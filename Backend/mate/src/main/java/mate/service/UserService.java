@@ -5,6 +5,8 @@ import mate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
     @Autowired
@@ -16,6 +18,14 @@ public class UserService {
 
     public void save(User user) {
         userRepository.save(user);
+    }
+
+    public List<User> idcheck(String id) {
+        return userRepository.findById(id);
+    }
+
+    public List<User> nickcheck(String nickname) {
+        return userRepository.findByNickname(nickname);
     }
 
     public void delete(User user) {

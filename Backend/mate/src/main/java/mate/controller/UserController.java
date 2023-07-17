@@ -93,10 +93,7 @@ public class UserController {
             res.put("user", loginUser);
             return ResponseEntity.ok(res);
         } else {
-<<<<<<< HEAD
             res.put("resmsg", "로그인 실패");
-=======
->>>>>>> c314c100ef427bcb8df0f245183c01936dd40a95
             return ResponseEntity.notFound().build();
         }
     }

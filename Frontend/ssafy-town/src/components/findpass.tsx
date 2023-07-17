@@ -32,6 +32,7 @@ const FindPassword: React.FC = () => {
     <div className={findpass_css.background}>
       <div className={findpass_css.modal}>
       <a className={findpass_css.link} href="/login">뒤로가기</a>
+      <a className={findpass_css.link} href="/Mypage">마이페이지 테스트(임시)</a>
         <div className={findpass_css.logo}/>
         <h1>비밀번호 찾기</h1>
         <form onSubmit={formik.handleSubmit}>
@@ -45,10 +46,6 @@ const FindPassword: React.FC = () => {
 
           {/* <button className={findpass_css.button} type="submit" disabled={!formik.isValid || formik.isSubmitting}>Find Password</button> */}
           <button className={findpass_css.button} id="findpass" type="submit" color="skyblue" disabled={!formik.isValid || formik.isSubmitting}>확인</button>
-
-          <div className={findpass_css.button}>
-            <a href="/Mypage">마이페이지 테스트</a>
-          </div>
         </form>
       </div>
     </div>

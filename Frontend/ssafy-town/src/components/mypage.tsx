@@ -46,6 +46,7 @@ const Mypage: React.FC = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
+      alert("변경 완료")
       console.log(values);
       // Add signup logic here
     },
@@ -77,11 +78,11 @@ const Mypage: React.FC = () => {
           </div>
           <div className={mypage_css.mypage_info}>
             <span>비밀번호 : </span>
-            <input type="text" className={mypage_css.input} {...formik.getFieldProps('password')} />
+            <input type="password" className={mypage_css.input} {...formik.getFieldProps('password')} />
           </div>
           <div className={mypage_css.mypage_info}>
             <label htmlFor="confirmPassword">비밀번호 확인 : </label>
-            <input id="confirmPassword" type="text" className={mypage_css.input} {...formik.getFieldProps('confirmPassword')} placeholder="비밀번호 확인"/>
+            <input id="confirmPassword" type="password" className={mypage_css.input} {...formik.getFieldProps('confirmPassword')} placeholder="비밀번호 확인"/>
           </div>
           {/*사진 :  <input type="file" className={mypage_css.input}/> */}
           <button className={mypage_css.button} type="submit" disabled={!formik.isValid || formik.isSubmitting}>수정</button>
@@ -91,10 +92,12 @@ const Mypage: React.FC = () => {
   }
   return (
     <div className={mypage_css.background}>
-      <div className={mypage_css.modal} id="mypage-modal">
+      <div className={mypage_css.modal} id={mypage_css.modal}>
+      <a className={mypage_css.link} href="/findpassword">뒤로가기</a>
         <div className={mypage_css.mypage_welcome}>
-          {/* `안녕하세요!
-          {user.name} 님` */}
+          <div>
+          안녕하세요! {user.name} 님
+          </div>
           <button onClick={editInfo}>회원정보 수정</button>
         </div>
         {showMine()}

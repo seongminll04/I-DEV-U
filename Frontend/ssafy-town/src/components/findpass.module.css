@@ -1,3 +1,8 @@
+* {
+  font-family: 'NeoDGM';
+  src: url('/public/fonts/neodgm.woff') format('woff');
+}
+
 .background {
   background: url(/public/assets/loginimage.png) no-repeat center center fixed; 
   -webkit-background-size: cover;

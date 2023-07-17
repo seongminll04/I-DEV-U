@@ -1,5 +1,6 @@
 import React from 'react';
 import { useFormik } from 'formik';
+import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import './signup.css';
 import axios from 'axios';
@@ -27,7 +28,6 @@ const validationSchema = Yup.object().shape({
     .required('이름을 입력해주세요.'),
   birthday: Yup.string()
     .matches(/^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, '유효하지 않은 생년월일입니다.')
-    // 1997-11-04
     .required('생년월일을 입력해주세요.'),
   gender: Yup.number()
   .required('성별을 선택해주세요.')
@@ -35,6 +35,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const SignupForm = () => {
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -47,8 +48,9 @@ const SignupForm = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log(values);
+      // console.log(values);
       // 회원가입 요청 로직
+      
       axios({
         method : 'post',
         url : 'http://localhost:8080/user/signup',
@@ -56,6 +58,7 @@ const SignupForm = () => {
       })
       .then(res => {
         console.log(res)
+        navigate('/login')
       })
       .catch(err => {
         console.log(err)
@@ -83,10 +86,10 @@ const SignupForm = () => {
                 <input
                   type="radio"
                   name="gender"
-                  value="male"
+                  value="1"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  checked={formik.values.gender === 1}
+                  checked={formik.values.gender === '1'}
                 />
                 남성
               </label>
@@ -94,10 +97,10 @@ const SignupForm = () => {
                 <input
                   type="radio"
                   name="gender"
-                  value="female"
+                  value="2"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  checked={formik.values.gender === 2}
+                  checked={formik.values.gender === '2'}
                 />
                 여성
               </label>

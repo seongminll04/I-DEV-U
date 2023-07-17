@@ -39,7 +39,7 @@ public class UserController {
         user.setGender(Integer.parseInt(map.get("gender")));
 
         userService.save(user);
-
+        System.out.println(user);
         return ResponseEntity.ok(res);
     }
     
@@ -86,6 +86,8 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> map) {
         Map<String, Object> res = new HashMap<>();
 
+        System.out.println(map.get("id") + " " + map.get("pw"));
+
         User loginUser = userService.login(map.get("id"), map.get("pw"));
 
         if (loginUser != null) {
@@ -94,7 +96,7 @@ public class UserController {
             return ResponseEntity.ok(res);
         } else {
             res.put("resmsg", "로그인 실패");
-            return ResponseEntity.ok(res);
+            return ResponseEntity.notFound().build();
         }
     }
 }

@@ -16,7 +16,7 @@ const validationSchema = Yup.object().shape({
     .required('비밀번호를 입력해주세요.'),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password') as any, null], '비밀번호가 일치하지 않습니다.')
-    .required('비밀번호를 입력해주세요.'),
+    .required('비밀번호를 확인해주세요.'),
   nickname: Yup.string()
     .min(2, '2~12 자리, 특수문자 사용불가')
     .max(12, '2~12 자리, 특수문자 사용불가')
@@ -76,17 +76,22 @@ const SignupForm = () => {
         <div className={signup_css.logo}/>
 
         <form onSubmit={formik.handleSubmit}>
-          <label className={signup_css.split}>이름</label>
+          
+          <label className={signup_css.split}>이름
+          <span style={{color:'darkgray'}}>{formik.touched.name && formik.errors.name ? formik.errors.name : null}</span>
+          </label>
+          
           <input className={signup_css.input} type="text" placeholder="이름" {...formik.getFieldProps('name')} />
-          {formik.touched.name && formik.errors.name ? <div>{formik.errors.name}</div> : null}
 
-          <label className={signup_css.split}>생년월일</label>
+          <label className={signup_css.split}>생년월일
+          <span style={{color:'darkgray'}}>{formik.touched.birthday && formik.errors.birthday ? formik.errors.birthday : null}</span>
+          </label>
           <input className={signup_css.input} type="date" {...formik.getFieldProps('birthday')} />
-          {formik.touched.birthday && formik.errors.birthday ? <div>{formik.errors.birthday}</div> : null}
 
-          <br />
+            <label className={signup_css.split}>성별
+            <span style={{color:'darkgray', margin:'0'}}>{formik.touched.gender && formik.errors.gender ? formik.errors.gender : null}</span>
+            </label>
             <div className={signup_css.split}>
-            <label className={signup_css.split1}>성별</label>
               <label>
                 <input
                   type="radio"
@@ -110,22 +115,31 @@ const SignupForm = () => {
                 여성
               </label>
             </div>
-          {formik.touched.gender && formik.errors.gender ? <div>{formik.errors.gender}</div> : null}
+          
+          
 
-          <label className={signup_css.split}>닉네임</label>
+          <label className={signup_css.split}>닉네임
+          <span style={{color:'darkgray'}}>{formik.touched.nickname && formik.errors.nickname ? formik.errors.nickname : null}</span>
+          </label>
           <input className={signup_css.input} type="text" placeholder="닉네임" {...formik.getFieldProps('nickname')} />
-          {formik.touched.nickname && formik.errors.nickname ? <div>{formik.errors.nickname}</div> : null}
+          
 
-          <label className={signup_css.split}>아이디</label>
+          <label className={signup_css.split}>아이디
+          <span style={{color:'darkgray'}}>{formik.touched.email && formik.errors.email ? formik.errors.email : null}</span>
+          </label>
           <input className={signup_css.input} type="text" placeholder="이메일" {...formik.getFieldProps('email')} />
-          {formik.touched.email && formik.errors.email ? <div>{formik.errors.email}</div> : null}
+          
 
-          <label className={signup_css.split}>비밀번호</label>
+          <label className={signup_css.split}>비밀번호
+          <span style={{color:'darkgray'}}>{formik.touched.password && formik.errors.password ? formik.errors.password : null}</span>
+          </label>
           <input className={signup_css.input} type="password" placeholder="비밀번호" {...formik.getFieldProps('password')} />
-          {formik.touched.password && formik.errors.password ? <div>{formik.errors.password}</div> : null}
-
+          
+          <label className={signup_css.split}>비밀번호 확인
+          <span style={{color:'darkgray'}}>{formik.touched.confirmPassword && formik.errors.confirmPassword ? formik.errors.confirmPassword : null}</span>
+          </label>
           <input className={signup_css.input} type="password" placeholder="비밀번호 확인" {...formik.getFieldProps('confirmPassword')} />
-          {formik.touched.confirmPassword && formik.errors.confirmPassword ? <div>{formik.errors.confirmPassword}</div> : null}
+          
 
           <label className={signup_css.split}>프로필 사진 등록(선택)</label>
           <input  className={signup_css.split} type="file" name="photo" onChange={(event) => {

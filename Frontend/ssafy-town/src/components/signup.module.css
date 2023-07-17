@@ -86,3 +86,13 @@
   width: 80%;
   margin: 0.5em 0;
 }
+
+.error {
+  height: 30px;
+  color: red;
+  align-items: center;
+}
+
+.sort {
+  /* display: flex; */
+}

@@ -82,7 +82,7 @@ public class UserController {
     /*
     * 로그인
     */
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> map) {
         Map<String, Object> res = new HashMap<>();
 

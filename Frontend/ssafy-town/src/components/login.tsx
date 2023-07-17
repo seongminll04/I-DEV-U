@@ -41,7 +41,7 @@ const Login: React.FC = () => {
   return (
     <div className="background">
       <div className="modal">
-        <div className="logo"/>
+        <h1 className='logo'>I DEV U</h1>
         <input className="input" type="text" placeholder="아이디" value={userId} onChange={(e) => setUserId(e.target.value)} onKeyDown={handleKeyDown} />
         <input className="input" type="password" placeholder="비밀번호" value={userPassword} onChange={(e) => setUserPassword(e.target.value)} onKeyDown={handleKeyDown} />
         <div className="checkContainer">

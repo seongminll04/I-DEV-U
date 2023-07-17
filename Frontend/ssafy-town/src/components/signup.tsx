@@ -51,6 +51,7 @@ const SignupForm = () => {
       // console.log(values);
       // 회원가입 요청 로직
       
+      console.log(values)
       axios({
         method : 'post',
         url : 'http://localhost:8080/user/signup',
@@ -73,17 +74,19 @@ const SignupForm = () => {
         <a className={signup_css.link} href="/login">뒤로가기</a>
         <h1>회원가입</h1>
         <div className={signup_css.logo}/>
-        <label style={{float:'left'}}>이름</label>
+
         <form onSubmit={formik.handleSubmit}>
+          <label className={signup_css.split}>이름</label>
           <input className={signup_css.input} type="text" placeholder="이름" {...formik.getFieldProps('name')} />
           {formik.touched.name && formik.errors.name ? <div>{formik.errors.name}</div> : null}
 
+          <label className={signup_css.split}>생년월일</label>
           <input className={signup_css.input} type="date" {...formik.getFieldProps('birthday')} />
           {formik.touched.birthday && formik.errors.birthday ? <div>{formik.errors.birthday}</div> : null}
 
           <br />
-          <label>성별</label>
-            <div>
+            <div className={signup_css.split}>
+            <label className={signup_css.split1}>성별</label>
               <label>
                 <input
                   type="radio"
@@ -109,22 +112,26 @@ const SignupForm = () => {
             </div>
           {formik.touched.gender && formik.errors.gender ? <div>{formik.errors.gender}</div> : null}
 
+          <label className={signup_css.split}>닉네임</label>
           <input className={signup_css.input} type="text" placeholder="닉네임" {...formik.getFieldProps('nickname')} />
           {formik.touched.nickname && formik.errors.nickname ? <div>{formik.errors.nickname}</div> : null}
 
+          <label className={signup_css.split}>아이디</label>
           <input className={signup_css.input} type="text" placeholder="이메일" {...formik.getFieldProps('email')} />
           {formik.touched.email && formik.errors.email ? <div>{formik.errors.email}</div> : null}
 
+          <label className={signup_css.split}>비밀번호</label>
           <input className={signup_css.input} type="password" placeholder="비밀번호" {...formik.getFieldProps('password')} />
           {formik.touched.password && formik.errors.password ? <div>{formik.errors.password}</div> : null}
 
           <input className={signup_css.input} type="password" placeholder="비밀번호 확인" {...formik.getFieldProps('confirmPassword')} />
           {formik.touched.confirmPassword && formik.errors.confirmPassword ? <div>{formik.errors.confirmPassword}</div> : null}
 
-          <input type="file" name="photo" onChange={(event) => {
+          <label className={signup_css.split}>프로필 사진 등록(선택)</label>
+          <input  className={signup_css.split} type="file" name="photo" onChange={(event) => {
             formik.setFieldValue("photo", event?.currentTarget?.files?.[0]);
           }} />
-
+          
           <button className={signup_css.button} type="submit" disabled={!formik.isValid || formik.isSubmitting}>Sign Up</button>
         </form>
       </div>

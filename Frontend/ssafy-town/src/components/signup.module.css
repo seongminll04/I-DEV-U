@@ -20,6 +20,8 @@
   align-items: center;
   width: 400px;
   border: 4px solid black;
+  overflow: auto;
+  max-height: 460px;
 }
 
 .logo {
@@ -54,12 +56,12 @@
   }
   
   .button:hover {
-    background: skyblue;
+    background: lightgray;
     cursor: pointer;
   }
   
   .button:active {
-    background: dodgerblue;
+    background: darkgray;
   }
   
   .link {
@@ -68,4 +70,19 @@
     align-self: flex-start;
     margin-bottom: 1em;
   }
-  
+
+.split1 {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 40%;
+  margin: 0.5em 0;
+} 
+
+.split {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 80%;
+  margin: 0.5em 0;
+}

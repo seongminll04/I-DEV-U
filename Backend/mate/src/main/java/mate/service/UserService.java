@@ -20,16 +20,16 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public List<User> idcheck(String id) {
-        return userRepository.findById(id);
+    public List<User> emailcheck(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public List<User> nickcheck(String nickname) {
         return userRepository.findByNickname(nickname);
     }
 
-    public User login(String id, String pw) {
-        return userRepository.findByIdAndPw(id, pw);
+    public User login(String email, String pw) {
+        return userRepository.findByEmailAndPw(email, pw);
     }
 
     public void delete(User user) {

@@ -23,37 +23,28 @@ public class UserController {
     }
 
     /*
-    * 회원가입
-    */
+     * 회원가입
+     */
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, String>> signup(@RequestBody Map<String, String> map) {
+    public ResponseEntity<Map<String, String>> signup(@RequestBody User user) {
         Map<String, String> res = new HashMap<>();
-
-        User user = new User();
-
-        user.setId(map.get("email"));
-        user.setPw(map.get("password"));
-        user.setName(map.get("name"));
-        user.setNickname(map.get("nickname"));
-//        user.setBirth(new Date(map.get("birthday")));
-        user.setGender(Integer.parseInt(map.get("gender")));
 
         userService.save(user);
-        System.out.println(user);
+
         return ResponseEntity.ok(res);
     }
-    
+
     /*
-    * 아이디 중복 확인
-    */
-    @GetMapping("/signup/idcheck/{id}")
-    public ResponseEntity<Map<String, String>> idcheck(@PathVariable("id") String id) {
+     * 아이디 중복 확인
+     */
+    @GetMapping("/signup/emailcheck/{email}")
+    public ResponseEntity<Map<String, String>> emailcheck(@PathVariable("email") String email) {
         Map<String, String> res = new HashMap<>();
 
-        List<User> list = userService.idcheck(id);
+        List<User> list = userService.emailcheck(email);
 
         if (list.isEmpty()) {
-            res.put("resmsg", "아이디 사용 가능");
+            res.put("resmsg", "이메일 사용 가능");
             return ResponseEntity.ok(res);
         } else {
             return ResponseEntity.notFound().build();
@@ -78,13 +69,11 @@ public class UserController {
     }
 
     /*
-    * 로그인
-    */
+     * 로그인
+     */
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> map) {
         Map<String, Object> res = new HashMap<>();
-
-        System.out.println(map.get("id") + " " + map.get("pw"));
 
         User loginUser = userService.login(map.get("id"), map.get("pw"));
 
@@ -93,7 +82,6 @@ public class UserController {
             res.put("user", loginUser);
             return ResponseEntity.ok(res);
         } else {
-            res.put("resmsg", "로그인 실패");
             return ResponseEntity.notFound().build();
         }
     }

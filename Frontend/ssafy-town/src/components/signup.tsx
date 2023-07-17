@@ -146,7 +146,8 @@ const SignupForm = () => {
             formik.setFieldValue("photo", event?.currentTarget?.files?.[0]);
           }} />
           
-          <button className={signup_css.button} type="submit" disabled={!formik.isValid || formik.isSubmitting}>Sign Up</button>
+          {/* <button className={signup_css.button} type="submit" disabled={!formik.isValid || formik.isSubmitting}>Sign Up</button> */}
+          <button className={signup_css.button} type="submit">Sign Up</button>
         </form>
       </div>
     </div>

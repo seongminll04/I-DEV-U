@@ -48,10 +48,8 @@ const SignupForm = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      // console.log(values);
+      console.log(values);
       // 회원가입 요청 로직
-      
-      console.log(values)
       axios({
         method : 'post',
         url : 'http://localhost:8080/user/signup',
@@ -146,8 +144,7 @@ const SignupForm = () => {
             formik.setFieldValue("photo", event?.currentTarget?.files?.[0]);
           }} />
           
-          {/* <button className={signup_css.button} type="submit" disabled={!formik.isValid || formik.isSubmitting}>Sign Up</button> */}
-          <button className={signup_css.button} type="submit">Sign Up</button>
+          {formik.isValid ? <button className={signup_css.button} type="submit">Sign Up</button> : <button className={signup_css.button_disabled} type="submit" disabled>Sign Up</button>}
         </form>
       </div>
     </div>

@@ -87,12 +87,15 @@
   margin: 0.5em 0;
 }
 
-.error {
-  height: 30px;
-  color: red;
-  align-items: center;
-}
-
-.sort {
-  /* display: flex; */
+.button_disabled {
+  background: gray;
+  color: black;
+  font-size: 1em;
+  font-weight: bold;
+  margin: 0.5em;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 3px;
+  width: 80%;
+  transition: all 0.3s ease;
 }

@@ -4,6 +4,7 @@ import Login from './components/login';
 import Town from './components/ssafytown';
 import SignupForm from './components/signup';
 import Findpassword from './components/findpass';
+import KakaoCallback from './components/kakao';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/findpassword" element={<Findpassword />} />
           <Route path="/home" element={<Town />} />
+          <Route path="/kakao" element={<KakaoCallback />} />
         </Routes>
       </div>
     </Router>

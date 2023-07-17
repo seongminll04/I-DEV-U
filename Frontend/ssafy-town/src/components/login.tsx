@@ -24,21 +24,33 @@ const Login: React.FC = () => {
     })
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      handleLogin();
+    }
+  }
+
+  const handleKakaoLogin = () => {
+    const CLIENT_ID = `${process.env.REACT_APP_REST_API_KEY}`;
+    const REDIRECT_URI = `${process.env.REACT_APP_REDIRECT_URL}`;
+    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`
+    window.location.href = kakaoURL;
+  };
+  
+
   return (
     <div className="background">
       <div className="modal">
         <div className="logo"/>
-        <input className="input" type="text" placeholder="아이디" value={userId} onChange={(e) => setUserId(e.target.value)} />
-        <input className="input" type="password" placeholder="비밀번호" value={userPassword} onChange={(e) => setUserPassword(e.target.value)} 
-        onKeyDown={(event => {if (event.key==='Enter') {handleLogin()}})} />
+        <input className="input" type="text" placeholder="아이디" value={userId} onChange={(e) => setUserId(e.target.value)} onKeyDown={handleKeyDown} />
+        <input className="input" type="password" placeholder="비밀번호" value={userPassword} onChange={(e) => setUserPassword(e.target.value)} onKeyDown={handleKeyDown} />
         <div className="checkContainer">
           <input className="check" id="saveid" type="checkbox" />
           <label htmlFor="saveid">아이디 저장</label>
         </div>
         <button className="enter-login" onClick={handleLogin}>로그인</button>
-        <hr className="separator" />
-        <button className="kakao-login">카카오 로그인 위치</button>
-        <button className="google-login">구글 로그인 위치</button>
+        <hr className="separator"/>
+        <button className="kakao-login" onClick={handleKakaoLogin}></button>
         <div className="checkContainer">
           <a className="link" href="/signup">회원가입</a>
           <a className="link" href="/findpassword">비밀번호 찾기</a>

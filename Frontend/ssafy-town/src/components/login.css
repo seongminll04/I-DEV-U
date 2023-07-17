@@ -19,7 +19,7 @@
   flex-direction: column;
   align-items: center;
   width: 400px;
-  border: 4px solid deepskyblue;
+  border: 4px solid black;
 }
 
 .logo {
@@ -39,31 +39,36 @@
   width: 80%;
 }
 
+.separator {
+  border-top: 1px solid #ddd;
+  width: 88%;
+  margin: 0.5em auto;
+}
+
 .enter-login,
-.kakao-login,
-.google-login {
-  background: deepskyblue;
+.kakao-login {
+  background: rgb(109, 206, 245);
   color: black;
   font-size: 1em;
-  margin: 1em;
+  font-weight: bold;
+  margin: 0.5em;
   padding: 0.5em 1em;
   border: none;
   border-radius: 3px;
-  width: 85%;
+  width: 80%;
+  height: 53px;
   transition: all 0.3s ease;
 }
 
 .enter-login:hover,
-.kakao-login:hover,
-.google-login:hover {
+.kakao-login:hover {
   background: rgb(200, 200, 200);
   cursor: pointer;
   
 }
 
 .enter-login:active,
-.kakao-login:active,
-.google-login:active {  
+.kakao-login:active {  
   background: rgb(150, 150, 150);
 }
 
@@ -75,9 +80,7 @@
 }
 
 .kakao-login {
-  background: yellow;
-}
-
-.google-login {
-  background: red;
+  background: url('/public/assets/kakao_login_medium_wide.png') no-repeat;
+  background-size: cover;
+  height: 55px;
 }

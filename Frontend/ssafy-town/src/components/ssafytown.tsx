@@ -43,7 +43,7 @@ function update() {
   }
 }
 
-export const Town = () => {
+const Town: React.FC = () => {
   useEffect(() => {
     const config = {
       type: Phaser.AUTO,
@@ -72,3 +72,5 @@ export const Town = () => {
     </div>
   );
 };
+
+export default Town;

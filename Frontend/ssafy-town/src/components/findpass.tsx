@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Background, Modal, Logo, Input, Button, Link } from './login_styled';
+import './findpass.css';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -13,10 +13,9 @@ const validationSchema = Yup.object().shape({
     .max(12, '1~12 자리, 특수문자 사용불가')
     .matches(/^[가-힣]+$/, '한글로만 작성해주세요.')
     .required('이름을 입력해주세요.'),
-
 });
 
-const SignupForm = () => {
+const FindPassword: React.FC = () => {
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -30,23 +29,23 @@ const SignupForm = () => {
   });
 
   return (
-    <Background>
-      <Modal>
+    <div className="background">
+      <div className="modal">
         <h1>비밀번호 찾기</h1>
-        <Link href="/login">뒤로가기</Link>
-        <Logo/>
+        <a className="link" href="/login">뒤로가기</a>
+        <img className="logo" alt="Logo" />
         <form onSubmit={formik.handleSubmit}>
-          <Input name="name" type="text" placeholder="성함" {...formik.getFieldProps('name')} />
+          <input className="input" type="text" placeholder="성함" {...formik.getFieldProps('name')} />
           {formik.touched.name && formik.errors.name ? <div>{formik.errors.name}</div> : null}
 
-          <Input name="email" type="text" placeholder="이메일" {...formik.getFieldProps('email')} />
+          <input className="input" type="text" placeholder="이메일" {...formik.getFieldProps('email')} />
           {formik.touched.email && formik.errors.email ? <div>{formik.errors.email}</div> : null}
 
-          <Button type="submit" disabled={!formik.isValid || formik.isSubmitting}>Find Password</Button>
+          <button className="button" type="submit" disabled={!formik.isValid || formik.isSubmitting}>Find Password</button>
         </form>
-      </Modal>
-    </Background>
+      </div>
+    </div>
   );
 };
 
-export default SignupForm;
+export default FindPassword;

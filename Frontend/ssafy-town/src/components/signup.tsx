@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Background, Modal, Logo, Input, Button, Link } from './login_styled';
+import './signup.css';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -13,7 +13,7 @@ const validationSchema = Yup.object().shape({
     .max(14, '8~14 자리, 특수문자 사용불가')
     .required('비밀번호를 입력해주세요.'),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password'), null], '비밀번호가 일치하지 않습니다.')
+    .oneOf([Yup.ref('password') as any, null], '비밀번호가 일치하지 않습니다.')
     .required('비밀번호를 입력해주세요.'),
   nickname: Yup.string()
     .min(2, '2~12 자리, 특수문자 사용불가')
@@ -51,15 +51,15 @@ const SignupForm = () => {
   });
 
   return (
-    <Background>
-      <Modal>
-        <Link href="/login">뒤로가기</Link>
-        <Logo/>
+    <div className="background">
+      <div className="modal">
+        <a className="link" href="/login">뒤로가기</a>
+        <div className="logo"/>
         <form onSubmit={formik.handleSubmit}>
-          <Input name="name" type="text" placeholder="성함" {...formik.getFieldProps('name')} />
+          <input className="input" type="text" placeholder="성함" {...formik.getFieldProps('name')} />
           {formik.touched.name && formik.errors.name ? <div>{formik.errors.name}</div> : null}
 
-          <Input name="birthday" type="date" {...formik.getFieldProps('birthday')} />
+          <input className="input" type="date" {...formik.getFieldProps('birthday')} />
           {formik.touched.birthday && formik.errors.birthday ? <div>{formik.errors.birthday}</div> : null}
 
           <br />
@@ -90,26 +90,26 @@ const SignupForm = () => {
             </div>
           {formik.touched.gender && formik.errors.gender ? <div>{formik.errors.gender}</div> : null}
 
-          <Input name="nickname" type="text" placeholder="닉네임" {...formik.getFieldProps('nickname')} />
+          <input className="input" type="text" placeholder="닉네임" {...formik.getFieldProps('nickname')} />
           {formik.touched.nickname && formik.errors.nickname ? <div>{formik.errors.nickname}</div> : null}
 
-          <Input name="email" type="text" placeholder="이메일" {...formik.getFieldProps('email')} />
+          <input className="input" type="text" placeholder="이메일" {...formik.getFieldProps('email')} />
           {formik.touched.email && formik.errors.email ? <div>{formik.errors.email}</div> : null}
 
-          <Input name="password" type="password" placeholder="비밀번호" {...formik.getFieldProps('password')} />
+          <input className="input" type="password" placeholder="비밀번호" {...formik.getFieldProps('password')} />
           {formik.touched.password && formik.errors.password ? <div>{formik.errors.password}</div> : null}
 
-          <Input name="confirmPassword" type="password" placeholder="비밀번호 확인" {...formik.getFieldProps('confirmPassword')} />
+          <input className="input" type="password" placeholder="비밀번호 확인" {...formik.getFieldProps('confirmPassword')} />
           {formik.touched.confirmPassword && formik.errors.confirmPassword ? <div>{formik.errors.confirmPassword}</div> : null}
 
-          <Input type="file" name="photo" onChange={(event) => {
-            formik.setFieldValue("photo", event.currentTarget.files[0]);
+          <input type="file" name="photo" onChange={(event) => {
+            formik.setFieldValue("photo", event?.currentTarget?.files?.[0]);
           }} />
 
-          <Button type="submit" disabled={!formik.isValid || formik.isSubmitting}>Sign Up</Button>
+          <button className="button" type="submit" disabled={!formik.isValid || formik.isSubmitting}>Sign Up</button>
         </form>
-      </Modal>
-    </Background>
+      </div>
+    </div>
   );
 };
 

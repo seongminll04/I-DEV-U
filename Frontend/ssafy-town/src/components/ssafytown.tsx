@@ -1,42 +1,44 @@
-import './ssafytown.css';
 import React, { useEffect } from 'react';
 import Phaser from 'phaser';
 
-let character;
-let cursors;
+let character: Phaser.Physics.Arcade.Sprite;
+let cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 
-function preload() {
+function preload(this: Phaser.Scene) {
   this.load.image('map', 'assets/bigmap.png');
   this.load.image('character', 'assets/12.png');
   console.log("ok")
 }
 
-function create() {
+function create(this: Phaser.Scene) {
   this.add.image(1000, 1000, 'map'); // 맵의 중심에 이미지 추가
 
   character = this.physics.add.sprite(1000, 1000, 'character'); // 캐릭터를 맵의 중앙에 배치
   character.setCollideWorldBounds(true);
 
-  cursors = this.input.keyboard.createCursorKeys();
+  if (this.input.keyboard) {
+    cursors = this.input.keyboard.createCursorKeys();
+  
+    this.cameras.main.setBounds(0, 0, 2000, 2000); // 카메라의 범위를 맵의 크기에 맞게 설정
+    this.cameras.main.startFollow(character); // 캐릭터를 따라다니도록 설정
+  
+    this.physics.world.setBounds(0, 0, 2000, 2000); // 게임 세계의 크기를 맵의 크기에 맞게 설정
 
-  this.cameras.main.setBounds(0, 0, 2000, 2000); // 카메라의 범위를 맵의 크기에 맞게 설정
-  this.cameras.main.startFollow(character); // 캐릭터를 따라다니도록 설정
-
-  this.physics.world.setBounds(0, 0, 2000, 2000); // 게임 세계의 크기를 맵의 크기에 맞게 설정
+  }
 }
 
-function update() {
-  if (cursors.left.isDown) {
+function update(this: Phaser.Scene) {
+  if (cursors.left?.isDown) {
     character.setVelocityX(-1280);
-  } else if (cursors.right.isDown) {
+  } else if (cursors.right?.isDown) {
     character.setVelocityX(1280);
   } else {
     character.setVelocityX(0);
   }
 
-  if (cursors.up.isDown) {
+  if (cursors.up?.isDown) {
     character.setVelocityY(-1280);
-  } else if (cursors.down.isDown) {
+  } else if (cursors.down?.isDown) {
     character.setVelocityY(1280);
   } else {
     character.setVelocityY(0);
@@ -45,7 +47,7 @@ function update() {
 
 const Town: React.FC = () => {
   useEffect(() => {
-    const config = {
+    const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
       parent: "phaser-game",
       width: window.innerWidth * 0.9,

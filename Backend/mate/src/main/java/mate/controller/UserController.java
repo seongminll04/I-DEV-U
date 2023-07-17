@@ -31,11 +31,12 @@ public class UserController {
 
         User user = new User();
 
-        user.setId(map.get("id"));
-        user.setPw(map.get("pw"));
+        user.setId(map.get("email"));
+        user.setPw(map.get("password"));
         user.setName(map.get("name"));
         user.setNickname(map.get("nickname"));
 //        user.setBirth(new Date(map.get("birthday")));
+        user.setGender(map.get("gender"));
 
         userService.save(user);
 

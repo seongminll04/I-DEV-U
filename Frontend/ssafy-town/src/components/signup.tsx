@@ -2,6 +2,7 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import './signup.css';
+import axios from 'axios';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -46,7 +47,19 @@ const SignupForm = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log(values);
-      // Add signup logic here
+      // 회원가입 요청 로직
+      axios({
+        method : 'post',
+        url : 'http://localhost:8080/user/signup',
+        data : values,
+      })
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+        alert('회원가입실패')
+      })
     },
   });
 

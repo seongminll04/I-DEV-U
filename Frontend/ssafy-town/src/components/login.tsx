@@ -10,23 +10,24 @@ const Login: React.FC = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('/user/login', {
-        userid: userId,
-        password: userPassword,
-      });
-
-      if (response.status === 200) {
+      const response = await axios.post('http://localhost:8080/user/login', {
+      id: userId,
+      pw: userPassword,
+    });
+  
+      if (response.data.resmsg === '로그인 성공') {
         // 로그인 성공하면 /home으로 이동
         navigate('/home');
       } else {
         // 실패한 경우 오류 처리
         console.error('로그인 실패');
-        alert('아이디 또는 비밀번호를 잘못 입력했습니다.입력하신 내용을 다시 확인해주세요.')
+        alert('아이디 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.')
       }
     } catch (error) {
       console.error(error);
     }
   };
+  
 
   return (
     <div className="background">

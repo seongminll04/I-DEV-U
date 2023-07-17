@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Phaser from 'phaser';
 import './ssafytown.css';
 
@@ -12,19 +12,18 @@ function preload(this: Phaser.Scene) {
 }
 
 function create(this: Phaser.Scene) {
-  this.add.image(1000, 1000, 'map'); // 맵의 중심에 이미지 추가
+  this.add.image(1000, 1000, 'map'); 
 
-  character = this.physics.add.sprite(1000, 1000, 'character'); // 캐릭터를 맵의 중앙에 배치
+  character = this.physics.add.sprite(1000, 1000, 'character'); 
   character.setCollideWorldBounds(true);
 
   if (this.input.keyboard) {
     cursors = this.input.keyboard.createCursorKeys();
   
-    this.cameras.main.setBounds(0, 0, 2000, 2000); // 카메라의 범위를 맵의 크기에 맞게 설정
-    this.cameras.main.startFollow(character); // 캐릭터를 따라다니도록 설정
+    this.cameras.main.setBounds(0, 0, 2000, 2000);
+    this.cameras.main.startFollow(character); 
   
-    this.physics.world.setBounds(0, 0, 2000, 2000); // 게임 세계의 크기를 맵의 크기에 맞게 설정
-
+    this.physics.world.setBounds(0, 0, 2000, 2000); 
   }
 }
 
@@ -47,11 +46,14 @@ function update(this: Phaser.Scene) {
 }
 
 const Town: React.FC = () => {
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [game, setGame] = useState<Phaser.Game | null>(null);
+
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
       parent: "phaser-game",
-      width: window.innerWidth * 0.9,
+      width: window.innerWidth * (isSidebarOpen ? 0.7 : 0.85),
       height: window.innerHeight,
       physics: {
         default: 'arcade',
@@ -62,15 +64,33 @@ const Town: React.FC = () => {
         update: update,
       },
     };
+  
+    const newGame = new Phaser.Game(config);
+    setGame(newGame);
 
-    new Phaser.Game(config);
+    return () => {
+      newGame.destroy(true);
+    }
+    // 아래 주석은 문제가 없는데 에러가 나올때 넣는 주석
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if(game) {
+      game.scale.resize(window.innerWidth * (isSidebarOpen ? 0.7 : 0.85), window.innerHeight);
+    }
+  }, [isSidebarOpen, game]);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
 
   return (
     <div id="game-container">
-      <div id="sidebar">
+      <div id="sidebar" onClick={toggleSidebar}>
         <img src="assets/side.png" alt="icon" />
       </div>
+      {isSidebarOpen && <div id="navigation-bar"></div>}
       <div id="phaser-game" />
     </div>
   );

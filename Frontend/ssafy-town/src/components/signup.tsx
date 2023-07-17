@@ -27,10 +27,11 @@ const validationSchema = Yup.object().shape({
     .required('이름을 입력해주세요.'),
   birthday: Yup.string()
     .matches(/^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, '유효하지 않은 생년월일입니다.')
+    // 1997-11-04
     .required('생년월일을 입력해주세요.'),
-  gender: Yup.string()
+  gender: Yup.number()
   .required('성별을 선택해주세요.')
-  .oneOf(['male', 'female'], '유효한 성별을 선택해주세요.'),
+  .oneOf([1, 2], '유효한 성별을 선택해주세요.'),
 });
 
 const SignupForm = () => {
@@ -42,7 +43,7 @@ const SignupForm = () => {
       nickname: '',
       name: '',
       birthday: '',
-      gender: '',
+      gender: null,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -85,7 +86,7 @@ const SignupForm = () => {
                   value="male"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  checked={formik.values.gender === 'male'}
+                  checked={formik.values.gender === 1}
                 />
                 남성
               </label>
@@ -96,7 +97,7 @@ const SignupForm = () => {
                   value="female"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  checked={formik.values.gender === 'female'}
+                  checked={formik.values.gender === 2}
                 />
                 여성
               </label>

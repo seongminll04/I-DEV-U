@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import './mypage.css';
+import mypage_css from './mypage.module.css';
 
 const validationSchema = Yup.object().shape({
   password: Yup.string()
@@ -55,44 +55,44 @@ const Mypage: React.FC = () => {
     if (isOpened) {
       return (
         <form id="mypage-form" onSubmit={formik.handleSubmit}>
-          <div className="mypage-info">
+          <div className={mypage_css.mypage_info}>
             <span>이름 : </span>
-            <input id="name" type="text" className="input" {...formik.getFieldProps('name')} readOnly/>
+            <input id="name" type="text" className={mypage_css.input} {...formik.getFieldProps('name')} readOnly/>
           </div>
-          <div className="mypage-info">
+          <div className={mypage_css.mypage_info}>
             <span>이메일 : </span>
-            <input type="text" className="input" {...formik.getFieldProps('email')} readOnly/>
+            <input type="text" className={mypage_css.input} {...formik.getFieldProps('email')} readOnly/>
           </div>
-          <div className="mypage-info">
+          <div className={mypage_css.mypage_info}>
             <span>생년월일 : </span>
-            <input type="text" className="input" {...formik.getFieldProps('birthday')} readOnly/>
+            <input type="text" className={mypage_css.input} {...formik.getFieldProps('birthday')} readOnly/>
           </div>
-          <div className="mypage-info">
+          <div className={mypage_css.mypage_info}>
             <span>성별 : </span>
-            <input type="text" className="input" {...formik.getFieldProps('gender')} readOnly/>
+            <input type="text" className={mypage_css.input} {...formik.getFieldProps('gender')} readOnly/>
           </div>
-          <div className="mypage-info">
+          <div className={mypage_css.mypage_info}>
             <span>닉네임 : </span>
-            <input type="text" className="input" {...formik.getFieldProps('nickname')} />
+            <input type="text" className={mypage_css.input} {...formik.getFieldProps('nickname')} />
           </div>
-          <div className="mypage-info">
+          <div className={mypage_css.mypage_info}>
             <span>비밀번호 : </span>
-            <input type="text" className="input" {...formik.getFieldProps('password')} />
+            <input type="text" className={mypage_css.input} {...formik.getFieldProps('password')} />
           </div>
-          <div className="mypage-info">
+          <div className={mypage_css.mypage_info}>
             <label htmlFor="confirmPassword">비밀번호 확인 : </label>
-            <input id="confirmPassword" type="text" className="input" {...formik.getFieldProps('confirmPassword')} placeholder="비밀번호 확인"/>
+            <input id="confirmPassword" type="text" className={mypage_css.input} {...formik.getFieldProps('confirmPassword')} placeholder="비밀번호 확인"/>
           </div>
-          {/*사진 :  <input type="file" className="input"/> */}
-          <button className="button" type="submit" disabled={!formik.isValid || formik.isSubmitting}>수정</button>
+          {/*사진 :  <input type="file" className={mypage_css.input}/> */}
+          <button className={mypage_css.button} type="submit" disabled={!formik.isValid || formik.isSubmitting}>수정</button>
         </form>
       );
     }
   }
   return (
-    <div className="background">
-      <div className="modal" id="mypage-modal">
-        <div className="mypage-welcome">
+    <div className={mypage_css.background}>
+      <div className={mypage_css.modal} id="mypage-modal">
+        <div className={mypage_css.mypage_welcome}>
           {/* `안녕하세요!
           {user.name} 님` */}
           <button onClick={editInfo}>회원정보 수정</button>

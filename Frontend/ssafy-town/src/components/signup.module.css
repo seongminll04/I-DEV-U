@@ -29,6 +29,7 @@
   user-select: none; 
 }
 
+
 .input {
   padding: 1em;
   margin: 0.5em;
@@ -38,49 +39,33 @@
   border-radius: 3px;
   width: 73%;
 }
-
-.separator {
-  border-top: 1px solid #ddd;
-  width: 80%;
-  margin: 0.5em auto;
-}
-
-.enter-login,
-.kakao-login {
-  background: rgb(109, 206, 245);
-  color: black;
-  font-size: 1em;
-  font-weight: bold;
-  margin: 0.5em;
-  padding: 0.5em 1em;
-  border: none;
-  border-radius: 3px;
-  width: 80%;
-  height: 48px;
-  transition: all 0.3s ease;
-}
-
-.enter-login:hover,
-.kakao-login:hover {
-  background: rgb(200, 200, 200);
-  cursor: pointer;
   
-}
-
-.enter-login:active,
-.kakao-login:active {  
-  background: rgb(150, 150, 150);
-}
-
-.link {
-  color: black;
-  text-decoration: none;
-  align-self: flex-start;
-  margin-bottom: 1em;
-}
-
-.kakao-login {
-  background: url('/public/assets/kakao_login_medium_wide.png') no-repeat;
-  background-size: cover;
-  height: 48px;
-}
+  .button {
+    background: rgb(109, 206, 245);
+    color: black;
+    font-size: 1em;
+    font-weight: bold;
+    margin: 0.5em;
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 3px;
+    width: 80%;
+    transition: all 0.3s ease;
+  }
+  
+  .button:hover {
+    background: skyblue;
+    cursor: pointer;
+  }
+  
+  .button:active {
+    background: dodgerblue;
+  }
+  
+  .link {
+    color: black;
+    text-decoration: none;
+    align-self: flex-start;
+    margin-bottom: 1em;
+  }
+  

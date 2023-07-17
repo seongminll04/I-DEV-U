@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Phaser from 'phaser';
-import './ssafytown.css';
+// import ssafytown_css from './ssafytown.module.css';
 
 let character: Phaser.Physics.Arcade.Sprite;
 let cursors: Phaser.Types.Input.Keyboard.CursorKeys;

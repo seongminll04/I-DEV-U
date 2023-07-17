@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './login.css';
+import login_css from './login.module.css';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -39,21 +39,21 @@ const Login: React.FC = () => {
   
 
   return (
-    <div className="background">
-      <div className="modal">
-        <h1 className='logo'>I DEV U</h1>
-        <input className="input" type="text" placeholder="아이디" value={userId} onChange={(e) => setUserId(e.target.value)} onKeyDown={handleKeyDown} />
-        <input className="input" type="password" placeholder="비밀번호" value={userPassword} onChange={(e) => setUserPassword(e.target.value)} onKeyDown={handleKeyDown} />
-        <div className="checkContainer">
-          <input className="check" id="saveid" type="checkbox" />
+    <div className={login_css.background}>
+      <div className={login_css.modal}>
+        <h1 className={login_css.logo}>I DEV U</h1>
+        <input className={login_css.input} type="text" placeholder="아이디" value={userId} onChange={(e) => setUserId(e.target.value)} onKeyDown={handleKeyDown} />
+        <input className={login_css.input} type="password" placeholder="비밀번호" value={userPassword} onChange={(e) => setUserPassword(e.target.value)} onKeyDown={handleKeyDown} />
+        <div className={login_css.checkContainer1}>
+          <input className={login_css.check} id="saveid" type="checkbox" />
           <label htmlFor="saveid">아이디 저장</label>
         </div>
-        <button className="enter-login" onClick={handleLogin}>로그인</button>
-        <hr className="separator"/>
-        <button className="kakao-login" onClick={handleKakaoLogin}></button>
-        <div className="checkContainer">
-          <a className="link" href="/signup">회원가입</a>
-          <a className="link" href="/findpassword">비밀번호 찾기</a>
+        <button className={login_css.enter_login} onClick={handleLogin}>로그인</button>
+        <hr className={login_css.separator}/>
+        <button className={login_css.kakao_login} onClick={handleKakaoLogin}></button>
+        <div className={login_css.checkContainer2}>
+          <a className={login_css.link} href="/signup">회원가입</a>
+          <a className={login_css.link} href="/findpassword">비밀번호 찾기</a>
         </div>
       </div>
     </div>

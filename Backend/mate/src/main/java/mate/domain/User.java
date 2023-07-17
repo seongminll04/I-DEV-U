@@ -21,7 +21,7 @@ public class User {
     private String name;
     private String nickname;
     private Date birth;
-    private String gender;
+    private int gender;
     private String text;
 
     // 생성자, 기타 메서드 생략

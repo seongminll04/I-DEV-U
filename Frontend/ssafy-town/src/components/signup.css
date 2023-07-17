@@ -1,43 +1,43 @@
 .background {
-    background: url(/public/assets/loginimage.png) no-repeat center center fixed; 
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-  }
-  
-  .modal {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 400px;
-    border: 4px solid black;
-  }
-  
-  .logo {
-    background: url('/public/assets/logo.png') no-repeat center;
-    height: 100px;
-    width: 100px;
-    margin-bottom: 2em;
-  }
-  
-  .input {
-    padding: 1em;
-    margin: 0.5em;
-    color: black;
-    background: white;
-    border: 1px solid black;
-    border-radius: 3px;
-    width: 80%;
-  }
+  background: url(/public/assets/loginimage.png) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.modal {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 400px;
+  border: 4px solid black;
+}
+
+.logo {
+  background: url('/public/assets/logo.png') no-repeat center;
+  height: 100px;
+  width: 100px;
+  margin-bottom: 2em;
+}
+
+.input {
+  padding: 1em;
+  margin: 0.5em;
+  color: black;
+  background: white;
+  border: 1px solid black;
+  border-radius: 3px;
+  width: 73%;
+}
   
   .button {
     background: deepskyblue;

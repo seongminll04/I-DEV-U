@@ -56,4 +56,13 @@ public class UserTest {
 
         assertThat(list.size()).isEqualTo(1);
     }
+
+    @Test
+    void Login() {
+        User loginUser = userRepository.findByIdAndPw("test", "test");
+
+        System.out.println(loginUser.toString());
+
+        assertThat(loginUser.getName()).isEqualTo("test");
+    }
 }

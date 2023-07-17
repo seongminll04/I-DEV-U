@@ -28,6 +28,10 @@ public class UserService {
         return userRepository.findByNickname(nickname);
     }
 
+    public User login(String id, String pw) {
+        return userRepository.findByIdAndPw(id, pw);
+    }
+
     public void delete(User user) {
         userRepository.delete(user);
     }

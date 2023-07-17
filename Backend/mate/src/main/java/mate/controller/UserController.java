@@ -78,4 +78,22 @@ public class UserController {
         }
     }
 
+    /*
+    * 로그인
+    */
+    @PostMapping("login")
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> map) {
+        Map<String, Object> res = new HashMap<>();
+
+        User loginUser = userService.login(map.get("id"), map.get("pw"));
+
+        if (loginUser != null) {
+            res.put("resmsg", "로그인 성공");
+            res.put("user", loginUser);
+            return ResponseEntity.ok(res);
+        } else {
+            res.put("resmsg", "로그인 실패");
+            return ResponseEntity.ok(res);
+        }
+    }
 }

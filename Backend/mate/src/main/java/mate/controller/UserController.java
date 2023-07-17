@@ -56,8 +56,7 @@ public class UserController {
             res.put("resmsg", "아이디 사용 가능");
             return ResponseEntity.ok(res);
         } else {
-            res.put("resmsg", "아이디 사용중");
-            return ResponseEntity.ok(res);
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -74,8 +73,7 @@ public class UserController {
             res.put("resmsg", "닉네임 사용 가능");
             return ResponseEntity.ok(res);
         } else {
-            res.put("resmsg", "닉네임 사용중");
-            return ResponseEntity.ok(res);
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -95,7 +93,10 @@ public class UserController {
             res.put("user", loginUser);
             return ResponseEntity.ok(res);
         } else {
+<<<<<<< HEAD
             res.put("resmsg", "로그인 실패");
+=======
+>>>>>>> c314c100ef427bcb8df0f245183c01936dd40a95
             return ResponseEntity.notFound().build();
         }
     }

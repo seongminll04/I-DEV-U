@@ -88,7 +88,7 @@ const Town: React.FC = () => {
   return (
     <div id="game_container" className={ssafytown_css.game_container}>
       <div id="sidebar" className={ssafytown_css.sidebar}>
-        <img src="assets/side.png" alt="icon" onClick={toggleSidebar} />
+        <img src="assets/사이드바/로그아웃.png" alt="icon" onClick={toggleSidebar} />
       </div>
       {isSidebarOpen && <div id="navigation_bar" className={ssafytown_css.navigation_bar}></div>}
       <div id="phaser_game" className={ssafytown_css.phaser_game} />

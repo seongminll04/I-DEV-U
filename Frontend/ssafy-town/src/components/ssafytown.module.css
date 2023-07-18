@@ -8,7 +8,7 @@
 .sidebar {
     width: 5%;  
     height: 100vh; 
-    background-color: aqua;
+    background-color: rgb(109, 206, 245);
     flex-shrink: 0; 
 }
 

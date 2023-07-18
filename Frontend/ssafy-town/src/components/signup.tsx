@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -34,7 +34,61 @@ const validationSchema = Yup.object().shape({
   .oneOf([1, 2], '유효한 성별을 선택해주세요.'),
 });
 
+
 const SignupForm = () => {
+  const [chkemail, setchkemail] = useState('no');
+  const [chknickname, setchknickname] = useState('no');
+
+  const emailcheck = (email:string) => {
+    setchkemail('no');
+
+    if (email==='') {
+      alert('아이디를 입력해주세요.')
+    }
+
+    else if (!formik.errors.email) {
+      axios({
+        method:'get',
+        url:`http://localhost:8080/user/signup/emailcheck/${email}`
+      })
+      .then(()=>{
+        setchkemail('yes');
+        alert('사용할 수 있는 아이디입니다.')
+      })
+      .catch(() => {
+        alert('중복된 아이디입니다.')
+      })
+    }
+    else {
+      alert('유효하지 않은 아이디입니다.')
+    }
+  };
+  
+  const nicknamecheck = (nickname:string) => {
+    setchknickname('no');
+
+    if (nickname==='') {
+      alert('닉네임을 입력해주세요.')
+    }
+
+    else if (!formik.errors.nickname) {
+      axios({
+        method:'get',
+        url:`http://localhost:8080/user/signup/nickcheck/${nickname}`
+      })
+      .then(()=>{
+        setchknickname('yes')
+        alert('사용할 수 있는 닉네임입니다.')
+      })
+      .catch(() => {
+        alert('중복된 닉네임입니다.')
+      })
+    }
+    else {
+      alert('유효하지 않은 닉네임입니다.')
+    }
+  };
+
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
@@ -50,24 +104,32 @@ const SignupForm = () => {
     onSubmit: (values) => {
       console.log(values);
       // 회원가입 요청 로직
-      axios({
-        method : 'post',
-        url : 'http://localhost:8080/user/signup',
-        data : values,
-      })
-      .then(res => {
-        console.log(res)
-        navigate('/login')
-      })
-      .catch(err => {
-        console.log(err)
-        alert('회원가입실패')
-      })
+      if (chkemail !== 'yes' && chknickname !== 'yes') {
+        alert('닉네임, 이메일 중복체크를 해주세요.')
+      }
+      else if (chknickname !== 'yes') {
+        alert('닉네임 중복체크를 해주세요.')
+      }
+      else if (chkemail !== 'yes') {
+        alert('이메일 중복체크를 해주세요.')
+      }
+      else {
+        axios({
+          method : 'post',
+          url : 'http://localhost:8080/user/signup',
+          data : values,
+        })
+        .then(res => {
+          console.log(res)
+          navigate('/login')
+        })
+        .catch(err => {
+          console.log(err)
+          alert('회원가입실패')
+        })
+      }
     },
   });
-  // const emailcheck(email:string) => {
-  //   console.log(email)
-  // }
 
   return (
     <div className={signup_css.background}>
@@ -121,18 +183,22 @@ const SignupForm = () => {
           
 
           <label className={signup_css.split}>닉네임
-          <span style={{color:'darkgray'}}>{formik.touched.nickname && formik.errors.nickname ? formik.errors.nickname : null}</span>
+          <span style={{color:'darkgray'}}>{formik.touched.nickname && formik.errors.nickname ? formik.errors.nickname : null}{chknickname === 'yes' ? '확인완료': null}</span>
           </label>
-          <input className={signup_css.input} type="text" placeholder="닉네임" {...formik.getFieldProps('nickname')} />
-          
-
+          <div className={signup_css.input_chk}>
+          <input className={signup_css.input} type="text" placeholder="닉네임" {...formik.getFieldProps('nickname')}  onChange={(event) => {formik.handleChange(event); setchknickname('no');}} />
+          <div className={signup_css.chk_input} onClick={()=>nicknamecheck(formik.values.nickname)}>중복확인</div>
+          </div>
           <label className={signup_css.split}>아이디
             <span style={{color:'darkgray'}}>
               {formik.values.email==='' ? '이메일을 입력해주세요.':null}{ formik.values.email!=='' &&formik.touched.email && formik.errors.email ? formik.errors.email : null}
+           {chkemail === 'yes' ? '확인완료': null}
             </span>
           </label>
-          <input className={signup_css.input} type="text" placeholder="아이디" {...formik.getFieldProps('email')} />
-          {/* <div onClick={emailcheck(formik.values.email)}>중복확인</div> */}
+          <div className={signup_css.input_chk}>
+            <input className={signup_css.input} type="text" placeholder="아이디" {...formik.getFieldProps('email')} onChange={(event) => {formik.handleChange(event); setchkemail('no');}}/>
+            <div className={signup_css.chk_input} onClick={()=>emailcheck(formik.values.email)}>중복확인</div>
+          </div>
 
           <label className={signup_css.split}>비밀번호
           <span style={{color:'darkgray'}}>{formik.touched.password && formik.errors.password ? formik.errors.password : null}</span>
@@ -149,7 +215,7 @@ const SignupForm = () => {
             formik.setFieldValue("photo", event?.currentTarget?.files?.[0]);
           }} />
           
-          {formik.isValid ? <button className={signup_css.button} type="submit">Sign Up</button> : <button className={signup_css.button_disabled} type="submit" disabled>Sign Up</button>}
+          {formik.isValid && chkemail==='yes' && chknickname==='yes' ? <button className={signup_css.button} type="submit">Sign Up</button> : <button className={signup_css.button_disabled} type="submit" disabled>Sign Up</button>}
         </form>
       </div>
     </div>

@@ -7,7 +7,7 @@ let cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 
 function preload(this: Phaser.Scene) {
   this.load.image('map', 'assets/bigmap.png');
-  this.load.image('character', 'assets/12.png');
+  this.load.image('character', 'assets/admin_character.png');
   console.log("ok")
 }
 

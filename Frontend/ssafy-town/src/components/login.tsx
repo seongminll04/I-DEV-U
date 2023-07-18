@@ -5,8 +5,9 @@ import login_css from './login.module.css';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const [userId, setUserId] = useState('');
+  const [userId, setUserId] = useState(localStorage.getItem('savedId') || ''); // 로컬스토리지에 아이디 저장
   const [userPassword, setUserPassword] = useState('');
+  const [saveId, setSaveId] = useState(false); // 아이디 저장 버튼 off상태
 
   const handleLogin = async () => {
     axios({
@@ -16,6 +17,11 @@ const Login: React.FC = () => {
     })
     .then(res => {
       console.log(res)
+      if (saveId) { // 아이디 저장 누르면 on 상태
+        localStorage.setItem('savedId', userId);
+      } else { // 꺼놓으면 로컬에서 삭제하자
+        localStorage.removeItem('savedId');
+      }
       navigate('/home')
     })
     .catch(err => {
@@ -45,7 +51,7 @@ const Login: React.FC = () => {
         <input className={login_css.input} type="text" placeholder="아이디" value={userId} onChange={(e) => setUserId(e.target.value)} onKeyDown={handleKeyDown} />
         <input className={login_css.input} type="password" placeholder="비밀번호" value={userPassword} onChange={(e) => setUserPassword(e.target.value)} onKeyDown={handleKeyDown} />
         <div className={login_css.checkContainer1}>
-          <input className={login_css.check} id="saveid" type="checkbox" />
+          <input className={login_css.check} id="saveid" type="checkbox" checked={saveId} onChange={(e) => setSaveId(e.target.checked)} />
           <label htmlFor="saveid">아이디 저장</label>
         </div>
         <button className={login_css.enter_login} onClick={handleLogin}>로그인</button>

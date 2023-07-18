@@ -94,6 +94,7 @@ const Town: React.FC = () => {
       console.error("설문 제출 실패", error);
     }
   }
+  const [isAlertModalOpen, setAlertModalOpen] = useState(false);
 
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
@@ -142,14 +143,22 @@ const Town: React.FC = () => {
   const handleLogoutClose = () => {
     setLogoutModalOpen(false);
   }
+  const handleAlertOpen = () => {
+    setAlertModalOpen(true);
+  }
+
+  const handleAlertClose = () => {
+    setAlertModalOpen(false);
+  }
 
   const handleLogoutConfirm = () => {
     setLogoutModalOpen(false);
+    //로그아웃 나중에 로컬 토큰 삭제하는 것 추가
     navigate("/");
   }
   
   const icons = [
-    { name: '알림', content: <Alert /> },
+    // { name: '알림', content: <Alert /> },
     { name: '/', content: '' },
     { name: '소개팅', content: <Sogae /> },
     { name: '동료', content: <Mate /> },
@@ -166,17 +175,20 @@ const Town: React.FC = () => {
   return (
     <div id="game_container" className={ssafytown_css.game_container}>
       <div id="sidebar" className={ssafytown_css.sidebar}>
+        <img style={{marginTop:'20px'}} src={`assets/사이드바/알림.png`} alt={`알림 icon`} onClick={() => handleAlertOpen()} />
         {icons.map((icon, index) => 
           icon.name === '/' ? 
           <hr key={index} /> : 
           <img src={`assets/사이드바/${icon.name}.png`} alt={`${icon.name} icon`} key={index} onClick={() => toggleSidebar(icon.name)} />
         )}
-        <img src={`assets/사이드바/로그아웃.png`} alt={`로그아웃 icon`} onClick={() => handleLogoutOpen()} />
+        <img style={{marginBottom:'20px'}} src={`assets/사이드바/로그아웃.png`} alt={`로그아웃 icon`} onClick={() => handleLogoutOpen()} />
       </div>
       {isSidebarOpen && <div id="navigation_bar" className={ssafytown_css.navigation_bar}>
         {icons.find(icon => icon.name === selectedIcon)?.content}
       </div>}
+  
       <div id="phaser_game" className={ssafytown_css.phaser_game} />
+      <Alert isOpen={isAlertModalOpen} onClose={handleAlertClose} />
       <Logout isOpen={isLogoutModalOpen} onClose={handleLogoutClose} onLogout={handleLogoutConfirm}/>
       <FirstQA isOpen={isFirstQAModalOpen} onClose={handleFirstQAClose} onConfirm={handleFirstQASubmit}/>
     </div>

@@ -12,6 +12,7 @@ import Cam from './sidebar/6cam';
 import Follow from './sidebar/7follow';
 import MyPage from './sidebar/8mypage';
 import Setting from './sidebar/9setting';
+import Logout from './sidebar/10logout';
 
 let character: Phaser.Physics.Arcade.Sprite;
 let cursors: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -100,15 +101,19 @@ const Town: React.FC = () => {
     setSelectedIcon(iconName);
   };
 
-  const handleLogoutClick = () => {
+  const handleLogoutOpen = () => {
     setLogoutModalOpen(true);
+  }
+
+  const handleLogoutClose = () => {
+    setLogoutModalOpen(false);
   }
 
   const handleLogoutConfirm = () => {
     setLogoutModalOpen(false);
     navigate("/");
   }
-
+  
   const icons = [
     { name: '알림', content: <Alert /> },
     { name: '/', content: '' },
@@ -122,7 +127,6 @@ const Town: React.FC = () => {
     { name: '/', content: '' },
     { name: '마이페이지', content: <MyPage /> },
     { name: '설정', content: <Setting /> },
-    { name: '로그아웃', content: '', onClick: handleLogoutClick },
   ];
 
   return (
@@ -131,20 +135,23 @@ const Town: React.FC = () => {
         {icons.map((icon, index) => 
           icon.name === '/' ? 
           <hr key={index} /> : 
-          <img src={`assets/사이드바/${icon.name}.png`} alt={`${icon.name} icon`} key={index} onClick={icon.onClick ? icon.onClick : () => toggleSidebar(icon.name)} />
+          <img src={`assets/사이드바/${icon.name}.png`} alt={`${icon.name} icon`} key={index} onClick={() => toggleSidebar(icon.name)} />
         )}
+        <img src={`assets/사이드바/로그아웃.png`} alt={`로그아웃 icon`} onClick={() => handleLogoutOpen()} />
       </div>
       {isSidebarOpen && <div id="navigation_bar" className={ssafytown_css.navigation_bar}>
         {icons.find(icon => icon.name === selectedIcon)?.content}
       </div>}
-      {isLogoutModalOpen && 
+  
+      {/* {isLogoutModalOpen && 
         <div>
           <p>정말 로그아웃 하시겠습니까?</p>
           <button onClick={handleLogoutConfirm}>네</button>
           <button onClick={() => setLogoutModalOpen(false)}>아니오</button>
         </div>
-      }
+      } */}
       <div id="phaser_game" className={ssafytown_css.phaser_game} />
+      <Logout isOpen={isLogoutModalOpen} onClose={handleLogoutClose} onLogout={handleLogoutConfirm}/>
     </div>
   );
 };

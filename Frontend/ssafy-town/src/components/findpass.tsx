@@ -2,6 +2,7 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import findpass_css from './findpass.module.css';
+import axios from 'axios';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -25,6 +26,17 @@ const FindPassword: React.FC = () => {
     onSubmit: (values) => {
       console.log(values);
       // Add 회원정보 찾기 logic here
+      axios({
+        method:'post',
+        url:'http://localhost:8080/user/~~~~',
+        data:values
+      })
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
     },
   });
 
@@ -36,16 +48,22 @@ const FindPassword: React.FC = () => {
         <div className={findpass_css.logo}/>
         <h1>비밀번호 찾기</h1>
         <form onSubmit={formik.handleSubmit}>
+          
+          <label className={findpass_css.split}>이름
+          <span style={{color:'darkgray'}}>
+          {formik.values.name==='' ? '이름을 입력해주세요.':null}{formik.values.name!=='' &&formik.touched.name && formik.errors.name ? formik.errors.name : null}</span>
+          </label>
           <input className={findpass_css.input} type="text" placeholder="이름" {...formik.getFieldProps('name')} />
-          {/* {formik.touched.name && formik.errors.name ? <div>{formik.errors.name}</div> : null} */}
-          <div className={findpass_css.error}>{formik.touched.name && formik.errors.name ? formik.errors.name : null}</div>
 
-          <input className={findpass_css.input} type="text" placeholder="이메일" {...formik.getFieldProps('email')} />
-          {/* {formik.touched.email && formik.errors.email ? <div>{formik.errors.email}</div> : null} */}
-          <div className={findpass_css.error}>{formik.touched.email && formik.errors.email ? formik.errors.email : null}</div>
 
-          {/* <button className={findpass_css.button} type="submit" disabled={!formik.isValid || formik.isSubmitting}>Find Password</button> */}
-          <button className={findpass_css.button} id="findpass" type="submit" color="skyblue" disabled={!formik.isValid || formik.isSubmitting}>확인</button>
+          <label className={findpass_css.split}>아이디
+            <span style={{color:'darkgray'}}>
+              {formik.values.email==='' ? '이메일을 입력해주세요.':null}{ formik.values.email!=='' &&formik.touched.email && formik.errors.email ? formik.errors.email : null}
+            </span>
+          </label>
+          <input className={findpass_css.input} type="text" placeholder="아이디" {...formik.getFieldProps('email')} />
+          <br />
+          {formik.isValid ? <button className={findpass_css.button} type="submit">확인</button> : <button className={findpass_css.button_disabled} type="submit" disabled>확인</button>}
         </form>
       </div>
     </div>

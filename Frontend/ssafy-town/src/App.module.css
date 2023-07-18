@@ -1,10 +1,15 @@
+* {
+  font-family: 'NeoDGM';
+  src: url('/public/fonts/neodgm.woff') format('woff');
+}
 .App {
   text-align: center;
 }
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+  user-select: none; 
+
 }
 
 @media (prefers-reduced-motion: no-preference) {

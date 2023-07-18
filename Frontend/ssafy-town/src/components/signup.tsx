@@ -65,6 +65,9 @@ const SignupForm = () => {
       })
     },
   });
+  // const emailcheck(email:string) => {
+  //   console.log(email)
+  // }
 
   return (
     <div className={signup_css.background}>
@@ -78,7 +81,6 @@ const SignupForm = () => {
           <label className={signup_css.split}>이름
           <span style={{color:'darkgray'}}>{formik.touched.name && formik.errors.name ? formik.errors.name : null}</span>
           </label>
-          
           <input className={signup_css.input} type="text" placeholder="이름" {...formik.getFieldProps('name')} />
 
           <label className={signup_css.split}>생년월일
@@ -112,6 +114,8 @@ const SignupForm = () => {
                 />
                 여성
               </label>
+              <p></p>
+              <p></p> {/* 대충 여백용 p */}
             </div>
           
           
@@ -123,10 +127,12 @@ const SignupForm = () => {
           
 
           <label className={signup_css.split}>아이디
-          <span style={{color:'darkgray'}}>{formik.touched.email && formik.errors.email ? formik.errors.email : null}</span>
+            <span style={{color:'darkgray'}}>
+              {formik.values.email==='' ? '이메일을 입력해주세요.':null}{ formik.values.email!=='' &&formik.touched.email && formik.errors.email ? formik.errors.email : null}
+            </span>
           </label>
-          <input className={signup_css.input} type="text" placeholder="이메일" {...formik.getFieldProps('email')} />
-          
+          <input className={signup_css.input} type="text" placeholder="아이디" {...formik.getFieldProps('email')} />
+          {/* <div onClick={emailcheck(formik.values.email)}>중복확인</div> */}
 
           <label className={signup_css.split}>비밀번호
           <span style={{color:'darkgray'}}>{formik.touched.password && formik.errors.password ? formik.errors.password : null}</span>
@@ -137,7 +143,6 @@ const SignupForm = () => {
           <span style={{color:'darkgray'}}>{formik.touched.confirmPassword && formik.errors.confirmPassword ? formik.errors.confirmPassword : null}</span>
           </label>
           <input className={signup_css.input} type="password" placeholder="비밀번호 확인" {...formik.getFieldProps('confirmPassword')} />
-          
 
           <label className={signup_css.split}>프로필 사진 등록(선택)</label>
           <input  className={signup_css.split} type="file" name="photo" onChange={(event) => {

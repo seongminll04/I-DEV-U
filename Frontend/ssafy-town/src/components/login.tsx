@@ -13,7 +13,7 @@ const Login: React.FC = () => {
     axios({
       method:'post',
       url:'http://localhost:8080/user/login',
-      data:{'id': userId, 'pw': userPassword,}
+      data:{'email': userId, 'password': userPassword,}
     })
     .then(res => {
       console.log(res)

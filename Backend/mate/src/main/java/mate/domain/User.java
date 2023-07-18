@@ -22,6 +22,9 @@ public class User {
     private String nickname;
     private Date birth;
     private int gender;
+    private String intro;
+    private String status;
+    private int grade;
     private String text;
 
     // 생성자, 기타 메서드 생략

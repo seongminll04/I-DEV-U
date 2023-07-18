@@ -26,8 +26,16 @@ public class UserController {
      * 회원가입
      */
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, String>> signup(@RequestBody User user) {
+    public ResponseEntity<Map<String, String>> signup(@RequestBody Map<String, String> map) {
         Map<String, String> res = new HashMap<>();
+
+        User user = new User();
+
+        user.setEmail(map.get("email"));
+        user.setPassword(map.get("password"));
+        user.setName(map.get("name"));
+        user.setNickname(map.get("nickname"));
+        user.setGender(Integer.parseInt(map.get("gender")));
 
         userService.save(user);
 

@@ -17,7 +17,7 @@ public class User {
     private int idx;
 
     private String email;
-    private String pw;
+    private String password;
     private String name;
     private String nickname;
     private Date birth;

@@ -75,7 +75,7 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> map) {
         Map<String, Object> res = new HashMap<>();
 
-        User loginUser = userService.login(map.get("id"), map.get("pw"));
+        User loginUser = userService.login(map.get("email"), map.get("password"));
 
         if (loginUser != null) {
             res.put("resmsg", "로그인 성공");

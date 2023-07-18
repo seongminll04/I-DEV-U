@@ -77,7 +77,7 @@ const Town: React.FC = () => {
 
   useEffect(() => {
     if(game) {
-      game.scale.resize(window.innerWidth * (isSidebarOpen ? 0.7 : 0.85), window.innerHeight);
+      game.scale.resize(window.innerWidth * (isSidebarOpen ? 0.8 : 0.95), window.innerHeight);
     }
   }, [isSidebarOpen, game]);
 

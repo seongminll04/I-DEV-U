@@ -85,10 +85,10 @@ const Town: React.FC = () => {
 
   const handleFirstQASubmit = async (surveyResults: any) => {
     try {
-      // 여기에 설문 결과를 서버에 제출하는 코드를 작성하세요.
+      // 여기에 설문 결과를 서버에 제출하는 코드를 작성
       // 예: const response = await axios.post('/api/submit_survey', surveyResults);
 
-      // 제출 후에는 모달을 닫습니다.
+      // 제출 후에는 모달을 끄기
       setFirstQAModalOpen(false);
     } catch (error) {
       console.error("설문 제출 실패", error);
@@ -127,13 +127,34 @@ const Town: React.FC = () => {
 
   useEffect(() => {
     if(game) {
-      game.scale.resize(window.innerWidth * (isSidebarOpen ? 0.8 : 0.95), window.innerHeight);
+      const resize = () => {
+        const width = window.innerWidth * (isSidebarOpen ? 0.7 : 0.95);
+        const height = window.innerHeight;
+        game.scale.resize(width, height);
+        game.scene.scenes[0].cameras.main.setViewport(0, 0, width, height);
+      }
+      
+      window.addEventListener('resize', resize);
+      resize();
+  
+      return () => {
+        window.removeEventListener('resize', resize);
+      };
     }
   }, [isSidebarOpen, game]);
+  
+  
 
   const toggleSidebar = (iconName: string) => {
-    setSidebarOpen(!isSidebarOpen);
-    setSelectedIcon(iconName);
+    if (iconName === selectedIcon) {
+      // 현재 선택된 아이콘과 같은 아이콘을 다시 클릭했을 때 네비게이션바 닫음
+      setSidebarOpen(false);
+      setSelectedIcon(null);
+    } else {
+      // 다른 아이콘을 클릭했을 때 다른 네비게이션바 바로뜸
+      setSidebarOpen(true);
+      setSelectedIcon(iconName);
+    }
   };
 
   const handleLogoutOpen = () => {

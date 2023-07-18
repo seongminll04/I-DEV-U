@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Phaser from 'phaser';
-// import ssafytown_css from './ssafytown.module.css';
+import ssafytown_css from './ssafytown.module.css';
 
 let character: Phaser.Physics.Arcade.Sprite;
 let cursors: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -52,7 +52,7 @@ const Town: React.FC = () => {
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
-      parent: "phaser-game",
+      parent: "phaser_game",
       width: window.innerWidth * (isSidebarOpen ? 0.7 : 0.85),
       height: window.innerHeight,
       physics: {
@@ -86,12 +86,12 @@ const Town: React.FC = () => {
   };
 
   return (
-    <div id="game-container">
-      <div id="sidebar">
+    <div id="game_container" className={ssafytown_css.game_container}>
+      <div id="sidebar" className={ssafytown_css.sidebar}>
         <img src="assets/side.png" alt="icon" onClick={toggleSidebar} />
       </div>
-      {isSidebarOpen && <div id="navigation-bar"></div>}
-      <div id="phaser-game" />
+      {isSidebarOpen && <div id="navigation_bar" className={ssafytown_css.navigation_bar}></div>}
+      <div id="phaser_game" className={ssafytown_css.phaser_game} />
     </div>
   );
 };

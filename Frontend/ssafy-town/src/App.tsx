@@ -6,11 +6,11 @@ import SignupForm from './components/signup';
 import Findpassword from './components/findpass';
 import KakaoCallback from './components/kakao';
 import Mypage from './components/mypage';
-
+import app_css from './App.module.css';
 function App() {
   return (
     <Router>
-      <div className="App">
+      <div className={app_css.App}>
         <Routes>
           {/* 로그인여부에 따른 login, home 이동  */}
           <Route path="/" element={<Login />} />

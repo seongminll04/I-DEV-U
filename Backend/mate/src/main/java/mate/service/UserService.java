@@ -28,8 +28,8 @@ public class UserService {
         return userRepository.findByNickname(nickname);
     }
 
-    public User login(String email, String pw) {
-        return userRepository.findByEmailAndPw(email, pw);
+    public User login(String email, String password) {
+        return userRepository.findByEmailAndPassword(email, password);
     }
 
     public void delete(User user) {

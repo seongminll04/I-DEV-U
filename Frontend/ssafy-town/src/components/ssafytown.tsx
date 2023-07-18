@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Phaser from 'phaser';
 import ssafytown_css from './ssafytown.module.css';
+
+import Alert from './sidebar/1alert';
+import Sogae from './sidebar/2sogae';
+import Mate from './sidebar/3mate';
+import Project from './sidebar/4project';
+import Chat from './sidebar/5chat';
+import Cam from './sidebar/6cam';
+import Follow from './sidebar/7follow';
+import MyPage from './sidebar/8mypage';
+import Setting from './sidebar/9setting';
 
 let character: Phaser.Physics.Arcade.Sprite;
 let cursors: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -46,8 +57,11 @@ function update(this: Phaser.Scene) {
 }
 
 const Town: React.FC = () => {
+  const navigate = useNavigate();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [game, setGame] = useState<Phaser.Game | null>(null);
+  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
 
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
@@ -81,30 +95,55 @@ const Town: React.FC = () => {
     }
   }, [isSidebarOpen, game]);
 
-  const toggleSidebar = () => {
+  const toggleSidebar = (iconName: string) => {
     setSidebarOpen(!isSidebarOpen);
+    setSelectedIcon(iconName);
   };
 
-  const iconNames = [
-    '알림',
-    '/',
-    '소개팅', '동료', '프로젝트',
-    '/', 
-    '채팅', '화상', '팔로우',
-    '/',
-    '마이페이지', '설정', '로그아웃'
+  const handleLogoutClick = () => {
+    setLogoutModalOpen(true);
+  }
+
+  const handleLogoutConfirm = () => {
+    setLogoutModalOpen(false);
+    navigate("/");
+  }
+
+  const icons = [
+    { name: '알림', content: <Alert /> },
+    { name: '/', content: '' },
+    { name: '소개팅', content: <Sogae /> },
+    { name: '동료', content: <Mate /> },
+    { name: '프로젝트', content: <Project /> },
+    { name: '/', content: '' },
+    { name: '채팅', content: <Chat /> },
+    { name: '화상', content: <Cam /> },
+    { name: '팔로우', content: <Follow /> },
+    { name: '/', content: '' },
+    { name: '마이페이지', content: <MyPage /> },
+    { name: '설정', content: <Setting /> },
+    { name: '로그아웃', content: '', onClick: handleLogoutClick },
   ];
 
   return (
     <div id="game_container" className={ssafytown_css.game_container}>
       <div id="sidebar" className={ssafytown_css.sidebar}>
-        {iconNames.map((iconName, index) => 
-          iconName === '/' ? 
+        {icons.map((icon, index) => 
+          icon.name === '/' ? 
           <hr key={index} /> : 
-          <img src={`assets/사이드바/${iconName}.png`} alt={`${iconName} icon`} key={index} onClick={toggleSidebar} />
+          <img src={`assets/사이드바/${icon.name}.png`} alt={`${icon.name} icon`} key={index} onClick={icon.onClick ? icon.onClick : () => toggleSidebar(icon.name)} />
         )}
       </div>
-      {isSidebarOpen && <div id="navigation_bar" className={ssafytown_css.navigation_bar}></div>}
+      {isSidebarOpen && <div id="navigation_bar" className={ssafytown_css.navigation_bar}>
+        {icons.find(icon => icon.name === selectedIcon)?.content}
+      </div>}
+      {isLogoutModalOpen && 
+        <div>
+          <p>정말 로그아웃 하시겠습니까?</p>
+          <button onClick={handleLogoutConfirm}>네</button>
+          <button onClick={() => setLogoutModalOpen(false)}>아니오</button>
+        </div>
+      }
       <div id="phaser_game" className={ssafytown_css.phaser_game} />
     </div>
   );

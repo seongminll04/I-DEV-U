@@ -7,31 +7,31 @@ import axios from 'axios';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
-    .email('유효하지 않은 이메일입니다.')
-    .max(50, '이메일의 글자 수는 50자 이내로 설정해주세요.')
-    .required('이메일을 입력해주세요.'),
+    .email('유효하지 않은 이메일입니다')
+    .max(50, '이메일의 글자 수는 50자 이내로 설정해주세요')
+    .required('이메일을 입력해주세요'),
   password: Yup.string()
     .min(8, '8~14 자리, 특수문자 사용불가')
     .max(14, '8~14 자리, 특수문자 사용불가')
-    .required('비밀번호를 입력해주세요.'),
+    .required('비밀번호를 입력해주세요'),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password') as any, null], '비밀번호가 일치하지 않습니다.')
-    .required('비밀번호를 확인해주세요.'),
+    .oneOf([Yup.ref('password') as any, null], '비밀번호가 일치하지 않음')
+    .required('비밀번호를 확인해주세요'),
   nickname: Yup.string()
     .min(2, '2~12 자리, 특수문자 사용불가')
     .max(12, '2~12 자리, 특수문자 사용불가')
-    .required('닉네임을 입력해주세요.'),
+    .required('닉네임을 입력해주세요'),
   name: Yup.string()
     .min(1, '1~12 자리, 특수문자 사용불가')
     .max(12, '1~12 자리, 특수문자 사용불가')
-    .matches(/^[가-힣]+$/, '한글로만 작성해주세요.')
-    .required('이름을 입력해주세요.'),
+    .matches(/^[가-힣]+$/, '한글로만 작성해주세요')
+    .required('이름을 입력해주세요'),
   birthday: Yup.string()
-    .matches(/^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, '유효하지 않은 생년월일입니다.')
-    .required('생년월일을 입력해주세요.'),
+    .matches(/^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, '유효하지 않은 생년월일입니다')
+    .required('생년월일을 입력해주세요'),
   gender: Yup.number()
-  .required('성별을 선택해주세요.')
-  .oneOf([1, 2], '유효한 성별을 선택해주세요.'),
+  .required('성별을 선택해주세요')
+  .oneOf([1, 2], '유효한 성별을 선택해주세요'),
 });
 
 
@@ -191,7 +191,7 @@ const SignupForm = () => {
           </div>
           <label className={signup_css.split}>아이디
             <span style={{color:'darkgray'}}>
-              {formik.values.email==='' ? '이메일을 입력해주세요.':null}{ formik.values.email!=='' &&formik.touched.email && formik.errors.email ? formik.errors.email : null}
+              {formik.values.email==='' ? '이메일을 입력해주세요':null}{ formik.values.email!=='' &&formik.touched.email && formik.errors.email ? formik.errors.email : null}
            {chkemail === 'yes' ? '확인완료': null}
             </span>
           </label>
@@ -215,7 +215,10 @@ const SignupForm = () => {
             formik.setFieldValue("photo", event?.currentTarget?.files?.[0]);
           }} />
           
-          {formik.isValid && chkemail==='yes' && chknickname==='yes' ? <button className={signup_css.button} type="submit">Sign Up</button> : <button className={signup_css.button_disabled} type="submit" disabled>Sign Up</button>}
+          {formik.isValid && chkemail==='yes' && chknickname==='yes' ? 
+          <button className={signup_css.button} type="submit">Sign Up</button> : 
+          <p style={{width:'100%'}}><button className={signup_css.button_disabled} type="submit" disabled>Sign Up</button><br/>
+          빈칸을 모두 채워주세요.</p>}
         </form>
       </div>
     </div>

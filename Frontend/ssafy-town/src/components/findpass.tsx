@@ -63,7 +63,9 @@ const FindPassword: React.FC = () => {
           </label>
           <input className={findpass_css.input} type="text" placeholder="아이디" {...formik.getFieldProps('email')} />
           <br />
-          {formik.isValid ? <button className={findpass_css.button} type="submit">확인</button> : <button className={findpass_css.button_disabled} type="submit" disabled>확인</button>}
+          {formik.isValid ? <p style={{width:'100%'}}><button className={findpass_css.button} type="submit">확인</button></p> : 
+          <p style={{width:'100%'}}><button className={findpass_css.button_disabled} type="submit" disabled>확인</button><br/>
+          빈 칸을 모두 채워주세요.</p>}
         </form>
       </div>
     </div>

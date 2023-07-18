@@ -1,0 +1,45 @@
+.modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* background-color: rgba(0, 0, 0, 0.5); 모달 위에 어두운 오버레이 효과를 주기 위한 설정 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.alert_modal {
+    background-color: rgba(109, 206, 245, 0.9);
+    border-radius: 1rem;
+    width:50%;
+    height: 460px;
+    padding: 10px;
+    box-sizing: border-box;
+    color : white;
+    overflow: auto;
+}
+
+.alert_modal::-webkit-scrollbar {
+    display: none; /* 크롬, 사파리, 오페라, 엣지 */
+}
+
+.button {
+    margin: 0 10px;
+    margin-top:100px;
+    display: flex;
+    justify-content: space-between;
+}
+.closebtn {
+    margin:10px;
+    text-align: left;
+    cursor: pointer;
+}
+.closebtn:hover{
+    color:gray;
+}
+
+.notice {
+    display: flex;
+    text-align: left;
+}

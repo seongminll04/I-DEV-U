@@ -5,7 +5,6 @@ import Town from './components/ssafytown';
 import SignupForm from './components/signup';
 import Findpassword from './components/findpass';
 import KakaoCallback from './components/kakao';
-import Mypage from './components/mypage';
 import app_css from './App.module.css';
 function App() {
   return (
@@ -19,7 +18,6 @@ function App() {
           <Route path="/findpassword" element={<Findpassword />} />
           <Route path="/home" element={<Town />} />
           <Route path="/kakao" element={<KakaoCallback />} />
-          <Route path="/Mypage" element={<Mypage />} />
         </Routes>
       </div>
     </Router>

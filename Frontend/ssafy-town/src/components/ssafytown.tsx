@@ -63,6 +63,7 @@ const Town: React.FC = () => {
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [game, setGame] = useState<Phaser.Game | null>(null);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [isAlertModalOpen, setAlertModalOpen] = useState(false);
 
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
@@ -108,14 +109,22 @@ const Town: React.FC = () => {
   const handleLogoutClose = () => {
     setLogoutModalOpen(false);
   }
+  const handleAlertOpen = () => {
+    setAlertModalOpen(true);
+  }
+
+  const handleAlertClose = () => {
+    setAlertModalOpen(false);
+  }
 
   const handleLogoutConfirm = () => {
     setLogoutModalOpen(false);
+    //로그아웃 나중에 로컬 토큰 삭제하는 것 추가
     navigate("/");
   }
   
   const icons = [
-    { name: '알림', content: <Alert /> },
+    // { name: '알림', content: <Alert /> },
     { name: '/', content: '' },
     { name: '소개팅', content: <Sogae /> },
     { name: '동료', content: <Mate /> },
@@ -132,6 +141,7 @@ const Town: React.FC = () => {
   return (
     <div id="game_container" className={ssafytown_css.game_container}>
       <div id="sidebar" className={ssafytown_css.sidebar}>
+        <img src={`assets/사이드바/알림.png`} alt={`알림 icon`} onClick={() => handleAlertOpen()} />
         {icons.map((icon, index) => 
           icon.name === '/' ? 
           <hr key={index} /> : 
@@ -143,14 +153,8 @@ const Town: React.FC = () => {
         {icons.find(icon => icon.name === selectedIcon)?.content}
       </div>}
   
-      {/* {isLogoutModalOpen && 
-        <div>
-          <p>정말 로그아웃 하시겠습니까?</p>
-          <button onClick={handleLogoutConfirm}>네</button>
-          <button onClick={() => setLogoutModalOpen(false)}>아니오</button>
-        </div>
-      } */}
       <div id="phaser_game" className={ssafytown_css.phaser_game} />
+      <Alert isOpen={isAlertModalOpen} onClose={handleAlertClose} />
       <Logout isOpen={isLogoutModalOpen} onClose={handleLogoutClose} onLogout={handleLogoutConfirm}/>
     </div>
   );

@@ -9,9 +9,10 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onLogout }) => {
   if (!isOpen) return null;
-
+    
   return (
-    <div className={logout_css.modal_overlay}>
+    <div className={logout_css.modal_overlay} onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+        if (e.target === e.currentTarget) {onClose()}}}>
         <div className={logout_css.logout_modal}>
         <h1>로그아웃 하시겠습니까?</h1>
             <div className={logout_css.button}>

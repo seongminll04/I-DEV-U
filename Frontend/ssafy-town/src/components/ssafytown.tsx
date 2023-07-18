@@ -141,13 +141,13 @@ const Town: React.FC = () => {
   return (
     <div id="game_container" className={ssafytown_css.game_container}>
       <div id="sidebar" className={ssafytown_css.sidebar}>
-        <img src={`assets/사이드바/알림.png`} alt={`알림 icon`} onClick={() => handleAlertOpen()} />
+        <img style={{marginTop:'20px'}} src={`assets/사이드바/알림.png`} alt={`알림 icon`} onClick={() => handleAlertOpen()} />
         {icons.map((icon, index) => 
           icon.name === '/' ? 
           <hr key={index} /> : 
           <img src={`assets/사이드바/${icon.name}.png`} alt={`${icon.name} icon`} key={index} onClick={() => toggleSidebar(icon.name)} />
         )}
-        <img src={`assets/사이드바/로그아웃.png`} alt={`로그아웃 icon`} onClick={() => handleLogoutOpen()} />
+        <img style={{marginBottom:'20px'}} src={`assets/사이드바/로그아웃.png`} alt={`로그아웃 icon`} onClick={() => handleLogoutOpen()} />
       </div>
       {isSidebarOpen && <div id="navigation_bar" className={ssafytown_css.navigation_bar}>
         {icons.find(icon => icon.name === selectedIcon)?.content}

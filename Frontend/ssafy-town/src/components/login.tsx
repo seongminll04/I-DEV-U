@@ -7,7 +7,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const [userId, setUserId] = useState(localStorage.getItem('savedId') || ''); // 로컬스토리지에 아이디 저장
   const [userPassword, setUserPassword] = useState('');
-  const [saveId, setSaveId] = useState(false); // 아이디 저장 버튼 off상태
+  const [saveId, setSaveId] = useState(Boolean(localStorage.getItem('savedId'))); // 아이디 저장되어있으면 버튼 on상태
 
   const handleLogin = async () => {
     axios({

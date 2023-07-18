@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Phaser from 'phaser';
 import ssafytown_css from './ssafytown.module.css';
+import FirstQA from './firstQA';
+import axios from 'axios';
 
 import Alert from './sidebar/1alert';
 import Sogae from './sidebar/2sogae';
@@ -63,6 +65,35 @@ const Town: React.FC = () => {
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [game, setGame] = useState<Phaser.Game | null>(null);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [isFirstQAModalOpen, setFirstQAModalOpen] = useState(false);  // 첫 설문
+
+  const checkFirstSurvey = async () => {
+    try {
+      const response = await axios.get('/api/check_survey');
+      if (response.data.need_survey) {
+        setFirstQAModalOpen(true);
+      }
+    } catch (error) {
+      console.error("설문 찾기 실패", error);
+      setFirstQAModalOpen(true);  //우선 지금은 백엔드 연결안한상태로 무조건 첫설문이 뜨게하자. 개발할때 거슬리면 이문장 주석처리하면됨
+    }
+  };
+
+  const handleFirstQAClose = () => {
+    setFirstQAModalOpen(false);
+  }
+
+  const handleFirstQASubmit = async (surveyResults: any) => {
+    try {
+      // 여기에 설문 결과를 서버에 제출하는 코드를 작성하세요.
+      // 예: const response = await axios.post('/api/submit_survey', surveyResults);
+
+      // 제출 후에는 모달을 닫습니다.
+      setFirstQAModalOpen(false);
+    } catch (error) {
+      console.error("설문 제출 실패", error);
+    }
+  }
 
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
@@ -83,9 +114,12 @@ const Town: React.FC = () => {
     const newGame = new Phaser.Game(config);
     setGame(newGame);
 
+    checkFirstSurvey();
+
     return () => {
       newGame.destroy(true);
     }
+
     // 아래 주석은 문제가 없는데 에러가 나올때 넣는 주석
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -142,16 +176,9 @@ const Town: React.FC = () => {
       {isSidebarOpen && <div id="navigation_bar" className={ssafytown_css.navigation_bar}>
         {icons.find(icon => icon.name === selectedIcon)?.content}
       </div>}
-  
-      {/* {isLogoutModalOpen && 
-        <div>
-          <p>정말 로그아웃 하시겠습니까?</p>
-          <button onClick={handleLogoutConfirm}>네</button>
-          <button onClick={() => setLogoutModalOpen(false)}>아니오</button>
-        </div>
-      } */}
       <div id="phaser_game" className={ssafytown_css.phaser_game} />
       <Logout isOpen={isLogoutModalOpen} onClose={handleLogoutClose} onLogout={handleLogoutConfirm}/>
+      <FirstQA isOpen={isFirstQAModalOpen} onClose={handleFirstQAClose} onConfirm={handleFirstQASubmit}/>
     </div>
   );
 };

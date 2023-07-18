@@ -64,7 +64,7 @@ const Town: React.FC = () => {
         update: update,
       },
     };
-  
+
     const newGame = new Phaser.Game(config);
     setGame(newGame);
 
@@ -85,10 +85,24 @@ const Town: React.FC = () => {
     setSidebarOpen(!isSidebarOpen);
   };
 
+  const iconNames = [
+    '알림',
+    '/',
+    '소개팅', '동료', '프로젝트',
+    '/', 
+    '채팅', '화상', '팔로우',
+    '/',
+    '마이페이지', '설정', '로그아웃'
+  ];
+
   return (
     <div id="game_container" className={ssafytown_css.game_container}>
       <div id="sidebar" className={ssafytown_css.sidebar}>
-        <img src="assets/사이드바/로그아웃.png" alt="icon" onClick={toggleSidebar} />
+        {iconNames.map((iconName, index) => 
+          iconName === '/' ? 
+          <hr key={index} /> : 
+          <img src={`assets/사이드바/${iconName}.png`} alt={`${iconName} icon`} key={index} onClick={toggleSidebar} />
+        )}
       </div>
       {isSidebarOpen && <div id="navigation_bar" className={ssafytown_css.navigation_bar}></div>}
       <div id="phaser_game" className={ssafytown_css.phaser_game} />

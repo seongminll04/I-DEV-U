@@ -56,7 +56,9 @@ const Login: React.FC = () => {
         </div>
         <button className={login_css.enter_login} onClick={handleLogin}>로그인</button>
         <hr className={login_css.separator}/>
-        <button className={login_css.kakao_login} onClick={handleKakaoLogin}></button>
+        <button className={login_css.kakao_login} onClick={handleKakaoLogin}> 
+        <img src="assets/kakao_logo.png" alt="" style={{width:'30px', height:'20px'}}/>
+        <span>카카오 로그인</span><p></p></button>
         <div className={login_css.checkContainer2}>
           <a className={login_css.link} href="/signup">회원가입</a>
           <a className={login_css.link} href="/findpassword">비밀번호 찾기</a>

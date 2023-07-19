@@ -45,8 +45,7 @@
   margin: 0.5em auto;
 }
 
-.enter_login,
-.kakao_login {
+.enter_login {
   background: rgb(109, 206, 245);
   color: black;
   font-size: 1em;
@@ -80,7 +79,20 @@
 }
 
 .kakao_login {
-  background: url('/public/assets/kakao_login_medium_wide.png') no-repeat;
+  background: #F7E600;
+  color: #3A1D1D;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1em;
+  font-weight: bold;
+  margin: 0.5em;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 3px;
+  width: 80%;
+  height: 48px;
+  transition: all 0.3s ease;
   background-size: cover;
   height: 48px;
 }

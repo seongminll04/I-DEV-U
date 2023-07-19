@@ -143,7 +143,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
               <span>닉네임</span>
             </div>
             <div className={mypage_modal_css.mypage_nickname}>
-              <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('nickname')}  onChange={(event) => {formik.handleChange(event); setchknickname('no'); console.log(chknickname)}} />
+              <input style={{width:'82%'}} type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('nickname')}  onChange={(event) => {formik.handleChange(event); setchknickname('no'); console.log(chknickname)}} />
               <div className={mypage_modal_css.mypage_check_nickname_btn} onClick={()=>nicknamecheck(formik.values.nickname)}>중복확인</div>
             </div>
 

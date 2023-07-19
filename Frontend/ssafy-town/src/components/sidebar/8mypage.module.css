@@ -1,16 +1,3 @@
-.background {
-  background: url(/public/assets/loginimage.png) no-repeat center center fixed; 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100vw;
-}
-
 .mypage_modal {
   background-color: #fff;
   padding: 20px;

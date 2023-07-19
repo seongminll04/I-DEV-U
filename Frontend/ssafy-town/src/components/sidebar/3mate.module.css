@@ -1,4 +1,4 @@
-.mypage_modal {
+.mate_modal {
     background-color: #fff;
     padding: 5px;
     border-radius: 10px;
@@ -32,35 +32,6 @@
     background: dodgerblue;
 }
 
-.pagination {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.pagination button {
-    width: 20px;
-    height: 20px;
-    font-size: 15px;
-    border-radius: 50%;
-    border: none;
-    background-color: white;
-    color: black;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.pagination button.current-page {
-    background-color: deepskyblue;
-}
-
-.pagination button.arrow-btn {
-    background-color: transparent;
-    width: auto;
-    border-radius: 0;
-}
-
 .table {
     width: 90%;
     border-collapse: collapse; /* 테두리 겹치게 */
@@ -80,17 +51,4 @@
 
 .table .matchRate {
     width: 25%;
-}
-
-.redText {
-    color: red;
-}
-
-.selectfilter {
-    font-size: 20px
-}
-
-.selectbox {
-    width: 150px;
-    height: 30px;
 }

@@ -116,10 +116,10 @@ const handleFilterSearch = () => {
 
   return (
     <div className={sogae_css.mypage_modal}>
-      <div className={sogae_css.mypage_welcome}>
-        <div>
+      <div>
+      
           <h1>if(소개팅) {"{🤍=❤️}"}</h1>
-        </div>
+      
 
         {!data ? (
           <>

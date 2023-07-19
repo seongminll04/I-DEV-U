@@ -86,7 +86,7 @@ const Mypage: React.FC = () => {
   }
 
   return (
-    <div className={mypage_css.mypage_background}>
+    <div>
       <div className={mypage_css.mypage_modal} id={mypage_css.modal}>
         <div className={mypage_css.mypage_photo}>
           <img src="assets/default_profile.png" alt="" style={{width:'100px', height:'100px'}}/>

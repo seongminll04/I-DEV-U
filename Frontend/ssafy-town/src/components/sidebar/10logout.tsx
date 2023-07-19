@@ -15,9 +15,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onLogout }) => {
         if (e.target === e.currentTarget) {onClose()}}}>
         <div className={logout_css.logout_modal}>
         <h1>로그아웃 하시겠습니까?</h1>
-            <div className={logout_css.button}>
-                <button onClick={onLogout}>로그아웃</button>
-                <button onClick={onClose}>뒤로가기</button>
+            <div className={logout_css.button_icon}>
+                <button className={logout_css.button} onClick={onLogout}>로그아웃</button>
+                <button className={logout_css.button} onClick={onClose}>뒤로가기</button>
             </div>
         </div>
     </div>

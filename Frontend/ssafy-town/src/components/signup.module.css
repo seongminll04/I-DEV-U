@@ -107,7 +107,8 @@
 }
 
 .chk_input {
-  width:15%;
+  width:10%;
+  padding: 3px;
   border:solid 1px black;
   border-radius: 0.5rem;
   background-color: rgb(109, 206, 245);

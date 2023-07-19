@@ -27,14 +27,28 @@
 }
 .closebtn {
     margin:10px;
-    text-align: left;
+    text-align: right;
     cursor: pointer;
 }
-.closebtn:hover{
+.backbtn {
+    margin:10px;
+    margin-top: -25px;
+    text-align: left;
+    /* cursor: pointer; */
+}
+.closebtn:hover,
+.backbtn:hover,
+.movebtn:hover{
     color:gray;
+    cursor: pointer;
 }
 
 .notice {
     display: flex;
-    text-align: left;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+.container {
+    background-color: black;
 }

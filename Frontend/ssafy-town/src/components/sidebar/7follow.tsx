@@ -1,11 +1,16 @@
 import React from 'react';
 
-const Alert = () => {
+const Follow = () => {
   return (
     <div>
-      안녕7
+      <h1>내 친구목록</h1>
+      <hr />
+      <div>
+        <p>1</p>
+        <p>2</p>
+      </div>
     </div>
   );
 };
 
-export default Alert;
+export default Follow;

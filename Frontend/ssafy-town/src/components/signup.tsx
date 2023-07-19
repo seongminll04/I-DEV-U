@@ -191,7 +191,7 @@ const SignupForm = () => {
           </div>
           <label className={signup_css.split}>아이디
             <span style={{color:'darkgray'}}>
-              {formik.values.email==='' ? '이메일을 입력해주세요':null}{ formik.values.email!=='' &&formik.touched.email && formik.errors.email ? formik.errors.email : null}
+              {formik.values.email==='' ? '이메일 형식으로 입력해주세요':null}{ formik.values.email!=='' &&formik.touched.email && formik.errors.email ? formik.errors.email : null}
            {chkemail === 'yes' ? '확인완료': null}
             </span>
           </label>

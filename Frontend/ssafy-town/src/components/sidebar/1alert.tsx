@@ -9,7 +9,8 @@ interface ModalProps {
 
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
-  const [page, setpage] = useState<Number>(0);
+  const [page, setpage] = useState<Number>(0); 
+  // 0 처음 1 공지전체 2 알림전체    99 0->공지상세 98 0->알림상세 97 공지전체->공지상세 96 알림전체->알림상세
   const [search, setsearch] = useState<string>('');
   const [nowsearch, setnowsearch] = useState<boolean>(false);
   const searchdata = () => {

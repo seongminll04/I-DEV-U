@@ -15,8 +15,8 @@
 .mypage_alert_modal {
   background-color: rgba(109, 206, 245, 1);
   border-radius: 1rem;
-  width: 700px;
-  height: 560px;
+  width: 400px;
+  height: 460px;
   padding: 20px;
   box-sizing: border-box;
   color : white;
@@ -74,7 +74,7 @@
 
 /* 닉네임찾기 감싸는 박스 */
 .mypage_nickname {
-  width: 84%; 
+  width: 83%; 
   display: flex;
   align-items: center;
 }

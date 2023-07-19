@@ -179,7 +179,6 @@ const Town: React.FC = () => {
   }
   
   const icons = [
-    // { name: '알림', content: <Alert /> },
     { name: '/', content: '' },
     { name: '소개팅', content: <Sogae /> },
     { name: '동료', content: <Mate /> },
@@ -208,7 +207,7 @@ const Town: React.FC = () => {
         {icons.find(icon => icon.name === selectedIcon)?.content}
       </div>}
   
-      <div id="phaser_game" className={ssafytown_css.phaser_game} />
+      <div id="phaser_game" className={ssafytown_css.phaser_game} onClick={()=> {if(isSidebarOpen){setSidebarOpen(false)}}} />
       <Alert isOpen={isAlertModalOpen} onClose={handleAlertClose} />
       <Logout isOpen={isLogoutModalOpen} onClose={handleLogoutClose} onLogout={handleLogoutConfirm}/>
       <FirstQA isOpen={isFirstQAModalOpen} onClose={handleFirstQAClose} onConfirm={handleFirstQASubmit}/>

@@ -71,8 +71,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
   }  
 
   const nicknamecheck = (nickname:string) => {
-    setchknickname('no');
-
+    
     if (nickname==='') {
       alert('닉네임을 입력해주세요.')
     }
@@ -85,6 +84,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
       .then(()=>{
         setchknickname('yes')
         alert('사용할 수 있는 닉네임입니다.')
+        console.log(chknickname)
       })
       .catch(() => {
         alert('중복된 닉네임입니다.')
@@ -112,7 +112,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
       // Add signup logic here
     },
   });
-
+  
   if (!isOpen) return null;
   
   return (
@@ -143,7 +143,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
               <span>닉네임</span>
             </div>
             <div className={mypage_modal_css.mypage_nickname}>
-              <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('nickname')} />
+              <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('nickname')}  onChange={(event) => {formik.handleChange(event); setchknickname('no'); console.log(chknickname)}} />
               <div className={mypage_modal_css.mypage_check_nickname_btn} onClick={()=>nicknamecheck(formik.values.nickname)}>중복확인</div>
             </div>
 
@@ -159,7 +159,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
               <span>사진</span>
             </div>
             <input type="file" className={mypage_modal_css.mypage_input}/>
-            <button className={mypage_modal_css.mypage_button} type="submit" disabled={!formik.isValid || formik.isSubmitting}>수정</button>
+            <button className={mypage_modal_css.mypage_button} type="submit" disabled={chknickname==='no' ||!formik.isValid || formik.isSubmitting}>수정</button>
           </form>
           <p className={mypage_modal_css.mypage_withdrawal} onClick={goWithdrawal}>회원탈퇴</p>
         </div>

@@ -46,7 +46,7 @@ const FindPassword: React.FC = () => {
       <a className={findpass_css.link} href="/login">뒤로가기</a>
         <div className={findpass_css.logo}/>
         <h1>비밀번호 찾기</h1>
-        <form onSubmit={formik.handleSubmit}>
+        <form className={findpass_css.findpass_form} onSubmit={formik.handleSubmit}>
           
           <label className={findpass_css.split}>이름
           <span style={{color:'darkgray'}}>

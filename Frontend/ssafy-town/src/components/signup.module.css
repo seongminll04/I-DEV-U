@@ -113,3 +113,10 @@
   border-radius: 0.5rem;
   background-color: rgb(109, 206, 245);
 }
+
+.signup_form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}

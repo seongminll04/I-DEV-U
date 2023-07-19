@@ -46,9 +46,11 @@
 .notice {
     display: flex;
     justify-content: space-between;
-    margin: 20px;
+    margin: 0px 20px;
 }
 
 .container {
     background-color: black;
+    height: 170px;
+    border-radius: 1rem;
 }

@@ -139,7 +139,6 @@ const SignupForm = () => {
         <div className={signup_css.logo}/>
 
         <form className={signup_css.signup_form} onSubmit={formik.handleSubmit}>
-          
           <label className={signup_css.split}>이름
           <span style={{color:'darkgray'}}>{formik.touched.name && formik.errors.name ? formik.errors.name : null}</span>
           </label>

@@ -10,8 +10,12 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
   const [page, setpage] = useState<Number>(0);
+  const [search, setsearch] = useState<string>('');
+  const [nowsearch, setnowsearch] = useState<boolean>(false);
   const searchdata = () => {
+    setnowsearch(true)
     // 여기서 모든데이터 중 검색어랑 일치하는 것만 리스트화 하는 코드작성
+
   }
   if (!isOpen) return null;
   
@@ -33,12 +37,12 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
 
   return (
     <div className={alert_css.modal_overlay}  onClick={(e: React.MouseEvent<HTMLDivElement>) => {
-      if (e.target === e.currentTarget) {setpage(0); onClose()}}}>
+      if (e.target === e.currentTarget) {setpage(0);setnowsearch(false); setsearch(''); onClose()}}}>
         <div className={alert_css.alert_modal}>
-        <p className={alert_css.closebtn} onClick={() => {setpage(0); onClose()}}>닫기</p>
-        
+        <p className={alert_css.closebtn} onClick={() => {setpage(0);setnowsearch(false); setsearch(''); onClose()}}>닫기</p>
         {page===0 ? 
         <div>
+          <h1 style={{margin:'-20px 0 20px 0'}}>공지사항 / 알림</h1>
           <div className={alert_css.container}>
             <div className={alert_css.notice}>
               <p>공지사항</p>
@@ -50,7 +54,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
               <p>07/19 00:00</p>
             </div>
           </div>
-          <hr />
+          <hr style={{border:'1px solid black'}}/>
           <div className={alert_css.container}>
             <div className={alert_css.notice}>
               <p>알림</p>
@@ -65,24 +69,43 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
         </div>
       : 
       <div>
-        <p className={alert_css.backbtn} onClick={() => {setpage(0)}}>돌아가기</p>
+        <p className={alert_css.backbtn} onClick={() => {setpage(0); setnowsearch(false); setsearch('')}}>돌아가기</p>
         {page===1 ? 
         <div>
-          <h1>공지사항 전체보기</h1>
-          <div style={{display:'flex', justifyContent:'flex-end'}}>
-            검색: 
-            <input type="text" onChange={searchdata}/>
-          </div>
+          <h1 style={{margin:'-20px 0 20px 0'}}>공지사항</h1>
           <hr />
+          <div style={{display:'flex', justifyContent:'space-between'}}>
+            {!nowsearch ? <span></span> : <span onClick={()=> {setsearch(''); setnowsearch(false)}}>검색취소</span>}
+            <div>
+            <input type="text" value={search} onChange={(event) => {setsearch(event.target.value);}}/>
+            <button onClick={searchdata}>검색</button>
+            </div>
+          </div>
+     
+          <br />
+          <div className={alert_css.notice}>
+             전체 or 검색 결과 리스트 출력하는 곳
+          </div>
+          
         </div>
         :
         <div>
-          <h1>알림 전체보기</h1>
-          <div style={{display:'flex', justifyContent:'flex-end'}}>
-            검색: 
-            <input type="text" onChange={searchdata}/>
+          <h1 style={{margin:'-20px 0 20px 0'}}>알림</h1>
+          <div style={{display:'flex', justifyContent:'space-between'}}>
+            {!nowsearch ? <span></span> : <span onClick={()=> {setsearch(''); setnowsearch(false)}}>검색취소</span>}
+            <div>
+            <input type="text" value={search} onChange={(event) => {setsearch(event.target.value);}}/>
+            <button onClick={searchdata}>검색</button>
+            </div>
           </div>
-          <hr />
+
+          <br />
+          <div className={alert_css.notice}>
+
+            전체 or 검색 결과 리스트 출력하는 곳
+ 
+          </div>
+
         </div>
         }
       </div>

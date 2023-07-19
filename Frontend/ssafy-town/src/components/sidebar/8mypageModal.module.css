@@ -74,19 +74,20 @@
 
 /* 닉네임찾기 감싸는 박스 */
 .mypage_nickname {
-  width: 84%; 
+  width: 80%; 
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 /* 닉네임 중복체크 버튼 */
 .mypage_check_nickname_btn {
-  width: 10%;
-  min-width: 32px;
+  width: 32px;
   padding: 3px;
   border: solid 1px black;
   border-radius: 0.5rem;
   background-color: rgb(109, 206, 245);
+  margin-right: 10px;
 }
 
 /* 수정 버튼 */

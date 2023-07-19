@@ -1,7 +1,6 @@
 import React from 'react';
-import alert_css from './8mypageModal.module.css';
+import mypage_modal_css from './8mypageModal.module.css';
 import axios from 'axios';
-import mypage_css from './8mypage.module.css';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -11,7 +10,7 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
-  
+
   const validationSchema = Yup.object().shape({
     password: Yup.string()
       .min(8, '8~14 자리, 특수문자 사용불가')
@@ -39,6 +38,37 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
       grade: 2, // 1 : 관리자(운영자), 2 : 일반
     };
 
+    // const user1 = async () => {
+    //   axios({
+    //     method: 'get',
+    //     url: 'http://localhost:8080/notice/?~~~~~',
+    //   })
+    //   .then(res => {
+    //     console.log(res)
+    //     // const alert_data=res.data 
+    //   })
+    //   .catch(err => {
+    //     console.log(err)
+    //     console.log("유저 정보가 정확하지 않음")
+    //   })
+    // };
+
+    const goWithdrawal = () => {
+      // 회원탈퇴 버튼 누르면 실행
+      console.log("회원탈퇴 버튼 누름");
+      // axios({
+      //   method: 'put',
+      //   url: 'http://localhost:8080/notice/?~~~~~',
+      // })
+      // .then(() => {
+      //   console.log("탈퇴처리 되었습니다.")
+      // })
+      // .catch(err => {
+      //   console.log(err)
+      //   console.log("탈퇴처리 중 오류가 발생함")
+      // })
+    }  
+
   const formik = useFormik({
     initialValues: {
       email: user.email,
@@ -56,63 +86,52 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
       // Add signup logic here
     },
   });
-
+  
   if (!isOpen) return null;
   
-  // 모달창이 열렸다면 현재 접속중인 유저 데이터 불러오기
-  // else {
-  //   axios({
-  //     method:'get',
-  //     url:'http://localhost:8080/notice/?~~~~~',
-  //   })
-  //   .then(res => {
-  //     console.log(res)
-  //     // const alert_data=res.data 
-  //   })
-  //   .catch(err => {
-  //     console.log(err)
-  //   })
-  // }
-
   return (
-    <div className={alert_css.modal_overlay}  onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+    <div className={mypage_modal_css.mypage_modal_overlay}  onClick={(e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) {onClose()}}}>
-        <div className={alert_css.alert_modal}>
-          <p className={alert_css.closebtn} onClick={onClose}>닫기</p>
-          <h1>공지사항</h1>
+        <div className={mypage_modal_css.mypage_alert_modal}>
+          <p className={mypage_modal_css.mypage_closeBtn} onClick={onClose}>닫기</p>
+          <h1>회원정보 수정</h1>
           <hr/>
-          <form id="mypage-form" onSubmit={formik.handleSubmit}>
-            <div className={mypage_css.mypage_info}>
+          <form id={mypage_modal_css.mypage_form} onSubmit={formik.handleSubmit}>
+            <div className={mypage_modal_css.mypage_info}>
               <span>이름 : </span>
-              <input id="name" type="text" className={mypage_css.input} {...formik.getFieldProps('name')} readOnly/>
+              <input id="name" type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('name')} readOnly/>
             </div>
-            <div className={mypage_css.mypage_info}>
+            <div className={mypage_modal_css.mypage_info}>
               <span>이메일 : </span>
-              <input type="text" className={mypage_css.input} {...formik.getFieldProps('email')} readOnly/>
+              <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('email')} readOnly/>
             </div>
-            <div className={mypage_css.mypage_info}>
+            <div className={mypage_modal_css.mypage_info}>
               <span>생년월일 : </span>
-              <input type="text" className={mypage_css.input} {...formik.getFieldProps('birthday')} readOnly/>
+              <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('birthday')} readOnly/>
             </div>
-            <div className={mypage_css.mypage_info}>
+            <div className={mypage_modal_css.mypage_info}>
               <span>성별 : </span>
-              <input type="text" className={mypage_css.input} {...formik.getFieldProps('gender')} readOnly/>
+              <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('gender')} readOnly/>
             </div>
-            <div className={mypage_css.mypage_info}>
+            <div className={mypage_modal_css.mypage_info}>
               <span>닉네임 : </span>
-              <input type="text" className={mypage_css.input} {...formik.getFieldProps('nickname')} />
+              <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('nickname')} />
             </div>
-            <div className={mypage_css.mypage_info}>
+            <div className={mypage_modal_css.mypage_info}>
               <span>비밀번호 : </span>
-              <input type="password" className={mypage_css.input} {...formik.getFieldProps('password')} />
+              <input type="password" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('password')} />
             </div>
-            <div className={mypage_css.mypage_info}>
-              <label htmlFor="confirmPassword">비밀번호 확인 : </label>
-              <input id="confirmPassword" type="password" className={mypage_css.input} {...formik.getFieldProps('confirmPassword')} placeholder="비밀번호 확인"/>
+            <div className={mypage_modal_css.mypage_info}>
+              <span>비밀번호 확인: </span>
+              <input type="password" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('confirmPassword')} placeholder="비밀번호 확인"/>
             </div>
-            {/*사진 :  <input type="file" className={mypage_css.input}/> */}
-            <button className={mypage_css.button} type="submit" disabled={!formik.isValid || formik.isSubmitting}>수정</button>
+            <div className={mypage_modal_css.mypage_info}>
+              <span>사진 : </span>
+              <input type="file" className={mypage_modal_css.mypage_input}/>
+            </div>
+            <button className={mypage_modal_css.mypage_button} type="submit" disabled={!formik.isValid || formik.isSubmitting}>수정</button>
           </form>
+          <p className={mypage_modal_css.mypage_withdrawal} onClick={goWithdrawal}>회원탈퇴</p>
         </div>
     </div>
   );

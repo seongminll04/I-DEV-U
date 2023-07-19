@@ -88,17 +88,16 @@ const Mypage: React.FC = () => {
   return (
     <div className={mypage_css.mypage_background}>
       <div className={mypage_css.mypage_modal} id={mypage_css.modal}>
-      <a className={mypage_css.link} href="/findpassword">뒤로가기</a>
-        <div className={mypage_css.mypage_welcome}>
-          <div>
+        <div className={mypage_css.mypage_view}>
+          <div className={mypage_css.mypage_welcome}>
           안녕하세요! {user.name} 님
           </div>
           <button className={mypage_css.button} onClick={handleModalOpen}>회원정보 수정</button>
           <div className={mypage_css.mypage_togglebox}>
             <div className={mypage_css.mypage_toggle}>
               {isOn === false ?
-              <Desc><div className='OFF'>초대 거부</div></Desc> :
-              <Desc><div className='ON'>초대 수락</div></Desc>}
+              <Desc><div className={mypage_css.OFF}>초대 거부</div></Desc> :
+              <Desc><div className={mypage_css.ON}>초대 수락</div></Desc>}
               <ToggleContainer
                 // 클릭하면 토글이 켜진 상태(isOn)를 boolean 타입으로 변경하는 메소드가 실행
                 onClick={toggleHandler}

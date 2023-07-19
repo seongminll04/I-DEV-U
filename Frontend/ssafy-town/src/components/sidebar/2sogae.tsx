@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import sogae_css from './2sogae.module.css';
+import SecondQAModal from './secondQA';
+
 
 type User = {
   name: string;
@@ -10,6 +12,7 @@ type User = {
 const ITEMS_PER_PAGE = 10;
 
 const Sogae: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [data, setData] = useState<any | null>(null);
   const [users, setUsers] = useState<User[]>([
     { name: "홍길동1", matchRate: 95 },
@@ -29,14 +32,14 @@ const Sogae: React.FC = () => {
 
   useEffect(() => {
     // 소개팅 등록이 되어있는 유저인가?
-    axios.get("/date/detail/$user_idx").then(response => { //${user_idx} 로 jwt 토큰에서 뽑아오는거 나중에 jwt되면 구현
+    axios.get("/date/survey/$user_idx").then(response => { //${user_idx} 로 jwt 토큰에서 뽑아오는거 나중에 jwt되면 구현
       setData(response.data);
     }).catch(error => {
       console.error("등록 확인 실패", error);
     });
 
-    // 유저 100명의 목록 가져오기
-    axios.get("/date/list").then(response => {
+    // 유저 100명의 목록 가져오기 , 나중에 백엔드가 완성되면 정렬도 없애고
+    axios.get("/date/list/$user_idx").then(response => {
       const sortedUsers = response.data.sort((a: User, b: User) => b.matchRate - a.matchRate);
       setUsers(sortedUsers);
     }).catch(error => {
@@ -47,6 +50,19 @@ const Sogae: React.FC = () => {
   useEffect(() => {
     setTotalItems(users.length);
   }, [users]);
+
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleConfirm = () => {
+    // 여기에 onConfirm 로직을 작성하세요.
+};
+
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -67,7 +83,7 @@ const Sogae: React.FC = () => {
 
         {!data && (
           <>
-            <button className={sogae_css.button}>등록하기</button>
+            <button className={sogae_css.button} onClick={handleModalOpen}>등록하기</button>
             <div>
               <span className={sogae_css.redText}>소개팅 정보가 등록되어 있지 않습니다.</span><br/>
               <span className={sogae_css.redText}> 추가 사용을 원하시면 정보를 등록하셔야합니다.</span>
@@ -94,7 +110,7 @@ const Sogae: React.FC = () => {
             </tbody>
           </table>
         )}
-        
+
         <div className={sogae_css.pagination}>
           {Array.from({ length: Math.ceil(totalItems / ITEMS_PER_PAGE) }, (_, i) => i).map((num) => (
             <button
@@ -107,6 +123,7 @@ const Sogae: React.FC = () => {
           ))}
         </div>
         <button className={sogae_css.button}>매칭</button>
+        <SecondQAModal isOpen={isModalOpen} onClose={handleModalClose} onConfirm={handleConfirm} />
       </div>
     </div>
   );

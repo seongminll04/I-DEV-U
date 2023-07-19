@@ -98,3 +98,12 @@
 .redText {
     color: red;
 }
+
+.selectfilter {
+    font-size: 20px
+}
+
+.selectbox {
+    width: 150px;
+    height: 30px;
+}

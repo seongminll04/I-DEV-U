@@ -9,11 +9,15 @@ type User = {
   matchRate: number;
 };
 
+const MAX_FILTERS = 4;
 const ITEMS_PER_PAGE = 10;
+const words = ["#가", "#나", "#다", "#라", "#마", "#바", "#사"];
 
 const Sogae: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [data, setData] = useState<any | null>(null);
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  // const [data, setData] = useState<any | null>(null); //실제 상태용 데이터의 상황에따라 변화
+  const [data, setData] = useState<any>(true); //개발용 항상 ok인 상태
   const [users, setUsers] = useState<User[]>([
     { name: "홍길동1", matchRate: 95 },
     { name: "홍길동2", matchRate: 90 },
@@ -29,6 +33,7 @@ const Sogae: React.FC = () => {
   ].sort((a, b) => b.matchRate - a.matchRate));
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(users.length);
+  const [selectedWord, setSelectedWord] = useState<string | null>(null);
 
   useEffect(() => {
     // 소개팅 등록이 되어있는 유저인가?
@@ -60,8 +65,43 @@ const Sogae: React.FC = () => {
   };
 
   const handleConfirm = () => {
-    // 여기에 onConfirm 로직을 작성하세요.
+    // 여기에 onConfirm 했을때의 로직
 };
+
+const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const wordValue = e.target.value;
+
+  setSelectedWord(wordValue);
+
+  // 필터 추가 및 제거 로직
+  if (selectedFilters.includes(wordValue)) {
+    // 단어가 이미 선택되어 있다면 필터에서 제거
+    setSelectedFilters((prevFilters) => prevFilters.filter(filter => filter !== wordValue));
+  } else if (selectedFilters.length < MAX_FILTERS) {
+    // 최대 필터 수를 초과하지 않았다면 필터에 추가
+    setSelectedFilters((prevFilters) => [...prevFilters, wordValue]);
+  } else {
+    // 최대 필터 수를 초과했을 때 경고 메시지 출력 
+    alert(`최대 ${MAX_FILTERS}개의 필터까지만 선택 가능합니다.`);
+  }
+};
+
+const handleFilterSearch = () => {
+  // 필터된 요청을 서버에 보냅니다.
+  axios.get(`/date/filteredList/$user_idx`, {
+    params: {
+      filters: selectedFilters // 필터 정보를 params로 보내고
+    }
+  })
+  .then(response => {
+    const sortedUsers = response.data.sort((a: User, b: User) => b.matchRate - a.matchRate);
+    setUsers(sortedUsers);
+  })
+  .catch(error => {
+    console.error("필터링 실패", error);
+  });
+};
+
 
 
   const handlePageChange = (pageNumber: number) => {
@@ -81,7 +121,7 @@ const Sogae: React.FC = () => {
           <h1>if(소개팅) {"{🤍=❤️}"}</h1>
         </div>
 
-        {!data && (
+        {!data ? (
           <>
             <button className={sogae_css.button} onClick={handleModalOpen}>등록하기</button>
             <div>
@@ -90,6 +130,27 @@ const Sogae: React.FC = () => {
               <br/><br/>
             </div>
           </>
+        ) : (
+          <div><br/>
+            <div>
+              <label htmlFor="wordFilterSelect" className={sogae_css.selectfilter}>필터: </label>
+              <select 
+                id="wordFilterSelect" 
+                value={selectedWord || ""}
+                onChange={handleSelectChange}
+                className={sogae_css.selectbox}
+              >
+                <option value="" disabled>선택하세요</option>
+                {words.map(word => (
+                  <option key={word} value={word}>{word}</option>
+                ))}
+              </select>
+            </div><br/>
+            <div className={sogae_css.selectfilter}>
+              선택된 필터: {selectedFilters.join(', ')}
+            </div>
+            <button onClick={handleFilterSearch} className={sogae_css.button}>필터로 검색하기</button>
+          </div>
         )}
 
         {users.length > 0 && (

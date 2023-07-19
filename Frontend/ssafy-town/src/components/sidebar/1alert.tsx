@@ -48,7 +48,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
               <p>공지사항</p>
                 <p className={alert_css.movebtn} onClick={() => setpage(1)}>전체보기</p>
             </div>
-            <div className={alert_css.notice}>
+            <div onClick={()=> {setpage(99)}} className={alert_css.notice}>
               <p>1</p>
               <p>~~~~에 점검 진행합니다.~~~~에 점검 진행합니다.</p>
               <p>07/19 00:00</p>
@@ -60,14 +60,44 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
               <p>알림</p>
                 <p className={alert_css.movebtn} onClick={() => setpage(2)}>전체보기</p>
             </div>
-            <div className={alert_css.notice}>
+            <div onClick={()=> {setpage(98)}} className={alert_css.notice}>
               <p>1</p>
               <p>~~~~에 점검 진행합니다.~~~~에 점검 진행합니다.</p>
               <p>07/19 00:00</p>
             </div>
           </div>
         </div>
-      : 
+      : page===99 ? // 첫화면에서 공지사항 상세정보 접근시
+      <div>
+        <p className={alert_css.backbtn} onClick={() => {setpage(0); setnowsearch(false); setsearch('')}}>돌아가기</p>
+        <div>
+          <p>공지사항 상세정보</p>
+        </div> 
+      </div>
+      
+      : page===98 ? // 첫화면에서 알림 상세정보 접근시
+      <div>
+        <p className={alert_css.backbtn} onClick={() => {setpage(0); setnowsearch(false); setsearch('')}}>돌아가기</p>
+        <div>
+          <p>알림 상세정보</p>
+        </div> 
+      </div>
+      : page===97 ? // 공지 전체보기에서 공지사항 상세정보 접근시
+      <div>
+        <p className={alert_css.backbtn} onClick={() => {setpage(1);}}>돌아가기</p>
+        <div>
+          <p>공지사항 상세정보</p>
+        </div> 
+      </div>
+      :page===96 ? // 알림 전체보기에서 공지사항 상세정보 접근시
+      <div>
+        <p className={alert_css.backbtn} onClick={() => {setpage(2);}}>돌아가기</p>
+        <div>
+          <p>알림 상세정보</p>
+        </div> 
+      </div>
+      :
+      
       <div>
         <p className={alert_css.backbtn} onClick={() => {setpage(0); setnowsearch(false); setsearch('')}}>돌아가기</p>
         {page===1 ? 
@@ -75,10 +105,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
           <h1 style={{margin:'-20px 0 20px 0'}}>공지사항</h1>
           <hr />
           <div style={{display:'flex', justifyContent:'space-between'}}>
-            {!nowsearch ? <span></span> : <span onClick={()=> {setsearch(''); setnowsearch(false)}}>검색취소</span>}
+            {!nowsearch ? <span></span> : <span className={alert_css.movebtn} onClick={()=> {setsearch(''); setnowsearch(false)}}>검색취소</span>}
             <div>
             <input type="text" value={search} onChange={(event) => {setsearch(event.target.value);}}/>
-            <button onClick={searchdata}>검색</button>
+            <button onClick={searchdata}>검색icon</button>
             </div>
           </div>
      
@@ -86,16 +116,21 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
           <div className={alert_css.notice}>
              전체 or 검색 결과 리스트 출력하는 곳
           </div>
+          <div onClick={()=> {setpage(97)}} className={alert_css.notice}>
+            <p>1</p>
+            <p>~~~~에 점검 진행합니다.~~~~에 점검 진행합니다.</p>
+            <p>07/19 00:00</p>
+          </div>
           
         </div>
         :
         <div>
           <h1 style={{margin:'-20px 0 20px 0'}}>알림</h1>
           <div style={{display:'flex', justifyContent:'space-between'}}>
-            {!nowsearch ? <span></span> : <span onClick={()=> {setsearch(''); setnowsearch(false)}}>검색취소</span>}
+            {!nowsearch ? <span></span> : <span className={alert_css.movebtn} onClick={()=> {setsearch(''); setnowsearch(false)}}>검색취소</span>}
             <div>
             <input type="text" value={search} onChange={(event) => {setsearch(event.target.value);}}/>
-            <button onClick={searchdata}>검색</button>
+            <button onClick={searchdata}>검색icon</button>
             </div>
           </div>
 
@@ -104,6 +139,11 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
 
             전체 or 검색 결과 리스트 출력하는 곳
  
+          </div>
+          <div onClick={()=> {setpage(96)}} className={alert_css.notice}>
+            <p>1</p>
+            <p>~~~~에 점검 진행합니다.~~~~에 점검 진행합니다.</p>
+            <p>07/19 00:00</p>
           </div>
 
         </div>

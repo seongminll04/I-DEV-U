@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import mypage_modal_css from './8mypageModal.module.css';
 import axios from 'axios';
 import { useFormik } from 'formik';
@@ -10,6 +10,7 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
+  const [chknickname, setchknickname] = useState('no');
 
   const validationSchema = Yup.object().shape({
     password: Yup.string()
@@ -25,49 +26,74 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
     //   .required('닉네임을 입력해주세요.'),
   });
 
-    // user from databse;
-    const user = {
-      email: "aaa@bbb.com",
-      password: "aaaaaaaaaa",
-      name: "lee",
-      nickname: "leek",
-      birthdate: "1999-99-99",
-      gender: "1",
-      intro: "", // 자기소개
-      status: "", // active or not (회원탈퇴여부)
-      grade: 2, // 1 : 관리자(운영자), 2 : 일반
-    };
+  // user from databse;
+  const user = {
+    email: "aaa@bbb.com",
+    password: "aaaaaaaaaa",
+    name: "lee",
+    nickname: "leek",
+    birthdate: "1999-99-99",
+    gender: "1",
+    intro: "", // 자기소개
+    status: "", // active or not (회원탈퇴여부)
+    grade: 2, // 1 : 관리자(운영자), 2 : 일반
+  };
 
-    // const user1 = async () => {
-    //   axios({
-    //     method: 'get',
-    //     url: 'http://localhost:8080/notice/?~~~~~',
-    //   })
-    //   .then(res => {
-    //     console.log(res)
-    //     // const alert_data=res.data 
-    //   })
-    //   .catch(err => {
-    //     console.log(err)
-    //     console.log("유저 정보가 정확하지 않음")
-    //   })
-    // };
+  // const user1 = async () => {
+  //   axios({
+  //     method: 'get',
+  //     url: 'http://localhost:8080/notice/?~~~~~',
+  //   })
+  //   .then(res => {
+  //     console.log(res)
+  //     // const alert_data=res.data 
+  //   })
+  //   .catch(err => {
+  //     console.log(err)
+  //     console.log("유저 정보가 정확하지 않음")
+  //   })
+  // };
 
-    const goWithdrawal = () => {
-      // 회원탈퇴 버튼 누르면 실행
-      console.log("회원탈퇴 버튼 누름");
-      // axios({
-      //   method: 'put',
-      //   url: 'http://localhost:8080/notice/?~~~~~',
-      // })
-      // .then(() => {
-      //   console.log("탈퇴처리 되었습니다.")
-      // })
-      // .catch(err => {
-      //   console.log(err)
-      //   console.log("탈퇴처리 중 오류가 발생함")
-      // })
-    }  
+  const goWithdrawal = () => {
+    // 회원탈퇴 버튼 누르면 실행
+    console.log("회원탈퇴 버튼 누름");
+    // axios({
+    //   method: 'put',
+    //   url: 'http://localhost:8080/notice/?~~~~~',
+    // })
+    // .then(() => {
+    //   console.log("탈퇴처리 되었습니다.")
+    // })
+    // .catch(err => {
+    //   console.log(err)
+    //   console.log("탈퇴처리 중 오류가 발생함")
+    // })
+  }  
+
+  const nicknamecheck = (nickname:string) => {
+    setchknickname('no');
+
+    if (nickname==='') {
+      alert('닉네임을 입력해주세요.')
+    }
+
+    else if (!formik.errors.nickname) {
+      axios({
+        method:'get',
+        url:`http://localhost:8080/user/signup/nickcheck/${nickname}`
+      })
+      .then(()=>{
+        setchknickname('yes')
+        alert('사용할 수 있는 닉네임입니다.')
+      })
+      .catch(() => {
+        alert('중복된 닉네임입니다.')
+      })
+    }
+    else {
+      alert('유효하지 않은 닉네임입니다.')
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -86,7 +112,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
       // Add signup logic here
     },
   });
-  
+
   if (!isOpen) return null;
   
   return (
@@ -98,37 +124,41 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
           <hr/>
           <form id={mypage_modal_css.mypage_form} onSubmit={formik.handleSubmit}>
             <div className={mypage_modal_css.mypage_info}>
-              <span>이름 : </span>
-              <input id="name" type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('name')} readOnly/>
+              <span>이름</span>
             </div>
+            <input id="name" type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('name')} readOnly/>
             <div className={mypage_modal_css.mypage_info}>
-              <span>이메일 : </span>
-              <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('email')} readOnly/>
+              <span>이메일</span>
             </div>
+            <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('email')} readOnly/>
             <div className={mypage_modal_css.mypage_info}>
-              <span>생년월일 : </span>
-              <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('birthday')} readOnly/>
+              <span>생년월일</span>
             </div>
+            <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('birthday')} readOnly/>
             <div className={mypage_modal_css.mypage_info}>
-              <span>성별 : </span>
-              <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('gender')} readOnly/>
+              <span>성별</span>
             </div>
+            <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('gender')} readOnly/>
             <div className={mypage_modal_css.mypage_info}>
-              <span>닉네임 : </span>
+              <span>닉네임</span>
+            </div>
+            <div className={mypage_modal_css.mypage_nickname}>
               <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('nickname')} />
+              <div className={mypage_modal_css.mypage_check_nickname_btn} onClick={()=>nicknamecheck(formik.values.nickname)}>중복확인</div>
             </div>
+
             <div className={mypage_modal_css.mypage_info}>
-              <span>비밀번호 : </span>
-              <input type="password" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('password')} />
+              <span>비밀번호</span>
             </div>
+            <input type="password" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('password')} />
             <div className={mypage_modal_css.mypage_info}>
-              <span>비밀번호 확인: </span>
-              <input type="password" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('confirmPassword')} placeholder="비밀번호 확인"/>
+              <span>비밀번호 확인</span>
             </div>
+            <input type="password" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('confirmPassword')} placeholder="비밀번호 확인"/>
             <div className={mypage_modal_css.mypage_info}>
-              <span>사진 : </span>
-              <input type="file" className={mypage_modal_css.mypage_input}/>
+              <span>사진</span>
             </div>
+            <input type="file" className={mypage_modal_css.mypage_input}/>
             <button className={mypage_modal_css.mypage_button} type="submit" disabled={!formik.isValid || formik.isSubmitting}>수정</button>
           </form>
           <p className={mypage_modal_css.mypage_withdrawal} onClick={goWithdrawal}>회원탈퇴</p>

@@ -15,9 +15,9 @@
 .mypage_alert_modal {
   background-color: rgba(109, 206, 245, 1);
   border-radius: 1rem;
-  width:50%;
+  width: 400px;
   height: 460px;
-  padding: 10px;
+  padding: 20px;
   box-sizing: border-box;
   color : white;
   overflow: auto;
@@ -44,22 +44,21 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 70%;
+  width: 100%;
 }
 
-/* 회원정보 수정 인풋칸 */
+/* 회원정보 수정 인풋 윗쪽 텍스트를 감싸는 div */
 .mypage_info {
-  width: 100%;
+  width: 80%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-/* 회원정보 수정 인풋 왼쪽 텍스트 */
+/* 회원정보 수정 인풋 윗쪽 텍스트 */
 .mypage_info > span {
   display: flex;
   align-items: center;
-  width: 40%;
 }
 
 /* 회원정보 수정 인풋*/
@@ -70,7 +69,24 @@
   background: white;
   border: 1px solid black;
   border-radius: 3px;
-  width: 50%; 
+  width: 73%; 
+}
+
+/* 닉네임찾기 감싸는 박스 */
+.mypage_nickname {
+  width: 83%; 
+  display: flex;
+  align-items: center;
+}
+
+/* 닉네임 중복체크 버튼 */
+.mypage_check_nickname_btn {
+  width: 10%;
+  min-width: 32px;
+  padding: 3px;
+  border: solid 1px black;
+  border-radius: 0.5rem;
+  background-color: rgb(109, 206, 245);
 }
 
 /* 수정 버튼 */

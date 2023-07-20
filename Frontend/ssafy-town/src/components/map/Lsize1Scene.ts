@@ -240,7 +240,7 @@ export class Lsize1Scene extends Phaser.Scene {
             this.doorOpenTween = this.tweens.addCounter({
                 from: 0,
                 to: 5,
-                duration: 500,
+                duration: 300,
                 loop: 0,
                 onUpdate: tween => {
                     const nextSet = Math.floor(tween.getValue());
@@ -273,7 +273,7 @@ export class Lsize1Scene extends Phaser.Scene {
         this.tweens.addCounter({
             from: 5,
             to: 0,
-            duration: 500, 
+            duration: 300, 
             loop: 0,
             onUpdate: tween => {
                 const nextSet = Math.floor(tween.getValue());

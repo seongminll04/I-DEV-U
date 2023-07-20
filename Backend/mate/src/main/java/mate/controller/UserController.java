@@ -111,7 +111,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/user/detail/{idx}")
+    @PutMapping("/detail/{idx}")
     public ResponseEntity<Map<String, String>> modifyUser(@RequestBody Map<String, String> map, @PathVariable("idx") int idx) {
         Map<String, String> res = new HashMap<>();
 

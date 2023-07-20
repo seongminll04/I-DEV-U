@@ -1,16 +1,3 @@
-.mypage_modal {
-    background-color: #fff;
-    padding: 5px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 100vh;
-    box-sizing: border-box;
-    border: 4px solid black;
-}
-
 .button {
     background: deepskyblue;
     color: white;

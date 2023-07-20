@@ -2,7 +2,7 @@ import React from 'react';
 
 const Follow = () => {
   return (
-    <div>
+    <div className='sidebar_modal'>
       <h1>내 친구목록</h1>
       <hr />
       <div>

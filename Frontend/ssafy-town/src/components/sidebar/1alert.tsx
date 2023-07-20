@@ -58,7 +58,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
           <hr style={{border:'1px solid black'}}/>
           <div className={alert_css.container}>
             <div className={alert_css.notice}>
-              <p>알림</p>
+              <p>알림 </p>
                 <p className={alert_css.movebtn} onClick={() => setpage(2)}>전체보기</p>
             </div>
             <div onClick={()=> {setpage(98)}} className={alert_css.notice}>

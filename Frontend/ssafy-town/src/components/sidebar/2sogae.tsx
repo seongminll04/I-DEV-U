@@ -115,7 +115,7 @@ const handleFilterSearch = () => {
   };
 
   return (
-    <div className={sogae_css.mypage_modal}>
+    <div className='sidebar_modal'>
       <div>
       
           <h1>if(소개팅) {"{🤍=❤️}"}</h1>

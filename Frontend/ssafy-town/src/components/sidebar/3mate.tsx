@@ -45,7 +45,7 @@ const Mate = () => {
   };
   return (
     <div>
-      <div className={mate_css.mate_modal} id={mate_css.modal}>
+      <div className='sidebar_modal'>
           <h1>너 내 동료가 되라!</h1>
           <img src="assets/onepiece.jpg" alt="" style={{width:'350px', height:'auto'}}/>
           <p style={{display:'flex',justifyContent:'center',alignItems:'center',marginTop:'0'}}>내 정보 검색허용 

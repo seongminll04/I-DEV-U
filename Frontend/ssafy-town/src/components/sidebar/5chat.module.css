@@ -18,24 +18,3 @@
 .button:active {
     background: dodgerblue;
 }
-
-.table {
-    width: 90%;
-    border-collapse: collapse; /* 테두리 겹치게 */
-    margin: 0 auto;
-}
-
-.table th,
-.table td {
-    border: 2px solid black;
-    padding: 10px;
-    text-align: center;
-}
-
-.table .userInfo {
-    width: 75%;
-}
-
-.table .matchRate {
-    width: 25%;
-}

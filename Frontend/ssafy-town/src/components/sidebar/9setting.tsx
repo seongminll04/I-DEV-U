@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Alert = () => {
+const Setting = () => {
   return (
-    <div>
-      안녕9
+    <div className='sidebar_modal'>
+      Setting
     </div>
   );
 };
 
-export default Alert;
+export default Setting;

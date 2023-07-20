@@ -1,11 +1,12 @@
 import React from 'react';
+// import chat_css from './5chat.module.css'
 
-const Alert = () => {
+const Chat = () => {
   return (
-    <div>
-      안녕5
+    <div className='sidebar_modal'>
+      Chat
     </div>
   );
 };
 
-export default Alert;
+export default Chat;

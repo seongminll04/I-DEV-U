@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 
 const ASSETS = {
-  'A': '/assets/L1-1.png',
-  'B': '/assets/L1-2.png',
-  'C': '/assets/L1-3.png',
+  'A': '/assets/L1-B1.png',
+  'B': '/assets/L1-C4.png',
+  'C': '/assets/L1-A4.png',
 };
 
 const pattern = `
@@ -21,7 +21,7 @@ BCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCB
-BAAAAAAAAAAAAAAB
+BCCCCCCCCCCCCCCB
 BBBBBBBBBBBBBBBB
 `;
 
@@ -71,7 +71,7 @@ export class Ssize1Scene extends Phaser.Scene {
 
     this.cursors = this.input.keyboard?.createCursorKeys();
     this.cameras.main.startFollow(this.character);
-    this.physics.world.createDebugGraphic();  // 디버그 그래픽 활성화
+    // this.physics.world.createDebugGraphic();  // 디버그 그래픽
 }
 
 

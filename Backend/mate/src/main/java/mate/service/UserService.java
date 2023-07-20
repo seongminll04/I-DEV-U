@@ -32,7 +32,7 @@ public class UserService {
         return userRepository.findByEmailAndPassword(email, password);
     }
 
-    public void delete(User user) {
-        userRepository.delete(user);
+    public User findUserByIdx(Integer idx) {
+        return userRepository.findByIdx(idx);
     }
 }

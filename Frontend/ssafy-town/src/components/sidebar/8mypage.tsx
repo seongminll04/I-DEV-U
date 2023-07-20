@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import mypage_css from './8mypage.module.css';
+import axios from 'axios';
 import Modal from './8mypageModal';
 
 const ToggleContainer = styled.div`
@@ -43,7 +44,38 @@ const Desc = styled.div`
   margin: 20px;
 `;
 
+let user = {
+  email: '',
+  password: '',
+  name: '',
+  nickname: '',
+  birthdate: '',
+  gender: 0,
+  intro: '', // 자기소개
+  status: '', // active or not (회원탈퇴여부)
+  grade: 0, // 1 : 관리자(운영자), 2 : 일반
+};
+
+const getUser = async () => {
+  const idx = parseInt(localStorage.getItem('idx') || '0', 10); // Parse to an integer
+  axios({
+    method: 'get',
+    url: `http://localhost:8080/user/${idx}`,
+  })
+  .then(res => {
+    console.log(res)
+    user = res.data.user;
+    console.log(user);
+    // const alert_data=res.data 
+  })
+  .catch(err => {
+    console.log(err)
+    console.log("유저 정보가 정확하지 않음")
+  })
+};
+
 const Mypage: React.FC = () => {
+  getUser();
   // toggle
   const [isOn, setisOn] = useState(false);
 
@@ -61,19 +93,6 @@ const Mypage: React.FC = () => {
   const handleModalClose = () => {
     setModalOpen(false);
   }
-
-  // user from databse;
-  const user = {
-    email: "aaa@bbb.com",
-    password: "aaaaaaaaaa",
-    name: "lee",
-    nickname: "leek",
-    birthdate: "1999-99-99",
-    gender: "1",
-    intro: "", // 자기소개
-    status: "", // active or not (회원탈퇴여부)
-    grade: 2, // 1 : 관리자(운영자), 2 : 일반
-  };
 
   // 소개팅 등록한 경우 등록철회
   function unregistMeeting(){
@@ -117,7 +136,7 @@ const Mypage: React.FC = () => {
           <button className={mypage_css.button}onClick={unregistMeeting}>소개팅 등록 취소</button>
           <button className={mypage_css.button}onClick={editMyInitSurvey}>최초 설문 수정</button>
         </div>
-        <Modal isOpen={isModalOpen} onClose={handleModalClose} />
+        <Modal isOpen={isModalOpen} onClose={handleModalClose} user={user} />
       </div>
     </div>
     

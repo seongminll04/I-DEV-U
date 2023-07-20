@@ -93,4 +93,60 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/{idx}")
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<Map<String, Object>> getUser(@PathVariable("idx") Integer idx) {
+        Map<String, Object> res = new HashMap<>();
+
+        User loginUser = userService.findUserByIdx(idx);
+        System.out.println("loginUser = " + loginUser);
+        System.out.println("idx = " + idx);
+        if (loginUser != null) {
+            res.put("resmsg", "로그인유저 호출 성공");
+            res.put("user", loginUser);
+            return ResponseEntity.ok(res);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/user/detail/{idx}")
+    public ResponseEntity<Map<String, String>> modifyUser(@RequestBody Map<String, String> map, @PathVariable("idx") int idx) {
+        Map<String, String> res = new HashMap<>();
+
+        try {
+            User loginUser = userService.findUserByIdx(idx);
+            loginUser.setPassword(map.get("password"));
+            loginUser.setName(map.get("name"));
+            loginUser.setNickname(map.get("nickname"));
+            loginUser.setIntro(map.get("intro"));
+            userService.save(loginUser);
+
+            res.put("resmsg", "회원정보 수정 성공");
+            return ResponseEntity.ok(res);
+        } catch (Exception e) {
+            System.out.println("회원정보 수정 중 오류 발생");
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/user/delete")
+    public ResponseEntity<Map<String, String>> deleteUser(int idx) {
+        Map<String, String> res = new HashMap<>();
+
+        try {
+            User loginUser = userService.findUserByIdx(idx);
+            loginUser.setStatus("D");
+            userService.save(loginUser);
+
+            res.put("resmsg", "회원탈퇴 성공");
+            return ResponseEntity.ok(res);
+        } catch (Exception e) {
+            System.out.println("회원탈퇴 진행 중 오류 발생");
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

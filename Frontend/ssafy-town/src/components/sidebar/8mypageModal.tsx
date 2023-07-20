@@ -4,14 +4,25 @@ import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  user: {email: string;
+    password: string;
+    name: string;
+    nickname: string;
+    birthdate: string;
+    gender: number;
+    intro: string; // 자기소개
+    status: string; // active or not (회원탈퇴여부)
+    grade: number; // 1 : 관리자(운영자), 2 : 일반}  
+  };
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, user}) => {
   const [chknickname, setchknickname] = useState('no');
-
+  console.log(user.email)
   const validationSchema = Yup.object().shape({
     password: Yup.string()
       .min(8, '8~14 자리, 특수문자 사용불가')
@@ -25,34 +36,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
     //   .max(12, '2~12 자리, 특수문자 사용불가')
     //   .required('닉네임을 입력해주세요.'),
   });
-
-  // user from databse;
-  const user = {
-    email: "aaa@bbb.com",
-    password: "aaaaaaaaaa",
-    name: "lee",
-    nickname: "leek",
-    birthdate: "1999-99-99",
-    gender: "1",
-    intro: "", // 자기소개
-    status: "", // active or not (회원탈퇴여부)
-    grade: 2, // 1 : 관리자(운영자), 2 : 일반
-  };
-
-  // const user1 = async () => {
-  //   axios({
-  //     method: 'get',
-  //     url: 'http://localhost:8080/notice/?~~~~~',
-  //   })
-  //   .then(res => {
-  //     console.log(res)
-  //     // const alert_data=res.data 
-  //   })
-  //   .catch(err => {
-  //     console.log(err)
-  //     console.log("유저 정보가 정확하지 않음")
-  //   })
-  // };
 
   const goWithdrawal = () => {
     // 회원탈퇴 버튼 누르면 실행
@@ -104,6 +87,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
       gender: user.gender,
       password: user.password,
       confirmPassword: '',
+      intro: '',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -146,7 +130,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
               <input style={{width:'82%'}} type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('nickname')}  onChange={(event) => {formik.handleChange(event); setchknickname('no'); console.log(chknickname)}} />
               <div className={mypage_modal_css.mypage_check_nickname_btn} onClick={()=>nicknamecheck(formik.values.nickname)}>중복확인</div>
             </div>
-
+            <div className={mypage_modal_css.mypage_info}>
+              <span>자기소개</span>
+            </div>
+            <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('intro')}/>
             <div className={mypage_modal_css.mypage_info}>
               <span>비밀번호</span>
             </div>

@@ -15,57 +15,89 @@ import Follow from './sidebar/7follow';
 import MyPage from './sidebar/8mypage';
 import Setting from './sidebar/9setting';
 import Logout from './sidebar/10logout';
+//사이드바 리스트
 
-let character: Phaser.Physics.Arcade.Sprite;
-let cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+import { Ssize1Scene } from './map/Ssize1Scene';
+import { Lsize1Scene } from './map/Lsize1Scene';
+//맵 리스트
 
-function preload(this: Phaser.Scene) {
-  this.load.image('map', 'assets/bigmap.png');
-  this.load.image('character', 'assets/admin_character.png');
-  console.log("ok")
-}
+class MainScene extends Phaser.Scene {
+  private character?: Phaser.Physics.Arcade.Sprite;
+  private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
 
-function create(this: Phaser.Scene) {
-  this.add.image(1000, 1000, 'map'); 
+  constructor() {
+    super({ key: 'MainScene' });
+  }
 
-  character = this.physics.add.sprite(1000, 1000, 'character'); 
-  character.setCollideWorldBounds(true);
+  preload() {
+    this.load.image('map', 'assets/bigmap.png');
+    this.load.image('character', 'assets/admin_character.png');
+  }
 
-  if (this.input.keyboard) {
-    cursors = this.input.keyboard.createCursorKeys();
-  
+  create() {
+    this.add.image(1000, 1000, 'map');
+
+    this.character = this.physics.add.sprite(1000, 1000, 'character');
+    this.character.setCollideWorldBounds(true);
+
+    this.cursors = this.input.keyboard?.createCursorKeys();
+
     this.cameras.main.setBounds(0, 0, 2000, 2000);
-    this.cameras.main.startFollow(character); 
-  
-    this.physics.world.setBounds(0, 0, 2000, 2000); 
-  }
-}
+    this.cameras.main.startFollow(this.character);
 
-function update(this: Phaser.Scene) {
-  if (cursors.left?.isDown) {
-    character.setVelocityX(-1280);
-  } else if (cursors.right?.isDown) {
-    character.setVelocityX(1280);
-  } else {
-    character.setVelocityX(0);
+    this.physics.world.setBounds(0, 0, 2000, 2000);
   }
 
-  if (cursors.up?.isDown) {
-    character.setVelocityY(-1280);
-  } else if (cursors.down?.isDown) {
-    character.setVelocityY(1280);
-  } else {
-    character.setVelocityY(0);
+  update() {
+    if (this.cursors && this.character) {
+      if (this.cursors.left?.isDown) {
+        this.character.setVelocityX(-1280);
+      } else if (this.cursors.right?.isDown) {
+        this.character.setVelocityX(1280);
+      } else {
+        this.character.setVelocityX(0);
+      }
+
+      if (this.cursors.up?.isDown) {
+        this.character.setVelocityY(-1280);
+      } else if (this.cursors.down?.isDown) {
+        this.character.setVelocityY(1280);
+      } else {
+        this.character.setVelocityY(0);
+      }
+    }
   }
 }
 
 const Town: React.FC = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); //페이지 이동 navigate
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [game, setGame] = useState<Phaser.Game | null>(null);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const [isFirstQAModalOpen, setFirstQAModalOpen] = useState(false);  // 첫 설문
+  const [currentScene, setCurrentScene] = useState<'MainScene' | 'Ssize1Scene' | 'Lsize1Scene'>('MainScene'); //맵
+
+  const switchToMainScene = () => {
+    if (game) {
+      game.scene.switch(currentScene, 'MainScene');
+      setCurrentScene('MainScene');
+    }
+  };
+
+  const switchToSsize1Scene = () => {
+    if (game) {
+      game.scene.switch(currentScene, 'Ssize1Scene');
+      setCurrentScene('Ssize1Scene');
+    }
+  };
+
+  const switchToLsize1Scene = () => {
+    if (game) {
+      game.scene.switch(currentScene, 'Lsize1Scene');
+      setCurrentScene('Lsize1Scene');
+    }
+  };
 
   const checkFirstSurvey = async () => {
     try {
@@ -77,7 +109,7 @@ const Town: React.FC = () => {
       console.error("설문 찾기 실패", error);
       setFirstQAModalOpen(true);  //우선 지금은 백엔드 연결안한상태로 무조건 첫설문이 뜨게하자. 개발할때 거슬리면 이문장 주석처리하면됨
     }
-  };
+  }; //첫 설문 했는지 확인
 
   const handleFirstQAClose = () => {
     setFirstQAModalOpen(false);
@@ -94,22 +126,19 @@ const Town: React.FC = () => {
       console.error("설문 제출 실패", error);
     }
   }
+
   const [isAlertModalOpen, setAlertModalOpen] = useState(false);
 
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
       parent: "phaser_game",
-      width: window.innerWidth * (isSidebarOpen ? 0.7 : 0.85),
+      width: window.innerWidth * (isSidebarOpen ? 0.7 : 0.95),
       height: window.innerHeight,
       physics: {
         default: 'arcade',
       },
-      scene: {
-        preload: preload,
-        create: create,
-        update: update,
-      },
+      scene: [MainScene, Ssize1Scene, Lsize1Scene], //맵들 여기 다넣으면됨
     };
 
     const newGame = new Phaser.Game(config);
@@ -206,6 +235,12 @@ const Town: React.FC = () => {
       {isSidebarOpen && <div id="navigation_bar" className={ssafytown_css.navigation_bar}>
         {icons.find(icon => icon.name === selectedIcon)?.content}
       </div>}
+      <div className={ssafytown_css.map_switch_buttons}>
+        <span>임시 맵선택 바<br/>(나중에 없앰)</span><br/>
+        <button onClick={switchToMainScene}>개발용</button><br/>
+        <button onClick={switchToSsize1Scene}>Ssize1Scene</button><br/>
+        <button onClick={switchToLsize1Scene}>Lsize1Scene</button>
+      </div>
   
       <div id="phaser_game" className={ssafytown_css.phaser_game} onClick={()=> {if(isSidebarOpen){setSidebarOpen(false)}}} />
       <Alert isOpen={isAlertModalOpen} onClose={handleAlertClose} />

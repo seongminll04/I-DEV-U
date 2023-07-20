@@ -235,11 +235,10 @@ const Town: React.FC = () => {
       {isSidebarOpen && <div id="navigation_bar" className={ssafytown_css.navigation_bar}>
         {icons.find(icon => icon.name === selectedIcon)?.content}
       </div>}
-      <div className={ssafytown_css.map_switch_buttons}>
-        <span>임시 맵선택 바<br/>(나중에 없앰)</span><br/>
-        <button onClick={switchToMainScene}>개발용</button><br/>
-        <button onClick={switchToSsize1Scene}>Ssize1Scene</button><br/>
-        <button onClick={switchToLsize1Scene}>Lsize1Scene</button>
+      <div id="phaser_game" onClick={()=> {if(isSidebarOpen){setSidebarOpen(false)}}}>
+        <button className={ssafytown_css.map_switch_button} onClick={switchToMainScene}>개발용</button>
+        <button className={ssafytown_css.map_switch_button2} onClick={switchToSsize1Scene}>Ssize1Scene</button>
+        <button className={ssafytown_css.map_switch_button3} onClick={switchToLsize1Scene}>Lsize1Scene</button>
       </div>
   
       <div id="phaser_game" className={ssafytown_css.phaser_game} onClick={()=> {if(isSidebarOpen){setSidebarOpen(false)}}} />

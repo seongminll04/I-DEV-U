@@ -170,7 +170,7 @@ export class Lsize1Scene extends Phaser.Scene {
             
             const distance = Phaser.Math.Distance.Between(this.character.x, this.character.y, doorCenterX, doorCenterY);
             
-            return distance > 64 && distance <= 140;  // 문 주변에 있어야함, 문이랑 겹치면 안됨
+            return distance > 32 && distance <= 160;  // 문 주변에 있어야함, 문이랑 겹치면 안됨
         }
         return false;  // 캐릭터가 없는 경우, 문 주변에 없다고 가정하고 false
     }

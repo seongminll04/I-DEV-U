@@ -3,7 +3,9 @@ import styled from 'styled-components';
 import mypage_css from './8mypage.module.css';
 import axios from 'axios';
 import Modal from './8mypageModal';
-
+interface MyComponentProps {
+  onmodalChange: (value: boolean) => void;
+}
 const ToggleContainer = styled.div`
   position: relative;
   cursor: pointer;
@@ -74,7 +76,7 @@ const getUser = async () => {
   })
 };
 
-const Mypage: React.FC = () => {
+const Mypage: React.FC<MyComponentProps> = ({ onmodalChange }) => {
   getUser();
   // toggle
   const [isOn, setisOn] = useState(false);
@@ -88,10 +90,12 @@ const Mypage: React.FC = () => {
 
   const handleModalOpen = () => {
     setModalOpen(true);
+    onmodalChange(true);
   }
 
   const handleModalClose = () => {
     setModalOpen(false);
+    onmodalChange(false);
   }
 
   // 소개팅 등록한 경우 등록철회

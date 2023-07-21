@@ -206,7 +206,11 @@ const Town: React.FC = () => {
     //로그아웃 나중에 로컬 토큰 삭제하는 것 추가
     navigate("/");
   }
-  
+  const [mypagemodal, setmypagemodal] = useState(false);
+  const handlemypagemodal = (value:boolean) => {
+    // 자식 컴포넌트로부터 전달된 값을 받아서 처리
+    setmypagemodal(value);
+  };
   const icons = [
     { name: '/', content: '' },
     { name: '소개팅', content: <Sogae /> },
@@ -217,12 +221,15 @@ const Town: React.FC = () => {
     { name: '화상', content: <Cam /> },
     { name: '팔로우', content: <Follow /> },
     { name: '/', content: '' },
-    { name: '마이페이지', content: <MyPage /> },
+    { name: '마이페이지', content: <MyPage onmodalChange={handlemypagemodal}/> },
     { name: '설정', content: <Setting /> },
   ];
 
   return (
-    <div id="game_container" className={ssafytown_css.game_container}>
+    <div id="game_container" className={ssafytown_css.game_container} tabIndex={0} onKeyDown={(e:React.KeyboardEvent)=>{
+      console.log('esc')
+      if (e.key==='Escape' && !isAlertModalOpen && !isLogoutModalOpen && !isFirstQAModalOpen && !mypagemodal) {setSidebarOpen(false); setSelectedIcon(null);}
+    }} >
       <div id="sidebar" className={ssafytown_css.sidebar}>
         <img style={{marginTop:'20px'}} src={`assets/사이드바/알림.png`} alt={`알림 icon`} onClick={() => handleAlertOpen()} />
         {icons.map((icon, index) => 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import alert_css from './1alert.module.css';
 import axios from 'axios';
 
@@ -13,6 +13,23 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
   // 0 처음 1 공지전체 2 알림전체    99 0->공지상세 98 0->알림상세 97 공지전체->공지상세 96 알림전체->알림상세
   const [search, setsearch] = useState<string>('');
   const [nowsearch, setnowsearch] = useState<boolean>(false);
+
+  useEffect(() => { //esc키로 끄기 지금 너무 불편함
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setpage(0);setnowsearch(false); setsearch(''); onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
   const searchdata = () => {
     setnowsearch(true)
     // 여기서 모든데이터 중 검색어랑 일치하는 것만 리스트화 하는 코드작성
@@ -35,10 +52,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
     })
   }
 
-
   return (
-    <div className={alert_css.modal_overlay}  onClick={(e: React.MouseEvent<HTMLDivElement>) => {
-      if (e.target === e.currentTarget) {setpage(0);setnowsearch(false); setsearch(''); onClose()}}}>
+    <div className={alert_css.modal_overlay}
+    onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+      if (e.target === e.currentTarget) {setpage(0);setnowsearch(false); setsearch(''); onClose()}}} >
         <div className={alert_css.alert_modal}>
         <p className={alert_css.closebtn} onClick={() => {setpage(0);setnowsearch(false); setsearch(''); onClose()}}>닫기</p>
         {page===0 ? 

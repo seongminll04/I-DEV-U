@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import mypage_modal_css from './8mypageModal.module.css';
 import axios from 'axios';
 import { useFormik } from 'formik';
@@ -21,6 +21,22 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, user}) => {
+  useEffect(() => { //esc키로 끄기 지금 너무 불편함
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
   const [chknickname, setchknickname] = useState('no');
   console.log(user.email)
   const validationSchema = Yup.object().shape({

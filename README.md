@@ -24,4 +24,33 @@
 
 `키워드(대문자) :  (영어로 위치/함수/기능) + 설명`
 
+***예시***
+
+
+Add : 230719 이형석 회의록 생성
+
+Delete : 230719 이형석 회의록 삭제
+
+Feat : 채팅방목록, 채팅방 (웹소켓) 기능 구현(미완)
+
+Fix:설문창 esc로 끄게, 문 속도 조절
+
+Build : 
+
+Chore : 
+
+Ci :
+
+Docs : UserController 주석 수정
+
+Style : 에어비엔비 컨벤션 파일 생성
+
+Refactor : UserController 회원가입 코드 최적화
+
+Test : User 로그인 테스트
+
+Release : 
+
+Rename : Controller 파일 구조 수정
+
 ---

@@ -19,6 +19,7 @@ import Logout from './sidebar/10logout';
 
 import { Ssize1Scene } from './map/Ssize1Scene';
 import { Lsize1Scene } from './map/Lsize1Scene';
+import { Msize1Scene } from './map/Msize1Scene';
 //맵 리스트
 
 class MainScene extends Phaser.Scene {
@@ -76,7 +77,7 @@ const Town: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const [isFirstQAModalOpen, setFirstQAModalOpen] = useState(false);  // 첫 설문
-  const [currentScene, setCurrentScene] = useState<'MainScene' | 'Ssize1Scene' | 'Lsize1Scene'>('MainScene'); //맵
+  const [currentScene, setCurrentScene] = useState<'MainScene' | 'Ssize1Scene' | 'Lsize1Scene' | 'Msize1Scene'>('MainScene'); //맵
 
   const switchToMainScene = () => {
     if (game) {
@@ -96,6 +97,13 @@ const Town: React.FC = () => {
     if (game) {
       game.scene.switch(currentScene, 'Lsize1Scene');
       setCurrentScene('Lsize1Scene');
+    }
+  };
+
+  const switchToMsize1Scene = () => {
+    if (game) {
+      game.scene.switch(currentScene, 'Msize1Scene');
+      setCurrentScene('Msize1Scene');
     }
   };
 
@@ -138,7 +146,7 @@ const Town: React.FC = () => {
       physics: {
         default: 'arcade',
       },
-      scene: [MainScene, Ssize1Scene, Lsize1Scene], //맵들 여기 다넣으면됨
+      scene: [MainScene, Ssize1Scene, Lsize1Scene, Msize1Scene], //맵들 여기 다넣으면됨
     };
 
     const newGame = new Phaser.Game(config);
@@ -246,6 +254,7 @@ const Town: React.FC = () => {
         <button className={ssafytown_css.map_switch_button} onClick={switchToMainScene}>개발용</button>
         <button className={ssafytown_css.map_switch_button2} onClick={switchToSsize1Scene}>Ssize1Scene</button>
         <button className={ssafytown_css.map_switch_button3} onClick={switchToLsize1Scene}>Lsize1Scene</button>
+        <button className={ssafytown_css.map_switch_button4} onClick={switchToMsize1Scene}>Msize1Scene</button>
       </div>
   
       <div id="phaser_game" className={ssafytown_css.phaser_game} onClick={()=> {if(isSidebarOpen){setSidebarOpen(false)}}} />

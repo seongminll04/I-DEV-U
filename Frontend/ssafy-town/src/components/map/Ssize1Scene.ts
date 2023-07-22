@@ -68,14 +68,6 @@ export class Ssize1Scene extends Phaser.Scene {
     }
 
     this.load.image('character', 'assets/admin_character.png');
-    this.load.image('D1', 'assets/침대4.png');
-    this.load.image('E1', 'assets/테이블1.png');
-    this.load.image('F1', 'assets/장롱1.png');
-    this.load.image('G1', 'assets/게시판1.png');
-    this.load.image('H1', 'assets/러그1.png');
-    this.load.image('I1', 'assets/컴퓨터1.png');
-    this.load.image('J1', 'assets/식물1.png');
-    this.load.image('K1', 'assets/에어컨1.png');
   }
 
   create() {

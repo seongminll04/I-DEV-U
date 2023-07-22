@@ -1,10 +1,26 @@
 import Phaser from 'phaser';
 
-// 이미지의 경로를 직접 정의합니다.
-const ASSETS = {
+type AssetKeys = 'A' | 'B' | 'C' | 'E' | 'F' | 'Z'
+               | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm';
+const ASSETS: Record<AssetKeys, string> = {
   'A': '/assets/L1-B1.png',
   'B': '/assets/L1-C4.png',
   'C': '/assets/L1-A4.png',
+  'E': '/assets/water.png',
+  'F': '/assets/machine.png',
+  'a': '/assets/L1-d1.png',
+  'b': '/assets/L1-d2.png',
+  'c': '/assets/L1-d3.png',
+  'd': '/assets/L1-d4.png',
+  'e': '/assets/L1-d5.png',
+  'f': '/assets/L1-d6.png',
+  'g': '/assets/L1-d7.png',
+  'h': '/assets/L1-d8.png',
+  'i': '/assets/L1-d9.png',
+  'j': '/assets/L1-d10.png',
+  'k': '/assets/L1-d11.png',
+  'l': '/assets/의자앞1.png',
+  'm': '/assets/의자뒤1.png',
   'Z': '/assets/장식용허수코드.png',
 };
 
@@ -52,25 +68,25 @@ BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBCCCCBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 BAAAAAAAAAAAAAAAAAAAAAAAAAAAAACCCCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB
+BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCFCB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
+BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCClCClCClCClCCCCB
+BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCfffggghhhiiiCCCB
+BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCaaabbbkkkdddCCCB
+BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCmCCmCCmCCmCCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
+BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCClCClCClCClCClCB
+BBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCCCCCBCCCCCjjjhhhiiigggfffB
+BAAAAAAAAAAAAAAAAAAAABCCCCCCCCCCCCCCCCCCCCBCCCCCkkkeeeaaabbbdddB
+BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCmCCmCCmCCmCCmCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
-BBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBBBBBBBB
-BAAAAAAAAAAAAAAAAAAAABCCCCCCCCCCCCCCCCCCCCBAAAAAAAAAAAAAAAAAAAAB
-BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCACCCCCCCCCCCCCCCCCCCCACCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
+BCCCCCCCCCCCCCCCCCCCCACCCCCCCCCCCCCCCCCCCCBCCCCCClCClCClCClCClCB
+BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBCCCCCiiifffhhhjjjgggB
+BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBECCCCdddaaabbbaaacccB
+BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBCCCCCCmCCmCCmCCmCCmCB
+BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 `;
@@ -84,6 +100,20 @@ export class Lsize1Scene extends Phaser.Scene {
     private doorParts: Phaser.GameObjects.Image[] = [];
     private doorOpenTween?: Phaser.Tweens.Tween;
     private doorOpened: boolean = false; // 현재 문의 상태
+
+      private d1?: Phaser.Physics.Arcade.Sprite;
+      private d2?: Phaser.Physics.Arcade.Sprite;
+      private d3?: Phaser.Physics.Arcade.Sprite;
+      private d4?: Phaser.Physics.Arcade.Sprite;
+      private d5?: Phaser.Physics.Arcade.Sprite;
+      private d6?: Phaser.Physics.Arcade.Sprite;
+      private d7?: Phaser.Physics.Arcade.Sprite;
+      private d8?: Phaser.Physics.Arcade.Sprite;
+      private d9?: Phaser.Physics.Arcade.Sprite;
+      private d10?: Phaser.Physics.Arcade.Sprite;
+      private d11?: Phaser.Physics.Arcade.Sprite;
+      private water?: Phaser.Physics.Arcade.Sprite;
+      private copy?: Phaser.Physics.Arcade.Sprite;
   
     constructor() {
       super({ key: 'Lsize1Scene' });
@@ -95,6 +125,7 @@ export class Lsize1Scene extends Phaser.Scene {
         }
 
         this.load.image('character', 'assets/admin_character.png');
+        
 
         for (let i = 1; i <= 72; i++) {
             this.load.image('문' + i, 'assets/문' + i + '.png');
@@ -106,25 +137,7 @@ export class Lsize1Scene extends Phaser.Scene {
       const tileSize = 32;  
   
       this.walls = this.physics.add.staticGroup();
-  
-      rows.forEach((row, rowIndex) => {
-        Array.from(row).forEach((char, colIndex) => {
-          if ((ASSETS as Record<string, string>)[char]) {
-            if (char === 'A' || char === 'B' || char === 'Z' ) {
-              const wallTile = this.walls?.create(colIndex * tileSize + tileSize / 2, rowIndex * tileSize + tileSize / 2, char);
-              wallTile.setSize(tileSize, tileSize);  // 벽 타일의 크기 설정
-            } else {
-              this.add.image(colIndex * tileSize, rowIndex * tileSize, char).setOrigin(0, 0);
-            }
-          }
-        });
-      });
 
-      this.input.keyboard?.on('keydown-E', () => {
-        this.openDoor();
-      });
-      
-  
       const mapCenterX = rows[0].length * tileSize / 2;
       const mapCenterY = rows.length * tileSize / 2;
       const mapWidth = rows[0].length * tileSize;
@@ -137,7 +150,96 @@ export class Lsize1Scene extends Phaser.Scene {
       this.cameras.main.setBounds(0, 0, mapWidth, mapHeight); // 카메라가 이동 가능한 범위 설정
       this.cursors = this.input.keyboard?.createCursorKeys();
       this.cameras.main.startFollow(this.character);
+      this.character?.setDepth(1); // 캐릭터부터 생성했으니 depth를 줘야 캐릭터가 화면에 보임
     //   this.physics.world.createDebugGraphic();  // 디버그 그래픽
+  
+      rows.forEach((row, rowIndex) => {
+        for (let colIndex = 0; colIndex < row.length; colIndex ++) {
+          const tileID = row.substring(colIndex, colIndex +1) as AssetKeys;
+    
+          if (ASSETS[tileID]) {
+            if (tileID === 'A' || tileID === 'B') {
+                const wallTile = this.walls?.create(colIndex * tileSize + tileSize / 2, rowIndex * tileSize + tileSize / 2, tileID);
+                wallTile.setSize(tileSize, tileSize);
+            } else if (tileID ==='C' || tileID === 'm' || tileID === 'l') {
+              this.add.image(colIndex * tileSize, rowIndex * tileSize, tileID).setOrigin(0, 0);
+            } else if (tileID === 'E') {
+              this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.water.setOrigin(0, 0).setDisplaySize(32, 64).setImmovable(true);
+              this.physics.add.collider(this.character!, this.water);
+              this.water.setDepth(1);
+            } else if (tileID === 'F') {
+              this.copy = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.copy.setOrigin(0, 0).setDisplaySize(64, 64).setImmovable(true);
+              this.physics.add.collider(this.character!, this.copy);
+              this.copy.setDepth(1);
+            } else if (tileID === 'a') {
+              this.d1 = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.d1.setOrigin(0, 0).setDisplaySize(96, 32).setImmovable(true);
+              this.physics.add.collider(this.character!, this.d1);
+              colIndex +=2
+            } else if (tileID === 'b') {
+              this.d2 = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.d2.setOrigin(0, 0).setDisplaySize(96, 32).setImmovable(true);
+              this.physics.add.collider(this.character!, this.d2);
+              colIndex +=2
+            } else if (tileID === 'c') {
+              this.d3 = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.d3.setOrigin(0, 0).setDisplaySize(96, 32).setImmovable(true);
+              this.physics.add.collider(this.character!, this.d3);
+              colIndex +=2
+            } else if (tileID === 'd') {
+              this.d4 = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.d4.setOrigin(0, 0).setDisplaySize(96, 32).setImmovable(true);
+              this.physics.add.collider(this.character!, this.d4);
+              colIndex +=2
+            } else if (tileID === 'e') {
+              this.d5 = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.d5.setOrigin(0, 0).setDisplaySize(96, 32).setImmovable(true);
+              this.physics.add.collider(this.character!, this.d5);
+              colIndex +=2
+            } else if (tileID === 'f') {
+              this.d6 = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.d6.setOrigin(0, 0).setDisplaySize(96, 32).setImmovable(true);
+              this.physics.add.collider(this.character!, this.d6);
+              colIndex +=2
+            } else if (tileID === 'g') {
+              this.d7 = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.d7.setOrigin(0, 0).setDisplaySize(96, 32).setImmovable(true);
+              this.physics.add.collider(this.character!, this.d7);
+              colIndex +=2
+            } else if (tileID === 'h') {
+              this.d8 = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.d8.setOrigin(0, 0).setDisplaySize(96, 32).setImmovable(true);
+              this.physics.add.collider(this.character!, this.d8);
+              colIndex +=2
+            } else if (tileID === 'i') {
+              this.d9 = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.d9.setOrigin(0, 0).setDisplaySize(96, 32).setImmovable(true);
+              this.physics.add.collider(this.character!, this.d9);
+              colIndex +=2
+            } else if (tileID === 'j') {
+              this.d10 = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.d10.setOrigin(0, 0).setDisplaySize(96, 32).setImmovable(true);
+              this.physics.add.collider(this.character!, this.d10);
+              colIndex +=2
+            } else if (tileID === 'k') {
+              this.d11 = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.d11.setOrigin(0, 0).setDisplaySize(96, 32).setImmovable(true);
+              this.physics.add.collider(this.character!, this.d11);
+              colIndex +=2
+            }
+        }
+      }        
+    });
+    
+
+      this.input.keyboard?.on('keydown-E', () => {
+        this.openDoor();
+      });
+      
+  
+
       
       this.loadDoorParts();
   }

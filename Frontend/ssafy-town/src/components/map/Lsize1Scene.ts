@@ -416,7 +416,7 @@ export class Lsize1Scene extends Phaser.Scene {
 
       const buffer = 10;  // 경계값에 10의 버퍼
         if (this.character!.y >= 0 && this.character!.y <= 736 - buffer && !this.deadzoneActive) {
-            this.cameras.main.setDeadzone(192, 192);
+            this.cameras.main.setDeadzone(256, 256);
             this.deadzoneActive = true;
         } else if ((this.character!.y < 0 || this.character!.y > 736 + buffer) && this.deadzoneActive) {
             this.cameras.main.setDeadzone(0, 0);

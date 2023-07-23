@@ -1,8 +1,9 @@
 import Phaser from 'phaser';
 
 type AssetKeys = 'A' | 'B' | 'C' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' 
-               | 'Z' 
-               | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's';
+               | 'T' | 'U' | 'V' | 'W' | 'X' | '1' | '2' | '3' | '4'
+               | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's'
+               | 't' | 'u' | 'z';
 const ASSETS: Record<AssetKeys, string> = {
   'A': '/assets/L1-B1.png',
   'B': '/assets/L1-C4.png',
@@ -23,6 +24,14 @@ const ASSETS: Record<AssetKeys, string> = {
   'R': '/assets/소화전.png',
   'S': '/assets/식물2.png',
   'T': '/assets/식물3.png',
+  'U': '/assets/U테이블.png',
+  'V': '/assets/화면1.png',
+  'W': '/assets/피아노.png',
+  'X': '/assets/스피커1.png',
+  '1': '/assets/배너1.png',
+  '2': '/assets/배너2.png',
+  '3': '/assets/배너3.png',
+  '4': '/assets/배너4.png',
   'a': '/assets/L1-d1.png',
   'b': '/assets/L1-d2.png',
   'c': '/assets/L1-d3.png',
@@ -42,35 +51,37 @@ const ASSETS: Record<AssetKeys, string> = {
   'q': '/assets/의자뒤2.png',
   'r': '/assets/의자왼2.png',
   's': '/assets/의자오른2.png',
-  'Z': '/assets/장식용허수코드.png',
+  't': '/assets/의자2.png',
+  'u': '/assets/피아노의자.png',
+  'z': '/assets/장식용허수코드.png',
 };
 
 const pattern = `
-BBBBRBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+BBBBRBBBBBBBBBBBBBBBBBBBVBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB
+BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCWCCCCCB
+BCCCCCCCCCCCCCCCCCCCCXCCCCCCCCCCCCCCCCCXCCCCCCCCCCCCCCCCCCCCCCCB
+BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
+BCCCCCCCCCCCCCCCUCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCuCCCCB
+BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
+BCCCC1CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC2CCCCCB
+BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
+BCCCCCCCCCCCCCCCCtCtCtCtCtCtCtCtCtCtCtCtCtCtCtCCCCCCCCCCCCCCCCCB
+BCCCCCCCCCCCCCCCCtCtCtCtCtCtCtCtCtCtCtCtCtCtCtCCCCCCCCCCCCCCCCCB
+BCCCCCCCCCCCCCCCCtCtCtCtCtCtCtCtCtCtCtCtCtCtCtCCCCCCCCCCCCCCCCCB
+BCCCCCCCCCCCCCCCCtCtCtCtCtCtCtCtCtCtCtCtCtCtCtCCCCCCCCCCCCCCCCCB
+BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
+BCCCC3CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC4CCCCCB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
+BTCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCSB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
-BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBZDDZBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
-BBBBBBBBBBBBBBBBBBBBBBPBBGBBBBZDDZBBBBBBBBBRBBBBBBBBBBBBBBBBBBBB
-BAAAAAAAAAAAAAAAAAAAABAAAAAAAAZDDZAAAHAAAABAAAAAAAAAAAAAAAAAAAAB
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBzDDzBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBBBBPBBGBBBBzDDzBBBBBBBBBRBBBBBBBBBBBBBBBBBBBB
+BAAAAAAAAAAAAAAAAAAAABAAAAAAAAzDDzAAAHAAAABAAAAAAAAAAAAAAAAAAAAB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCpCCpCCpCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCpCCpCCpCCCCCB
@@ -81,7 +92,7 @@ BCCCrCCCCCCCCCCCsCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCrCCCCCCCCCCCsCCB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
 BCCCCOCCCCCCCCOCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCOCCCCCCCCOCCCCB
 BCCCrCCCCCCCCCCCsCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCrCCCCCCCCCCCsCCB
-BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
+BCCCCCCCCCCCCCCCCCCCoBCCCCCCCCCCCCCCCCCCCCBoCCCCCCCCCCCCCCCCCCCB
 BCCCCCMCCMCCMCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCMCCMCCMCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCqCCqCCqCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCqCCqCCqCCCCCB
@@ -100,7 +111,7 @@ BCCCJCCCCCJCCCCCJCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BCCICCICCICCICCICCICCBCCCCCCCCCCCCCCCCCCCCBCCCCCClCClCClCClCClCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCjjjhhhiiigggfffB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCkkkeeeaaabbbdddB
-BBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCCCCCBCCCCCCmCCmCCmCCmCCmCB
+BRBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCCCCCBCCCCCCmCCmCCmCCmCCmCB
 BAAAAAAAAAAAAAAAAAAAABCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCClCClCClCClCClCB
@@ -182,7 +193,7 @@ export class Lsize1Scene extends Phaser.Scene {
       this.cursors = this.input.keyboard?.createCursorKeys();
       this.cameras.main.startFollow(this.character);
       this.character?.setDepth(2); // 캐릭터부터 생성했으니 depth를 줘야 캐릭터가 화면에 보임
-    //   this.physics.world.createDebugGraphic();  // 디버그 그래픽
+      // this.physics.world.createDebugGraphic();  // 디버그 그래픽
   
       rows.forEach((row, rowIndex) => {
         for (let colIndex = 0; colIndex < row.length; colIndex ++) {
@@ -193,7 +204,7 @@ export class Lsize1Scene extends Phaser.Scene {
                 const wallTile = this.walls?.create(colIndex * tileSize + tileSize / 2, rowIndex * tileSize + tileSize / 2, tileID);
                 wallTile.setSize(tileSize, tileSize);
             } else if (tileID ==='C' || tileID === 'm' || tileID === 'l' || tileID === 'I'|| tileID === 'n' || tileID === 'o' ||
-                       tileID ==='p' || tileID === 'q' || tileID === 'r' || tileID === 's' ) {
+                       tileID ==='p' || tileID === 'q' || tileID === 'r' || tileID === 's'|| tileID === 't' || tileID === 'u' ) {
               this.add.image(colIndex * tileSize, rowIndex * tileSize, tileID).setOrigin(0, 0);
             } else if (tileID === 'E') {
               this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
@@ -267,6 +278,46 @@ export class Lsize1Scene extends Phaser.Scene {
             } else if (tileID === 'T') {
               this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
               this.water.setOrigin(0, 0).setDisplaySize(32, 64).setImmovable(true);
+              this.physics.add.collider(this.character!, this.water);
+              this.water.setDepth(1);
+            } else if (tileID === 'U') {
+              this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.water.setOrigin(0, 0).setDisplaySize(128, 96).setImmovable(true);
+              this.physics.add.collider(this.character!, this.water);
+              this.water.setDepth(1);
+            } else if (tileID === 'V') {
+              this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.water.setOrigin(0, 0).setDisplaySize(480, 256).setImmovable(true);
+              this.physics.add.collider(this.character!, this.water);
+              this.water.setDepth(1);
+            } else if (tileID === 'W') {
+              this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.water.setOrigin(0, 0).setDisplaySize(96, 96).setImmovable(true);
+              this.physics.add.collider(this.character!, this.water);
+              this.water.setDepth(1);
+            } else if (tileID === 'X') {
+              this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.water.setOrigin(0, 0).setDisplaySize(96, 96).setImmovable(true);
+              this.physics.add.collider(this.character!, this.water);
+              this.water.setDepth(1);
+            } else if (tileID === '1') {
+              this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.water.setOrigin(0, 0).setDisplaySize(128, 192).setImmovable(true);
+              this.physics.add.collider(this.character!, this.water);
+              this.water.setDepth(1);
+            } else if (tileID === '2') {
+              this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.water.setOrigin(0, 0).setDisplaySize(128, 192).setImmovable(true);
+              this.physics.add.collider(this.character!, this.water);
+              this.water.setDepth(1);
+            } else if (tileID === '3') {
+              this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.water.setOrigin(0, 0).setDisplaySize(128, 192).setImmovable(true);
+              this.physics.add.collider(this.character!, this.water);
+              this.water.setDepth(1);
+            } else if (tileID === '4') {
+              this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.water.setOrigin(0, 0).setDisplaySize(128, 192).setImmovable(true);
               this.physics.add.collider(this.character!, this.water);
               this.water.setDepth(1);
             } else if (tileID === 'a') {

@@ -1,13 +1,19 @@
 import Phaser from 'phaser';
 
-type AssetKeys = 'A' | 'B' | 'C' | 'E' | 'F' | 'Z'
-               | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm';
+type AssetKeys = 'A' | 'B' | 'C' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'Z'
+               | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o';
 const ASSETS: Record<AssetKeys, string> = {
   'A': '/assets/L1-B1.png',
   'B': '/assets/L1-C4.png',
   'C': '/assets/L1-A4.png',
   'E': '/assets/water.png',
   'F': '/assets/machine.png',
+  'G': '/assets/칠판1.png',
+  'H': '/assets/게시판2.png',
+  'I': '/assets/의자.png',
+  'J': '/assets/테이블2.png',
+  'K': '/assets/정수기2.png',
+  'L': '/assets/커피세트1.png',
   'a': '/assets/L1-d1.png',
   'b': '/assets/L1-d2.png',
   'c': '/assets/L1-d3.png',
@@ -21,6 +27,8 @@ const ASSETS: Record<AssetKeys, string> = {
   'k': '/assets/L1-d11.png',
   'l': '/assets/의자앞1.png',
   'm': '/assets/의자뒤1.png',
+  'n': '/assets/쓰레기통1.png',
+  'o': '/assets/쓰레기통2.png',
   'Z': '/assets/장식용허수코드.png',
 };
 
@@ -48,8 +56,8 @@ BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBZDDZBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
-BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBZDDZBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
-BAAAAAAAAAAAAAAAAAAAABAAAAAAAAZDDZAAAAAAAABAAAAAAAAAAAAAAAAAAAAB
+BBBBBBBBBBBBBBBBBBBBBBBBBGBBBBZDDZBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+BAAAAAAAAAAAAAAAAAAAABAAAAAAAAZDDZAAAHAAAABAAAAAAAAAAAAAAAAAAAAB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
@@ -67,26 +75,26 @@ BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBCCCCBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
-BAAAAAAAAAAAAAAAAAAAAAAAAAAAAACCCCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCFCB
+BKAALAAAAAAAAAAAAAAAAAAAAAAAAACCCCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB
+BCnCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCFCB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCClCClCClCClCCCCB
-BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCfffggghhhiiiCCCB
-BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCaaabbbkkkdddCCCB
+BCCCJCCCCCJCCCCCJCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCfffggghhhiiiCCCB
+BCCICCICCICCICCICCICCBCCCCCCCCCCCCCCCCCCCCBCCCCCaaabbbkkkdddCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCmCCmCCmCCmCCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
+BCCCJCCCCCJCCCCCJCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
+BCCICCICCICCICCICCICCBCCCCCCCCCCCCCCCCCCCCBCCCCCClCClCClCClCClCB
+BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCjjjhhhiiigggfffB
+BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCkkkeeeaaabbbdddB
+BBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCCCCCBCCCCCCmCCmCCmCCmCCmCB
+BAAAAAAAAAAAAAAAAAAAABCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCClCClCClCClCClCB
-BBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCCCCCBCCCCCjjjhhhiiigggfffB
-BAAAAAAAAAAAAAAAAAAAABCCCCCCCCCCCCCCCCCCCCBCCCCCkkkeeeaaabbbdddB
-BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCmCCmCCmCCmCCmCB
-BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCACCCCCCCCCCCCCCCCCCCCBCCCCCClCClCClCClCClCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBCCCCCiiifffhhhjjjgggB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBECCCCdddaaabbbaaacccB
+BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCiiifffhhhjjjgggB
+BCCCCCCCCCCCCCCCCCCCCACCCCCCCCCCCCCCCCCCCCBECCCCdddaaabbbaaacccB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBCCCCCCmCCmCCmCCmCCmCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
+BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBoCCCCCCCCCCCCCCCCCCCB
 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 `;
@@ -96,6 +104,8 @@ export class Lsize1Scene extends Phaser.Scene {
     private character?: Phaser.Physics.Arcade.Sprite;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
     private walls?: Phaser.Physics.Arcade.StaticGroup;
+    private clockText!: Phaser.GameObjects.Text; //시계
+    private clockText2!: Phaser.GameObjects.Text; //시계
 
     private doorParts: Phaser.GameObjects.Image[] = [];
     private doorOpenTween?: Phaser.Tweens.Tween;
@@ -134,7 +144,12 @@ export class Lsize1Scene extends Phaser.Scene {
 
     create() {
       const rows = pattern.trim().split('\n');
-      const tileSize = 32;  
+      const tileSize = 32; 
+
+      this.clockText = this.add.text(1680, 1340, '', { font: '32px Arial', color: '#ffffff' });
+      this.clockText2 = this.add.text(1360, 28, '', { font: '32px Arial', color: 'gray' });
+      this.clockText.setDepth(10);
+      this.clockText2.setDepth(10);
   
       this.walls = this.physics.add.staticGroup();
 
@@ -161,7 +176,7 @@ export class Lsize1Scene extends Phaser.Scene {
             if (tileID === 'A' || tileID === 'B') {
                 const wallTile = this.walls?.create(colIndex * tileSize + tileSize / 2, rowIndex * tileSize + tileSize / 2, tileID);
                 wallTile.setSize(tileSize, tileSize);
-            } else if (tileID ==='C' || tileID === 'm' || tileID === 'l') {
+            } else if (tileID ==='C' || tileID === 'm' || tileID === 'l' || tileID === 'I'|| tileID === 'n' || tileID === 'o' ) {
               this.add.image(colIndex * tileSize, rowIndex * tileSize, tileID).setOrigin(0, 0);
             } else if (tileID === 'E') {
               this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
@@ -173,6 +188,31 @@ export class Lsize1Scene extends Phaser.Scene {
               this.copy.setOrigin(0, 0).setDisplaySize(64, 64).setImmovable(true);
               this.physics.add.collider(this.character!, this.copy);
               this.copy.setDepth(1);
+            } else if (tileID === 'G') {
+              this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.water.setOrigin(0, 0).setDisplaySize(96, 64).setImmovable(true);
+              this.physics.add.collider(this.character!, this.water);
+              this.water.setDepth(1);
+            } else if (tileID === 'H') {
+              this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.water.setOrigin(0, 0).setDisplaySize(96, 64).setImmovable(true);
+              this.physics.add.collider(this.character!, this.water);
+              this.water.setDepth(1);
+            } else if (tileID === 'J') {
+              this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.water.setOrigin(0, 0).setDisplaySize(64, 64).setImmovable(true);
+              this.physics.add.collider(this.character!, this.water);
+              this.water.setDepth(1);
+            } else if (tileID === 'K') {
+              this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.water.setOrigin(0, 0).setDisplaySize(32, 64).setImmovable(true);
+              this.physics.add.collider(this.character!, this.water);
+              this.water.setDepth(1);
+            } else if (tileID === 'L') {
+              this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.water.setOrigin(0, 0).setDisplaySize(64, 64).setImmovable(true);
+              this.physics.add.collider(this.character!, this.water);
+              this.water.setDepth(1);
             } else if (tileID === 'a') {
               this.d1 = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
               this.d1.setOrigin(0, 0).setDisplaySize(96, 32).setImmovable(true);
@@ -263,6 +303,14 @@ export class Lsize1Scene extends Phaser.Scene {
           this.character.setVelocityY(0);
         }
       }
+
+      let currentDate = new Date();
+      let hours = String(currentDate.getHours()).padStart(2, '0');
+      let minutes = String(currentDate.getMinutes()).padStart(2, '0');
+      let seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
+      this.clockText.setText(`${hours}:${minutes}:${seconds}`);
+      this.clockText2.setText(`${hours}:${minutes}:${seconds}`);
     }
 
     private isNearDoor(): boolean {     //캐릭터가 문 주변에 있는가?

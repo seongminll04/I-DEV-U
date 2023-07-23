@@ -67,12 +67,12 @@ BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
 BCCCC1CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC2CCCCCB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCtCtCtCtCtCtCtCtCtCtCtCtCtCtCtCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCtCtCtCtCtCtCtCtCtCtCtCtCtCtCtCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCtCtCtCtCtCtCtCtCtCtCtCtCtCtCtCCCCCCCCCCCCCCCCCB
+BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCtCtCtCtCtCtCtCtCtCtCtCtCtCtCtCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
+BCCCCCCCCCCCCCCCCtCtCtCtCtCtCtCtCtCtCtCtCtCtCtCCCCCCCCCCCCCCCCCB
 BCCCC3CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC4CCCCCB
-BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
+BCCCCCCCCCCCCCCCCtCtCtCtCtCtCtCtCtCtCtCtCtCtCtCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCB
@@ -131,6 +131,8 @@ export class Lsize1Scene extends Phaser.Scene {
     private clockText!: Phaser.GameObjects.Text; //우하시계
     private clockText2!: Phaser.GameObjects.Text; //우상시계
     private clockText3!: Phaser.GameObjects.Text; //좌하시계
+    private deadzoneActive: boolean = false;  // 데드존 상태 추적 변수
+
 
     private doorParts: Phaser.GameObjects.Image[] = [];
     private doorOpenTween?: Phaser.Tweens.Tween;
@@ -192,6 +194,7 @@ export class Lsize1Scene extends Phaser.Scene {
       this.cameras.main.setBounds(0, 0, mapWidth, mapHeight); // 카메라가 이동 가능한 범위 설정
       this.cursors = this.input.keyboard?.createCursorKeys();
       this.cameras.main.startFollow(this.character);
+
       this.character?.setDepth(2); // 캐릭터부터 생성했으니 depth를 줘야 캐릭터가 화면에 보임
       // this.physics.world.createDebugGraphic();  // 디버그 그래픽
   
@@ -261,7 +264,7 @@ export class Lsize1Scene extends Phaser.Scene {
               this.water.setOrigin(0, 0).setDisplaySize(64, 96).setImmovable(true);
               this.physics.add.collider(this.character!, this.water);
               this.water.setDepth(1);
-            } else if (tileID === 'Q') {
+            } else if (tileID === 'Q') {  //카펫이니 충돌 x
               this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
               this.water.setOrigin(0, 0).setDisplaySize(320, 320).setImmovable(true);
               this.water.setDepth(1);
@@ -411,6 +414,15 @@ export class Lsize1Scene extends Phaser.Scene {
         }
       }
 
+      const buffer = 10;  // 경계값에 10의 버퍼
+        if (this.character!.y >= 0 && this.character!.y <= 736 - buffer && !this.deadzoneActive) {
+            this.cameras.main.setDeadzone(192, 192);
+            this.deadzoneActive = true;
+        } else if ((this.character!.y < 0 || this.character!.y > 736 + buffer) && this.deadzoneActive) {
+            this.cameras.main.setDeadzone(0, 0);
+            this.deadzoneActive = false;
+        }
+
       let currentDate = new Date();
       let hours = String(currentDate.getHours()).padStart(2, '0');
       let minutes = String(currentDate.getMinutes()).padStart(2, '0');
@@ -489,7 +501,7 @@ export class Lsize1Scene extends Phaser.Scene {
         }
     
         if (this.doorOpened) {
-            this.closeDoor(); // 만약 문이 열려있다면, 문을 닫습니다.
+            this.closeDoor(); // 만약 문이 열려있다면, 문을 닫는다
             return;
         } 
     
@@ -521,7 +533,7 @@ export class Lsize1Scene extends Phaser.Scene {
     closeDoor() {
         
         if (!this.isNearDoor() || !this.doorOpened) {
-            return;  // 문 주변에 있지 않거나 문이 이미 닫혀있으면 함수를 빠져나옵니다.
+            return;  // 문 주변에 있지 않거나 문이 이미 닫혀있으면 함수를 빠져나옴
         }
         
         this.doorOpenTween?.stop();

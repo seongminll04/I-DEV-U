@@ -146,6 +146,7 @@ const Town: React.FC = () => {
       physics: {
         default: 'arcade',
       },
+      pixelArt: true, //  픽셀 아트 스타일의 게임에서 그래픽이 더 깔끔하고 정확하게 표시되도록 도와줍니다. 라네요
       scene: [MainScene, Ssize1Scene, Lsize1Scene, Msize1Scene], //맵들 여기 다넣으면됨
     };
 

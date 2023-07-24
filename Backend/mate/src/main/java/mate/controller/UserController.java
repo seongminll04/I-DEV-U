@@ -22,6 +22,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    User loginUser = null;
     /*
      * 회원가입
      */
@@ -83,7 +84,7 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> map) {
         Map<String, Object> res = new HashMap<>();
 
-        User loginUser = userService.login(map.get("email"), map.get("password"));
+        loginUser = userService.login(map.get("email"), map.get("password"));
 
         if (loginUser != null) {
             res.put("resmsg", "로그인 성공");
@@ -99,9 +100,6 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> getUser(@PathVariable("idx") Integer idx) {
         Map<String, Object> res = new HashMap<>();
 
-        User loginUser = userService.findUserByIdx(idx);
-        System.out.println("loginUser = " + loginUser);
-        System.out.println("idx = " + idx);
         if (loginUser != null) {
             res.put("resmsg", "로그인유저 호출 성공");
             res.put("user", loginUser);
@@ -111,12 +109,11 @@ public class UserController {
         }
     }
 
-    @PutMapping("/detail/{idx}")
-    public ResponseEntity<Map<String, String>> modifyUser(@RequestBody Map<String, String> map, @PathVariable("idx") int idx) {
+    @PutMapping("/detail")
+    public ResponseEntity<Map<String, String>> modifyUser(@RequestBody Map<String, String> map) {
         Map<String, String> res = new HashMap<>();
 
         try {
-            User loginUser = userService.findUserByIdx(idx);
             loginUser.setPassword(map.get("password"));
             loginUser.setName(map.get("name"));
             loginUser.setNickname(map.get("nickname"));
@@ -132,12 +129,11 @@ public class UserController {
         }
     }
 
-    @PutMapping("/user/delete")
-    public ResponseEntity<Map<String, String>> deleteUser(int idx) {
+    @PutMapping("/delete")
+    public ResponseEntity<Map<String, String>> deleteUser() {
         Map<String, String> res = new HashMap<>();
 
         try {
-            User loginUser = userService.findUserByIdx(idx);
             loginUser.setStatus("D");
             userService.save(loginUser);
 

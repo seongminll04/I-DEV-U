@@ -33,11 +33,14 @@
 
 /* 모달창 닫기버튼 */
 .mypage_closeBtn {
-  width: 90%;
-  text-align: left;
+  width: 95%;
+  text-align: right;
   cursor: pointer;
 }
 
+.mypage_closeBtn:hover {
+  color:gray;
+}
 /* === 여기서부터 모달 창 내부 ===*/
 /* 회원정보 수정 폼(틀)*/
 #mypage_form {
@@ -122,4 +125,3 @@
   color: red;
   cursor: pointer;
 }
-

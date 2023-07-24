@@ -8,7 +8,7 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onLogout }) => {
-  useEffect(() => { //esc키로 끄기 지금 너무 불편함
+  useEffect(() => { 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose();

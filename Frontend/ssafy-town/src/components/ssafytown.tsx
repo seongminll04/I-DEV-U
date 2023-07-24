@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Phaser from 'phaser';
 import ssafytown_css from './ssafytown.module.css';
-import FirstQA from './firstQA';
+import FirstQA from './survey/firstQA';
 import axios from 'axios';
 
 import Alert from './sidebar/1alert';
@@ -235,7 +235,6 @@ const Town: React.FC = () => {
 
   return (
     <div id="game_container" className={ssafytown_css.game_container} tabIndex={0} onKeyDown={(e:React.KeyboardEvent)=>{
-      console.log('esc')
       if (e.key==='Escape' && !isAlertModalOpen && !isLogoutModalOpen && !isFirstQAModalOpen && !mypagemodal) {setSidebarOpen(false); setSelectedIcon(null);}
     }} >
       <div id="sidebar" className={ssafytown_css.sidebar}>

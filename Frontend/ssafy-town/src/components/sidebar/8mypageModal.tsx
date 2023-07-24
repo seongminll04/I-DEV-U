@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
+import Withdraw from '../account/withdraw';
 
 interface ModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, user}) => {
+  const [isWithdraw, setWithdraw] = useState(false);
   useEffect(() => { //esc키로 끄기 지금 너무 불편함
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -52,10 +54,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, user}) => {
     //   .max(12, '2~12 자리, 특수문자 사용불가')
     //   .required('닉네임을 입력해주세요.'),
   });
-
   const goWithdrawal = () => {
     // 회원탈퇴 버튼 누르면 실행
     console.log("회원탈퇴 버튼 누름");
+    setWithdraw(true)
     // axios({
     //   method: 'put',
     //   url: 'http://localhost:8080/notice/?~~~~~',
@@ -117,9 +119,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, user}) => {
   
   return (
     <div className={mypage_modal_css.mypage_modal_overlay}  onClick={(e: React.MouseEvent<HTMLDivElement>) => {
-      if (e.target === e.currentTarget) {onClose()}}}>
-        <div className={mypage_modal_css.mypage_alert_modal}>
-          <p className={mypage_modal_css.mypage_closeBtn} onClick={onClose}>닫기</p>
+      if (e.target === e.currentTarget) {onClose(); setWithdraw(false);}}}>
+        {!isWithdraw ? <div className={mypage_modal_css.mypage_alert_modal}>
+          <p className={mypage_modal_css.mypage_closeBtn} onClick={()=>{onClose();setWithdraw(false);}}>닫기</p>
           <h1>회원정보 수정</h1>
           <hr/>
           <form id={mypage_modal_css.mypage_form} onSubmit={formik.handleSubmit}>
@@ -165,7 +167,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, user}) => {
             <button className={mypage_modal_css.mypage_button} type="submit" disabled={chknickname==='no' ||!formik.isValid || formik.isSubmitting}>수정</button>
           </form>
           <p className={mypage_modal_css.mypage_withdrawal} onClick={goWithdrawal}>회원탈퇴</p>
-        </div>
+        </div>:
+        <div>
+          <Withdraw onBack={()=>{setWithdraw(false);}} onClose={()=>{setWithdraw(false);onClose();}}/>
+        </div> }
     </div>
   );
 };

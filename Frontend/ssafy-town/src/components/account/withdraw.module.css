@@ -2,7 +2,7 @@
     background-color: rgba(109, 206, 245, 1);
     border-radius: 1rem;
     width: 600px;
-    height: 350px;
+    height: 380px;
     padding: 20px;
     box-sizing: border-box;
     color : white;
@@ -47,4 +47,19 @@ cursor: pointer;
 
 .two_btn span:hover {
 color:gray
+}
+
+.bye_modal {
+  background-color: rgba(109, 206, 245, 1);
+  border-radius: 1rem;
+  width: 700px;
+  height: 300px;
+  padding: 20px;
+  box-sizing: border-box;
+  color : white;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }

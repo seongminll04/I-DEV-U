@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import sogae_css from './2sogae.module.css';
-import SecondQAModal from './secondQA';
+import SecondQAModal from '../survey/secondQA';
 
 
 type User = {

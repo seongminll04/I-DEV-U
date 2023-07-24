@@ -1,10 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './components/login';
+// 회원정보 관련
+import Login from './components/account/login';
+import SignupForm from './components/account/signup';
+import Findpassword from './components/account/findpass';
+import KakaoCallback from './components/account/kakaologin';
+
 import Town from './components/ssafytown';
-import SignupForm from './components/signup';
-import Findpassword from './components/findpass';
-import KakaoCallback from './components/kakao';
 import app_css from './App.module.css';
 function App() {
   return (

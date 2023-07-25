@@ -212,6 +212,8 @@ const Town: React.FC = () => {
 
   const handleLogoutConfirm = () => {
     setLogoutModalOpen(false);
+    localStorage.removeItem('idx');
+    localStorage.removeItem('savedId');
     //로그아웃 나중에 로컬 토큰 삭제하는 것 추가
     navigate("/");
   }

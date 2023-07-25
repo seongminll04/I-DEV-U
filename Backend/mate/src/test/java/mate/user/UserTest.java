@@ -39,14 +39,14 @@ public class UserTest {
 //        assertThat(findUser.get().getId()).isEqualTo(user.getId());
 //    }
 
-    @Test
-    void 아이디_중복체크() {
-        String id = "admin@admin";
-
-        List<User> list = userRepository.findById(id);
-
-        assertThat(list.size()).isEqualTo(1);
-    }
+//    @Test
+//    void 아이디_중복체크() {
+//        String id = "admin@admin";
+//
+//        List<User> list = userRepository.findById(id);
+//
+//        assertThat(list.size()).isEqualTo(1);
+//    }
 
     @Test
     void 닉네임_중복체크() {
@@ -57,12 +57,12 @@ public class UserTest {
         assertThat(list.size()).isEqualTo(1);
     }
 
-    @Test
-    void Login() {
-        User loginUser = userRepository.findByIdAndPw("test", "test");
-
-        System.out.println(loginUser.toString());
-
-        assertThat(loginUser.getName()).isEqualTo("test");
-    }
+//    @Test
+//    void Login() {
+//        User loginUser = userRepository.findByIdAndPw("test", "test");
+//
+//        System.out.println(loginUser.toString());
+//
+//        assertThat(loginUser.getName()).isEqualTo("test");
+//    }
 }

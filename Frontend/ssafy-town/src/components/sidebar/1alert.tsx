@@ -3,7 +3,7 @@ import alert_css from './1alert.module.css';
 import axios from 'axios';
 
 interface ModalProps {
-  isOpen: boolean;
+  isOpen: string;
   onClose: () => void;
 }
 

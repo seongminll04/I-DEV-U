@@ -14,7 +14,7 @@ function App() {
       <div className={app_css.App}>
         <Routes>
           {/* 로그인여부에 따른 login, home 이동  */}
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Town />} />
           <Route path="/login" element={<Login />} /> 
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/findpassword" element={<Findpassword />} />

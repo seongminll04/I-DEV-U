@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import logout_css from './10logout.module.css';
 
 interface ModalProps {
-  isOpen: boolean;
+  isOpen: string;
   onClose: () => void;
   onLogout:() => void;
 }

@@ -20,34 +20,6 @@ public class UserTest {
     @Autowired
     UserRepository userRepository;
 
-//    @Test
-//    void 회원가입(){
-//        // 새로운 User 생성
-//        User user = new User();
-//        user.setId("example");
-//        user.setPw("password");
-//        user.setName("John Doe");
-//        user.setNickname("johndoe");
-//        user.setBirth(new Date());
-//        user.setGender("M");
-//        user.setText("This is a sample user.");
-//
-//        User saveUser = userRepository.save(user);
-//
-//        Optional<User> findUser = userRepository.findById(saveUser.getIdx());
-//
-//        assertThat(findUser.get().getId()).isEqualTo(user.getId());
-//    }
-
-//    @Test
-//    void 아이디_중복체크() {
-//        String id = "admin@admin";
-//
-//        List<User> list = userRepository.findById(id);
-//
-//        assertThat(list.size()).isEqualTo(1);
-//    }
-
     @Test
     void 닉네임_중복체크() {
         String nickname = "admin";
@@ -57,12 +29,4 @@ public class UserTest {
         assertThat(list.size()).isEqualTo(1);
     }
 
-//    @Test
-//    void Login() {
-//        User loginUser = userRepository.findByIdAndPw("test", "test");
-//
-//        System.out.println(loginUser.toString());
-//
-//        assertThat(loginUser.getName()).isEqualTo("test");
-//    }
 }

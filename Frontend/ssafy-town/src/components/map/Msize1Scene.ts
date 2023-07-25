@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-// import io from '클라'; // 추후 소켓연결후에
 
 type AssetKeys = 'A2' | 'B2' | 'C2' | 'D2' | 'E2' | 'F2' | 'G2' | 'H2' | 'I2' | 'J2' |
                  'K2' | 'L2' | 'M2' | 'N2' | 'O2' | 'P2' | 'Q2' | 'R2' | 'S2' | 'T2' |
@@ -55,8 +54,6 @@ B2L2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2
 
 export class Msize1Scene extends Phaser.Scene {
 
-    // private socket: SocketIOClient.Socket;
-
     private character?: Phaser.Physics.Arcade.Sprite;
     private character2?: Phaser.Physics.Arcade.Sprite;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -68,7 +65,6 @@ export class Msize1Scene extends Phaser.Scene {
   
     constructor() {
       super({ key: 'Msize1Scene' });
-      // this.socket = io('http://your-server-ip:port');
       
     }
   
@@ -104,27 +100,6 @@ export class Msize1Scene extends Phaser.Scene {
       this.cameras.main.startFollow(this.character);
       // this.physics.world.createDebugGraphic();  // 디버그 그래픽
 
-
-      // this.socket = io('http://your-server-ip:port');
-
-      // this.socket.on('playerAssignment', (data) => {
-      //   this.myCharacter = data.assignedCharacter;
-      //   // 여기서 필요한 경우 캐릭터 설정 및 게임 시작 관련 로직 추가
-      // });
-
-      // this.socket.on('playerMoved', (movementData) => {
-      //     if (movementData.id !== this.socket.id) {
-      //         if (movementData.character === 'character') {
-      //             this.character.setPosition(movementData.x, movementData.y);
-      //         } else if (movementData.character === 'character2') {
-      //             this.character2.setPosition(movementData.x, movementData.y);
-      //         }
-      //     }
-      // });
-
-
-
-  
       rows.forEach((row, rowIndex) => {
         for (let colIndex = 0; colIndex < row.length; colIndex += 2) {
           const tileID = row.substring(colIndex, colIndex + 2) as AssetKeys;
@@ -237,7 +212,6 @@ export class Msize1Scene extends Phaser.Scene {
         }
     
         if (moved) {
-          // this.socket.emit('playerMovement', { x: this.character.x, y: this.character.y });
         }
       }
     }

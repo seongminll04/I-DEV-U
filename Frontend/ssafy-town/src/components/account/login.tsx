@@ -3,6 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import login_css from './login.module.css';
 
+class ValidationError extends Error {
+  constructor(message : string) {
+    super(message);
+    this.name = "ValidationError";
+  }
+}
+
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const [userId, setUserId] = useState(localStorage.getItem('savedId') || ''); // 로컬스토리지에 아이디 저장
@@ -23,11 +30,19 @@ const Login: React.FC = () => {
       } else { // 꺼놓으면 로컬에서 삭제하자
         localStorage.removeItem('savedId');
       }
+      
+      if (res.data.user.status === "D") {
+        throw new ValidationError("탈퇴처리된 회원입니다!");
+      } 
       navigate('/home')
     })
     .catch(err => {
       console.log(err)
-      alert('아이디 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.')
+      if (err instanceof ValidationError) {
+        alert(err.message);
+      } else {
+        alert('아이디 또는 비밀번호를 잘못 입력했습니다.\n입력하신 내용을 다시 확인해주세요.');
+      }
     })
   };
 

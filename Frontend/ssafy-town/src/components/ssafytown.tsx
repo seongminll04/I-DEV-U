@@ -22,53 +22,6 @@ import { Lsize1Scene } from './map/Lsize1Scene';
 import { Msize1Scene } from './map/Msize1Scene';
 //맵 리스트
 
-class MainScene extends Phaser.Scene {
-  private character?: Phaser.Physics.Arcade.Sprite;
-  private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
-
-  constructor() {
-    super({ key: 'MainScene' });
-  }
-
-  preload() {
-    this.load.image('map', 'assets/bigmap.png');
-    this.load.image('character', 'assets/admin_character.png');
-  }
-
-  create() {
-    this.add.image(1000, 1000, 'map');
-
-    this.character = this.physics.add.sprite(1000, 1000, 'character');
-    this.character.setCollideWorldBounds(true);
-
-    this.cursors = this.input.keyboard?.createCursorKeys();
-
-    this.cameras.main.setBounds(0, 0, 2000, 2000);
-    this.cameras.main.startFollow(this.character);
-
-    this.physics.world.setBounds(0, 0, 2000, 2000);
-  }
-
-  update() {
-    if (this.cursors && this.character) {
-      if (this.cursors.left?.isDown) {
-        this.character.setVelocityX(-1280);
-      } else if (this.cursors.right?.isDown) {
-        this.character.setVelocityX(1280);
-      } else {
-        this.character.setVelocityX(0);
-      }
-
-      if (this.cursors.up?.isDown) {
-        this.character.setVelocityY(-1280);
-      } else if (this.cursors.down?.isDown) {
-        this.character.setVelocityY(1280);
-      } else {
-        this.character.setVelocityY(0);
-      }
-    }
-  }
-}
 
 const Town: React.FC = () => {
   const navigate = useNavigate(); //페이지 이동 navigate
@@ -77,14 +30,7 @@ const Town: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const [isFirstQAModalOpen, setFirstQAModalOpen] = useState(false);  // 첫 설문
-  const [currentScene, setCurrentScene] = useState<'MainScene' | 'Ssize1Scene' | 'Lsize1Scene' | 'Msize1Scene'>('MainScene'); //맵
-
-  const switchToMainScene = () => {
-    if (game) {
-      game.scene.switch(currentScene, 'MainScene');
-      setCurrentScene('MainScene');
-    }
-  };
+  const [currentScene, setCurrentScene] = useState<'Ssize1Scene' | 'Lsize1Scene' | 'Msize1Scene'>('Ssize1Scene'); //맵
 
   const switchToSsize1Scene = () => {
     if (game) {
@@ -147,7 +93,7 @@ const Town: React.FC = () => {
         default: 'arcade',
       },
       pixelArt: true, //  픽셀 아트 스타일의 게임에서 그래픽이 더 깔끔하고 정확하게 표시되도록 도와줍니다. 라네요
-      scene: [MainScene, Ssize1Scene, Lsize1Scene, Msize1Scene], //맵들 여기 다넣으면됨
+      scene: [Ssize1Scene, Lsize1Scene, Msize1Scene], //맵들 여기 다넣으면됨
     };
 
     const newGame = new Phaser.Game(config);
@@ -253,7 +199,6 @@ const Town: React.FC = () => {
         {icons.find(icon => icon.name === selectedIcon)?.content}
       </div>}
       <div id="phaser_game" onClick={()=> {if(isSidebarOpen){setSidebarOpen(false)}}}>
-        <button className={ssafytown_css.map_switch_button} onClick={switchToMainScene}>개발용</button>
         <button className={ssafytown_css.map_switch_button2} onClick={switchToSsize1Scene}>Ssize1Scene</button>
         <button className={ssafytown_css.map_switch_button3} onClick={switchToLsize1Scene}>Lsize1Scene</button>
         <button className={ssafytown_css.map_switch_button4} onClick={switchToMsize1Scene}>Msize1Scene</button>

@@ -31,7 +31,7 @@ const Town: React.FC = () => {
        : null }
 
       {/* Phaser 맵 */}
-      <MyRoom isSidebarOpen={isSidebarOpen}/>
+      <MyRoom onSidebar={isSidebarOpen} onModal={isModalOpen}/>
     </div>
   );
 };

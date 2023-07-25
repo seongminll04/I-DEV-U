@@ -7,7 +7,7 @@ import Sidebar from './sidebar'
 import Navbar from './navbar'
 
 import Alert from './sidebar/1alert'
-import Logout from './sidebar/10logout'
+import Logout from './account/logout'
 import MyRoom from './room/myroom';
 
 const Town: React.FC = () => {

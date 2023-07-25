@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import logout_css from './10logout.module.css';
+import logout_css from './logout.module.css';
 
 interface ModalProps {
   onClose: () => void;

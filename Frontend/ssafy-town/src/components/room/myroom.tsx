@@ -6,12 +6,14 @@ import { Lsize1Scene } from '../map/Lsize1Scene';
 import { Msize1Scene } from '../map/Msize1Scene';
 
 interface Props {
-    isSidebarOpen : string|null;
+    onSidebar : string|null;
+    onModal : string|null;
 }
 
-const Myroom: React.FC<Props> = ({isSidebarOpen}) => {
+const Myroom: React.FC<Props> = ({onSidebar, onModal}) => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
-
+  
+  
   // 맵전환에 대한건 나중에 없앨 수도?
   const [currentScene, setCurrentScene] = useState<'Ssize1Scene' | 'Lsize1Scene' | 'Msize1Scene'>('Ssize1Scene'); //맵
   const switchToSsize1Scene = () => {
@@ -39,7 +41,7 @@ const Myroom: React.FC<Props> = ({isSidebarOpen}) => {
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
       parent: "phaser_game",
-      width: window.innerWidth * (isSidebarOpen ? 0.7 : 0.95),
+      width: window.innerWidth * (onSidebar ? 0.7 : 0.95),
       height: window.innerHeight,
       physics: {
         default: 'arcade',
@@ -60,9 +62,18 @@ const Myroom: React.FC<Props> = ({isSidebarOpen}) => {
   }, []);
 
   useEffect(() => {
+    console.log(game?.isPaused)
+    if (game?.isPaused!== undefined) {
+      if (onModal || onSidebar) {
+        game.isPaused=true
+      }
+      else {
+        game.isPaused=false
+      }
+    }
     if(game) {
       const resize = () => {
-        const width = window.innerWidth * (isSidebarOpen ? 0.7 : 0.95);
+        const width = window.innerWidth * (onSidebar ? 0.7 : 0.95);
         const height = window.innerHeight;
         game.scale.resize(width, height);
         game.scene.scenes[0].cameras.main.setViewport(0, 0, width, height);
@@ -75,7 +86,7 @@ const Myroom: React.FC<Props> = ({isSidebarOpen}) => {
         window.removeEventListener('resize', resize);
       };
     }
-  }, [isSidebarOpen, game]);
+  }, [onModal,onSidebar, game]);
   return (
     <div id="phaser_game" className={ssafytown_css.phaser_game} >
         <button className={ssafytown_css.map_switch_button2} onClick={switchToSsize1Scene}>Ssize1Scene</button>

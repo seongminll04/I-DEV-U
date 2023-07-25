@@ -15,6 +15,12 @@ import java.util.Map;
 @CrossOrigin(origins = {})
 public class UserController {
 
+    @GetMapping("/sleep")
+    public String test(){
+        return "sleepasdasdasd";
+    }
+
+
     @Autowired
     UserService userService;
 

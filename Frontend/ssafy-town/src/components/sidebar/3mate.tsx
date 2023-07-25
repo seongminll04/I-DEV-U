@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import mate_css from './3mate.module.css'
 import styled from 'styled-components';
 
@@ -34,11 +34,26 @@ const ToggleContainer = styled.div`
   }
 `;
 
-
-
-
-const Mate = () => {
+interface Props {
+  onModal: string|null;
+  closeSidebar:()=>void;
+  closeModal:()=>void;
+}
+const Mate: React.FC<Props> = ({onModal, closeSidebar, closeModal}) => {
   const [isOn, setisOn] = useState(true);
+
+  useEffect(() => { //esc키로 끄기
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (onModal!==null) {closeModal()} else {closeSidebar()}
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onModal,closeSidebar,closeModal]);
+
   const toggleHandler = () => {
     // isOn의 상태를 변경하는 메소드를 구현
     setisOn(!isOn)

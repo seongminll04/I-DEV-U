@@ -23,24 +23,21 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, user}) => {
   const [isWithdraw, setWithdraw] = useState(false);
-  useEffect(() => { //esc키로 끄기 지금 너무 불편함
+  const [chknickname, setchknickname] = useState('no');
+  console.log(user.email)
+
+  useEffect(() => { //esc키로 끄기
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose();
+      if (isOpen && event.key === 'Escape') {
+        onClose(); setWithdraw(false);
       }
     };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-    }
-
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, onClose]);
 
-  const [chknickname, setchknickname] = useState('no');
-  console.log(user.email)
   const validationSchema = Yup.object().shape({
     password: Yup.string()
       .min(8, '8~14 자리, 특수문자 사용불가')
@@ -115,7 +112,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, user}) => {
     },
   });
   
-  if (!isOpen) return null;
+  if (!isOpen)  return null;
   
   return (
     <div className={mypage_modal_css.mypage_modal_overlay}  onClick={(e: React.MouseEvent<HTMLDivElement>) => {

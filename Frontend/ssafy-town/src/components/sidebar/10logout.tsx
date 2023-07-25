@@ -2,31 +2,25 @@ import React, {useEffect} from 'react';
 import logout_css from './10logout.module.css';
 
 interface ModalProps {
-  isOpen: string;
   onClose: () => void;
   onLogout:() => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onLogout }) => {
-  useEffect(() => { 
+const Modal: React.FC<ModalProps> = ({ onClose, onLogout }) => {
+  useEffect(() => { //esc키로 끄기
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose();
       }
     };
 
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-    }
-
+    document.addEventListener('keydown', handleKeyDown);
+    
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, onClose]);
+  }, [onClose]);
 
-  if (!isOpen) return null;
-  
-  
   return (
     <div className={logout_css.modal_overlay} onClick={(e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {onClose()}}}>

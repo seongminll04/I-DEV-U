@@ -21,13 +21,13 @@ const Town: React.FC = () => {
       onModal={(value:string|null)=>{setModalOpen(value)}} />
 
       {/* 사이드바 오픈 */}
-      {isSidebarOpen ? <Navbar onSidebar={isSidebarOpen} /> : null}
+      {isSidebarOpen ? <Navbar onSidebar={isSidebarOpen} onModal={isModalOpen} closeSidebar={()=>setSidebarOpen(null)} closeModal={()=>setModalOpen(null)} /> : null}
       
       {/* 모달창 오픈 */}
       {isModalOpen === '알림' ? 
-      <Alert isOpen='d' onClose={()=>setModalOpen(null)}/>
+      <Alert onClose={()=>setModalOpen(null)}/>
        : isModalOpen === '로그아웃' ? 
-      <Logout isOpen='d' onClose={()=>setModalOpen(null)} onLogout={()=>{setModalOpen(null); navigate('/')}} />
+      <Logout onClose={()=>setModalOpen(null)} onLogout={()=>{setModalOpen(null); navigate('/login')}} />
        : null }
 
       {/* Phaser 맵 */}

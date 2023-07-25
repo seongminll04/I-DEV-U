@@ -6,8 +6,12 @@
     content: string;
     sender: string;
   }
-
-  const Chat: React.FC = () => {
+  interface Props {
+    onModal: string|null;
+    closeSidebar:()=>void;
+    closeModal:()=>void;
+  }
+  const Chat: React.FC<Props> = ({onModal, closeSidebar, closeModal}) => {
     const [socket, setSocket] = useState<Socket | null>(null);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [messageInput, setMessageInput] = useState<string>("");
@@ -15,6 +19,17 @@
     const [selectedRoom, setSelectedRoom] = useState<string>("");
     const [oldestMessageTimestamp, setOldestMessageTimestamp] = useState<number | null>(null);
 
+    useEffect(() => { //esc키로 끄기
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+          if (onModal!==null) {closeModal()} else {closeSidebar()}
+        }
+      };
+      document.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    }, [onModal,closeSidebar,closeModal]);
 
     useEffect(() => {
       // Socket.IO 연결

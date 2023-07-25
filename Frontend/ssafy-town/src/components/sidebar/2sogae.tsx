@@ -13,7 +13,13 @@ const MAX_FILTERS = 4;
 const ITEMS_PER_PAGE = 10;
 const words = ["#가", "#나", "#다", "#라", "#마", "#바", "#사"];
 
-const Sogae: React.FC = () => {
+interface Props {
+  onModal: string|null;
+  closeSidebar:()=>void;
+  closeModal:()=>void;
+}
+
+const Sogae: React.FC<Props> = ({onModal, closeSidebar, closeModal}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   // const [data, setData] = useState<any | null>(null); //실제 상태용 데이터의 상황에따라 변화
@@ -34,6 +40,20 @@ const Sogae: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(users.length);
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
+
+
+  useEffect(() => { //esc키로 끄기
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (onModal!==null) {closeModal()} else {closeSidebar()}
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onModal,closeSidebar,closeModal]);
+
 
   useEffect(() => {
     // 소개팅 등록이 되어있는 유저인가?

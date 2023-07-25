@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import styled from 'styled-components';
 import mypage_css from './8mypage.module.css';
 import axios from 'axios';
 import Modal from './8mypageModal';
-// interface MyComponentProps {
-//   onmodalChange: (value: boolean) => void;
-// }
+interface Props {
+  onModal: string|null;
+  closeSidebar:()=>void;
+  closeModal:()=>void;
+}
 const ToggleContainer = styled.div`
   position: relative;
   cursor: pointer;
@@ -76,7 +78,24 @@ const getUser = async () => {
   })
 };
 
-const Mypage: React.FC = () => {
+const Mypage: React.FC<Props> = ({onModal, closeSidebar, closeModal}) => {
+  
+  const [isModalOpen, setModalOpen] = useState(false);
+  
+  useEffect(() => { //esc키로 끄기
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (!isModalOpen) {
+          if (onModal!==null) {closeModal()} else {closeSidebar()}
+        }
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isModalOpen,onModal,closeSidebar,closeModal]);
+
   getUser();
   // toggle
   const [isOn, setisOn] = useState(false);
@@ -86,17 +105,6 @@ const Mypage: React.FC = () => {
     setisOn(!isOn)
   };
 
-  const [isModalOpen, setModalOpen] = useState(false);
-
-  const handleModalOpen = () => {
-    setModalOpen(true);
-    // onmodalChange(true);
-  }
-
-  const handleModalClose = () => {
-    setModalOpen(false);
-    // onmodalChange(false);
-  }
 
   // 소개팅 등록한 경우 등록철회
   function unregistMeeting(){
@@ -118,7 +126,7 @@ const Mypage: React.FC = () => {
           <div className={mypage_css.mypage_welcome}>
           안녕하세요! {user.name} 님
           </div>
-          <button className={mypage_css.button} onClick={handleModalOpen}>회원정보 수정</button>
+          <button className={mypage_css.button} onClick={()=>setModalOpen(true)}>회원정보 수정</button>
           <div className={mypage_css.mypage_togglebox}>
             <div className={mypage_css.mypage_toggle}>
               {isOn === false ?
@@ -140,7 +148,7 @@ const Mypage: React.FC = () => {
           <button className={mypage_css.button}onClick={unregistMeeting}>소개팅 등록 취소</button>
           <button className={mypage_css.button}onClick={editMyInitSurvey}>최초 설문 수정</button>
         </div>
-        <Modal isOpen={isModalOpen} onClose={handleModalClose} user={user} />
+        <Modal isOpen={isModalOpen} onClose={()=>setModalOpen(false)} user={user} />
       </div>
     </div>
     

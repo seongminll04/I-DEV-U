@@ -15,18 +15,21 @@ import Setting from './sidebar/9setting';
 
 interface Props {
     onSidebar: string|null;
+    onModal:string|null;
+    closeSidebar:()=>void;
+    closeModal:()=>void;
   }
-  const Navbar: React.FC<Props> = ({ onSidebar }) => {
+const Navbar: React.FC<Props> = ({ onSidebar,onModal,closeSidebar,closeModal }) => {
   return (
     <div className={ssafytown_css.navigation_bar}>
-        { onSidebar==='소개팅' ? <Sogae /> :
-         onSidebar==='동료' ? <Mate /> :
-         onSidebar==='프로젝트' ? <Project /> :
-         onSidebar==='채팅' ? <Chat /> :
-         onSidebar==='화상' ? <Cam /> :
-         onSidebar==='팔로우' ? <Follow /> :
-         onSidebar==='마이페이지' ? <MyPage /> :
-         onSidebar==='설정' ? <Setting /> : null
+        { onSidebar==='소개팅' ? <Sogae onModal={onModal} closeSidebar={()=>closeSidebar()} closeModal={()=>closeModal()} /> :
+         onSidebar==='동료' ? <Mate onModal={onModal} closeSidebar={()=>closeSidebar()} closeModal={()=>closeModal()} /> :
+         onSidebar==='프로젝트' ? <Project onModal={onModal} closeSidebar={()=>closeSidebar()} closeModal={()=>closeModal()} /> :
+         onSidebar==='채팅' ? <Chat onModal={onModal} closeSidebar={()=>closeSidebar()} closeModal={()=>closeModal()} /> :
+         onSidebar==='화상' ? <Cam onModal={onModal} closeSidebar={()=>closeSidebar()} closeModal={()=>closeModal()} /> :
+         onSidebar==='팔로우' ? <Follow onModal={onModal} closeSidebar={()=>closeSidebar()} closeModal={()=>closeModal()} /> :
+         onSidebar==='마이페이지' ? <MyPage onModal={onModal} closeSidebar={()=>closeSidebar()} closeModal={()=>closeModal()} /> :
+         onSidebar==='설정' ? <Setting onModal={onModal} closeSidebar={()=>closeSidebar()} closeModal={()=>closeModal()} /> : null
         }
     </div>
   );

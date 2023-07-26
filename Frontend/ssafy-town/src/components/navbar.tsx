@@ -12,24 +12,24 @@ import Follow from './sidebar/7follow';
 import MyPage from './sidebar/8mypage';
 import Setting from './sidebar/9setting';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { AppState } from '../store/state';
+import { setModal,setSidebar } from '../store/actions';
 
-interface Props {
-    onSidebar: string|null;
-    onModal:string|null;
-    closeSidebar:()=>void;
-    closeModal:()=>void;
-  }
-const Navbar: React.FC<Props> = ({ onSidebar,onModal,closeSidebar,closeModal }) => {
+const Navbar: React.FC = () => {
+  const dispatch = useDispatch();
+  const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
+
   return (
     <div className={ssafytown_css.navigation_bar}>
-        { onSidebar==='소개팅' ? <Sogae onModal={onModal} closeSidebar={()=>closeSidebar()} closeModal={()=>closeModal()} /> :
-         onSidebar==='동료' ? <Mate onModal={onModal} closeSidebar={()=>closeSidebar()} closeModal={()=>closeModal()} /> :
-         onSidebar==='프로젝트' ? <Project onModal={onModal} closeSidebar={()=>closeSidebar()} closeModal={()=>closeModal()} /> :
-         onSidebar==='채팅' ? <Chat onModal={onModal} closeSidebar={()=>closeSidebar()} closeModal={()=>closeModal()} /> :
-         onSidebar==='화상' ? <Cam onModal={onModal} closeSidebar={()=>closeSidebar()} closeModal={()=>closeModal()} /> :
-         onSidebar==='팔로우' ? <Follow onModal={onModal} closeSidebar={()=>closeSidebar()} closeModal={()=>closeModal()} /> :
-         onSidebar==='마이페이지' ? <MyPage onModal={onModal} closeSidebar={()=>closeSidebar()} closeModal={()=>closeModal()} /> :
-         onSidebar==='설정' ? <Setting onModal={onModal} closeSidebar={()=>closeSidebar()} closeModal={()=>closeModal()} /> : null
+        { isSidebarOpen==='소개팅' ? <Sogae closeSidebar={()=>dispatch(setSidebar(null))} closeModal={()=>dispatch(setModal(null))} /> :
+         isSidebarOpen==='동료' ? <Mate closeSidebar={()=>dispatch(setSidebar(null))} closeModal={()=>dispatch(setModal(null))} /> :
+         isSidebarOpen==='프로젝트' ? <Project closeSidebar={()=>dispatch(setSidebar(null))} closeModal={()=>dispatch(setModal(null))} /> :
+         isSidebarOpen==='채팅' ? <Chat closeSidebar={()=>dispatch(setSidebar(null))} closeModal={()=>dispatch(setModal(null))} /> :
+         isSidebarOpen==='화상' ? <Cam closeSidebar={()=>dispatch(setSidebar(null))} closeModal={()=>dispatch(setModal(null))} /> :
+         isSidebarOpen==='팔로우' ? <Follow closeSidebar={()=>dispatch(setSidebar(null))} closeModal={()=>dispatch(setModal(null))} /> :
+         isSidebarOpen==='마이페이지' ? <MyPage closeSidebar={()=>dispatch(setSidebar(null))} closeModal={()=>dispatch(setModal(null))} /> :
+         isSidebarOpen==='설정' ? <Setting closeSidebar={()=>dispatch(setSidebar(null))} closeModal={()=>dispatch(setModal(null))} /> : null
         }
     </div>
   );

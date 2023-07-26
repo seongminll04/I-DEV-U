@@ -2,16 +2,22 @@
   import React, { useState, useEffect } from "react";
   import { io, Socket } from "socket.io-client";
   import chat_css from "./5chat.module.css";
+
+import { useSelector } from 'react-redux';
+import { AppState } from '../../store/state';
+
+
+
   interface ChatMessage {
     content: string;
     sender: string;
   }
   interface Props {
-    onModal: string|null;
     closeSidebar:()=>void;
     closeModal:()=>void;
   }
-  const Chat: React.FC<Props> = ({onModal, closeSidebar, closeModal}) => {
+  const Chat: React.FC<Props> = ({closeSidebar, closeModal}) => {
+    const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
     const [socket, setSocket] = useState<Socket | null>(null);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [messageInput, setMessageInput] = useState<string>("");
@@ -22,14 +28,14 @@
     useEffect(() => { //esc키로 끄기
       const handleKeyDown = (event: KeyboardEvent) => {
         if (event.key === 'Escape') {
-          if (onModal!==null) {closeModal()} else {closeSidebar()}
+          if (isModalOpen!==null) {closeModal()} else {closeSidebar()}
         }
       };
       document.addEventListener('keydown', handleKeyDown);
       return () => {
         document.removeEventListener('keydown', handleKeyDown);
       };
-    }, [onModal,closeSidebar,closeModal]);
+    }, [isModalOpen,closeSidebar,closeModal]);
 
     useEffect(() => {
       // Socket.IO 연결
@@ -123,7 +129,7 @@
                       <span className={chat_css.chattime}>07/25 12:25 PM</span>
                     </div>
                     <div className={chat_css.roomdata}>
-                      <p className={chat_css.lastchat}>마지막 채팅 메시지</p>
+                      <p className={chat_css.lastchat}>마지막 채팅 메시지 입니다. 입니다. 입니다. 입니다. 입니다. 입니다.</p>
                       <p className={chat_css.chatcount}>99+</p>
                     </div>
                   </div>

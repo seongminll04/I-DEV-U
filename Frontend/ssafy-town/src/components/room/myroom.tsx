@@ -1,18 +1,18 @@
 import React,{useState, useEffect} from 'react';
 import ssafytown_css from '../ssafytown.module.css';
 
+import { useSelector } from 'react-redux';
+import { AppState } from '../../store/state';
+
+
 import { Ssize1Scene } from '../map/Ssize1Scene';
 import { Lsize1Scene } from '../map/Lsize1Scene';
 import { Msize1Scene } from '../map/Msize1Scene';
 
-interface Props {
-    onSidebar : string|null;
-    onModal : string|null;
-}
-
-const Myroom: React.FC<Props> = ({onSidebar, onModal}) => {
+const Myroom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
-  
+  const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
+  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
   
   // 맵전환에 대한건 나중에 없앨 수도?
   const [currentScene, setCurrentScene] = useState<'Ssize1Scene' | 'Lsize1Scene' | 'Msize1Scene'>('Ssize1Scene'); //맵
@@ -41,7 +41,7 @@ const Myroom: React.FC<Props> = ({onSidebar, onModal}) => {
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
       parent: "phaser_game",
-      width: window.innerWidth * (onSidebar ? 0.7 : 0.95),
+      width: window.innerWidth * (isSidebarOpen ? 0.7 : 0.95),
       height: window.innerHeight,
       physics: {
         default: 'arcade',
@@ -64,7 +64,7 @@ const Myroom: React.FC<Props> = ({onSidebar, onModal}) => {
   useEffect(() => {
     console.log(game?.isPaused)
     if (game?.isPaused!== undefined) {
-      if (onModal || onSidebar) {
+      if (isModalOpen) {
         game.isPaused=true
       }
       else {
@@ -73,7 +73,7 @@ const Myroom: React.FC<Props> = ({onSidebar, onModal}) => {
     }
     if(game) {
       const resize = () => {
-        const width = window.innerWidth * (onSidebar ? 0.7 : 0.95);
+        const width = window.innerWidth * (isSidebarOpen ? 0.7 : 0.95);
         const height = window.innerHeight;
         game.scale.resize(width, height);
         game.scene.scenes[0].cameras.main.setViewport(0, 0, width, height);
@@ -86,7 +86,7 @@ const Myroom: React.FC<Props> = ({onSidebar, onModal}) => {
         window.removeEventListener('resize', resize);
       };
     }
-  }, [onModal,onSidebar, game]);
+  }, [isModalOpen,isSidebarOpen, game]);
   return (
     <div id="phaser_game" className={ssafytown_css.phaser_game} >
         <button className={ssafytown_css.map_switch_button2} onClick={switchToSsize1Scene}>Ssize1Scene</button>

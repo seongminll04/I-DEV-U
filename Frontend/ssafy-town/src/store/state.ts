@@ -1,18 +1,18 @@
 export interface AppState {
-    movekey: boolean;
+  isModalOpen: string|null;
+  isSidebarOpen: string|null;
   }
   
-export enum ActionTypes {
-    NO_MOVE = 'NO_MOVE',
-    YES_MOVE = 'YES_MOVE',
-  }
+// export enum ActionTypes {
+//     setModal = 'setModal',
+//     setSidebar = 'setSidebar'
+//   }
+
+// export interface setModal {
+//     type: ActionTypes.setModal;
+//   }
+// export interface setSidebar {
+//   type: ActionTypes.setSidebar;
+// }
   
-export interface No_moveAction {
-    type: ActionTypes.NO_MOVE;
-  }
-  
-export interface Yes_moveAction {
-    type: ActionTypes.YES_MOVE;
-  }
-  
-export type AppAction = No_moveAction | Yes_moveAction;
+// export type AppAction = setSidebar;

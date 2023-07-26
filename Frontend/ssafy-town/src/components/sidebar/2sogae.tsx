@@ -3,6 +3,10 @@ import axios from 'axios';
 import sogae_css from './2sogae.module.css';
 import SecondQAModal from '../survey/secondQA';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { AppState } from '../../store/state';
+import { setModal,setSidebar } from '../../store/actions';
+
 
 type User = {
   name: string;
@@ -14,12 +18,14 @@ const ITEMS_PER_PAGE = 10;
 const words = ["#가", "#나", "#다", "#라", "#마", "#바", "#사"];
 
 interface Props {
-  onModal: string|null;
   closeSidebar:()=>void;
   closeModal:()=>void;
 }
 
-const Sogae: React.FC<Props> = ({onModal, closeSidebar, closeModal}) => {
+
+
+const Sogae: React.FC<Props> = ({closeSidebar, closeModal}) => {
+  const onModal = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   // const [data, setData] = useState<any | null>(null); //실제 상태용 데이터의 상황에따라 변화

@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import ssafytown_css from './ssafytown.module.css';
 
 import Sidebar from './sidebar'
@@ -9,28 +8,30 @@ import Alert from './sidebar/1alert'
 import Logout from './account/logout'
 import MyRoom from './room/myroom';
 
-const Town: React.FC = () => {
-  const navigate = useNavigate(); //페이지 이동 navigate
-  const [isSidebarOpen, setSidebarOpen] = useState<string | null>(null); //사이드바 오픈여부
-  const [isModalOpen, setModalOpen] = useState<string | null>(null); // 모달창 오픈여부 (알림, 로그아웃)
+import { useSelector, useDispatch } from 'react-redux';
+import { AppState } from '../store/state';
+import { setModal } from '../store/actions';
 
+const Town: React.FC = () => {
+  const dispatch = useDispatch();
+  const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
+  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
   return (
     <div className={ssafytown_css.container}>
-      <Sidebar onSidebar={(value:string|null)=>{if (isSidebarOpen===value) {setSidebarOpen(null)} else {setSidebarOpen(value)}}}
-      onModal={(value:string|null)=>{setModalOpen(value)}} />
+      <Sidebar/>
 
       {/* 사이드바 오픈 */}
-      {isSidebarOpen ? <Navbar onSidebar={isSidebarOpen} onModal={isModalOpen} closeSidebar={()=>setSidebarOpen(null)} closeModal={()=>setModalOpen(null)} /> : null}
+      {isSidebarOpen ? <Navbar /> : null}
       
       {/* 모달창 오픈 */}
       {isModalOpen === '알림' ? 
-      <Alert onClose={()=>setModalOpen(null)}/>
+      <Alert onClose={()=>dispatch(setModal(null))}/>
        : isModalOpen === '로그아웃' ? 
-      <Logout onClose={()=>setModalOpen(null)} onLogout={()=>{setModalOpen(null); navigate('/login')}} />
+      <Logout onClose={()=>dispatch(setModal(null))} />
        : null }
 
       {/* Phaser 맵 */}
-      <MyRoom onSidebar={isSidebarOpen} onModal={isModalOpen}/>
+      <MyRoom/>
     </div>
   );
 };

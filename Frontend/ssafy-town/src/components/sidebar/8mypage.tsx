@@ -3,8 +3,12 @@ import styled from 'styled-components';
 import mypage_css from './8mypage.module.css';
 import axios from 'axios';
 import Modal from './8mypageModal';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { AppState } from '../../store/state';
+import { setModal } from '../../store/actions';
+
 interface Props {
-  onModal: string|null;
   closeSidebar:()=>void;
   closeModal:()=>void;
 }
@@ -78,23 +82,23 @@ const getUser = async () => {
   })
 };
 
-const Mypage: React.FC<Props> = ({onModal, closeSidebar, closeModal}) => {
-  
-  const [isModalOpen, setModalOpen] = useState(false);
+const Mypage: React.FC<Props> = ({closeSidebar, closeModal}) => {
+  const dispatch = useDispatch();
+  // const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
+  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
+
   
   useEffect(() => { //esc키로 끄기
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        if (!isModalOpen) {
-          if (onModal!==null) {closeModal()} else {closeSidebar()}
-        }
+        if (isModalOpen !==null) {closeModal()} else {closeSidebar()}
       }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isModalOpen,onModal,closeSidebar,closeModal]);
+  }, [isModalOpen,closeSidebar,closeModal]);
 
   getUser();
   // toggle
@@ -127,7 +131,7 @@ const Mypage: React.FC<Props> = ({onModal, closeSidebar, closeModal}) => {
           <div className={mypage_css.mypage_welcome}>
           안녕하세요! {user.name} 님
           </div>
-          <button className={mypage_css.button} onClick={()=>setModalOpen(true)}>회원정보 수정</button>
+          <button className={mypage_css.button} onClick={()=>dispatch(setModal('회원정보수정'))}>회원정보 수정</button>
           <div className={mypage_css.mypage_togglebox}>
             <div className={mypage_css.mypage_toggle}>
               {isOn === false ?
@@ -149,7 +153,7 @@ const Mypage: React.FC<Props> = ({onModal, closeSidebar, closeModal}) => {
           <button className={mypage_css.button}onClick={unregistMeeting}>소개팅 등록 취소</button>
           <button className={mypage_css.button}onClick={editMyInitSurvey}>최초 설문 수정</button>
         </div>
-        <Modal isOpen={isModalOpen} onClose={()=>setModalOpen(false)} user={user} />
+        {isModalOpen==='회원정보수정' ? <Modal onClose={()=>dispatch(setModal(null))} user={user} /> : null}
       </div>
     </div>
     

@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react';
 import logout_css from './logout.module.css';
+import { useNavigate } from 'react-router-dom';
 
 interface ModalProps {
   onClose: () => void;
-  onLogout:() => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ onClose, onLogout }) => {
+const Modal: React.FC<ModalProps> = ({ onClose }) => {
+  const navigate = useNavigate(); //페이지 이동 navigate
   useEffect(() => { //esc키로 끄기
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -27,7 +28,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, onLogout }) => {
         <div className={logout_css.logout_modal}>
         <h1>로그아웃 하시겠습니까?</h1>
             <div className={logout_css.button_icon}>
-                <button className={logout_css.button} onClick={onLogout}>로그아웃</button>
+                <button className={logout_css.button} onClick={()=>{onClose();navigate('/login');}}>로그아웃</button>
                 <button className={logout_css.button} onClick={onClose}>뒤로가기</button>
             </div>
         </div>

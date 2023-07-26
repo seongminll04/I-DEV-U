@@ -4,10 +4,13 @@ import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
+import { useSelector } from 'react-redux';
+import { AppState } from '../../store/state';
+
+
 import Withdraw from '../account/withdraw';
 
 interface ModalProps {
-  isOpen: boolean;
   onClose: () => void;
   user: {email: string;
     password: string;
@@ -21,11 +24,12 @@ interface ModalProps {
   };
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, user}) => {
+const Modal: React.FC<ModalProps> = ({ onClose, user}) => {
+  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
   const [isWithdraw, setWithdraw] = useState(false);
   const [chknickname, setchknickname] = useState('no');
-
   const inputRef = useRef<HTMLInputElement | null>(null);
+
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
@@ -33,18 +37,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, user}) => {
   }, []);
 
   console.log(user.email)
-
-  useEffect(() => { //esc키로 끄기
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (isOpen && event.key === 'Escape') {
-        onClose(); setWithdraw(false);
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen, onClose]);
 
   const validationSchema = Yup.object().shape({
     password: Yup.string()
@@ -133,7 +125,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, user}) => {
       inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
     }
   }
-  if (!isOpen)  return null;
+  if (!isModalOpen)  return null;
   
   return (
     <div className={mypage_modal_css.mypage_modal_overlay}  onClick={(e: React.MouseEvent<HTMLDivElement>) => {

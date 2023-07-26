@@ -32,7 +32,8 @@ public class UserService {
         return userRepository.findByEmailAndPassword(email, password);
     }
 
-    public User findUserByIdx(Integer idx) {
-        return userRepository.findByIdx(idx);
+    public User findById(Integer userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
     }
 }

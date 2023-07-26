@@ -6,10 +6,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
+
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "user")
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 public class User {
     @Id
@@ -27,4 +32,10 @@ public class User {
     private int grade;
 
     // 생성자, 기타 메서드 생략
+
+    @Builder
+    public User(String email, String password, String auth) {
+        this.email = email;
+        this.password = password;
+    }
 }

@@ -1,8 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 
-// 기본틀이고 추가해야할게 산더미긴함.
-
-
 const WebRTC: React.FC = () => {
     const localConnection = useRef<RTCPeerConnection | null>(null);
     const sendChannel = useRef<RTCDataChannel | null>(null);
@@ -16,7 +13,7 @@ const WebRTC: React.FC = () => {
 
         // 데이터 채널의 상태 변화 확인
         sendChannel.current.onopen = (event: Event) => {
-            // + 연결됨 표시
+            // + 연결됨 표p
         };
         sendChannel.current.onclose = (event: Event) => {
             // + 연결해제 표시

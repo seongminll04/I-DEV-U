@@ -64,7 +64,7 @@ const Myroom: React.FC<Props> = ({onSidebar, onModal}) => {
   useEffect(() => {
     console.log(game?.isPaused)
     if (game?.isPaused!== undefined) {
-      if (onModal || onSidebar) {
+      if (onModal) {
         game.isPaused=true
       }
       else {

@@ -104,13 +104,30 @@
     return (
       <div className="sidebar_modal">
         {!selectedRoom ? 
-        <div>
+        <div style={{width:'100%', display:'flex',flexDirection:'column', alignItems:'center'}}>
           <h1>채팅방목록</h1>
-          {roomList.map((room) => (
-            <div key={room}>
-              <button onClick={() => handleJoinRoom(room)}>{room}</button>
-            </div>
-          ))}
+          <div className={chat_css.search}>
+            <input type="text" placeholder='검색어를 입력해주세요'/>
+            <button>검색</button>
+          </div>
+          <hr style={{width:'75%', color:'black'}}/>
+
+          <div className={chat_css.scrollbox}>
+            {roomList.map((room) => (
+              <div className={chat_css.chat_room} key={room}  onClick={() => handleJoinRoom(room)}>
+                <img src="assets/default_profile.png" alt=""/>
+                <div className={chat_css.chat_roomdata}>
+                  <b>{room}</b>
+                  <b>마지막 채팅메시지</b>
+                </div>
+                <div>
+                  
+                </div>
+              </div>
+            ))}
+            <hr />
+
+          </div>
         </div>
         :
         <div>

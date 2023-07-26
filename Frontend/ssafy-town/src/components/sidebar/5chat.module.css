@@ -30,3 +30,55 @@
     color:gray;
     cursor: pointer;
 }
+
+.search {
+    width: 80%;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+.search input {
+    width: 70%;
+    padding: 0 10px;
+    background-color: #D9D9D9;
+    box-sizing: border-box;
+    border-radius: 0.5rem;
+    border:none;
+    height:22px;
+}
+.search button {
+    width: 20%;
+    height:22px;
+    margin-left: 10px;
+    border-radius: 0.5rem;
+    font-size: medium;
+}
+
+.scrollbox {
+    width:100%;
+    overflow-y: scroll;
+}
+.scrollbox hr {
+    width :80%
+}
+.chat_room {
+    width: 80%;
+    display: flex;
+    margin: 5px 0;
+    margin-left:10%;
+    border-radius: 1rem;
+}
+.chat_room:hover {
+    background-color: gray;
+}
+.chat_room img {
+    width: 60px ;
+    height: 60px;
+    margin: 5px;
+    margin-right: 10px;
+}
+.chat_roomdata{
+    width:80%;
+    display: flex;
+    justify-content: space-between;
+    margin-top:5px;
+}

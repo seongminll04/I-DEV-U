@@ -37,6 +37,7 @@ public class UserController {
         user.setName(map.get("name"));
         user.setNickname(map.get("nickname"));
         user.setGender(Integer.parseInt(map.get("gender")));
+        user.setStatus("A");
 
         userService.save(user);
 

@@ -2,14 +2,8 @@ import Phaser from 'phaser';
 
 type AssetKeys = 'A2' | 'B2' | 'C2' | 'D2' | 'E2' | 'F2' | 'G2' | 'H2' | 'I2' | 'J2' |
                  'K2' | 'L2' | 'M2' | 'N2' | 'O2' | 'P2' | 'Q2' | 'R2' | 'S2' | 'T2' |
-                 'U2' | 'V2' | 'W2' | 'X2' | 'Y2' | 'Z2' |
-                 'a2' | 'b2' | 'c2' | 'd2' | 'e2' | 'f2' | 'g2' | 'h2' |
-                 'i2' | 'j2' | 'k2' | 'l2' | 'm2' | 'n2' | 'o2' | 'p2' |
-                 'q2' | 'r2' | 's2' | 't2' | 'u2' | 'v2' | 'w2' | 'x2' |
-                 'y2' | 'z2' | 'ㄱ2' | 'ㄴ2' | 'ㄷ2' | 'ㄹ2' | 'ㅁ2' | 'ㅂ2' | 'ㅅ2' |
-                 'ㅇ2' | 'ㅈ2' | 'ㅊ2' | 'ㅋ2' | 'ㅌ2' | 'ㅍ2' | 'ㅎ2' |
-                 '가2' | '나2' | '다2' | '라2' | '마2' | '바2' | '사2' | '아2' | '자2' |
-                 '차2' | '카2' | '타2' | '파2' | '하2' | '갸2' | '냐2';
+                 'U2' | 'V2' | 'W2' | 'X2' | 'Y2' | 'Z2' | 'a2' | 'b2' | 'c2' | 'd2' |
+                 'e2';
 const ASSETS: Record<AssetKeys, string> = {
   'A2': '/assets/M1-B1.png',
   'B2': '/assets/M1-C1.png',
@@ -37,140 +31,41 @@ const ASSETS: Record<AssetKeys, string> = {
   'X2': '/assets/M1-A14.png',
   'Y2': '/assets/M1-A15.png',
   'Z2': '/assets/M1-A16.png',
-  'a2': '/assets/산책가로1.png',
-  'b2': '/assets/산책가로2.png',
-  'c2': '/assets/산책가로3.png',
-  'd2': '/assets/산책가로4.png',
-  'e2': '/assets/산책가로5.png',
-  'f2': '/assets/산책가로6.png',
-  'g2': '/assets/산책가로7.png',
-  'h2': '/assets/산책가로8.png',
-  'i2': '/assets/산책가로9.png',
-  'j2': '/assets/산책가로10.png',
-  'k2': '/assets/산책가로11.png',
-  'l2': '/assets/산책가로12.png',
-  'm2': '/assets/산책가로13.png',
-  'n2': '/assets/산책가로14.png',
-  'o2': '/assets/산책가로15.png',
-  'p2': '/assets/산책가로16.png',
-  'q2': '/assets/산책세로1.png',
-  'r2': '/assets/산책세로2.png',
-  's2': '/assets/산책세로3.png',
-  't2': '/assets/산책세로4.png',
-  'u2': '/assets/산책세로5.png',
-  'v2': '/assets/산책세로6.png',
-  'w2': '/assets/산책세로7.png',
-  'x2': '/assets/산책세로8.png',
-  'y2': '/assets/산책세로9.png',
-  'z2': '/assets/산책세로10.png',
-  'ㄱ2': '/assets/산책세로11.png',
-  'ㄴ2': '/assets/산책세로12.png',
-  'ㄷ2': '/assets/산책세로13.png',
-  'ㄹ2': '/assets/산책세로14.png',
-  'ㅁ2': '/assets/산책세로15.png',
-  'ㅂ2': '/assets/산책세로16.png',
-  'ㅅ2': '/assets/좌상귀1.png',
-  'ㅇ2': '/assets/좌상귀2.png',
-  'ㅈ2': '/assets/좌하귀1.png',
-  'ㅊ2': '/assets/좌하귀2.png',
-  'ㅋ2': '/assets/우상귀1.png',
-  'ㅌ2': '/assets/우상귀2.png',
-  'ㅍ2': '/assets/우하귀1.png',
-  'ㅎ2': '/assets/우하귀2.png',
-  '가2': '/assets/M1-D1.png',
-  '나2': '/assets/M1-D2.png',
-  '다2': '/assets/M1-D3.png',
-  '라2': '/assets/M1-D4.png',
-  '마2': '/assets/M1-D5.png',
-  '바2': '/assets/M1-D6.png',
-  '사2': '/assets/M1-D7.png',
-  '아2': '/assets/M1-D8.png',
-  '자2': '/assets/M1-D9.png',
-  '차2': '/assets/M1-D10.png',
-  '카2': '/assets/M1-D11.png',
-  '타2': '/assets/M1-D12.png',
-  '파2': '/assets/M1-D13.png',
-  '하2': '/assets/M1-D14.png',
-  '갸2': '/assets/M1-D15.png',
-  '냐2': '/assets/M1-D16.png',
+  'a2': '/assets/봄나무5.png',
+  'b2': '/assets/봄나무6.png',
+  'c2': '/assets/봄나무7.png',
+  'd2': '/assets/분수대.png',
+  'e2': '/assets/벤치2.png',
 };
 
 const pattern = `
-B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2
-B2K2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2마2바2사2아2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2M2B2
-B2G2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2자2차2카2타2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2H2B2
-B2G2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2파2하2갸2냐2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2H2B2
-B2G2A2A2ㅅ2b2c2d2a2b2c2d2a2b2c2d2a2b2c2d2a2b2c2d2a2b2c2d2a2b2가2나2다2라2a2b2c2d2a2b2c2d2a2b2c2d2a2b2c2d2a2b2c2d2a2b2c2d2a2ㅋ2A2A2H2B2
-B2G2A2A2u2v2k2k2e2f2g2h2e2f2g2h2e2f2g2h2e2f2g2h2e2f2g2h2e2f2마2바2사2아2e2f2g2h2e2f2g2h2e2f2g2h2e2f2g2h2e2f2g2h2e2f2k2k2k2x2A2A2H2B2
-B2G2A2A2y2z2k2k2i2j2k2l2i2j2k2l2i2j2k2l2i2j2k2l2i2j2k2l2i2j2자2차2카2타2i2j2k2l2i2j2k2l2i2j2k2l2i2j2k2l2i2j2k2l2i2j2k2k2k2x2A2A2H2B2
-B2G2A2A2ㄷ2ㄹ2ㄹ2ㅇ2m2n2o2p2m2n2o2p2m2n2o2p2m2n2o2p2m2n2o2p2m2n2파2하2갸2냐2m2n2o2p2m2n2o2p2m2n2o2p2m2n2o2p2m2n2o2p2m2n2ㅌ2ㄹ2ㅁ2ㅂ2A2A2H2B2
-B2G2A2A2q2r2s2t2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2가2나2다2라2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2q2r2s2t2A2A2H2B2
-B2G2A2A2u2v2w2x2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2마2바2사2아2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2u2v2w2x2A2A2H2B2
-B2G2A2A2y2z2ㄱ2ㄴ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2자2차2카2타2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2y2z2ㄱ2ㄴ2A2A2H2B2
-B2G2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2파2하2갸2냐2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2H2B2
-B2G2A2A2q2r2s2t2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2가2나2다2라2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2q2r2s2t2A2A2H2B2
-B2G2A2A2u2v2w2x2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2마2바2사2아2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2u2v2w2x2A2A2H2B2
-B2G2A2A2y2z2ㄱ2ㄴ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2자2차2카2타2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2y2z2ㄱ2ㄴ2A2A2H2B2
-B2G2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2파2하2갸2냐2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2H2B2
-B2G2A2A2q2r2s2t2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2가2나2다2라2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2q2r2s2t2A2A2H2B2
-B2G2A2A2u2v2w2x2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2마2바2사2아2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2u2v2w2x2A2A2H2B2
-B2G2A2A2y2z2ㄱ2ㄴ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2자2차2카2타2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2y2z2ㄱ2ㄴ2A2A2H2B2
-B2G2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2파2하2갸2냐2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2H2B2
-B2G2A2A2q2r2s2t2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2가2나2다2라2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2q2r2s2t2A2A2H2B2
-B2G2A2A2u2v2w2x2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2마2바2사2아2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2u2v2w2x2A2A2H2B2
-B2G2A2A2y2z2ㄱ2ㄴ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2자2차2카2타2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2y2z2ㄱ2ㄴ2A2A2H2B2
-B2G2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2파2하2갸2냐2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2H2B2
-B2G2A2A2q2r2s2t2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2가2나2다2라2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2q2r2s2t2A2A2H2B2
-B2G2A2A2u2v2w2x2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2마2바2사2아2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2u2v2w2x2A2A2H2B2
-B2G2A2A2y2z2ㄱ2ㄴ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2자2차2카2타2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2y2z2ㄱ2ㄴ2A2A2H2B2
-B2G2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2파2하2갸2냐2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2H2B2
-B2G2A2A2q2r2s2t2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2가2나2다2라2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2q2r2s2t2A2A2H2B2
-B2G2A2A2u2v2w2x2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2마2바2사2아2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2u2v2w2x2A2A2H2B2
-B2G2A2A2y2z2ㄱ2ㄴ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2자2차2카2타2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2y2z2ㄱ2ㄴ2A2A2H2B2
-B2G2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2파2하2갸2냐2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2H2B2
-B2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2zzzzzzzzC2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2B2
-B2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2zzzzzzzzO2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2B2
-B2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2zzzzzzzzS2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2B2
-B2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2zzzzzzzzW2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2B2
-B2G2A2A2q2r2s2t2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2가2나2다2라2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2q2r2s2t2A2A2H2B2
-B2G2A2A2u2v2w2x2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2마2바2사2아2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2u2v2w2x2A2A2H2B2
-B2G2A2A2y2z2ㄱ2ㄴ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2자2차2카2타2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2y2z2ㄱ2ㄴ2A2A2H2B2
-B2G2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2파2하2갸2냐2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2H2B2
-B2G2A2A2q2r2s2t2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2가2나2다2라2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2q2r2s2t2A2A2H2B2
-B2G2A2A2u2v2w2x2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2마2바2사2아2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2u2v2w2x2A2A2H2B2
-B2G2A2A2y2z2ㄱ2ㄴ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2자2차2카2타2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2y2z2ㄱ2ㄴ2A2A2H2B2
-B2G2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2파2하2갸2냐2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2H2B2
-B2G2A2A2q2r2s2t2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2가2나2다2라2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2q2r2s2t2A2A2H2B2
-B2G2A2A2u2v2w2x2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2마2바2사2아2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2u2v2w2x2A2A2H2B2
-B2G2A2A2y2z2ㄱ2ㄴ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2자2차2카2타2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2y2z2ㄱ2ㄴ2A2A2H2B2
-B2G2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2파2하2갸2냐2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2H2B2
-B2G2A2A2q2r2s2t2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2가2나2다2라2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2q2r2s2t2A2A2H2B2
-B2G2A2A2u2v2w2x2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2마2바2사2아2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2u2v2w2x2A2A2H2B2
-B2G2A2A2y2z2ㄱ2ㄴ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2자2차2카2타2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2y2z2ㄱ2ㄴ2A2A2H2B2
-B2G2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2파2하2갸2냐2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2H2B2
-B2G2A2A2q2r2s2t2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2가2나2다2라2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2q2r2s2t2A2A2H2B2
-B2G2A2A2u2v2w2x2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2마2바2사2아2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2u2v2w2x2A2A2H2B2
-B2G2A2A2y2z2ㄱ2ㄴ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2자2차2카2타2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2y2z2ㄱ2ㄴ2A2A2H2B2
-B2G2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2파2하2갸2냐2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2ㄷ2ㄹ2ㅁ2ㅂ2A2A2H2B2
-B2G2A2A2q2r2s2t2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2가2나2다2라2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2q2r2s2t2A2A2H2B2
-B2G2A2A2u2v2v2ㅊ2a2b2c2d2a2b2c2d2a2b2c2d2a2b2c2d2a2b2c2d2a2b2마2바2사2아2a2b2c2d2a2b2c2d2a2b2c2d2a2b2c2d2a2b2c2d2a2b2ㅎ2v2w2x2A2A2H2B2
-B2G2A2A2y2z2k2l2e2f2g2h2e2f2g2h2e2f2g2h2e2f2g2h2e2f2g2h2e2f2자2차2카2타2e2f2g2h2e2f2g2h2e2f2g2h2e2f2g2h2e2f2g2h2e2f2g2h2ㄱ2ㄴ2A2A2H2B2
-B2G2A2A2ㄷ2ㄹ2k2l2i2j2k2l2i2j2k2l2i2j2k2l2i2j2k2l2i2j2k2l2i2j2파2하2갸2냐2i2j2k2l2i2j2k2l2i2j2k2l2i2j2k2l2i2j2k2l2i2j2k2l2i2ㅂ2A2A2H2B2
-B2G2A2A2ㅈ2n2o2p2m2n2o2p2m2n2o2p2m2n2o2p2m2n2o2p2m2n2o2p2m2n2가2나2다2라2m2n2o2p2m2n2o2p2m2n2o2p2m2n2o2p2m2n2o2p2m2n2o2p2m2ㅍ2A2A2H2B2
-B2G2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2마2바2사2아2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2H2B2
-B2G2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2자2차2카2타2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2H2B2
-B2L2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2파2하2갸2냐2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2N2B2
-B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2
+B2K2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2I2B2
+B2G2A2A2A2A2A2c2A2A2A2A2b2A2A2A2A2c2A2A2A2A2b2A2A2A2A2c2A2A2A2A2b2A2A2A2A2c2A2A2A2A2b2A2A2A2A2A2A2A2d2A2A2A2A2A2c2A2A2A2A2b2A2A2A2A2c2A2A2A2A2b2A2A2A2A2c2A2A2A2A2b2A2A2A2A2c2A2A2A2A2b2A2A2A2A2A2A2A2A2H2B2
+B2G2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2H2B2
+B2G2a2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2a2A2A2A2H2B2
+B2G2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2e2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2H2B2
+B2G2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2H2B2
+B2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2B2
+B2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2B2
+B2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2B2
+B2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2B2
+B2L2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2L2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2B2
 `;
 
 export class Msize1Scene extends Phaser.Scene {
 
     private character?: Phaser.Physics.Arcade.Sprite;
+    private character2?: Phaser.Physics.Arcade.Sprite;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
     private walls?: Phaser.Physics.Arcade.StaticGroup;
+
+    private thing?: Phaser.Physics.Arcade.Sprite;
+
+    private sittingOnBench: boolean = false; // 현재 앉아있니?
   
     constructor() {
       super({ key: 'Msize1Scene' });
+      
     }
   
     preload() {
@@ -180,6 +75,7 @@ export class Msize1Scene extends Phaser.Scene {
 
       // 타일 이미지 로드
       this.load.image('character', 'assets/admin_character.png');
+      this.load.image('character2', 'assets/admin_character.png');
     }
   
     create() {
@@ -188,21 +84,22 @@ export class Msize1Scene extends Phaser.Scene {
   
       this.walls = this.physics.add.staticGroup();
   
-      const mapCenterX = rows[0].length * tileSize / 2;
+      // const mapCenterX = rows[0].length * tileSize / 2;
       const mapCenterY = rows.length * tileSize / 2;
-      const mapWidth = rows[0].length * tileSize;
-      const mapHeight = rows.length * tileSize;
 
-      this.character = this.physics.add.sprite(mapCenterX - 1000, mapCenterY, 'character').setOrigin(0.5, 0.5);
+      this.character = this.physics.add.sprite(52, mapCenterY + 72, 'character').setOrigin(0.5, 0.5);
       this.physics.add.collider(this.character, this.walls);  // 캐릭터와 벽 사이의 충돌 설정
-      
-      this.cameras.main.setBounds(0, 0, mapWidth, mapHeight); // 카메라가 이동 가능한 범위 설정
+      this.character?.setDepth(2); // 캐릭터부터 생성했으니 depth를 줘야 캐릭터가 화면에 보임
+
+      this.character2 = this.physics.add.sprite(3210, mapCenterY + 72, 'character2').setOrigin(0.5, 0.5);
+      this.physics.add.collider(this.character2, this.walls);
+      this.character2.setDepth(2);
+
+
       this.cursors = this.input.keyboard?.createCursorKeys();
       this.cameras.main.startFollow(this.character);
+      // this.physics.world.createDebugGraphic();  // 디버그 그래픽
 
-      this.character?.setDepth(2); // 캐릭터부터 생성했으니 depth를 줘야 캐릭터가 화면에 보임
-      this.physics.world.createDebugGraphic();  // 디버그 그래픽
-  
       rows.forEach((row, rowIndex) => {
         for (let colIndex = 0; colIndex < row.length; colIndex += 2) {
           const tileID = row.substring(colIndex, colIndex + 2) as AssetKeys;
@@ -216,45 +113,142 @@ export class Msize1Scene extends Phaser.Scene {
             else if (tileID ==='A2' || tileID === 'C2' || tileID === 'D2' || tileID === 'E2' || tileID === 'F2' ||
                     tileID ==='O2' || tileID === 'P2' || tileID === 'Q2' || tileID === 'R2' || tileID === 'S2' ||
                     tileID ==='T2' || tileID === 'U2' || tileID === 'V2' || tileID === 'W2' || tileID === 'X2' ||
-                    tileID ==='Y2' || tileID === 'Z2' ||
-                    tileID === 'a2' || tileID === 'b2' || tileID === 'c2' || tileID === 'd2' || tileID === 'e2' ||
-                    tileID === 'f2' || tileID === 'g2' || tileID === 'h2' || tileID === 'i2' || tileID === 'j2' ||
-                    tileID === 'k2' || tileID === 'l2' || tileID === 'm2' || tileID === 'n2' || tileID === 'o2' ||
-                    tileID === 'p2' || tileID === 'q2' || tileID === 'r2' || tileID === 's2' || tileID === 't2' ||
-                    tileID === 'u2' || tileID === 'v2' || tileID === 'w2' || tileID === 'x2' || tileID === 'y2' ||
-                    tileID === 'z2' || tileID === 'ㄱ2' || tileID === 'ㄴ2' || tileID === 'ㄷ2' || tileID === 'ㄹ2' ||
-                    tileID === 'ㅁ2' || tileID === 'ㅂ2' || tileID === 'ㅅ2' || tileID === 'ㅇ2' || tileID === 'ㅈ2' ||
-                    tileID === 'ㅊ2' || tileID === 'ㅋ2' || tileID === 'ㅌ2' || tileID === 'ㅍ2' || tileID === 'ㅎ2' ||
-                    tileID === '가2' || tileID === '나2' || tileID === '다2' || tileID === '라2' || tileID === '마2' ||
-                    tileID === '바2' || tileID === '사2' || tileID === '아2' || tileID === '자2' || tileID === '차2' ||
-                    tileID === '카2' || tileID === '타2' || tileID === '파2' || tileID === '하2' || tileID === '갸2' ||
-                    tileID === '냐2'
+                    tileID ==='Y2' || tileID === 'Z2'
             ) 
             {
             this.add.image((colIndex / 2) * tileSize, rowIndex * tileSize, tileID).setOrigin(0, 0);
+            } else if (tileID === 'a2') {
+              this.thing = this.physics.add.sprite((colIndex / 2) * tileSize, rowIndex * tileSize, tileID);
+              this.thing.setOrigin(0, 0).setDisplaySize(128, 96).setImmovable(true);
+              this.physics.add.collider(this.character!, this.thing);
+              this.thing.setDepth(1);
+            } else if (tileID === 'b2') {
+              this.thing = this.physics.add.sprite((colIndex / 2) * tileSize, rowIndex * tileSize, tileID);
+              this.thing.setOrigin(0, 0).setDisplaySize(128, 160).setImmovable(true);
+              this.physics.add.collider(this.character!, this.thing);
+              this.thing.setDepth(1);
+            } else if (tileID === 'c2') {
+              this.thing = this.physics.add.sprite((colIndex / 2) * tileSize, rowIndex * tileSize, tileID);
+              this.thing.setOrigin(0, 0).setDisplaySize(128, 160).setImmovable(true);
+              this.physics.add.collider(this.character!, this.thing);
+              this.thing.setDepth(1);
+            } else if (tileID === 'd2') {
+              this.thing = this.physics.add.sprite((colIndex / 2) * tileSize, rowIndex * tileSize, tileID);
+              this.thing.setOrigin(0, 0).setDisplaySize(96, 96).setImmovable(true);
+              this.physics.add.collider(this.character!, this.thing);
+              this.thing.setDepth(1);
+            } else if (tileID === 'e2') {
+              this.thing = this.physics.add.sprite((colIndex / 2) * tileSize, rowIndex * tileSize, tileID);
+              this.thing.setOrigin(0, 0).setDisplaySize(96, 64).setImmovable(true);
+              this.physics.add.collider(this.character!, this.thing);
+              this.thing.setDepth(1);
             }
           }
-        }
+          }
       });
+
+      this.input.keyboard?.on('keydown-E', () => {
+        this.sitdown();
+      });
+
     }
   
     update() {
-      if (this.cursors && this.character) {
+
+    //   if (this.cursors && this.myCharacter) {
+    //     let movingSprite: Phaser.Physics.Arcade.Sprite;
+
+    //     if (this.myCharacter === 'character') {
+    //         movingSprite = this.character!;
+    //     } else if (this.myCharacter === 'character2') {
+    //         movingSprite = this.character2!;
+    //     }
+
+    //     if (this.cursors.left?.isDown) {
+    //         movingSprite.setVelocityX(-1280);
+    //     } else if (this.cursors.right?.isDown) {
+    //         movingSprite.setVelocityX(1280);
+    //     } else {
+    //         movingSprite.setVelocityX(0);
+    //     }
+
+    //     if (this.cursors.up?.isDown) {
+    //         movingSprite.setVelocityY(-1280);
+    //     } else if (this.cursors.down?.isDown) {
+    //         movingSprite.setVelocityY(1280);
+    //     } else {
+    //         movingSprite.setVelocityY(0);
+    //     }
+
+    //     // 움직임을 서버에 전송
+    //     this.socket?.emit('playerMovement', {
+    //         id: this.socket.id,
+    //         character: this.myCharacter,
+    //         x: movingSprite.x,
+    //         y: movingSprite.y
+    //     });
+    // }
+
+      if (this.cursors && this.character && !this.sittingOnBench) {
+        let moved = false;
         if (this.cursors.left?.isDown) {
           this.character.setVelocityX(-1280);
+          moved = true;
         } else if (this.cursors.right?.isDown) {
           this.character.setVelocityX(1280);
+          moved = true;
         } else {
           this.character.setVelocityX(0);
         }
-  
+    
         if (this.cursors.up?.isDown) {
           this.character.setVelocityY(-1280);
+          moved = true;
         } else if (this.cursors.down?.isDown) {
           this.character.setVelocityY(1280);
+          moved = true;
         } else {
           this.character.setVelocityY(0);
         }
+    
+        if (moved) {
+        }
+      }
+    }
+
+    private isNear(): boolean {     //캐릭터가 문 주변에 있는가?
+      if (this.character) {            
+          const benchCenterX = 1650;  // 벤치중심 X 좌표
+          const benchCenterY = 150;  // 벤치중심 Y 좌표
+
+          const minX = benchCenterX - 32;
+          const maxX = benchCenterX + 32;
+          const minY = benchCenterY;
+          const maxY = benchCenterY + 96; //캐릭터 다시 만들고 조정해줘야함
+          
+          const charX = this.character.x;
+          const charY = this.character.y;
+          
+          if (charX >= minX && charX <= maxX && charY >= minY && charY <= maxY) {
+            return true;
+        }
+      }
+      return false;  // 캐릭터가 없는 경우, 문 주변에 없다고 가정하고 false
+  }
+
+    sitdown(){
+      if (!this.isNear()) {
+        return;  // 밴치주변에 없으면 놉
+      }
+      else if(this.sittingOnBench){ //이미 앉아있으면
+        this.character!.y += 64;
+        this.character!.setAlpha(1);
+        this.sittingOnBench = false;
+      }
+      else{ //앉아있지않으면
+      this.character!.y -= 64;
+      this.character!.setAlpha(0.4);
+      this.sittingOnBench = true;
       }
     }
   }

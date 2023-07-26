@@ -30,3 +30,97 @@
     color:gray;
     cursor: pointer;
 }
+
+.search {
+    width: 80%;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+.search input {
+    width: 70%;
+    padding: 0 10px;
+    background-color: #D9D9D9;
+    box-sizing: border-box;
+    border-radius: 0.5rem;
+    border:none;
+    height:22px;
+}
+.search button {
+    width: 20%;
+    height:22px;
+    margin-left: 10px;
+    border-radius: 0.5rem;
+    font-size: medium;
+}
+
+.scrollbox {
+    width:100%;
+    overflow-y: scroll;
+}
+.scrollbox hr {
+    width :80%
+}
+.chat_room {
+    width: 80%;
+    display: flex;
+    margin: 5px 0;
+    margin-left:10%;
+    border-radius: 1rem;
+}
+.chat_room:hover {
+    background-color: gray;
+}
+.chat_room img {
+    width: 60px ;
+    height: 60px;
+    margin: 5px;
+    margin-right: 10px;
+}
+.chat_roomdata{
+    width:80%;
+    margin-top:5px;
+    margin-right: 10px;
+}
+.roomdata{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.chattime {
+    font-size: small;
+}
+
+.lastchat {
+    width: 80%;
+    color: darkgray;
+    margin: 0;
+    margin-right: 5px;
+    font-size: small;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-align: left;
+    white-space: pre-wrap; /* 줄바꿈 처리를 위해 white-space 속성을 pre-wrap으로 변경 */
+    overflow-wrap: break-word; /* 긴 단어를 끊어서 표시하기 위해 overflow-wrap 속성을 break-word로 변경 */
+    word-break: break-all;     
+    -webkit-line-clamp: 2;
+  }
+
+.chatcount {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: orange;
+    font-size: x-small;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    margin: auto 0;
+}
+
+.chatstatus {
+    
+    display: flex;
+    justify-content: space-between;
+}

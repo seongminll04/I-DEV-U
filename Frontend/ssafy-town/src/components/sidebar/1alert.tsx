@@ -3,42 +3,39 @@ import alert_css from './1alert.module.css';
 import axios from 'axios';
 
 interface ModalProps {
-  isOpen: boolean;
   onClose: () => void;
 }
 
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
+const Modal: React.FC<ModalProps> = ({onClose}) => {
   const [page, setpage] = useState<Number>(0); 
   // 0 처음 1 공지전체 2 알림전체    99 0->공지상세 98 0->알림상세 97 공지전체->공지상세 96 알림전체->알림상세
   const [search, setsearch] = useState<string>('');
   const [nowsearch, setnowsearch] = useState<boolean>(false);
 
-  useEffect(() => { //esc키로 끄기 지금 너무 불편함
+  useEffect(() => { //esc키로 끄기
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setpage(0);setnowsearch(false); setsearch(''); onClose();
       }
     };
 
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-    }
-
+    document.addEventListener('keydown', handleKeyDown);
+    
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, onClose]);
+  }, [onClose]);
 
   const searchdata = () => {
     setnowsearch(true)
     // 여기서 모든데이터 중 검색어랑 일치하는 것만 리스트화 하는 코드작성
 
   }
-  if (!isOpen) return null;
+
   
   // 모달창이 열렸다면 공지사항 데이터 불러오기
-  else {
+
     axios({
       method:'get',
       url:'http://localhost:8080/notice/?~~~~~',
@@ -50,7 +47,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
     .catch(err => {
       console.log(err)
     })
-  }
+  
 
   return (
     <div className={alert_css.modal_overlay}

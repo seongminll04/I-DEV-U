@@ -138,6 +138,9 @@ export class Lsize1Scene extends Phaser.Scene {
     private doorOpenTween?: Phaser.Tweens.Tween;
     private doorOpened: boolean = false; // 현재 문의 상태
 
+    private chairPositions: {x: number, y: number}[] = [];
+    private sittingOnChair: boolean = false; // 현재 앉아있니?
+
       private d1?: Phaser.Physics.Arcade.Sprite;
       private d2?: Phaser.Physics.Arcade.Sprite;
       private d3?: Phaser.Physics.Arcade.Sprite;
@@ -198,6 +201,7 @@ export class Lsize1Scene extends Phaser.Scene {
       this.character?.setDepth(2); // 캐릭터부터 생성했으니 depth를 줘야 캐릭터가 화면에 보임
       // this.physics.world.createDebugGraphic();  // 디버그 그래픽
   
+      
       rows.forEach((row, rowIndex) => {
         for (let colIndex = 0; colIndex < row.length; colIndex ++) {
           const tileID = row.substring(colIndex, colIndex +1) as AssetKeys;
@@ -209,6 +213,12 @@ export class Lsize1Scene extends Phaser.Scene {
             } else if (tileID ==='C' || tileID === 'm' || tileID === 'l' || tileID === 'I'|| tileID === 'n' || tileID === 'o' ||
                        tileID ==='p' || tileID === 'q' || tileID === 'r' || tileID === 's'|| tileID === 't' || tileID === 'u' ) {
               this.add.image(colIndex * tileSize, rowIndex * tileSize, tileID).setOrigin(0, 0);
+
+              if(tileID ==='p' || tileID ==='q' || tileID ==='r' || tileID ==='s' || tileID ==='t' || tileID ==='l' || tileID ==='m' || tileID ==='I' ){
+                this.chairPositions.push({x: colIndex * tileSize + tileSize/2, y: rowIndex * tileSize + tileSize/2});
+              }
+
+
             } else if (tileID === 'E') {
               this.water = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
               this.water.setOrigin(0, 0).setDisplaySize(32, 64).setImmovable(true);
@@ -384,19 +394,23 @@ export class Lsize1Scene extends Phaser.Scene {
     });
     
 
-      this.input.keyboard?.on('keydown-E', () => {
-        this.openDoor();
-      });
-      
+    this.input.keyboard?.on('keydown-E', () => {
+      const nearbyObject = this.NearbyObjects();
   
-
+      if (nearbyObject === 'door') {
+          this.openDoor();
+      } else if (nearbyObject && typeof nearbyObject !== 'string') {
+        this.sitdown(nearbyObject);
+    }
+  });
+      
       
       this.loadDoorParts();
   }
   
   
     update() {
-      if (this.cursors && this.character) {
+      if (this.cursors && this.character && !this.sittingOnChair) {
         if (this.cursors.left?.isDown) {
           this.character.setVelocityX(-1280);
         } else if (this.cursors.right?.isDown) {
@@ -433,17 +447,31 @@ export class Lsize1Scene extends Phaser.Scene {
       this.clockText3.setText(`${hours}:${minutes}:${seconds}`);
     }
 
-    private isNearDoor(): boolean {     //캐릭터가 문 주변에 있는가?
-        if (this.character) {            
-            const doorCenterX = 1024;  // 문의 중심 X 좌표
-            const doorCenterY = 768;  // 문의 중심 Y 좌표
-            
-            const distance = Phaser.Math.Distance.Between(this.character.x, this.character.y, doorCenterX, doorCenterY);
-            
-            return distance > 32 && distance <= 160;  // 문 주변에 있어야함, 문이랑 겹치면 안됨
-        }
-        return false;  // 캐릭터가 없는 경우, 문 주변에 없다고 가정하고 false
-    }
+    private NearbyObjects(): 'door' | { x: number, y: number } | null {
+      const doorPosition = { x: 1024, y: 768 }; // 문
+      const chairPositions = this.chairPositions; // 의자
+
+      if (this.character) {
+          const distanceToDoor = Phaser.Math.Distance.Between(this.character.x, this.character.y, doorPosition.x, doorPosition.y);
+          if (distanceToDoor <= 160 && distanceToDoor > 32) {
+              return 'door';
+          }
+  
+          let nearestChair: { x: number, y: number } | null = null;
+          let nearestDistance: number = Infinity;
+          for (const chairPos of chairPositions) {
+              const distanceToChair = Phaser.Math.Distance.Between(this.character.x, this.character.y, chairPos.x, chairPos.y);
+              if (distanceToChair < 32 && distanceToChair < nearestDistance) {
+                  nearestChair = chairPos;
+                  nearestDistance = distanceToChair;
+              }
+          }
+          if (nearestChair) {
+              return nearestChair;
+          }
+      }
+      return null; // 주변에 아무 오브젝트도 없다면 null
+  }
     
 
     loadDoorParts() {
@@ -496,10 +524,6 @@ export class Lsize1Scene extends Phaser.Scene {
     
   
     openDoor() {
-        if (!this.isNearDoor()) {
-            return;  // 캐릭터가 문 주변에 있지 않다면 못열어
-        }
-    
         if (this.doorOpened) {
             this.closeDoor(); // 만약 문이 열려있다면, 문을 닫는다
             return;
@@ -532,7 +556,7 @@ export class Lsize1Scene extends Phaser.Scene {
     
     closeDoor() {
         
-        if (!this.isNearDoor() || !this.doorOpened) {
+        if (!this.doorOpened) {
             return;  // 문 주변에 있지 않거나 문이 이미 닫혀있으면 함수를 빠져나옴
         }
         
@@ -580,4 +604,17 @@ export class Lsize1Scene extends Phaser.Scene {
             (part.body as Phaser.Physics.Arcade.Body).enable = false;
         });
     }
+
+    sitdown(chairPosition: { x: number, y: number }){
+      if (this.sittingOnChair) {  
+          this.character!.x += 32;
+          this.character!.setAlpha(1);
+          this.sittingOnChair = false;
+      } else {  
+          this.character!.x = chairPosition.x;
+          this.character!.y = chairPosition.y - 16;
+          this.character!.setAlpha(0.4);
+          this.sittingOnChair = true;
+      }
+  }
 }

@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useRef } from 'react';
 import mypage_modal_css from './8mypageModal.module.css';
 import axios from 'axios';
 import { useFormik } from 'formik';
@@ -23,24 +23,29 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, user}) => {
   const [isWithdraw, setWithdraw] = useState(false);
-  useEffect(() => { //esc키로 끄기 지금 너무 불편함
+  const [chknickname, setchknickname] = useState('no');
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
+  console.log(user.email)
+
+  useEffect(() => { //esc키로 끄기
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose();
+      if (isOpen && event.key === 'Escape') {
+        onClose(); setWithdraw(false);
       }
     };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-    }
-
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, onClose]);
 
-  const [chknickname, setchknickname] = useState('no');
-  console.log(user.email)
   const validationSchema = Yup.object().shape({
     password: Yup.string()
       .min(8, '8~14 자리, 특수문자 사용불가')
@@ -114,8 +119,21 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, user}) => {
       // Add signup logic here
     },
   });
-  
-  if (!isOpen) return null;
+
+  // input 방향키 살리기
+  const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
+    const inputElement = event.currentTarget
+    const currentCursorPosition = inputElement.selectionStart || 0;
+    if (event.key === 'ArrowLeft') {
+      inputElement.setSelectionRange(currentCursorPosition - 1, currentCursorPosition - 1);
+    } else if (event.key === 'ArrowRight') {
+      inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
+    } else if (event.key === ' '){
+      inputElement.value = inputElement.value.slice(0,currentCursorPosition)+ ' ' +inputElement.value.slice(currentCursorPosition,)
+      inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
+    }
+  }
+  if (!isOpen)  return null;
   
   return (
     <div className={mypage_modal_css.mypage_modal_overlay}  onClick={(e: React.MouseEvent<HTMLDivElement>) => {
@@ -145,7 +163,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, user}) => {
               <span>닉네임</span>
             </div>
             <div className={mypage_modal_css.mypage_nickname}>
-              <input style={{width:'82%'}} type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('nickname')}  onChange={(event) => {formik.handleChange(event); setchknickname('no'); console.log(chknickname)}} />
+              <input style={{width:'82%'}} type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('nickname')}  onChange={(event) => {formik.handleChange(event); setchknickname('no'); console.log(chknickname)}} 
+              onKeyDown={handlekeydown}/>
               <div className={mypage_modal_css.mypage_check_nickname_btn} onClick={()=>nicknamecheck(formik.values.nickname)}>중복확인</div>
             </div>
             <div className={mypage_modal_css.mypage_info}>

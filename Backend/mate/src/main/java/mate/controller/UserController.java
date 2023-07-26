@@ -19,7 +19,7 @@ public class UserController {
     @GetMapping("/sleep")
     public ResponseEntity<Map<String, String>> test(){
         Map<String, String> map = new HashMap<>();
-        map.put("home", "house");
+        map.put("home", "hyeong Suck");
         return ResponseEntity.ok(map);
     }
 

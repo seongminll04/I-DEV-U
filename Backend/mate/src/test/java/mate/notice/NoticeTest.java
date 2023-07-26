@@ -7,11 +7,11 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import lombok.extern.slf4j.Slf4j;
 import mate.domain.Notice;
 import mate.repository.NoticeRepository;
 
@@ -29,7 +29,7 @@ public class NoticeTest {
 
 		notice.setUserIdx(4);
 		notice.setType("운영");
-		notice.setTitle("운영공지1");
+		notice.setTitle("운영공지2");
 		notice.setContent("운영공지 내용입니다.");
 
 		Notice savedNotice = noticeRepository.save(notice);
@@ -51,10 +51,10 @@ public class NoticeTest {
 	void 공지사항_수정() {
 		Notice notice = new Notice();
 
-		notice.setIdx(4);
+		notice.setIdx(5);
 		notice.setUserIdx(4);
-		notice.setTitle("운영공지제목_수정");
-		notice.setContent("운영공지제목수정입니다.");
+		notice.setTitle("운영공지제목_수정123");
+		notice.setContent("운영공지제목수정입니다.123");
 
 		Notice updateNotice = noticeRepository.save(notice);
 

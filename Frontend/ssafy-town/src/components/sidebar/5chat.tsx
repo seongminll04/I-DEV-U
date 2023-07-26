@@ -49,7 +49,7 @@
       newSocket.on("roomList", (rooms: string[]) => {
         setRoomList(rooms);
       });
-      setRoomList(['room1','room2']);
+      setRoomList(['김싸피','이싸피']);
     
       return () => {
         // 컴포넌트 언마운트 시 Socket.IO 연결 종료 및 이벤트 리스너 제거
@@ -114,26 +114,34 @@
 
           <div className={chat_css.scrollbox}>
             {roomList.map((room) => (
-              <div className={chat_css.chat_room} key={room}  onClick={() => handleJoinRoom(room)}>
-                <img src="assets/default_profile.png" alt=""/>
-                <div className={chat_css.chat_roomdata}>
-                  <b>{room}</b>
-                  <b>마지막 채팅메시지</b>
+              <div>
+                <div className={chat_css.chat_room} key={room}  onClick={() => handleJoinRoom(room)}>
+                  <img src="assets/default_profile.png" alt=""/>
+                  <div className={chat_css.chat_roomdata}>
+                    <div className={chat_css.roomdata} style={{marginBottom:'10px'}}>
+                      <b>{room}</b>
+                      <span className={chat_css.chattime}>07/25 12:25 PM</span>
+                    </div>
+                    <div className={chat_css.roomdata}>
+                      <p className={chat_css.lastchat}>마지막 채팅 메시지</p>
+                      <p className={chat_css.chatcount}>99+</p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  
-                </div>
+                <hr />
               </div>
-            ))}
-            <hr />
-
+            ))} 
           </div>
         </div>
         :
-        <div>
-          <p className={chat_css.backbtn} onClick={() => {setSelectedRoom('')}}>돌아가기</p>
-          <p>{selectedRoom} 채팅방</p>
-          <div onScroll={handleScroll}>
+        <div style={{width:'80%'}}>
+          <div className={chat_css.chatstatus}>
+            <p onClick={() => {setSelectedRoom('')}}>back</p>
+            <h3>{selectedRoom}</h3>
+            <p>나가기</p>
+          </div>
+          <hr />
+          <div onScroll={handleScroll} style={{height:'80vh'}}>
             {messages.map((message, index) => (
               <div key={index}>
                 <strong>{message.sender}: </strong>
@@ -141,8 +149,9 @@
               </div>
             ))}
           </div>
+          <hr />
           <div>
-            <input type="text" value={messageInput} onChange={handleInputChange} />
+            <input type="text" value={messageInput} onChange={handleInputChange} style={{width:'80%'}} />
             <button onClick={handleSendMessage}>전송</button>
           </div>
         </div>

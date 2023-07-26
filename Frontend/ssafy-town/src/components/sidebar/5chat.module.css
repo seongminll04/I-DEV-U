@@ -78,7 +78,49 @@
 }
 .chat_roomdata{
     width:80%;
+    margin-top:5px;
+    margin-right: 10px;
+}
+.roomdata{
+    width: 100%;
     display: flex;
     justify-content: space-between;
-    margin-top:5px;
+}
+
+.chattime {
+    font-size: small;
+}
+
+.lastchat {
+    width: 80%;
+    color: darkgray;
+    margin: 0;
+    margin-right: 5px;
+    font-size: small;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-align: left;
+    white-space: pre-wrap; /* 줄바꿈 처리를 위해 white-space 속성을 pre-wrap으로 변경 */
+    overflow-wrap: break-word; /* 긴 단어를 끊어서 표시하기 위해 overflow-wrap 속성을 break-word로 변경 */
+    word-break: break-all;     
+    -webkit-line-clamp: 2;
+  }
+
+.chatcount {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: orange;
+    font-size: x-small;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    margin: auto 0;
+}
+
+.chatstatus {
+    
+    display: flex;
+    justify-content: space-between;
 }

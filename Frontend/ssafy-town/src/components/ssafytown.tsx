@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ssafytown_css from './ssafytown.module.css';
 
-
 import Sidebar from './sidebar'
 import Navbar from './navbar'
 

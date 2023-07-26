@@ -119,6 +119,7 @@ const Mypage: React.FC<Props> = ({onModal, closeSidebar, closeModal}) => {
   return (
     <div>
       <div className='sidebar_modal' id={mypage_css.modal}>
+        <h1>내 프로필</h1>
         <div className={mypage_css.mypage_photo}>
           <img src="assets/default_profile.png" alt="" style={{width:'100px', height:'100px'}}/>
         </div>

@@ -465,7 +465,7 @@ export class Lsize1Scene extends Phaser.Scene {
 
       if (this.character) {
           const distanceToDoor = Phaser.Math.Distance.Between(this.character.x, this.character.y, doorPosition.x, doorPosition.y);
-          if (distanceToDoor <= 160 && distanceToDoor > 32) {
+          if (distanceToDoor <= 140 && distanceToDoor > 32) {
             this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
               return 'door';
           }
@@ -639,6 +639,6 @@ export class Lsize1Scene extends Phaser.Scene {
       }
   }
   openBoard(){
-    //모달 창열자
+    this.game.events.emit("openModal2");
   }
 }

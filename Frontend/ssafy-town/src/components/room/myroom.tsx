@@ -65,7 +65,6 @@ const Myroom: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log(game?.isPaused)
     if (game?.isPaused!== undefined) {
       if (isModalOpen || !isAllowMove) {
         game.isPaused=true

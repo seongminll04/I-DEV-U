@@ -134,7 +134,7 @@ const QAModal: React.FC<QAModalProps> = ({ onClose, onConfirm }) => {
                         </label>
                     ))}
                 </div>
-                
+                <br />
                 <button type="button" onClick={() => setCurrentPage(2)}>다음 페이지</button>
             </form>
         );
@@ -246,16 +246,14 @@ const QAModal: React.FC<QAModalProps> = ({ onClose, onConfirm }) => {
     }
 
     return (
-        <div className={qa_css.modal_overlay} onClick={(e: React.MouseEvent<HTMLDivElement>) => {
-            if (e.target === e.currentTarget) {onClose()}}}>
+        <div className={qa_css.modal_overlay}>
             <div className={qa_css.qa_modal}>
+            <button onClick={onCloseHandler}>
+                나중에 하기 (작성중인 설문이 초기화됩니다)</button>
                 <h1>I DEV U</h1>
                 <h2>📝 소개팅 설문조사</h2>
                 <h3>* 질문의 답변들이 이용할 정보가 됩니다. *</h3>
                 {surveyForm}
-                <button onClick={onCloseHandler}>
-                나중에 하기(개발용, 나중에는 없애고 강제시킬예정)
-                </button>
             </div>
         </div>
     );

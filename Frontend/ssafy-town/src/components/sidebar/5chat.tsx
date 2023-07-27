@@ -3,10 +3,9 @@
   import { io, Socket } from "socket.io-client";
   import chat_css from "./5chat.module.css";
 
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
-
-
+import { setAllowMove } from '../../store/actions';
 
   interface ChatMessage {
     content: string;
@@ -17,6 +16,7 @@ import { AppState } from '../../store/state';
     closeModal:()=>void;
   }
   const Chat: React.FC<Props> = ({closeSidebar, closeModal}) => {
+    const dispatch = useDispatch()
     const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
     const [socket, setSocket] = useState<Socket | null>(null);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -24,6 +24,20 @@ import { AppState } from '../../store/state';
     const [roomList, setRoomList] = useState<string[]>([]);
     const [selectedRoom, setSelectedRoom] = useState<string>("");
     const [oldestMessageTimestamp, setOldestMessageTimestamp] = useState<number | null>(null);
+
+      // input 방향키 살리기
+  const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
+    const inputElement = event.currentTarget
+    const currentCursorPosition = inputElement.selectionStart || 0;
+    if (event.key === 'ArrowLeft' && currentCursorPosition!==0) {
+      inputElement.setSelectionRange(currentCursorPosition - 1, currentCursorPosition - 1);
+    } else if (event.key === 'ArrowRight') {
+      inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
+    } else if (event.key === ' '){
+      inputElement.value = inputElement.value.slice(0,currentCursorPosition)+ ' ' +inputElement.value.slice(currentCursorPosition,)
+      inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
+    }
+  }
 
     useEffect(() => { //esc키로 끄기
       const handleKeyDown = (event: KeyboardEvent) => {
@@ -113,7 +127,8 @@ import { AppState } from '../../store/state';
         <div style={{width:'100%', display:'flex',flexDirection:'column', alignItems:'center'}}>
           <h1>채팅방목록</h1>
           <div className={chat_css.search}>
-            <input type="text" placeholder='검색어를 입력해주세요'/>
+            <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown}
+            onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
             <button>검색</button>
           </div>
           <hr style={{width:'75%', color:'black'}}/>
@@ -157,7 +172,7 @@ import { AppState } from '../../store/state';
           </div>
           <hr />
           <div>
-            <input type="text" value={messageInput} onChange={handleInputChange} style={{width:'80%'}} />
+            <input type="text" value={messageInput} onChange={handleInputChange} style={{width:'80%'}} onKeyDown={handlekeydown} />
             <button onClick={handleSendMessage}>전송</button>
           </div>
         </div>

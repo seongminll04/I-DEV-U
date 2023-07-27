@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import mate_css from './3mate.module.css'
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
+import { setModal } from '../../store/actions';
 
+import MateFilter from '../filter/mateFilter';
 
 // import styled from 'styled-components';
 
@@ -44,6 +46,7 @@ interface Props {
   closeModal:()=>void;
 }
 const Mate: React.FC<Props> = ({closeSidebar, closeModal}) => {
+  const dispatch = useDispatch();
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
   // const [isOn, setisOn] = useState(true);
 
@@ -75,7 +78,7 @@ const Mate: React.FC<Props> = ({closeSidebar, closeModal}) => {
             </ToggleContainer>
           </p> */}
           <div style={{display:'flex', width:'85%'}}>
-            <button className={mate_css.button}>필터</button>
+            <button className={mate_css.button} onClick={()=>dispatch(setModal('동료찾기필터'))}>필터</button>
             <button className={mate_css.button}>검색</button>
           </div>
           <div className={mate_css.userattribute}>
@@ -196,6 +199,7 @@ const Mate: React.FC<Props> = ({closeSidebar, closeModal}) => {
                 </tr>
               ))} */}
       </div>
+      {isModalOpen==='동료찾기필터' ? <MateFilter onClose={()=>dispatch(setModal(null))} />:null}
     </div>
   );
 };

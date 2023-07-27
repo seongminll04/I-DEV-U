@@ -1,6 +1,7 @@
 export interface AppState {
   isModalOpen: string|null;
   isSidebarOpen: string|null;
+  isAllowMove:boolean;
   }
   
 // export enum ActionTypes {

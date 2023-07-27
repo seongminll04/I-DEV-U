@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 import qa_css from './firstQA.module.css';
 
 interface QAModalProps {
-  isOpen: boolean;
   onClose: () => void;
   onConfirm: (surveyResults: any) => void;
 }
 
-const QAModal: React.FC<QAModalProps> = ({ isOpen, onClose, onConfirm }) => {
+const QAModal: React.FC<QAModalProps> = ({ onClose, onConfirm }) => {
   const [workingYears, setWorkingYears] = useState<string>("");
   const [currentJob, setCurrentJob] = useState<string>("");
   const [languages, setLanguages] = useState<string[]>([]);
@@ -54,19 +53,15 @@ const QAModal: React.FC<QAModalProps> = ({ isOpen, onClose, onConfirm }) => {
         onClose();
       }
     };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-    }
+    
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, onClose]);
+  }, [onClose]);
 
-  if (!isOpen) {
-    return null;
-  }
+
 
   const surveyForm = (
     <form onSubmit={handleSubmit}>

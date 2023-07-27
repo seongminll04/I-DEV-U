@@ -116,7 +116,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, user}) => {
   const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget
     const currentCursorPosition = inputElement.selectionStart || 0;
-    if (event.key === 'ArrowLeft') {
+    if (event.key === 'ArrowLeft' && currentCursorPosition!==0) {
       inputElement.setSelectionRange(currentCursorPosition - 1, currentCursorPosition - 1);
     } else if (event.key === 'ArrowRight') {
       inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
@@ -162,15 +162,15 @@ const Modal: React.FC<ModalProps> = ({ onClose, user}) => {
             <div className={mypage_modal_css.mypage_info}>
               <span>자기소개</span>
             </div>
-            <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('intro')}/>
+            <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('intro')} onKeyDown={handlekeydown}/>
             <div className={mypage_modal_css.mypage_info}>
               <span>비밀번호</span>
             </div>
-            <input type="password" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('password')} />
+            <input type="password" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('password')} onKeyDown={handlekeydown} />
             <div className={mypage_modal_css.mypage_info}>
               <span>비밀번호 확인</span>
             </div>
-            <input type="password" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('confirmPassword')} placeholder="비밀번호 확인"/>
+            <input type="password" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('confirmPassword')} placeholder="비밀번호 확인" onKeyDown={handlekeydown}/>
             <div className={mypage_modal_css.mypage_info}>
               <span>사진</span>
             </div>

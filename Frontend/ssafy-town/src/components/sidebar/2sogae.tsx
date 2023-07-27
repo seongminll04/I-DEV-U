@@ -52,7 +52,9 @@ const Sogae: React.FC<Props> = ({closeSidebar, closeModal}) => {
   useEffect(() => { //esc키로 끄기
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        if (isModalOpen!==null) {closeModal()} else {closeSidebar()}
+        if (isModalOpen!=='소개팅설문') {
+          if (isModalOpen!== null) {closeModal()} else {closeSidebar()}
+        }
       }
     };
     document.addEventListener('keydown', handleKeyDown);

@@ -4,7 +4,6 @@ import ssafytown_css from '../ssafytown.module.css';
 import { useSelector } from 'react-redux';
 import { AppState } from '../../store/state';
 
-
 import { Ssize1Scene } from '../map/Ssize1Scene';
 import { Lsize1Scene } from '../map/Lsize1Scene';
 import { Msize1Scene } from '../map/Msize1Scene';
@@ -13,7 +12,7 @@ const Myroom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
   const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
-  
+  const isAllowMove = useSelector((state: AppState) => state.isAllowMove);// 모달창 오픈여부 (알림, 로그아웃)
   // 맵전환에 대한건 나중에 없앨 수도?
   const [currentScene, setCurrentScene] = useState<'Ssize1Scene' | 'Lsize1Scene' | 'Msize1Scene'>('Ssize1Scene'); //맵
   const switchToSsize1Scene = () => {
@@ -62,9 +61,11 @@ const Myroom: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log(game?.isPaused)
     if (game?.isPaused!== undefined) {
       if (isModalOpen) {
+        game.isPaused=true
+      }
+      else if (!isAllowMove) {
         game.isPaused=true
       }
       else {

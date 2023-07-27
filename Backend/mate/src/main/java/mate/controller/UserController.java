@@ -3,7 +3,6 @@ package mate.controller;
 import mate.domain.User;
 import mate.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +16,11 @@ import java.util.Map;
 public class UserController {
 
     @GetMapping("/sleep")
-    public ResponseEntity<Map<String, String>> test(){
+    public ResponseEntity<Map<String, String>> test() {
         Map<String, String> map = new HashMap<>();
         map.put("home", "hyeong Suck");
+
+
         return ResponseEntity.ok(map);
     }
 
@@ -32,6 +33,7 @@ public class UserController {
     }
 
     User loginUser = null;
+
     /*
      * 회원가입
      */

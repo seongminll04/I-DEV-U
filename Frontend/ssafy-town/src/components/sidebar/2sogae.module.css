@@ -2,7 +2,7 @@
     background: deepskyblue;
     color: white;
     font-size: 1em;
-    margin: 1em;
+    margin: 5px;
     padding: 0.5em 1em;
     border: none;
     border-radius: 3px;
@@ -80,4 +80,73 @@
 .selectbox {
     width: 150px;
     height: 30px;
+}
+
+.userattribute {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 80%;
+    border-width: 100%;
+    border-bottom: 2px solid black;
+    background-color: rgba(109, 206, 245, 1);
+    border-radius: 0.3rem;
+    padding:5px;
+    margin-top: 10px;
+}
+
+.scrollbar {
+    width:100%;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
+    overflow-y: scroll; 
+    margin-bottom: 10px;
+}
+.usertable {
+    display: flex;
+    margin-left:9%;
+    justify-content: space-around;
+    align-items: center;
+    width: 84%;
+    border-bottom: 2px solid black;
+}
+
+.usertable:hover {
+    background-color: rgba(109, 206, 245, 1);
+    border-radius: 0.5rem;
+}
+.userInfo {
+    width:70%;
+    text-align: center;
+    border-right: 2px solid black;
+}
+
+.matchRate {
+    width: 30%;
+    text-align: center;
+}
+
+.scrollbar .matchRate {
+    font-size: x-large;
+}
+.profile {
+    width: 100%;
+    display: flex;
+    margin: 5px 0;
+}
+.profile img {
+    width: 60px ;
+    height: 60px;
+    margin:0 10px;
+}
+.profiledata{
+    width:100%;
+    height:60px;
+    text-align: left;
+    margin-top:5px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow:ellipsis;
 }

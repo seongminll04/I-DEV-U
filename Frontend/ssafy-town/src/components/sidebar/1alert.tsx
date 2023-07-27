@@ -69,7 +69,7 @@ const Modal: React.FC<ModalProps> = ({onClose}) => {
               <p>07/19 00:00</p>
             </div>
           </div>
-          <hr style={{border:'1px solid black'}}/>
+          <br />
           <div className={alert_css.container}>
             <div className={alert_css.notice}>
               <p>알림 </p>
@@ -118,22 +118,19 @@ const Modal: React.FC<ModalProps> = ({onClose}) => {
         {page===1 ? 
         <div>
           <h1 style={{margin:'-20px 0 20px 0'}}>공지사항</h1>
-          <hr />
+          <hr style={{border:'solid 1px gray'}}/>
           <div style={{display:'flex', justifyContent:'space-between'}}>
             {!nowsearch ? <span></span> : <span className={alert_css.movebtn} onClick={()=> {setsearch(''); setnowsearch(false)}}>검색취소</span>}
             <div>
-            <input type="text" value={search} onChange={(event) => {setsearch(event.target.value);}}/>
-            <button onClick={searchdata}>검색icon</button>
+              <input type="text" value={search} onChange={(event) => {setsearch(event.target.value);}}/>
+              <button onClick={searchdata}>검색icon</button>
             </div>
           </div>
      
           <br />
-          <div className={alert_css.notice}>
-             전체 or 검색 결과 리스트 출력하는 곳
-          </div>
           <div onClick={()=> {setpage(97)}} className={alert_css.notice}>
             <p>1</p>
-            <p>~~~~에 점검 진행합니다.~~~~에 점검 진행합니다.</p>
+            <p>금일 오후 12:00 에 점검 일정이 있습니다.</p>
             <p>07/19 00:00</p>
           </div>
           
@@ -150,11 +147,6 @@ const Modal: React.FC<ModalProps> = ({onClose}) => {
           </div>
 
           <br />
-          <div className={alert_css.notice}>
-
-            전체 or 검색 결과 리스트 출력하는 곳
- 
-          </div>
           <div onClick={()=> {setpage(96)}} className={alert_css.notice}>
             <p>1</p>
             <p>~~~~에 점검 진행합니다.~~~~에 점검 진행합니다.</p>

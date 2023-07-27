@@ -50,7 +50,7 @@
 }
 
 .container {
-    background-color: black;
     height: 170px;
     border-radius: 1rem;
+    border: 3px gray solid;
 }

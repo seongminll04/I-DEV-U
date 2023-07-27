@@ -5,7 +5,8 @@ import SecondQAModal from '../survey/secondQA';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
-import { setModal,setSidebar } from '../../store/actions';
+import { setModal } from '../../store/actions';
+import SogaeFilter from '../filter/sogaeFilter';
 
 
 type User = {
@@ -25,8 +26,8 @@ interface Props {
 
 
 const Sogae: React.FC<Props> = ({closeSidebar, closeModal}) => {
-  const onModal = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch = useDispatch();
+  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   // const [data, setData] = useState<any | null>(null); //실제 상태용 데이터의 상황에따라 변화
   const [data, setData] = useState<any>(true); //개발용 항상 ok인 상태
@@ -51,14 +52,14 @@ const Sogae: React.FC<Props> = ({closeSidebar, closeModal}) => {
   useEffect(() => { //esc키로 끄기
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        if (onModal!==null) {closeModal()} else {closeSidebar()}
+        if (isModalOpen!==null) {closeModal()} else {closeSidebar()}
       }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [onModal,closeSidebar,closeModal]);
+  }, [isModalOpen,closeSidebar,closeModal]);
 
 
   useEffect(() => {
@@ -81,14 +82,6 @@ const Sogae: React.FC<Props> = ({closeSidebar, closeModal}) => {
   useEffect(() => {
     setTotalItems(users.length);
   }, [users]);
-
-  const handleModalOpen = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-  };
 
   const handleConfirm = () => {
     // 여기에 onConfirm 했을때의 로직
@@ -142,63 +135,53 @@ const handleFilterSearch = () => {
 
   return (
     <div className='sidebar_modal'>
-      <div>
+      <h1>if(소개팅) {"{🤍=❤️}"}</h1>
       
-          <h1>if(소개팅) {"{🤍=❤️}"}</h1>
-      
-
         {!data ? (
           <>
-            <button className={sogae_css.button} onClick={handleModalOpen}>등록하기</button>
+            <button className={sogae_css.button} onClick={()=>dispatch(setModal('소개팅설문'))}>등록하기</button>
             <div>
               <span className={sogae_css.redText}>소개팅 정보가 등록되어 있지 않습니다.</span><br/>
               <span className={sogae_css.redText}> 추가 사용을 원하시면 정보를 등록하셔야합니다.</span>
               <br/><br/>
             </div>
+            <img src="assets/sogae_blur.png" alt="" style={{width:'85%'}}/>
           </>
         ) : (
-          <div><br/>
-            <div>
-              <label htmlFor="wordFilterSelect" className={sogae_css.selectfilter}>필터: </label>
-              <select 
-                id="wordFilterSelect" 
-                value={selectedWord || ""}
-                onChange={handleSelectChange}
-                className={sogae_css.selectbox}
-              >
-                <option value="" disabled>선택하세요</option>
-                {words.map(word => (
-                  <option key={word} value={word}>{word}</option>
-                ))}
-              </select>
-            </div><br/>
-            <div className={sogae_css.selectfilter}>
-              선택된 필터: {selectedFilters.join(', ')}
-            </div>
-            <button onClick={handleFilterSearch} className={sogae_css.button}>필터로 검색하기</button>
+          <>
+          <div style={{display:'flex', width:'85%'}}>
+            <button className={sogae_css.button} onClick={()=>dispatch(setModal('소개팅설문'))}>설문 수정하기</button>
+            <button className={sogae_css.button} onClick={()=>dispatch(setModal('소개팅필터'))}>필터</button>
           </div>
-        )}
-
-        {users.length > 0 && (
-          <table className={sogae_css.table}>
-            <thead>
-              <tr>
-                <th className={sogae_css.userInfo}>유저 정보</th>
-                <th className={sogae_css.matchRate}>일치율</th>
-              </tr>
-            </thead>
-            <tbody>
-              {getCurrentPageData().map((user, index) => (
-                <tr key={index}>
-                  <td>{user.name}</td>
-                  <td>{user.matchRate}%</td>
-                </tr>
+          {users.length > 0 &&
+          <><div className={sogae_css.userattribute}>
+              <div className={sogae_css.userInfo} style={{fontSize:'large', fontWeight:'bold'}}>유저정보</div>
+              <div className={sogae_css.matchRate} style={{fontSize:'large', fontWeight:'bold'}}>일치율</div>
+            </div>
+            <div className={sogae_css.scrollbar}>
+            {getCurrentPageData().map((user, index) => (
+              <div className={sogae_css.usertable} key={index}>
+                <div className={sogae_css.userInfo}>
+                  <div className={sogae_css.profile}>
+                    <img src="assets/default_profile.png" alt=""/>
+                    <div className={sogae_css.profiledata}>
+                      <b>{user.name}</b>
+                      <p style={{color:'gray'}}>#Python #Java #JavaScript #React</p>
+                    </div>
+                  </div>
+                </div>
+                <div className={sogae_css.matchRate}>{user.matchRate}%</div>
+              </div>
               ))}
-            </tbody>
-          </table>
+              <p>-더 업슴-</p>
+            </div>
+            <button className={sogae_css.button}>매칭</button>
+            </>}
+            
+        </>
         )}
 
-        <div className={sogae_css.pagination}>
+        {/* <div className={sogae_css.pagination}>
           {Array.from({ length: Math.ceil(totalItems / ITEMS_PER_PAGE) }, (_, i) => i).map((num) => (
             <button
               key={num}
@@ -208,11 +191,11 @@ const handleFilterSearch = () => {
               {num + 1}
             </button>
           ))}
-        </div>
-        <button className={sogae_css.button}>매칭</button>
-        <SecondQAModal isOpen={isModalOpen} onClose={handleModalClose} onConfirm={handleConfirm} />
+        </div> */}
+        {isModalOpen==='소개팅설문' ? <SecondQAModal onClose={()=>dispatch(setModal(null))} onConfirm={handleConfirm} />:null}
+        {isModalOpen==='소개팅필터' ? <SogaeFilter onClose={()=>dispatch(setModal(null))} />:null}
       </div>
-    </div>
+  
   );
 };
 

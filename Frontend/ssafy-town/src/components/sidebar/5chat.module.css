@@ -68,7 +68,7 @@
     border-radius: 1rem;
 }
 .chat_room:hover {
-    background-color: gray;
+    background-color: rgba(109, 206, 245, 1);
 }
 .chat_room img {
     width: 60px ;

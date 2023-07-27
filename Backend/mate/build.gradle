@@ -45,7 +45,7 @@ tasks.named('test') {
 
 checkstyle {
     //maxWarnings = 0 // 규칙이 어긋나는 코드가 하나라도 있을 경우 빌드 fail을 내고 싶다면 이 선언을 추가한다.
-    configFile = file("Backend/mate/src/main/resources/formatter/naver-intellij-formatter.xml")
-    configProperties = ["suppressionFile": "Backend/mate/src/main/resources/formatter/naver-intellij-formatter.xml"]
+    configFile = file("formatter/naver-intellij-formatter.xml")
+    configProperties = ["suppressionFile": "formatter/naver-intellij-formatter.xml"]
     toolVersion = "8.24"  // checkstyle 버전 8.24 이상 선언
 }

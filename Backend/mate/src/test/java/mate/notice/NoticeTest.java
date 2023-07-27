@@ -1,20 +1,17 @@
 package mate.notice;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
-
-import java.util.List;
-import java.util.Optional;
-
-import javax.transaction.Transactional;
-
+import lombok.extern.slf4j.Slf4j;
+import mate.domain.Notice;
+import mate.repository.NoticeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import lombok.extern.slf4j.Slf4j;
-import mate.domain.Notice;
-import mate.repository.NoticeRepository;
-import org.springframework.test.context.junit4.SpringRunner;
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @Slf4j
 @SpringBootTest

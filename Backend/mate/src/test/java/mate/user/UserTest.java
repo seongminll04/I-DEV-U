@@ -1,19 +1,23 @@
 package mate.user;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
-
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import lombok.extern.slf4j.Slf4j;
 import mate.domain.User;
 import mate.repository.UserRepository;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.runner.RunWith;
+import javax.transaction.Transactional;
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 
 @Slf4j
 @SpringBootTest
+@RunWith(SpringRunner.class)
+@Transactional
 public class UserTest {
 
 	@Autowired

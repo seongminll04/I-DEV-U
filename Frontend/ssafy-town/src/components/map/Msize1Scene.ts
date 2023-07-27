@@ -58,6 +58,7 @@ export class Msize1Scene extends Phaser.Scene {
     private character2?: Phaser.Physics.Arcade.Sprite;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
     private walls?: Phaser.Physics.Arcade.StaticGroup;
+    private balloon!: Phaser.GameObjects.Sprite;
 
     private thing?: Phaser.Physics.Arcade.Sprite;
 
@@ -76,6 +77,7 @@ export class Msize1Scene extends Phaser.Scene {
       // 타일 이미지 로드
       this.load.image('character', 'assets/admin_character.png');
       this.load.image('character2', 'assets/admin_character.png');
+      this.load.image('balloon', 'assets/ekey.png');
     }
   
     create() {
@@ -83,6 +85,9 @@ export class Msize1Scene extends Phaser.Scene {
       const tileSize = 32;  // 타일 크기 설정
   
       this.walls = this.physics.add.staticGroup();
+
+      this.balloon = this.add.sprite(0, 0, 'balloon').setVisible(false);
+      this.balloon.setDepth(2);
   
       // const mapCenterX = rows[0].length * tileSize / 2;
       const mapCenterY = rows.length * tileSize / 2;
@@ -155,40 +160,6 @@ export class Msize1Scene extends Phaser.Scene {
   
     update() {
 
-    //   if (this.cursors && this.myCharacter) {
-    //     let movingSprite: Phaser.Physics.Arcade.Sprite;
-
-    //     if (this.myCharacter === 'character') {
-    //         movingSprite = this.character!;
-    //     } else if (this.myCharacter === 'character2') {
-    //         movingSprite = this.character2!;
-    //     }
-
-    //     if (this.cursors.left?.isDown) {
-    //         movingSprite.setVelocityX(-1280);
-    //     } else if (this.cursors.right?.isDown) {
-    //         movingSprite.setVelocityX(1280);
-    //     } else {
-    //         movingSprite.setVelocityX(0);
-    //     }
-
-    //     if (this.cursors.up?.isDown) {
-    //         movingSprite.setVelocityY(-1280);
-    //     } else if (this.cursors.down?.isDown) {
-    //         movingSprite.setVelocityY(1280);
-    //     } else {
-    //         movingSprite.setVelocityY(0);
-    //     }
-
-    //     // 움직임을 서버에 전송
-    //     this.socket?.emit('playerMovement', {
-    //         id: this.socket.id,
-    //         character: this.myCharacter,
-    //         x: movingSprite.x,
-    //         y: movingSprite.y
-    //     });
-    // }
-
       if (this.cursors && this.character && !this.sittingOnBench) {
         let moved = false;
         if (this.cursors.left?.isDown) {
@@ -214,9 +185,10 @@ export class Msize1Scene extends Phaser.Scene {
         if (moved) {
         }
       }
+      this.isNear()
     }
 
-    private isNear(): boolean {     //캐릭터가 문 주변에 있는가?
+    private isNear(): boolean {     //캐릭터가 벤치 주변에 있는가?
       if (this.character) {            
           const benchCenterX = 1650;  // 벤치중심 X 좌표
           const benchCenterY = 150;  // 벤치중심 Y 좌표
@@ -230,9 +202,11 @@ export class Msize1Scene extends Phaser.Scene {
           const charY = this.character.y;
           
           if (charX >= minX && charX <= maxX && charY >= minY && charY <= maxY) {
+            this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
             return true;
         }
       }
+      this.balloon.setVisible(false);
       return false;  // 캐릭터가 없는 경우, 문 주변에 없다고 가정하고 false
   }
 

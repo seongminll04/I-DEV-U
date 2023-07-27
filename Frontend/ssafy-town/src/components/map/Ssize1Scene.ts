@@ -37,6 +37,7 @@ B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1
 export class Ssize1Scene extends Phaser.Scene {
 
   private character?: Phaser.Physics.Arcade.Sprite;
+  private balloon!: Phaser.GameObjects.Sprite;
   private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
   private walls?: Phaser.Physics.Arcade.StaticGroup;
 
@@ -68,6 +69,7 @@ export class Ssize1Scene extends Phaser.Scene {
     }
 
     this.load.image('character', 'assets/admin_character.png');
+    this.load.image('balloon', 'assets/ekey.png');
   }
 
   create() {
@@ -75,6 +77,9 @@ export class Ssize1Scene extends Phaser.Scene {
   const tileSize = 32;  
 
   this.walls = this.physics.add.staticGroup();
+
+  this.balloon = this.add.sprite(0, 0, 'balloon').setVisible(false);
+  this.balloon.setDepth(2);
 
   const mapCenterX = rows[0].length * tileSize / 2;
   const mapCenterY = rows.length * tileSize / 2;
@@ -174,6 +179,7 @@ export class Ssize1Scene extends Phaser.Scene {
         this.character.setVelocityY(0);
       }
     }
+    this.NearbyObjects();
   }
 
   private NearbyObjects(): 'bed' | 'board' | null {
@@ -181,16 +187,19 @@ export class Ssize1Scene extends Phaser.Scene {
     const boardPosition = { x: 400, y: 100 }; // 게시판
 
     if (this.character) {
-        const distanceToBed = Phaser.Math.Distance.Between(this.character.x, this.character.y, bedPosition.x, bedPosition.y);
-        if (distanceToBed <= 50) {
-            return 'bed';
-        }
+      const distanceToBed = Phaser.Math.Distance.Between(this.character.x, this.character.y, bedPosition.x, bedPosition.y);
+      const distanceToBoard = Phaser.Math.Distance.Between(this.character.x, this.character.y, boardPosition.x, boardPosition.y);
+      
+      if (distanceToBed <= 50 || distanceToBoard <= 64) {
+          this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
 
-        const distanceToBoard = Phaser.Math.Distance.Between(this.character.x, this.character.y, boardPosition.x, boardPosition.y);
-        if (distanceToBoard <= 64) {
-          return 'board';
+
+          if(distanceToBed <= 50) return 'bed';
+          if(distanceToBoard <= 64) return 'board';
+      } else {
+          this.balloon.setVisible(false);
       }
-    }
+  }
     return null; // 주변에 아무 오브젝트도 없다면 null
   }
 

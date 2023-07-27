@@ -126,6 +126,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 export class Lsize1Scene extends Phaser.Scene {
 
     private character?: Phaser.Physics.Arcade.Sprite;
+    private balloon!: Phaser.GameObjects.Sprite;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
     private walls?: Phaser.Physics.Arcade.StaticGroup;
     private clockText!: Phaser.GameObjects.Text; //우하시계
@@ -165,6 +166,7 @@ export class Lsize1Scene extends Phaser.Scene {
         }
 
         this.load.image('character', 'assets/admin_character.png');
+        this.load.image('balloon', 'assets/ekey.png');
         
 
         for (let i = 1; i <= 72; i++) {
@@ -184,6 +186,9 @@ export class Lsize1Scene extends Phaser.Scene {
       this.clockText3.setDepth(10);
   
       this.walls = this.physics.add.staticGroup();
+
+      this.balloon = this.add.sprite(0, 0, 'balloon').setVisible(false);
+      this.balloon.setDepth(2);
 
       const mapCenterX = rows[0].length * tileSize / 2;
       const mapCenterY = rows.length * tileSize / 2;
@@ -449,6 +454,8 @@ export class Lsize1Scene extends Phaser.Scene {
       this.clockText.setText(`${hours}:${minutes}:${seconds}`);
       this.clockText2.setText(`${hours}:${minutes}:${seconds}`);
       this.clockText3.setText(`${hours}:${minutes}:${seconds}`);
+
+      this.NearbyObjects()
     }
 
     private NearbyObjects(): 'door' | 'board' | { x: number, y: number } | null {
@@ -457,13 +464,15 @@ export class Lsize1Scene extends Phaser.Scene {
       const chairPositions = this.chairPositions; // 의자
 
       if (this.character) {
-          const distanceToDoor = Phaser.Math.Distance.Between(this.character.x, this.character.y, boardPosition.x, boardPosition.y);
+          const distanceToDoor = Phaser.Math.Distance.Between(this.character.x, this.character.y, doorPosition.x, doorPosition.y);
           if (distanceToDoor <= 160 && distanceToDoor > 32) {
+            this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
               return 'door';
           }
 
-          const distanceToBoard = Phaser.Math.Distance.Between(this.character.x, this.character.y, doorPosition.x, doorPosition.y);
+          const distanceToBoard = Phaser.Math.Distance.Between(this.character.x, this.character.y, boardPosition.x, boardPosition.y);
           if (distanceToBoard <= 64) {
+            this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
             return 'board';
         }
   
@@ -472,6 +481,7 @@ export class Lsize1Scene extends Phaser.Scene {
           for (const chairPos of chairPositions) {
               const distanceToChair = Phaser.Math.Distance.Between(this.character.x, this.character.y, chairPos.x, chairPos.y);
               if (distanceToChair < 32 && distanceToChair < nearestDistance) {
+                this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
                   nearestChair = chairPos;
                   nearestDistance = distanceToChair;
               }
@@ -480,6 +490,7 @@ export class Lsize1Scene extends Phaser.Scene {
               return nearestChair;
           }
       }
+      this.balloon.setVisible(false);
       return null; // 주변에 아무 오브젝트도 없다면 null
   }
     

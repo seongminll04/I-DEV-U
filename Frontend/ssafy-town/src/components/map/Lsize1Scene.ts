@@ -396,9 +396,13 @@ export class Lsize1Scene extends Phaser.Scene {
 
     this.input.keyboard?.on('keydown-E', () => {
       const nearbyObject = this.NearbyObjects();
+
+      console.log(this.character!.x + "@@" + this.character!.y)
   
       if (nearbyObject === 'door') {
           this.openDoor();
+      } else if(nearbyObject === 'board') {
+        this.openBoard();
       } else if (nearbyObject && typeof nearbyObject !== 'string') {
         this.sitdown(nearbyObject);
     }
@@ -447,15 +451,21 @@ export class Lsize1Scene extends Phaser.Scene {
       this.clockText3.setText(`${hours}:${minutes}:${seconds}`);
     }
 
-    private NearbyObjects(): 'door' | { x: number, y: number } | null {
+    private NearbyObjects(): 'door' | 'board' | { x: number, y: number } | null {
       const doorPosition = { x: 1024, y: 768 }; // 문
+      const boardPosition = { x: 1236, y: 835 }; // 게시판
       const chairPositions = this.chairPositions; // 의자
 
       if (this.character) {
-          const distanceToDoor = Phaser.Math.Distance.Between(this.character.x, this.character.y, doorPosition.x, doorPosition.y);
+          const distanceToDoor = Phaser.Math.Distance.Between(this.character.x, this.character.y, boardPosition.x, boardPosition.y);
           if (distanceToDoor <= 160 && distanceToDoor > 32) {
               return 'door';
           }
+
+          const distanceToBoard = Phaser.Math.Distance.Between(this.character.x, this.character.y, doorPosition.x, doorPosition.y);
+          if (distanceToBoard <= 64) {
+            return 'board';
+        }
   
           let nearestChair: { x: number, y: number } | null = null;
           let nearestDistance: number = Infinity;
@@ -616,5 +626,8 @@ export class Lsize1Scene extends Phaser.Scene {
           this.character!.setAlpha(0.4);
           this.sittingOnChair = true;
       }
+  }
+  openBoard(){
+    //모달 창열자
   }
 }

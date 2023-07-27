@@ -141,7 +141,19 @@ export class Ssize1Scene extends Phaser.Scene {
         }
       }
     });
-}
+
+    this.input.keyboard?.on('keydown-E', () => {
+      const nearbyObject = this.NearbyObjects();
+
+      console.log(this.character!.x + "@@" + this.character!.y)
+  
+      if (nearbyObject === 'bed') {
+          this.openBed();
+      } else if(nearbyObject === 'board') {
+        this.openBoard();
+      }
+    }
+  )}
 
 
   update() {
@@ -162,5 +174,30 @@ export class Ssize1Scene extends Phaser.Scene {
         this.character.setVelocityY(0);
       }
     }
+  }
+
+  private NearbyObjects(): 'bed' | 'board' | null {
+    const bedPosition = { x: 84, y: 131 }; // 침대
+    const boardPosition = { x: 400, y: 100 }; // 게시판
+
+    if (this.character) {
+        const distanceToBed = Phaser.Math.Distance.Between(this.character.x, this.character.y, bedPosition.x, bedPosition.y);
+        if (distanceToBed <= 50) {
+            return 'bed';
+        }
+
+        const distanceToBoard = Phaser.Math.Distance.Between(this.character.x, this.character.y, boardPosition.x, boardPosition.y);
+        if (distanceToBoard <= 64) {
+          return 'board';
+      }
+    }
+    return null; // 주변에 아무 오브젝트도 없다면 null
+  }
+
+  openBed(){
+    this.game.events.emit("openModal");
+  }
+  openBoard(){
+    this.game.events.emit("openModal2");
   }
 }

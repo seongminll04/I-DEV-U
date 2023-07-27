@@ -15,6 +15,16 @@ import java.util.Map;
 @CrossOrigin(origins = {})
 public class UserController {
 
+    @GetMapping("/sleep")
+    public ResponseEntity<Map<String, String>> test() {
+        Map<String, String> map = new HashMap<>();
+        map.put("home", "hyeong Suck");
+
+
+        return ResponseEntity.ok(map);
+    }
+
+
     @Autowired
     UserService userService;
 
@@ -23,6 +33,7 @@ public class UserController {
     }
 
     User loginUser = null;
+
     /*
      * 회원가입
      */

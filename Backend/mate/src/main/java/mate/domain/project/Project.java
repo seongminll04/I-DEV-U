@@ -1,5 +1,7 @@
 package mate.domain.project;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -43,7 +45,11 @@ public class Project {
 	private String type;
 
 	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-	private ProjectParticipation projectParticipation;
+	private List<ProjectParticipation> projectParticipation;
+
+	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+	private List<ProjectTech> projectTeches;
+	
 	// Getters and setters, constructors, and other methods
 	// ...
 }

@@ -7,11 +7,11 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import lombok.extern.slf4j.Slf4j;
 import mate.domain.Notice;
 import mate.repository.NoticeRepository;
 
@@ -24,7 +24,7 @@ public class NoticeTest {
 
 	@Test
 	@Transactional
-	void 공지사항_작성() {
+	void noticeWrite() {
 		Notice notice = new Notice();
 
 		notice.setUserIdx(4);
@@ -41,14 +41,14 @@ public class NoticeTest {
 
 	@Test
 	@Transactional
-	void 공지사항_검색() {
+	void noticeList() {
 		List<Notice> list = noticeRepository.findNoticeByTitleContaining("운영");
 
 		log.info("리스트 확인 -> {}", list);
 	}
 
 	@Test
-	void 공지사항_수정() {
+	void noticeModify() {
 		Notice notice = new Notice();
 
 		notice.setIdx(5);
@@ -63,7 +63,7 @@ public class NoticeTest {
 
 	@Test
 	@Transactional
-	void 공지사항_삭제() {
+	void noticeDelete() {
 		noticeRepository.deleteById(4);
 
 		assertThat(noticeRepository.findById(4)).isEmpty();

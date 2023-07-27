@@ -7,7 +7,8 @@ import Navbar from './navbar'
 import Alert from './sidebar/1alert'
 import Logout from './account/logout'
 import MyRoom from './room/myroom';
-import FirstQA from './survey/firstQA'
+import FirstQA from './survey/firstQA';
+import QnA from './board/QnA';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../store/state';
@@ -17,11 +18,11 @@ const Town: React.FC = () => {
   const dispatch = useDispatch();
   const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
-  const FQA = () => {
-    if (true) {
-      dispatch(setModal('최초설문'))
-    }
-  }
+  // const FQA = () => {
+  //   if (true) {
+  //     dispatch(setModal('최초설문'))
+  //   }
+  // }
   return (
     <div className={ssafytown_css.container}>
       <Sidebar/>
@@ -37,7 +38,7 @@ const Town: React.FC = () => {
        : isModalOpen === '로그아웃' ? 
       <Logout onClose={()=>dispatch(setModal(null))} />
        : null }
-
+      <QnA onClose={()=>dispatch(setModal(null))} />
       {/* Phaser 맵 */}
       <MyRoom/>
     </div>

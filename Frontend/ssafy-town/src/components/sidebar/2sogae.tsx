@@ -14,9 +14,9 @@ type User = {
   matchRate: number;
 };
 
-const MAX_FILTERS = 4;
+// const MAX_FILTERS = 4;
 const ITEMS_PER_PAGE = 10;
-const words = ["#가", "#나", "#다", "#라", "#마", "#바", "#사"];
+// const words = ["#가", "#나", "#다", "#라", "#마", "#바", "#사"];
 
 interface Props {
   closeSidebar:()=>void;
@@ -28,7 +28,7 @@ interface Props {
 const Sogae: React.FC<Props> = ({closeSidebar, closeModal}) => {
   const dispatch = useDispatch();
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  // const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   // const [data, setData] = useState<any | null>(null); //실제 상태용 데이터의 상황에따라 변화
   const [data, setData] = useState<any>(true); //개발용 항상 ok인 상태
   const [users, setUsers] = useState<User[]>([
@@ -45,8 +45,8 @@ const Sogae: React.FC<Props> = ({closeSidebar, closeModal}) => {
     { name: "홍길동11", matchRate: 93 }
   ].sort((a, b) => b.matchRate - a.matchRate));
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalItems, setTotalItems] = useState(users.length);
-  const [selectedWord, setSelectedWord] = useState<string | null>(null);
+  // const [totalItems, setTotalItems] = useState(users.length);
+  // const [selectedWord, setSelectedWord] = useState<string | null>(null);
 
 
   useEffect(() => { //esc키로 끄기
@@ -65,6 +65,8 @@ const Sogae: React.FC<Props> = ({closeSidebar, closeModal}) => {
 
 
   useEffect(() => {
+    setCurrentPage(1)
+
     // 소개팅 등록이 되어있는 유저인가?
     axios.get("/date/survey/$user_idx").then(response => { //${user_idx} 로 jwt 토큰에서 뽑아오는거 나중에 jwt되면 구현
       setData(response.data);
@@ -81,53 +83,53 @@ const Sogae: React.FC<Props> = ({closeSidebar, closeModal}) => {
     });
   }, []);
 
-  useEffect(() => {
-    setTotalItems(users.length);
-  }, [users]);
+  // useEffect(() => {
+  //   setTotalItems(users.length);
+  // }, [users,]);
 
   const handleConfirm = () => {
     // 여기에 onConfirm 했을때의 로직
 };
 
-const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  const wordValue = e.target.value;
+// const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+//   const wordValue = e.target.value;
 
-  setSelectedWord(wordValue);
+//   setSelectedWord(wordValue);
 
-  // 필터 추가 및 제거 로직
-  if (selectedFilters.includes(wordValue)) {
-    // 단어가 이미 선택되어 있다면 필터에서 제거
-    setSelectedFilters((prevFilters) => prevFilters.filter(filter => filter !== wordValue));
-  } else if (selectedFilters.length < MAX_FILTERS) {
-    // 최대 필터 수를 초과하지 않았다면 필터에 추가
-    setSelectedFilters((prevFilters) => [...prevFilters, wordValue]);
-  } else {
-    // 최대 필터 수를 초과했을 때 경고 메시지 출력 
-    alert(`최대 ${MAX_FILTERS}개의 필터까지만 선택 가능합니다.`);
-  }
-};
+//   // 필터 추가 및 제거 로직
+//   if (selectedFilters.includes(wordValue)) {
+//     // 단어가 이미 선택되어 있다면 필터에서 제거
+//     setSelectedFilters((prevFilters) => prevFilters.filter(filter => filter !== wordValue));
+//   } else if (selectedFilters.length < MAX_FILTERS) {
+//     // 최대 필터 수를 초과하지 않았다면 필터에 추가
+//     setSelectedFilters((prevFilters) => [...prevFilters, wordValue]);
+//   } else {
+//     // 최대 필터 수를 초과했을 때 경고 메시지 출력 
+//     alert(`최대 ${MAX_FILTERS}개의 필터까지만 선택 가능합니다.`);
+//   }
+// };
 
-const handleFilterSearch = () => {
-  // 필터된 요청을 서버에 보냅니다.
-  axios.get(`/date/filteredList/$user_idx`, {
-    params: {
-      filters: selectedFilters // 필터 정보를 params로 보내고
-    }
-  })
-  .then(response => {
-    const sortedUsers = response.data.sort((a: User, b: User) => b.matchRate - a.matchRate);
-    setUsers(sortedUsers);
-  })
-  .catch(error => {
-    console.error("필터링 실패", error);
-  });
-};
+// const handleFilterSearch = () => {
+//   // 필터된 요청을 서버에 보냅니다.
+//   axios.get(`/date/filteredList/$user_idx`, {
+//     params: {
+//       filters: selectedFilters // 필터 정보를 params로 보내고
+//     }
+//   })
+//   .then(response => {
+//     const sortedUsers = response.data.sort((a: User, b: User) => b.matchRate - a.matchRate);
+//     setUsers(sortedUsers);
+//   })
+//   .catch(error => {
+//     console.error("필터링 실패", error);
+//   });
+// };
 
 
 
-  const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-  };
+//   const handlePageChange = (pageNumber: number) => {
+//     setCurrentPage(pageNumber);
+//   };
 
   const getCurrentPageData = () => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;

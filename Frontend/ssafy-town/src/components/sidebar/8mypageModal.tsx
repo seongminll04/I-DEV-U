@@ -4,10 +4,6 @@ import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import { useSelector } from 'react-redux';
-import { AppState } from '../../store/state';
-
-
 import Withdraw from '../account/withdraw';
 
 interface ModalProps {
@@ -25,7 +21,6 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ onClose, user}) => {
-  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
   const [isWithdraw, setWithdraw] = useState(false);
   const [chknickname, setchknickname] = useState('no');
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -125,7 +120,6 @@ const Modal: React.FC<ModalProps> = ({ onClose, user}) => {
       inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
     }
   }
-  if (!isModalOpen)  return null;
   
   return (
     <div className={mypage_modal_css.mypage_modal_overlay}  onClick={(e: React.MouseEvent<HTMLDivElement>) => {

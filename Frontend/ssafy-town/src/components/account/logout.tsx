@@ -21,7 +21,7 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [onClose]);
-
+  
   return (
     <div className={logout_css.modal_overlay} onClick={(e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {onClose()}}}>

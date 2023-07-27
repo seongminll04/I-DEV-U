@@ -1,8 +1,9 @@
 import React,{useState, useEffect} from 'react';
 import ssafytown_css from '../ssafytown.module.css';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
+import { setModal } from '../../store/actions';
 
 import { Ssize1Scene } from '../map/Ssize1Scene';
 import { Lsize1Scene } from '../map/Lsize1Scene';
@@ -37,6 +38,7 @@ const Myroom: React.FC = () => {
       setCurrentScene('Msize1Scene');
     }
   };
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
@@ -72,6 +74,14 @@ const Myroom: React.FC = () => {
         game.isPaused=false
       }
     }
+
+    game?.events.on("openModal", () => {
+      dispatch(setModal('로그아웃'));
+    });
+    game?.events.on("openModal2", () => {
+      dispatch(setModal('QnA게시판'));
+    });
+
     if(game) {
       const resize = () => {
         const width = window.innerWidth * (isSidebarOpen ? 0.7 : 0.95);
@@ -87,7 +97,7 @@ const Myroom: React.FC = () => {
         window.removeEventListener('resize', resize);
       };
     }
-  }, [isModalOpen,isSidebarOpen,isAllowMove, game]);
+  }, [isModalOpen,isSidebarOpen, isAllowMove, game, dispatch]);
   return (
     <div id="phaser_game" className={ssafytown_css.phaser_game} >
         <button className={ssafytown_css.map_switch_button2} onClick={switchToSsize1Scene}>Ssize1Scene</button>

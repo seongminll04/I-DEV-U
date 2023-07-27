@@ -12,9 +12,9 @@
 .QnA_modal {
     background-color: rgba(109, 206, 245, 0.9);
     border-radius: 1rem;
-    width:50%;
-    height: 460px;
-    padding: 100px;
+    width:70%;
+    height: 500px;
+    padding: 10px;
     box-sizing: border-box;
     color : white;
 }
@@ -33,6 +33,22 @@
     border-radius: 0.5rem;
 }
 
-.button:hover {
-    background-color: gray;
+.button:hover,
+.movebtn:hover {
+    color: gray;
+}
+.closebtn {
+    margin:10px;
+    text-align: right;
+    cursor: pointer;
+}
+
+.closebtn:hover{
+    color:gray;
+    cursor: pointer;
+}
+.notice {
+    display: flex;
+    justify-content: space-between;
+    margin: 0px 20px;
 }

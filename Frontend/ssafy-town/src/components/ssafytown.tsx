@@ -37,8 +37,10 @@ const Town: React.FC = () => {
       <Alert onClose={()=>dispatch(setModal(null))}/>
        : isModalOpen === '로그아웃' ? 
       <Logout onClose={()=>dispatch(setModal(null))} />
+       : isModalOpen === 'QnA게시판' ? 
+       <QnA onClose={()=>dispatch(setModal(null))} />
        : null }
-      <QnA onClose={()=>dispatch(setModal(null))} />
+       
       {/* Phaser 맵 */}
       <MyRoom/>
     </div>

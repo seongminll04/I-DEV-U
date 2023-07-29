@@ -15,6 +15,8 @@ import javax.persistence.Table;
 
 import mate.domain.User;
 
+import java.util.List;
+
 @Entity
 @Table(name = "project")
 public class Project {

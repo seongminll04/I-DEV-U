@@ -13,6 +13,8 @@ import javax.persistence.Table;
 
 import mate.domain.User;
 
+import java.util.List;
+
 @Entity
 @Table(name = "project")
 public class Project {
@@ -43,7 +45,7 @@ public class Project {
 	private String type;
 
 	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-	private ProjectParticipation projectParticipation;
+	private List<ProjectParticipation> projectParticipation;
 	// Getters and setters, constructors, and other methods
 	// ...
 }

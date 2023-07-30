@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import mate.domain.Notice;
+import mate.domain.notice.NoticeBoard;
 import mate.repository.NoticeRepository;
 
 @Service
@@ -19,17 +19,17 @@ public class NoticeService {
 		this.noticeRepository = noticeRepository;
 	}
 
-	public void writeNotice(Notice notice) {
+	public void writeNotice(NoticeBoard notice) {
 		noticeRepository.save(notice);
 	}
 
-	public Notice detailNotice(int noticeIdx) {
-		Optional<Notice> notice = noticeRepository.findById(noticeIdx);
+	public NoticeBoard detailNotice(int noticeIdx) {
+		Optional<NoticeBoard> notice = noticeRepository.findById(noticeIdx);
 
 		return notice.get();
 	}
 
-	public void modifyNotice(Notice notice) {
+	public void modifyNotice(NoticeBoard notice) {
 		noticeRepository.save(notice);
 	}
 
@@ -38,12 +38,12 @@ public class NoticeService {
 	}
 
 	// 리스트 조회
-	public List<Notice> listNotice() {
+	public List<NoticeBoard> listNotice() {
 		return noticeRepository.findAll();
 	}
 
 	// 검색어를 사용한 리스트 조회
-	public List<Notice> listNoticeByKeyword(String keyWord) {
+	public List<NoticeBoard> listNoticeByKeyword(String keyWord) {
 		return noticeRepository.findNoticeByTitleContaining(keyWord);
 	}
 }

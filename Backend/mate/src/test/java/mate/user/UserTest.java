@@ -1,7 +1,7 @@
 package mate.user;
 
 import lombok.extern.slf4j.Slf4j;
-import mate.domain.User;
+import mate.domain.user.User;
 import mate.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

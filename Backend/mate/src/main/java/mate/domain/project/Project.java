@@ -13,9 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import mate.domain.User;
-
-import java.util.List;
+import mate.domain.user.User;
 
 @Entity
 @Table(name = "project")

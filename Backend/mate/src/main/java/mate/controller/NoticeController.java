@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import mate.domain.Notice;
+import mate.domain.notice.NoticeBoard;
 import mate.repository.NoticeRepository;
 import mate.service.NoticeService;
 
@@ -35,7 +35,7 @@ public class NoticeController {
 	}
 
 	@PostMapping("/write")
-	public ResponseEntity<Map<String, Object>> writeNotice(Notice notice) {
+	public ResponseEntity<Map<String, Object>> writeNotice(NoticeBoard notice) {
 		Map<String, Object> map = new HashMap<>();
 
 		noticeService.writeNotice(notice);
@@ -47,7 +47,7 @@ public class NoticeController {
 	public ResponseEntity<Map<String, Object>> detailNotice(@RequestParam("noticeIdx") int noticeIdx) {
 		Map<String, Object> map = new HashMap<>();
 
-		Notice notice = noticeService.detailNotice(noticeIdx);
+		NoticeBoard notice = noticeService.detailNotice(noticeIdx);
 
 		map.put("notification", notice);
 
@@ -55,7 +55,7 @@ public class NoticeController {
 	}
 
 	@PutMapping("/modify")
-	public ResponseEntity<Map<String, Object>> modifyNotice(Notice notice) {
+	public ResponseEntity<Map<String, Object>> modifyNotice(NoticeBoard notice) {
 		Map<String, Object> map = new HashMap<>();
 
 		noticeService.modifyNotice(notice);

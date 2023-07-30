@@ -11,7 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import mate.domain.User;
+import mate.domain.user.User;
 
 @Entity
 @Table(name = "project_board")

@@ -1,30 +1,27 @@
-package mate.domain;
+package mate.domain.user;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 import lombok.Data;
+import lombok.Getter;
 
 @Entity
-@Table(name = "user")
-@Data
+@Getter
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idx;
-
     private String email;
     private String password;
     private String name;
     private String nickname;
     private Date birth;
-    private int gender;
+    private int gender; // 0 : 남자, 1 : 여자
     private String intro;
-    private String status;
-    private int grade;
+    @Enumerated(EnumType.STRING)
+    private UserStatus status; //
+    @Enumerated(EnumType.STRING)
+    private UserGrade grade; // ADMIN , USER
 
     // 생성자, 기타 메서드 생략
 }

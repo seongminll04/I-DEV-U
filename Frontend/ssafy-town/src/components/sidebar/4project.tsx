@@ -17,7 +17,7 @@ const Project: React.FC = () => {
 
   const loadproject = () => {
     axios({
-      method:'post',
+      method:'get',
       url:'https://i9b206.p.ssafy.io:9090',
       // data
     })

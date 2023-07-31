@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import store from '../../store/store'
+import { setModal } from '../../store/actions';
 
 type AssetKeys = 'A1' | 'B1' | 'C1' | 'D1' | 'E1' | 'F1' | 'G1' | 'H1' | 'I1' | 'J1' | 'K1';
 const ASSETS: Record<AssetKeys, string> = {
@@ -153,16 +155,16 @@ export class Ssize1Scene extends Phaser.Scene {
       console.log(this.character!.x + "@@" + this.character!.y)
   
       if (nearbyObject === 'bed') {
-          this.openBed();
+        store.dispatch(setModal('로그아웃'))
       } else if(nearbyObject === 'board') {
-        this.openBoard();
+        store.dispatch(setModal('QnA게시판'))
       }
     }
   )}
 
 
   update() {
-    if (this.cursors && this.character) {
+    if (store.getState().isAllowMove && this.cursors && this.character) {
       if (this.cursors.left?.isDown) {
         this.character.setVelocityX(-320);
       } else if (this.cursors.right?.isDown) {
@@ -201,12 +203,5 @@ export class Ssize1Scene extends Phaser.Scene {
       }
   }
     return null; // 주변에 아무 오브젝트도 없다면 null
-  }
-
-  openBed(){
-    this.game.events.emit("openModal");
-  }
-  openBoard(){
-    this.game.events.emit("openModal2");
   }
 }

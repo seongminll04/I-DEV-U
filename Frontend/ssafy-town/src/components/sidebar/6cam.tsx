@@ -27,7 +27,8 @@ const Cam: React.FC = () => {
       setCamList(res.data); // 백엔드에서 잘 보내줘야할듯 name / info / sessionId 잘맞춰서 받아야함. 백엔드와 소통 ㄱ
       console.log(res)
     })
-    .catch(err=>{console.log(err)})
+    .catch(err=>{console.log(err)
+      setCamList([])})
   })
 
   // 접속 반응 추가하기

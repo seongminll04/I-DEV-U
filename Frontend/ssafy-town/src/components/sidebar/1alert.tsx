@@ -5,6 +5,12 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 
+interface Notice {
+  content: string;
+  title: string;
+  createdAt: string;
+}
+
 const Modal: React.FC = () => {
   const dispatch = useDispatch()
   const [page, setpage] = useState<Number>(0); 
@@ -17,6 +23,34 @@ const Modal: React.FC = () => {
     // 여기서 모든데이터 중 검색어랑 일치하는 것만 리스트화 하는 코드작성
 
   }
+
+  let noticeList: any = [
+    {
+      idx: 1,
+      userIdx: 3,
+      title: 'TITLE title',
+      content: 'content content',
+      createdAt: '2023-07-31T02:17:37',
+      type: 'A',
+    },
+    {
+      idx: 4,
+      userIdx: 4,
+      title: 'TITLE 222',
+      content: 'content 222',
+      createdAt: '2023-07-31T04:15:09',
+      type: 'A',
+    },
+    {
+      idx: 5,
+      userIdx: 5,
+      title: 'TITLE 333',
+      content: 'content 333',
+      createdAt: '2023-07-31T04:15:09',
+      type: 'A',
+    },
+  ];
+
   useEffect(()=>{
     // 모달창이 열렸다면 공지사항 데이터 불러오기
     axios({
@@ -25,6 +59,7 @@ const Modal: React.FC = () => {
     })
     .then(res => {
       console.log(res.data)
+      noticeList = res.data.list;
       // const alert_data=res.data 
     })
     .catch(err => {
@@ -47,11 +82,25 @@ const Modal: React.FC = () => {
               <p>공지사항</p>
                 <p className={alert_css.movebtn} onClick={() => setpage(1)}>전체보기</p>
             </div>
-            <div onClick={()=> {setpage(99)}} className={alert_css.notice}>
-              <p>1</p>
-              <p>~~~~에 점검 진행합니다.~~~~에 점검 진행합니다.</p>
-              <p>07/19 00:00</p>
-            </div>
+            {noticeList.map((notice: Notice, index: number) => {
+                const date = new Date(notice.createdAt);
+                console.log(date);
+                // console.log(notice);
+                return (
+                  <div
+                    onClick={() => {
+                      setpage(98);
+                    }}
+                    className={alert_css.notice}
+                  >
+                    <p>{index}</p>
+                    <p>{notice.content}</p>
+                    <p>
+                      {date.getMonth() + 1} / {date.getDate()}
+                    </p>
+                  </div>
+                );
+              })}
           </div>
           <br />
           <div className={alert_css.container}>

@@ -6,17 +6,48 @@ import { setModal } from '../../store/actions';
 import axios from 'axios';
 
 const CreateProject: React.FC = () => {
+
+  const OPENVIDU_SERVER_URL = process.env.REACT_APP_OPENVIDU_SERVER_URL;
+  const OPENVIDU_SECRET = process.env.REACT_APP_OPENVIDU_SECRET;
+  const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
+
   const dispatch=useDispatch()
 
   const Create = () => {
-    axios({
-      method:'post',
-      url: 'https://~~~~~~.~~~/'
-      // data: {}
+    // OpenVidu 세션 생성
+    axios.post(OPENVIDU_SERVER_URL +'/api/sessions', {}, {
+        headers: {
+            'Authorization': 'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SECRET)
+        }
     })
-    .then(res => {console.log(res)})
-    .catch(err => {console.log(err)})
-  }
+    .then((response) => {
+        const sessionId = response.data.id;
+
+        // 백엔드에 프로젝트 정보, 세션 ID 전송
+        axios.post(BACKEND_SERVER_URL+'', {
+            user_idx: "프로젝트 구인 담당자",
+            // 이거는 지금 토큰에서 id를 뽑아쓸지 or Redux와 session에 정보저장해서 불러올지 판단해야할듯 지금 session에 떠있긴한데 음...
+            title: "프로젝트 제목", // 그외에는 입력받기
+            content: "프로젝트 내용",  
+            total_num: "총 인원", 
+            tech_list: [
+                { tech: "프로젝트 사용 기술1" },
+                { tech: "프로젝트 사용 기술2" },
+                //등등 추가
+            ],
+            session: sessionId // 냅두면됨
+        })
+        .then((res) => {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+}
 
   return (
     <div className={Create_css.modal_overlay} onClick={(e: React.MouseEvent<HTMLDivElement>) => {

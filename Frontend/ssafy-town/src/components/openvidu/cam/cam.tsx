@@ -13,7 +13,7 @@ interface AppState {
     currentVideoDevice?: MediaDeviceInfo;
 }
 
-const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? 'https://i9b206.p.ssafy.io:9090' : 'https://demos.openvidu.io/';
+const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? 'https://i9b206.p.ssafy.io:3000' : 'https://demos.openvidu.io/';
 
 class Cam extends Component<{}, AppState> {
     private OV: any;

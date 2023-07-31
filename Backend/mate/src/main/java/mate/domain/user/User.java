@@ -23,5 +23,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserGrade grade; // ADMIN , USER
 
+
     // 생성자, 기타 메서드 생략
 }

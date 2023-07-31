@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import { OpenVidu, Publisher, Session, /*Stream,*/ StreamEvent, StreamManager, Subscriber } from 'openvidu-browser';
+import store from '../../store/store'
+import { setModal } from '../../store/actions';
 
 type AssetKeys = 'A' | 'B' | 'C' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' 
                | 'T' | 'U' | 'V' | 'W' | 'X' | '1' | '2' | '3' | '4'
@@ -437,9 +439,9 @@ export class Lsize1Scene extends Phaser.Scene {
       console.log(this.character!.x + "@@" + this.character!.y)
   
       if (nearbyObject === 'door') {
-          this.openDoor();
+        this.openDoor();
       } else if(nearbyObject === 'board') {
-        this.openBoard();
+        store.dispatch(setModal('QnA게시판'))
       } else if (nearbyObject && typeof nearbyObject !== 'string') {
         this.sitdown(nearbyObject);
     }
@@ -451,7 +453,7 @@ export class Lsize1Scene extends Phaser.Scene {
   
   
     update() {
-      if (this.cursors && this.character && !this.sittingOnChair) {
+      if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnChair) {
         if (this.cursors.left?.isDown) {
           this.character.setVelocityX(-640);
         } else if (this.cursors.right?.isDown) {
@@ -669,9 +671,6 @@ export class Lsize1Scene extends Phaser.Scene {
           this.character!.setAlpha(0.4);
           this.sittingOnChair = true;
       }
-  }
-  openBoard(){
-    this.game.events.emit("openModal2");
   }
 
   async joinChat() {

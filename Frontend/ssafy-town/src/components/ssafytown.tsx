@@ -12,7 +12,7 @@ import QnA from './board/QnA';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../store/state';
-import { setModal, setSidebar } from '../store/actions';
+import { setAllowMove, setModal, setSidebar } from '../store/actions';
 
 const Town: React.FC = () => {
   const dispatch = useDispatch();
@@ -26,6 +26,11 @@ const Town: React.FC = () => {
   // }
 
   useEffect(() => { //esc키로 사이드바, 모달창 끄기 : 전역설정임
+    if (isModalOpen) {
+      dispatch(setAllowMove(false))
+    }
+    else {dispatch(setAllowMove(true))}
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         if (isModalOpen !== null) {dispatch(setModal(null))}
@@ -36,6 +41,7 @@ const Town: React.FC = () => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
+    
   }, [dispatch,isModalOpen,isSidebarOpen]);
 
   return (

@@ -3,7 +3,6 @@ import ssafytown_css from '../ssafytown.module.css';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
-import { setModal } from '../../store/actions';
 
 import { Ssize1Scene } from '../map/Ssize1Scene';
 import { Lsize1Scene } from '../map/Lsize1Scene';
@@ -66,22 +65,6 @@ const Myroom: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (game?.isPaused!== undefined) {
-      if (isModalOpen || !isAllowMove) {
-        game.isPaused=true
-      }
-      else {
-        game.isPaused=false
-      }
-    }
-
-    game?.events.on("openModal", () => {
-      dispatch(setModal('로그아웃'));
-    });
-    game?.events.on("openModal2", () => {
-      dispatch(setModal('QnA게시판'));
-    });
-
     if(game) {
       const resize = () => {
         const width = window.innerWidth * (isSidebarOpen ? 0.7 : 0.95);

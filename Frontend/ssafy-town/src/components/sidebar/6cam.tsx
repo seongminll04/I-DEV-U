@@ -39,7 +39,7 @@ const Cam: React.FC = () => {
       sessionId: sessionId
     })
     .then(res =>{
-      const token = res.data.token;
+      // const token = res.data.token;
 
       // 토큰을 사용하여 OpenVidu에 접속하는 코드 (OpenVidu SDK를 사용)
       // 예: openVidu.joinSession(token);

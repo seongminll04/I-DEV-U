@@ -41,7 +41,8 @@ const Cam: React.FC = () => {
       // setCamList()   데이터 받아서 여기에 저장
       console.log(res)
     })
-    .catch(err=>{console.log(err)})
+    .catch(err=>{console.log(err)
+      setCamList([])})
   })
   
   return (

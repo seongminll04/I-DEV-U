@@ -24,7 +24,7 @@ const EnterProject: React.FC = () => {
         <div className={enter_css.modal}>
             <h1>OO 프로젝트</h1>
             <h2>참가신청 하시겠습니까?</h2>
-            <button>참가</button><button>취소</button>
+            <button onClick={enter}>참가</button><button>취소</button>
         </div>
 
   </div>

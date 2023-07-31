@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import alert_css from './1alert.module.css';
 import axios from 'axios';
 
@@ -17,19 +17,20 @@ const Modal: React.FC = () => {
     // 여기서 모든데이터 중 검색어랑 일치하는 것만 리스트화 하는 코드작성
 
   }
-  
-  // 모달창이 열렸다면 공지사항 데이터 불러오기
+  useEffect(()=>{
+    // 모달창이 열렸다면 공지사항 데이터 불러오기
     axios({
       method:'get',
-      url:'http://localhost:8080/notice/?~~~~~',
+      url:'https://i9b206.p.ssafy.io:9090/notice/list/TITLE',
     })
     .then(res => {
-      console.log(res)
+      console.log(res.data)
       // const alert_data=res.data 
     })
     .catch(err => {
       console.log(err)
     })
+  })
   
     // setpage(0);setnowsearch(false); setsearch(''); 
   return (

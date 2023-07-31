@@ -40,8 +40,13 @@
 }
 .profiledata{
     width:80%;
+    height:60px;
     text-align: left;
     margin-top:5px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow:ellipsis;
 }
 .profilebtn {
     width: 80%;

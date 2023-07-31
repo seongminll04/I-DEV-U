@@ -1,4 +1,4 @@
-import React, { useState,useEffect,useRef } from 'react';
+import React, { useState } from 'react';
 import edit_css from './edit.module.css';
 import axios from 'axios';
 import { useFormik } from 'formik';
@@ -24,16 +24,8 @@ interface Props {
 
 const EditAccount: React.FC<Props> = ({user}) => {
   const dispatch = useDispatch()
-
   const [isWithdraw, setWithdraw] = useState(false);
   const [chknickname, setchknickname] = useState('no');
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, []);
 
   console.log(user.email)
 

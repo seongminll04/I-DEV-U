@@ -13,6 +13,24 @@ const CreateProject: React.FC = () => {
 
   const dispatch=useDispatch()
 
+  const handlekeydown = (event:React.KeyboardEvent<HTMLTextAreaElement>|React.KeyboardEvent<HTMLInputElement>) => {
+    const inputElement = event.currentTarget
+    const currentCursorPosition = inputElement.selectionStart || 0;
+    const maxCursorPosition = inputElement.value.length;
+    if (event.key === 'ArrowLeft' && currentCursorPosition!==0) {
+      inputElement.setSelectionRange(currentCursorPosition - 1, currentCursorPosition - 1);
+    } else if (event.key === 'ArrowRight') {
+      inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
+    } else if (event.key === ' '){
+      inputElement.value = inputElement.value.slice(0,currentCursorPosition)+ ' ' +inputElement.value.slice(currentCursorPosition,)
+      inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
+    } else if (event.key ==='ArrowUp' && currentCursorPosition >= 29) {
+      inputElement.setSelectionRange(currentCursorPosition-29 , currentCursorPosition-29);
+    } else if (event.key ==='ArrowDown' && currentCursorPosition+29 < maxCursorPosition) {
+      inputElement.setSelectionRange(currentCursorPosition+29 , currentCursorPosition+29);
+    }
+  }
+
   const Create = () => {
     // OpenVidu 세션 생성
     axios.post(OPENVIDU_SERVER_URL +'/api/sessions', {}, {
@@ -62,17 +80,17 @@ const CreateProject: React.FC = () => {
               <span>프</span><span>로</span><span>젝</span><span>트</span><span>명</span>
             </label>
             <p> : </p>
-            <input type="text" />
+            <input type="text" onKeyDown={handlekeydown}/>
           </div>
           <div className={Create_css.input}>
             <label><span>인</span><span>원</span><span>제</span><span>한</span></label>
             <p> : </p>
-            <input type="number" min="1" max="12" step="1" defaultValue={4} style={{width:'10%'}}/>
+            <input type="number" min="1" max="12" step="1" defaultValue={4} style={{width:'10%'}} />
           </div>
           <div className={Create_css.input}>
             <label><span>소</span><span>개</span></label>
             <p> : </p>
-            <textarea name="" id=""></textarea>
+            <textarea name="" id="" onKeyDown={handlekeydown}></textarea>
           </div>
           <div className={Create_css.input}>
             <label><span>스</span><span>택</span></label>

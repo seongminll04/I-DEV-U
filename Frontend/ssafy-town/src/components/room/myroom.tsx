@@ -8,6 +8,7 @@ import { setModal } from '../../store/actions';
 import { Ssize1Scene } from '../map/Ssize1Scene';
 import { Lsize1Scene } from '../map/Lsize1Scene';
 import { Msize1Scene } from '../map/Msize1Scene';
+// import Cam from '../openvidu/cam/cam'
 
 const Myroom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
@@ -101,6 +102,7 @@ const Myroom: React.FC = () => {
     <div id="phaser_game" className={ssafytown_css.phaser_game} >
         <div id="my-video-container" className={ssafytown_css.my_video_bar}></div>
         <div id="videoContainer" className={ssafytown_css.op_video_bar}> </div>
+        {/* <div className={ssafytown_css.video_bar}><Cam /></div> */}
         <button className={ssafytown_css.map_switch_button2} onClick={switchToSsize1Scene}>Ssize1Scene</button>
         <button className={ssafytown_css.map_switch_button3} onClick={switchToLsize1Scene}>Lsize1Scene</button>
         <button className={ssafytown_css.map_switch_button4} onClick={switchToMsize1Scene}>Msize1Scene</button>

@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import project_css from "./4project.module.css";
 
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setAllowMove, setModal } from '../../store/actions';
 import { AppState } from '../../store/state';
-import { setAllowMove } from '../../store/actions';
-import axios from "axios";
 
-  interface Props {
-    closeSidebar:()=>void;
-    closeModal:()=>void;
-  }
-  const Project: React.FC<Props> = ({closeSidebar, closeModal}) => {
+import axios from "axios";
+import ProjectFilter from "../filter/projectFilter";
+import CreateProject from "../board/CreateProject";
+
+const Project: React.FC = () => {
     const dispatch = useDispatch()
     const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
     const [projectList, setProjectList] = useState<string[]>(['프로젝트1','프로젝트2']);
@@ -29,8 +28,10 @@ import axios from "axios";
       console.log(err)
     })
   }
+
   // input 방향키 살리기
   const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
+    loadproject() //일단 박아둠 에러안뜨게
     const inputElement = event.currentTarget
     const currentCursorPosition = inputElement.selectionStart || 0;
     if (event.key === 'ArrowLeft' && currentCursorPosition!==0) {
@@ -43,19 +44,6 @@ import axios from "axios";
     }
   }
 
-    useEffect(() => { //esc키로 끄기
-      const handleKeyDown = (event: KeyboardEvent) => {
-        if (event.key === 'Escape') {
-          if (isModalOpen!==null) {closeModal()} else {closeSidebar()}
-        }
-      };
-      loadproject() //임시 배치
-      document.addEventListener('keydown', handleKeyDown);
-      return () => {
-        document.removeEventListener('keydown', handleKeyDown);
-      };
-    }, [isModalOpen,closeSidebar,closeModal]);
-
     return (
       <div className="sidebar_modal">
         <div style={{width:'100%', display:'flex',flexDirection:'column', alignItems:'center'}}>
@@ -66,8 +54,8 @@ import axios from "axios";
             <button>검색</button>
           </div>
           <div style={{display:'flex', width:'85%'}}>
-            <button className={project_css.button}>필터</button>
-            <button className={project_css.button}>방 생성</button>
+            <button className={project_css.button} onClick={()=>dispatch(setModal('프로젝트필터'))}>필터</button>
+            <button className={project_css.button} onClick={()=>dispatch(setModal('프로젝트생성'))}>방 생성</button>
           </div>
           <hr style={{width:'75%', color:'black'}}/>
           <div className={project_css.scrollbox}>
@@ -89,6 +77,9 @@ import axios from "axios";
             ))} 
           </div>
         </div>
+        {isModalOpen==='프로젝트필터' ? <ProjectFilter />:
+        isModalOpen==='프로젝트생성' ? <CreateProject /> :
+        null}
       </div>
     );
   };

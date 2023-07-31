@@ -1,29 +1,7 @@
-import React,{useEffect} from 'react';
+import React from 'react';
 import follow_css from './7follow.module.css'
 
-import { useSelector } from 'react-redux';
-import { AppState } from '../../store/state';
-
-
-
-interface Props {
-  closeSidebar:()=>void;
-  closeModal:()=>void;
-}
-const Follow: React.FC<Props> = ({closeSidebar, closeModal}) => {
-  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
-  useEffect(() => { //esc키로 끄기
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        if (isModalOpen!==null) {closeModal()} else {closeSidebar()}
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isModalOpen,closeSidebar,closeModal]);
-
+const Follow: React.FC = () => {
   return (
     <div className='sidebar_modal'>
       <h1>내 친구목록</h1>

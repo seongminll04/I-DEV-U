@@ -1,41 +1,24 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import alert_css from './1alert.module.css';
 import axios from 'axios';
 
-interface ModalProps {
-  onClose: () => void;
-}
+import { useDispatch } from 'react-redux';
+import { setModal } from '../../store/actions';
 
-
-const Modal: React.FC<ModalProps> = ({onClose}) => {
+const Modal: React.FC = () => {
+  const dispatch = useDispatch()
   const [page, setpage] = useState<Number>(0); 
   // 0 처음 1 공지전체 2 알림전체    99 0->공지상세 98 0->알림상세 97 공지전체->공지상세 96 알림전체->알림상세
   const [search, setsearch] = useState<string>('');
   const [nowsearch, setnowsearch] = useState<boolean>(false);
-
-  useEffect(() => { //esc키로 끄기
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setpage(0);setnowsearch(false); setsearch(''); onClose();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [onClose]);
 
   const searchdata = () => {
     setnowsearch(true)
     // 여기서 모든데이터 중 검색어랑 일치하는 것만 리스트화 하는 코드작성
 
   }
-
   
   // 모달창이 열렸다면 공지사항 데이터 불러오기
-
     axios({
       method:'get',
       url:'http://localhost:8080/notice/?~~~~~',
@@ -48,13 +31,13 @@ const Modal: React.FC<ModalProps> = ({onClose}) => {
       console.log(err)
     })
   
-
+    // setpage(0);setnowsearch(false); setsearch(''); 
   return (
     <div className={alert_css.modal_overlay}
     onClick={(e: React.MouseEvent<HTMLDivElement>) => {
-      if (e.target === e.currentTarget) {setpage(0);setnowsearch(false); setsearch(''); onClose()}}} >
+      if (e.target === e.currentTarget) {dispatch(setModal(null))}}} >
         <div className={alert_css.alert_modal}>
-        <p className={alert_css.closebtn} onClick={() => {setpage(0);setnowsearch(false); setsearch(''); onClose()}}>닫기</p>
+        <p className={alert_css.closebtn} onClick={() => {dispatch(setModal(null))}}>닫기</p>
         {page===0 ? 
         <div>
           <h1 style={{margin:'-20px 0 20px 0'}}>공지사항 / 알림</h1>

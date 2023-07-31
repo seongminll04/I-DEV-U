@@ -18,14 +18,7 @@ type User = {
 const ITEMS_PER_PAGE = 10;
 // const words = ["#가", "#나", "#다", "#라", "#마", "#바", "#사"];
 
-interface Props {
-  closeSidebar:()=>void;
-  closeModal:()=>void;
-}
-
-
-
-const Sogae: React.FC<Props> = ({closeSidebar, closeModal}) => {
+const Sogae: React.FC = () => {
   const dispatch = useDispatch();
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
   // const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
@@ -48,20 +41,6 @@ const Sogae: React.FC<Props> = ({closeSidebar, closeModal}) => {
   // const [totalItems, setTotalItems] = useState(users.length);
   // const [selectedWord, setSelectedWord] = useState<string | null>(null);
 
-
-  useEffect(() => { //esc키로 끄기
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        if (isModalOpen!=='소개팅설문') {
-          if (isModalOpen!== null) {closeModal()} else {closeSidebar()}
-        }
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isModalOpen,closeSidebar,closeModal]);
 
 
   useEffect(() => {
@@ -197,7 +176,7 @@ const Sogae: React.FC<Props> = ({closeSidebar, closeModal}) => {
           ))}
         </div> */}
         {isModalOpen==='소개팅설문' ? <SecondQAModal onClose={()=>dispatch(setModal(null))} onConfirm={handleConfirm} />:null}
-        {isModalOpen==='소개팅필터' ? <SogaeFilter onClose={()=>dispatch(setModal(null))} />:null}
+        {isModalOpen==='소개팅필터' ? <SogaeFilter />:null}
       </div>
   
   );

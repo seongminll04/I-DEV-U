@@ -1,38 +1,24 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState} from 'react';
 import QnA_css from './QnA.module.css';
 
-interface Props {
-  onClose : () => void;
-}
+import { useDispatch } from 'react-redux';
+import { setModal } from '../../store/actions';
 
-const QnA: React.FC<Props> = ({onClose}) => {
+const QnA: React.FC = () => {
+  const dispatch=useDispatch()
   const [search, setsearch] = useState<string>('');
   const [nowsearch, setnowsearch] = useState<boolean>(false);
 
-  
   const searchdata = () => {
     setnowsearch(true)
-    // 여기서 모든데이터 중 검색어랑 일치하는 것만 리스트화 하는 코드작성
-    
+    // 여기서 모든데이터 중 검색어랑 일치하는 것만 리스트화 하는 코드작성 
   }
-  useEffect(() => { //esc키로 끄기
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
-    };
 
-    document.addEventListener('keydown', handleKeyDown);
-    
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [onClose]);
   return (
     <div className={QnA_css.modal_overlay} onClick={(e: React.MouseEvent<HTMLDivElement>) => {
-      if (e.target === e.currentTarget) {onClose()}}}>
+      if (e.target === e.currentTarget) {dispatch(setModal(null))}}}>
       <div className={QnA_css.QnA_modal}>
-        <p className={QnA_css.closebtn} onClick={() => {onClose()}}>닫기</p>
+        <p className={QnA_css.closebtn} onClick={() => {dispatch(setModal(null))}}>닫기</p>
         <h1>Q n A 게시판</h1>
         <hr />
         <div style={{display:'flex', justifyContent:'space-between'}}>

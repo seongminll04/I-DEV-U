@@ -1,13 +1,15 @@
 import React, { useState,useEffect,useRef } from 'react';
-import mypage_modal_css from './8mypageModal.module.css';
+import edit_css from './edit.module.css';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import Withdraw from '../account/withdraw';
 
-interface ModalProps {
-  onClose: () => void;
+import { useDispatch } from 'react-redux';
+import { setModal } from '../../store/actions';
+
+interface Props {
   user: {email: string;
     password: string;
     name: string;
@@ -20,7 +22,9 @@ interface ModalProps {
   };
 }
 
-const Modal: React.FC<ModalProps> = ({ onClose, user}) => {
+const EditAccount: React.FC<Props> = ({user}) => {
+  const dispatch = useDispatch()
+
   const [isWithdraw, setWithdraw] = useState(false);
   const [chknickname, setchknickname] = useState('no');
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -122,62 +126,62 @@ const Modal: React.FC<ModalProps> = ({ onClose, user}) => {
   }
   
   return (
-    <div className={mypage_modal_css.mypage_modal_overlay}  onClick={(e: React.MouseEvent<HTMLDivElement>) => {
-      if (e.target === e.currentTarget) {onClose(); setWithdraw(false);}}}>
-        {!isWithdraw ? <div className={mypage_modal_css.mypage_alert_modal}>
-          <p className={mypage_modal_css.mypage_closeBtn} onClick={()=>{onClose();setWithdraw(false);}}>닫기</p>
+    <div className={edit_css.mypage_modal_overlay}  onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+      if (e.target === e.currentTarget) {dispatch(setModal(null)); setWithdraw(false);}}}>
+        {!isWithdraw ? <div className={edit_css.mypage_alert_modal}>
+          <p className={edit_css.mypage_closeBtn} onClick={()=>{dispatch(setModal(null));setWithdraw(false);}}>닫기</p>
           <h1>회원정보 수정</h1>
           <hr/>
-          <form id={mypage_modal_css.mypage_form} onSubmit={formik.handleSubmit}>
-            <div className={mypage_modal_css.mypage_info}>
+          <form id={edit_css.mypage_form} onSubmit={formik.handleSubmit}>
+            <div className={edit_css.mypage_info}>
               <span>이름</span>
             </div>
-            <input id="name" type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('name')} readOnly/>
-            <div className={mypage_modal_css.mypage_info}>
+            <input id="name" type="text" className={edit_css.mypage_input} {...formik.getFieldProps('name')} readOnly/>
+            <div className={edit_css.mypage_info}>
               <span>이메일</span>
             </div>
-            <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('email')} readOnly/>
-            <div className={mypage_modal_css.mypage_info}>
+            <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('email')} readOnly/>
+            <div className={edit_css.mypage_info}>
               <span>생년월일</span>
             </div>
-            <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('birthday')} readOnly/>
-            <div className={mypage_modal_css.mypage_info}>
+            <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('birthday')} readOnly/>
+            <div className={edit_css.mypage_info}>
               <span>성별</span>
             </div>
-            <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('gender')} readOnly/>
-            <div className={mypage_modal_css.mypage_info}>
+            <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('gender')} readOnly/>
+            <div className={edit_css.mypage_info}>
               <span>닉네임</span>
             </div>
-            <div className={mypage_modal_css.mypage_nickname}>
-              <input style={{width:'82%'}} type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('nickname')}  onChange={(event) => {formik.handleChange(event); setchknickname('no'); console.log(chknickname)}} 
+            <div className={edit_css.mypage_nickname}>
+              <input style={{width:'82%'}} type="text" className={edit_css.mypage_input} {...formik.getFieldProps('nickname')}  onChange={(event) => {formik.handleChange(event); setchknickname('no'); console.log(chknickname)}} 
               onKeyDown={handlekeydown}/>
-              <div className={mypage_modal_css.mypage_check_nickname_btn} onClick={()=>nicknamecheck(formik.values.nickname)}>중복확인</div>
+              <div className={edit_css.mypage_check_nickname_btn} onClick={()=>nicknamecheck(formik.values.nickname)}>중복확인</div>
             </div>
-            <div className={mypage_modal_css.mypage_info}>
+            <div className={edit_css.mypage_info}>
               <span>자기소개</span>
             </div>
-            <input type="text" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('intro')} onKeyDown={handlekeydown}/>
-            <div className={mypage_modal_css.mypage_info}>
+            <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('intro')} onKeyDown={handlekeydown}/>
+            <div className={edit_css.mypage_info}>
               <span>비밀번호</span>
             </div>
-            <input type="password" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('password')} onKeyDown={handlekeydown} />
-            <div className={mypage_modal_css.mypage_info}>
+            <input type="password" className={edit_css.mypage_input} {...formik.getFieldProps('password')} onKeyDown={handlekeydown} />
+            <div className={edit_css.mypage_info}>
               <span>비밀번호 확인</span>
             </div>
-            <input type="password" className={mypage_modal_css.mypage_input} {...formik.getFieldProps('confirmPassword')} placeholder="비밀번호 확인" onKeyDown={handlekeydown}/>
-            <div className={mypage_modal_css.mypage_info}>
+            <input type="password" className={edit_css.mypage_input} {...formik.getFieldProps('confirmPassword')} placeholder="비밀번호 확인" onKeyDown={handlekeydown}/>
+            <div className={edit_css.mypage_info}>
               <span>사진</span>
             </div>
-            <input type="file" className={mypage_modal_css.mypage_input}/>
-            <button className={mypage_modal_css.mypage_button} type="submit" disabled={chknickname==='no' ||!formik.isValid || formik.isSubmitting}>수정</button>
+            <input type="file" className={edit_css.mypage_input}/>
+            <button className={edit_css.mypage_button} type="submit" disabled={chknickname==='no' ||!formik.isValid || formik.isSubmitting}>수정</button>
           </form>
-          <p className={mypage_modal_css.mypage_withdrawal} onClick={goWithdrawal}>회원탈퇴</p>
+          <p className={edit_css.mypage_withdrawal} onClick={goWithdrawal}>회원탈퇴</p>
         </div>:
         <div>
-          <Withdraw onBack={()=>{setWithdraw(false);}} onClose={()=>{setWithdraw(false);onClose();}}/>
+          <Withdraw onBack={()=>{setWithdraw(false);}} onClose={()=>{setWithdraw(false);dispatch(setModal(null));}}/>
         </div> }
     </div>
   );
 };
 
-export default Modal;
+export default EditAccount;

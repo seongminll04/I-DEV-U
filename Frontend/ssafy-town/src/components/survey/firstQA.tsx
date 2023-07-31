@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import qa_css from './firstQA.module.css';
 
-interface QAModalProps {
-  onClose: () => void;
-  onConfirm: (surveyResults: any) => void;
-}
+import { useDispatch } from 'react-redux';
+import { setModal } from '../../store/actions';
 
-const QAModal: React.FC<QAModalProps> = ({ onClose, onConfirm }) => {
+const QAModal: React.FC = () => {
+  const dispatch = useDispatch()
   const [workingYears, setWorkingYears] = useState<string>("");
   const [currentJob, setCurrentJob] = useState<string>("");
   const [languages, setLanguages] = useState<string[]>([]);
@@ -44,24 +43,9 @@ const QAModal: React.FC<QAModalProps> = ({ onClose, onConfirm }) => {
       location,
       projectExperience
     }
-    onConfirm(surveyResults);
+    // onConfirm(surveyResults);
+    console.log(surveyResults)
   }
-
-  useEffect(() => { //esc키로 끄기 지금 너무 불편함
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
-    };
-    
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [onClose]);
-
-
 
   const surveyForm = (
     <form onSubmit={handleSubmit}>
@@ -133,7 +117,7 @@ const QAModal: React.FC<QAModalProps> = ({ onClose, onConfirm }) => {
     <h2>📝 신규 유저 설문조사</h2>
     <h3>* 저희 서비스를 이용하기 위해 첫 로그인시 설문조사가 필요합니다. *</h3>
     {surveyForm}
-    <button onClick={onClose}>
+    <button onClick={()=>dispatch(setModal(null))}>
       나중에 하기(개발용, 나중에는 없애고 강제시킬예정)
     </button>
   </div>

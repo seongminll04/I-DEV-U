@@ -8,6 +8,7 @@ import { AppState } from '../../store/state';
 import axios from "axios";
 import ProjectFilter from "../filter/projectFilter";
 import CreateProject from "../board/CreateProject";
+import EnterProject from "../board/EnterProject";
 
 const Project: React.FC = () => {
     const dispatch = useDispatch()
@@ -68,7 +69,7 @@ const Project: React.FC = () => {
                     <p style={{color:'gray'}}>#Python #Java #JavaScript #React </p>
                   </div>
                   <div>
-                    <button className={project_css.btn}>참가신청</button>
+                    <button className={project_css.btn} onClick={()=>{dispatch(setModal('참가신청'))}}>참가신청</button>
                     <span>2/5</span>
                   </div>
                 </div>
@@ -79,6 +80,7 @@ const Project: React.FC = () => {
         </div>
         {isModalOpen==='프로젝트필터' ? <ProjectFilter />:
         isModalOpen==='프로젝트생성' ? <CreateProject /> :
+        isModalOpen==='참가신청' ? <EnterProject /> :
         null}
       </div>
     );

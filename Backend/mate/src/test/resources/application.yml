@@ -11,6 +11,11 @@ jpa:
   database-platform: org.hibernate.dialect.MySQLDialect
   hibernate:
     ddl-auto: update
+  properties:
+    hibernate:
+    #        show_sql: true
+    format_sql: true
+    default_batch_fetch_size: 1000 #최적화 옵션
 
 # SSL
 server:
@@ -19,3 +24,9 @@ server:
     key-store: classpath:ssl/keystore.p12
     key-store-type: PKCS12
     key-store-password: ${SSL_PASSWORD}
+
+# JPA 쿼리 로깅 활성화 및 로그 레벨 설정
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: debug

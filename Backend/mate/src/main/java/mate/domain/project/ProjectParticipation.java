@@ -8,10 +8,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.Getter;
 import mate.domain.User;
 
 @Entity
 @Table(name = "project_participation")
+@Getter
 public class ProjectParticipation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

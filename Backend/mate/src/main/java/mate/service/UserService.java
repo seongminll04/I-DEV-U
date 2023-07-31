@@ -1,6 +1,6 @@
 package mate.service;
 
-import mate.domain.User;
+import mate.domain.user.User;
 import mate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

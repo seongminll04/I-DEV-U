@@ -1,7 +1,7 @@
 package mate.user;
 
 import lombok.extern.slf4j.Slf4j;
-import mate.domain.User;
+import mate.domain.user.User;
 import mate.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +23,9 @@ public class UserTest {
 
 	@Test
 	void nickName_check() {
-		String nickname = "admin";
+		String nickname = "ssafy";
 
 		List<User> list = userRepository.findByNickname(nickname);
-
 		assertThat(list.size()).isEqualTo(1);
 	}
 

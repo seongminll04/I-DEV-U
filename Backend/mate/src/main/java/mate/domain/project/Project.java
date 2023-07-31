@@ -13,8 +13,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+<<<<<<< HEAD
 import lombok.Getter;
 import mate.domain.User;
+=======
+import mate.domain.user.User;
+>>>>>>> c2f378a362c4e64ef8e821b4579358e64d0d8820
 
 @Entity
 @Table(name = "project")

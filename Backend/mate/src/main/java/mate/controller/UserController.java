@@ -1,6 +1,6 @@
 package mate.controller;
 
-import mate.domain.User;
+import mate.domain.user.User;
 import mate.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,13 +42,13 @@ public class UserController {
         Map<String, String> res = new HashMap<>();
 
         User user = new User();
-
-        user.setEmail(map.get("email"));
-        user.setPassword(map.get("password"));
-        user.setName(map.get("name"));
-        user.setNickname(map.get("nickname"));
-        user.setGender(Integer.parseInt(map.get("gender")));
-        user.setStatus("A");
+//
+//        user.setEmail(map.get("email"));
+//        user.setPassword(map.get("password"));
+//        user.setName(map.get("name"));
+//        user.setNickname(map.get("nickname"));
+//        user.setGender(Integer.parseInt(map.get("gender")));
+//        user.setStatus("A");
 
         userService.save(user);
 
@@ -126,10 +126,10 @@ public class UserController {
         Map<String, String> res = new HashMap<>();
 
         try {
-            loginUser.setPassword(map.get("password"));
-            loginUser.setName(map.get("name"));
-            loginUser.setNickname(map.get("nickname"));
-            loginUser.setIntro(map.get("intro"));
+//            loginUser.setPassword(map.get("password"));
+//            loginUser.setName(map.get("name"));
+//            loginUser.setNickname(map.get("nickname"));
+//            loginUser.setIntro(map.get("intro"));
             userService.save(loginUser);
 
             res.put("resmsg", "회원정보 수정 성공");
@@ -146,7 +146,7 @@ public class UserController {
         Map<String, String> res = new HashMap<>();
 
         try {
-            loginUser.setStatus("D");
+//            loginUser.setStatus("D");
             userService.save(loginUser);
 
             res.put("resmsg", "회원탈퇴 성공");

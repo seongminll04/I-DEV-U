@@ -21,6 +21,11 @@ logging.level: #띄어쓰기 없음
 server:
   port: 443
   ssl:
+<<<<<<< HEAD
     key-store: classpath:/certificate.p12
+=======
+    #    key-store: classpath:ssl/certificate.p12
+    key-store: ${SSL_KEY}
+>>>>>>> ab0ceb546229f78a262bcf7d530a433b21f67c7f
     key-store-type: PKCS12
     key-store-password: ${SSL_PASSWORD}

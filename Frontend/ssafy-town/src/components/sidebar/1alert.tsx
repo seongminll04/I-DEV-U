@@ -59,7 +59,7 @@ const Modal: React.FC = () => {
     })
     .then(res => {
       console.log(res.data)
-      noticeList = res.data.list;
+      // noticeList = res.data.list;
       // const alert_data=res.data 
     })
     .catch(err => {

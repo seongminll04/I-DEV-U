@@ -204,6 +204,4 @@ gradle-app.setting
 HELP.md
 
 application.properties
-
-ssl
 # End of https://www.toptal.com/developers/gitignore/api/macos,java,intellij,gradle

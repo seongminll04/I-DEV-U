@@ -9,7 +9,7 @@ const Modal: React.FC = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate(); //페이지 이동 navigate
   return (
-    <div className={logout_css.modal_overlay} onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+    <div className={logout_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {dispatch(setModal(null))}}}>
         <div className={logout_css.logout_modal}>
         <h1>로그아웃 하시겠습니까?</h1>

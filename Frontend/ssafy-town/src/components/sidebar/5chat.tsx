@@ -156,7 +156,8 @@ import { setAllowMove } from '../../store/actions';
           </div>
           <hr />
           <div>
-            <input type="text" value={messageInput} onChange={handleInputChange} style={{width:'80%'}} onKeyDown={handlekeydown} />
+            <input type="text" value={messageInput} onChange={handleInputChange} style={{width:'80%'}} onKeyDown={handlekeydown} 
+            onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
             <button onClick={handleSendMessage}>전송</button>
           </div>
         </div>

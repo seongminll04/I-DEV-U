@@ -1,0 +1,69 @@
+.modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.modal {
+    background-color: rgba(109, 206, 245, 0.9);
+    border-radius: 1rem;
+    width:50%;
+    height: 500px;
+    padding: 10px;
+    box-sizing: border-box;
+    color : white;
+}
+
+.closebtn {
+    margin:10px;
+    text-align: right;
+    cursor: pointer;
+}
+
+.closebtn:hover{
+    color:gray;
+    cursor: pointer;
+}
+
+.info {
+    overflow-y: scroll;
+}
+.input {
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    margin:auto;
+    width:70%;
+    font-size: large;
+}
+.input label {
+    width:20%;
+    display: flex;
+    justify-content: space-between;
+}
+.input p {
+    margin: 10px 20px;
+}
+.input input,textarea {
+    width:60%;
+    border-radius: 0.5rem;
+    padding:5px 10px;
+}
+
+.input textarea {
+    resize:none;
+    border: solid 2px;
+    height: 100px;
+}
+.backbtn {
+    margin:10px;
+    display: flex;
+    margin-top: -15px;
+    text-align: left;
+    cursor: pointer;
+}

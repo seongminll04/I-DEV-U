@@ -70,7 +70,7 @@ const Modal: React.FC = () => {
     // setpage(0);setnowsearch(false); setsearch(''); 
   return (
     <div className={alert_css.modal_overlay}
-    onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+    onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) {dispatch(setModal(null))}}} >
         <div className={alert_css.alert_modal}>
         <p className={alert_css.closebtn} onClick={() => {dispatch(setModal(null))}}>닫기</p>

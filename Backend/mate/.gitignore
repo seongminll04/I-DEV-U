@@ -205,5 +205,5 @@ HELP.md
 
 application.properties
 
-ssl
+certificate.p12
 # End of https://www.toptal.com/developers/gitignore/api/macos,java,intellij,gradle

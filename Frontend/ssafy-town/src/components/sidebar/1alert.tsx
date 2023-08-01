@@ -1,4 +1,4 @@
-import React, {useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import alert_css from './1alert.module.css';
 import axios from 'axios';
 
@@ -27,7 +27,7 @@ const Alert: React.FC = () => {
       url:'https://i9b206.p.ssafy.io:9090/notice/list/easy',
     })
     .then(res => {
-      console.log(res.data)
+      // console.log(res.data)
       setNoticeList(res.data.list);
     })
     .catch(err => {

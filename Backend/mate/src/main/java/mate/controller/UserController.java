@@ -18,7 +18,6 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-    private final LoginService loginService;
 
 
     @GetMapping("/sleep")
@@ -34,7 +33,6 @@ public class UserController {
      */
     @PostMapping("/signUp")
     public ResponseEntity<?> signup(@RequestBody UserSignUpDto userSignUpDto) throws Exception {
-        System.out.println(1);
         userService.signUp(userSignUpDto);
 
         return ResponseEntity.ok().build();

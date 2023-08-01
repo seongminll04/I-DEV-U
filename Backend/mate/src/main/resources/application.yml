@@ -27,7 +27,7 @@ logging.level:
 #    key-store-password: ${SSL_PASSWORD}
 
 jwt:
-  secretKey: ${jwt_secretKey}
+  secretKey: ${jwt_secretKey}e
 
   access:
     expiration: ${jwt_access_expiration} # 1시간(60분) (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))

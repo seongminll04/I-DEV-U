@@ -25,6 +25,9 @@ const Alert: React.FC = () => {
     axios({
       method:'get',
       url:'https://i9b206.p.ssafy.io:9090/notice/list/easy',
+      headers :{ 
+        Authorization: '~~~~~~~'
+      }
     })
     .then(res => {
       // console.log(res.data)

@@ -76,8 +76,8 @@ const Login: React.FC = () => {
         <img src="assets/kakao_logo.png" alt="" style={{width:'30px', height:'20px'}}/>
         <span>카카오 로그인</span><p></p></button>
         <div className={login_css.checkContainer2}>
-          <a className={login_css.link} href="/signup">회원가입</a>
-          <a className={login_css.link} href="/findpassword">비밀번호 찾기</a>
+          <p className={login_css.link} onClick={()=>navigate('/signup')}>회원가입</p>
+          <p className={login_css.link} onClick={()=>navigate('/findpassword')}>비밀번호 찾기</p>
         </div>
       </div>
     </div>

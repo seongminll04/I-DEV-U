@@ -3,6 +3,7 @@ package mate.service;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -11,14 +12,10 @@ import mate.domain.notice.NoticeBoard;
 import mate.repository.NoticeRepository;
 
 @Service
+@RequiredArgsConstructor
 public class NoticeService {
 
-	@Autowired
-	NoticeRepository noticeRepository;
-
-	public NoticeService(NoticeRepository noticeRepository) {
-		this.noticeRepository = noticeRepository;
-	}
+	private final NoticeRepository noticeRepository;
 
 	public void writeNotice(NoticeBoard notice) {
 		noticeRepository.save(notice);
@@ -44,9 +41,9 @@ public class NoticeService {
 	}
 
 	// 가장 최근 4개만 조회
-	public List<NoticeBoard> listNoticeTop4() {
-		return noticeRepository.findNoticeTop4OrderByIdxDesc();
-	}
+//	public List<NoticeBoard> listNoticeTop4() {
+//		return noticeRepository.findNoticeTop4OrderByIdxDesc();
+//	}
 
 	// 검색어를 사용한 리스트 조회(제목)
 	public List<NoticeBoard> listNoticeByTitle(String keyWord) {

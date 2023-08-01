@@ -3,6 +3,7 @@ package mate.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,18 +15,10 @@ import mate.service.NoticeService;
 @RestController
 @RequestMapping("/notice")
 @CrossOrigin(origins = {})
+@RequiredArgsConstructor
 public class NoticeController {
 
-	@Autowired
-	NoticeService noticeService;
-
-	@Autowired
-	NoticeRepository noticeRepository;
-
-	public NoticeController(NoticeService noticeService, NoticeRepository noticeRepository) {
-		this.noticeService = noticeService;
-		this.noticeRepository = noticeRepository;
-	}
+	private final NoticeService noticeService;
 
 	@PostMapping("/write")
 	public ResponseEntity<Map<String, Object>> writeNotice(NoticeBoard notice) {

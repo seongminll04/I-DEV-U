@@ -22,6 +22,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 
 /**
@@ -44,7 +45,7 @@ public class SecurityConfig {
         http
                 .formLogin().disable() // FormLogin 사용 X
                 .httpBasic().disable() // httpBasic 사용 X
-                .cors()
+                .cors().configurationSource((CorsConfigurationSource) new CorsConfig())
                 .and()
                 .csrf().disable() // csrf 보안 사용 X
 //                .headers().frameOptions().disable()

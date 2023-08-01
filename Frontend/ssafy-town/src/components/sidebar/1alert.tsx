@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import alert_css from './1alert.module.css';
 import axios from 'axios';
 
@@ -24,7 +24,8 @@ const Modal: React.FC = () => {
 
   }
 
-  let noticeList: any = [
+  // 초기 데이터, 불러와지는것 성공하면 초깃값 비울 예정
+  let noticeList = useRef<any[]>([
     {
       idx: 1,
       userIdx: 3,
@@ -49,7 +50,7 @@ const Modal: React.FC = () => {
       createdAt: '2023-07-31T04:15:09',
       type: 'A',
     },
-  ];
+  ]);
 
   useEffect(()=>{
     // 모달창이 열렸다면 공지사항 데이터 불러오기
@@ -59,8 +60,7 @@ const Modal: React.FC = () => {
     })
     .then(res => {
       console.log(res.data)
-      // noticeList = res.data.list;
-      // const alert_data=res.data 
+      noticeList.current = res.data.list;
     })
     .catch(err => {
       console.log(err)
@@ -82,7 +82,7 @@ const Modal: React.FC = () => {
               <p>공지사항</p>
                 <p className={alert_css.movebtn} onClick={() => setpage(1)}>전체보기</p>
             </div>
-            {noticeList.map((notice: Notice, index: number) => {
+            {noticeList.current.map((notice: Notice, index: number) => {
                 const date = new Date(notice.createdAt);
                 console.log(date);
                 // console.log(notice);

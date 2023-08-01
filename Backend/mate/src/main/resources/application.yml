@@ -1,12 +1,9 @@
 spring:
   # MySQL
   datasource:
-    url: jdbc:mysql://${PUBLIC_IP}:3500/mate
-#    url: jdbc:mysql://127.0.0.1:3306/mate
+    url: jdbc:mysql://${PUBLIC_IP}
     username: ${DB_USER_NAME}
-#    username: ssafy
     password: ${DB_USER_PASSWORD}
-#    password: ssafy
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -23,15 +20,15 @@ logging.level: #띄어쓰기 없음
 #  org.hibernate.type: trace
 
 # SSL
-server:
-  port: 443
-  ssl:
-    key-store: classpath:ssl/keystore.p12
-    key-store-type: PKCS12
-    key-store-password: ${SSL_PASSWORD}
+#server:
+#  port: 443
+#  ssl:
+#    key-store: classpath:ssl/keystore.p12
+#    key-store-type: PKCS12
+#    key-store-password: ${SSL_PASSWORD}
 
 jwt:
-  secretKey: ${jwt_secretKey}
+  secretKey: ${jwt_secretKey}e
 
   access:
     expiration: ${jwt_access_expiration} # 1시간(60분) (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))

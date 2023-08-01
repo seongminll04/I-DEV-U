@@ -21,10 +21,10 @@ public class User {
     private String nickname;
     private LocalDate birth;
     @Enumerated(EnumType.STRING)
-    private UserGender gender; // 0 : 남자, 1 : 여자
+    private UserGender gender; // MALE, FEMALE
     private String intro;
     @Enumerated(EnumType.STRING)
-    private UserStatus status; //
+    private UserStatus status; // A, B, C, D
     @Enumerated(EnumType.STRING)
     private Role role; // ADMIN , USER
     private String refreshToken;

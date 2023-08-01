@@ -64,7 +64,7 @@ const getUser = async () => {
   const idx = parseInt(localStorage.getItem('idx') || '0', 10); // Parse to an integer
   axios({
     method: 'get',
-    url: `http://localhost:8080/user/${idx}`,
+    url: `https://i9b206.p.ssafy.io:9090/user/${idx}`,
   })
   .then(res => {
     console.log(res)

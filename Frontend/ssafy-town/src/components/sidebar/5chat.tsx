@@ -37,7 +37,7 @@ import { setAllowMove } from '../../store/actions';
 
     useEffect(() => {
       // Socket.IO 연결
-      const newSocket = io("http://localhost:8080"); // 백엔드 서버의 URL로 변경해주세요.
+      const newSocket = io("https://i9b206.p.ssafy.io:9090"); // 백엔드 서버의 URL로 변경해주세요.
       setSocket(newSocket);
     
       newSocket.on("connect", () => {

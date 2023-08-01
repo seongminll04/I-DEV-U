@@ -54,7 +54,7 @@ const QnA: React.FC = () => {
             <button className={QnA_css.createQnA} onClick={()=>setCreateQnA(true)}>질문하기</button>
           </div>
           <br />
-          <div className={QnA_css.notice}>
+          <div className={QnA_css.notice} onClick={()=>{}}>
             <p>1</p>
             <p>!!! 궁금해요.</p>
             <p>07/19 00:00</p>

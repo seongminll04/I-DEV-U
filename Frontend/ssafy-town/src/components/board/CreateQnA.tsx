@@ -32,8 +32,8 @@ const CreateQnA: React.FC<Props> = ({onback}) => {
 
   return (
       <div className={Create_css.modal}>
-        <p className={Create_css.backbtn} onClick={onback}>돌아가기</p>
         <p className={Create_css.closebtn} onClick={() => {dispatch(setModal(null))}}>닫기</p>
+        <p className={Create_css.backbtn} onClick={onback}>돌아가기</p>
         <h1>새 QnA 생성</h1>
         <hr />
         <div className={Create_css.info}>

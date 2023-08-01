@@ -2,17 +2,17 @@ import React from 'react';
 import ssafytown_css from './ssafytown.module.css';
 
 // 사이드바 리스트
-import Sogae from './sidebar/2sogae';
-import Mate from './sidebar/3mate';
-import Project from './sidebar/4project';
-import Chat from './sidebar/5chat';
-import Cam from './sidebar/6cam';
-import Follow from './sidebar/7follow';
-import MyPage from './sidebar/8mypage';
-import Setting from './sidebar/9setting';
+import Sogae from '../sidebar/2sogae';
+import Mate from '../sidebar/3mate';
+import Project from '../sidebar/4project';
+import Chat from '../sidebar/5chat';
+import Cam from '../sidebar/6cam';
+import Follow from '../sidebar/7follow';
+import MyPage from '../sidebar/8mypage';
+import Setting from '../sidebar/9setting';
 
 import { useSelector } from 'react-redux';
-import { AppState } from '../store/state';
+import { AppState } from '../../store/state';
 
 
 const Navbar: React.FC = () => {

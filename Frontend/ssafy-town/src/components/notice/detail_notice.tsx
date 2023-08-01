@@ -22,4 +22,4 @@ const DetailNotice: React.FC<Props> = ({backpage}) => {
   );
 };
 
-export default DetailNotice;
+export default DetailNotice; 

@@ -11,6 +11,7 @@ import mate.global.login.service.LoginService;
 import mate.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -58,6 +59,7 @@ public class SecurityConfig {
                 // 기본 페이지, css, image, js 하위 폴더에 있는 자료들은 모두 접근 가능, h2-console에 접근 가능
                 .antMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
                 .antMatchers("/user/signUp").permitAll() // 회원가입 접근 가능
+                .antMatchers(HttpMethod.OPTIONS, "**/*").permitAll()
                 .anyRequest().authenticated() // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
                 .and();
 

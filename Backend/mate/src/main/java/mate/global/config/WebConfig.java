@@ -1,5 +1,6 @@
 package mate.global.config;
 
+import org.springframework.web.cors.reactive.CorsUtils;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -10,4 +11,5 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedMethods(ALLOWED_METHOD_NAMES.split(","));
     }
+
 }

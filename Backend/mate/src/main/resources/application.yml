@@ -1,22 +1,26 @@
-spring: #띄어쓰기 없음
+spring:
   # MySQL
-  datasource: #띄어쓰기 2칸
-    url: jdbc:mysql://${PUBLIC_IP}:3500/mate #4칸
+  datasource:
+    url: jdbc:mysql://${PUBLIC_IP}:3500/mate
+#    url: jdbc:mysql://127.0.0.1:3306/mate
     username: ${DB_USER_NAME}
+#    username: ssafy
     password: ${DB_USER_PASSWORD}
+#    password: ssafy
     driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa: #띄어쓰기 2칸
-    hibernate: #띄어쓰기 4칸
-      ddl-auto: update #띄어쓰기 6칸
-    properties: #띄어쓰기 4칸
-      hibernate: #띄어쓰기 6칸
-        #        show_sql: true   #띄어쓰기 8칸
-        format_sql: true  #띄어쓰기 8칸
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        #        show_sql: true
+        format_sql: true
         default_batch_fetch_size: 1000 #최적화 옵션
-logging.level: #띄어쓰기 없음
-  org.hibernate.SQL: debug #띄어쓰기 2칸
-#  org.hibernate.type: trace #띄어쓰기 2칸
 
+
+logging.level: #띄어쓰기 없음
+  org.hibernate.SQL: debug
+#  org.hibernate.type: trace
 
 # SSL
 server:
@@ -26,3 +30,13 @@ server:
     key-store-type: PKCS12
     key-store-password: ${SSL_PASSWORD}
 
+jwt:
+  secretKey: ${jwt_secretKey}
+
+  access:
+    expiration: ${jwt_access_expiration} # 1시간(60분) (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))
+    header: ${jwt_access_header}
+
+  refresh:
+    expiration: ${jwt_refresh_expiration} #  (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> 하루) * 14(2주))
+    header: ${jwt_refresh_header}

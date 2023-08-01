@@ -13,6 +13,17 @@ spring: #띄어쓰기 없음
         #        show_sql: true   #띄어쓰기 8칸
         format_sql: true  #띄어쓰기 8칸
         default_batch_fetch_size: 1000 #최적화 옵션
+  #Redis
+  redis:
+    host: ${PUBLIC_IP}
+    port: 6379
+
+jwt:
+  secret: VGhpcyBpcyBhIGRlbW8gcHJvamVjdCBmb3IgaW1wbGVtZW50aW5nIGp3dC4=VGhpcyBpcyBhIGRlbW8gcHJvamVjdCBmb3IgaW1wbGVtZW50aW5nIGp3dC4= # 임의의 문자열을 Base64로 인코딩한 값
+  refresh-token-validity-in-seconds: 1209600 # 14일
+  access-token-validity-in-seconds: 43200 # 12시간
+
+
 logging.level: #띄어쓰기 없음
   org.hibernate.SQL: debug #띄어쓰기 2칸
 #  org.hibernate.type: trace #띄어쓰기 2칸

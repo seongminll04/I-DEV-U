@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = {})
 public class VideoController {
 
-    @Value("https://i9b206.p.ssafy.io:4443")
+    @Value("${OPENVIDU.URL}")
     private String OPENVIDU_URL;
 
-    @Value("PWB206206")
+    @Value("${OPENVIDU.PASSWORD}")
     private String OPENVIDU_PASSWORD;
 
 

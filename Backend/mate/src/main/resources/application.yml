@@ -35,3 +35,6 @@ jwt:
     expiration: ${jwt_refresh_expiration} #  (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> 하루) * 14(2주))
     header: ${jwt_refresh_header}
 
+OPENVIDU:
+  PASSWORD: ${OPENVIDU_PASSWORD}
+  URL: ${OPENVIDU_URL}

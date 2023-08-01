@@ -47,7 +47,7 @@ public class SecurityConfig {
         http
                 .formLogin().disable() // FormLogin 사용 X
                 .httpBasic().disable() // httpBasic 사용 X
-                .cors().configurationSource(corsConfigurationSource())
+                .cors()
                 .and()
                 .csrf().disable() // csrf 보안 사용 X
 //                .headers().frameOptions().disable()
@@ -134,20 +134,6 @@ public class SecurityConfig {
     public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
         JwtAuthenticationProcessingFilter jwtAuthenticationFilter = new JwtAuthenticationProcessingFilter(jwtService, userRepository);
         return jwtAuthenticationFilter;
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.addAllowedOrigin("https://i9b206.p.ssafy.io:9090");
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 
 }

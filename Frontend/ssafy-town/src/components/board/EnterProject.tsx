@@ -19,7 +19,7 @@ const EnterProject: React.FC = () => {
   }
 
   return (
-    <div className={enter_css.modal_overlay} onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+    <div className={enter_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) {dispatch(setModal(null))}}}>
         <div className={enter_css.modal}>
             <h1>OO 프로젝트</h1>

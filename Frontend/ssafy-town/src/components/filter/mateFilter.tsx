@@ -6,7 +6,7 @@ import { setModal } from '../../store/actions';
 const MateFilter: React.FC = () => {
   const dispatch = useDispatch()
   return (
-    <div className={filter_css.modal_overlay} onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+    <div className={filter_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {dispatch(setModal(null))}}}>
         <div className={filter_css.logout_modal}>
         <h1>동료찾기 필터</h1>

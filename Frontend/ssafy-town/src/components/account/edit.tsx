@@ -118,7 +118,7 @@ const EditAccount: React.FC<Props> = ({user}) => {
   }
   
   return (
-    <div className={edit_css.mypage_modal_overlay}  onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+    <div className={edit_css.mypage_modal_overlay}  onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) {dispatch(setModal(null)); setWithdraw(false);}}}>
         {!isWithdraw ? <div className={edit_css.mypage_alert_modal}>
           <p className={edit_css.mypage_closeBtn} onClick={()=>{dispatch(setModal(null));setWithdraw(false);}}>닫기</p>

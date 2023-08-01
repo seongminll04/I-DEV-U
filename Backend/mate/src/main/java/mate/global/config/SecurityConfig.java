@@ -45,7 +45,8 @@ public class SecurityConfig {
                 .formLogin().disable() // FormLogin 사용 X
                 .httpBasic().disable() // httpBasic 사용 X
                 .csrf().disable() // csrf 보안 사용 X
-                .headers().frameOptions().disable()
+                .cors()
+//                .headers().frameOptions().disable()
                 .and()
 
                 // 세션 사용하지 않으므로 STATELESS로 설정

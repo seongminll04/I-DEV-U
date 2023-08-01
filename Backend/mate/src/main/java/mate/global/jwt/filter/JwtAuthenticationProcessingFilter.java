@@ -35,7 +35,6 @@ import java.io.IOException;
  *                              인증 성공 처리는 하지 않고 실패 처리
  *
  */
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @Slf4j
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {

@@ -5,14 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import mate.domain.notice.NoticeBoard;
 import mate.repository.NoticeRepository;
@@ -72,17 +65,47 @@ public class NoticeController {
 		return ResponseEntity.ok(map);
 	}
 
-	@GetMapping("/list/{keyWord}")
-	public ResponseEntity<Map<String, Object>> listNotice(
-		@RequestParam(value = "keyWord", required = false) String keyWord) {
+//	@GetMapping("/list/{keyWord}")
+//	public ResponseEntity<Map<String, Object>> listNotice(
+//		@RequestParam(value = "keyWord", required = false) String keyWord) {
+//		System.out.println("keyWord = " + keyWord);
+//		Map<String, Object> map = new HashMap<>();
+//
+//		if (keyWord == null) {
+//			map.put("list", noticeService.listNotice());
+//			return ResponseEntity.ok(map);
+//		} else {
+//			map.put("list", noticeService.listNoticeByKeyword(keyWord));
+//			return ResponseEntity.ok(map);
+//		}
+//	}
+
+	@GetMapping("/list")
+	public ResponseEntity<Map<String, Object>> listNotice() {
+		System.out.println("noticeAll");
 		Map<String, Object> map = new HashMap<>();
 
-		if (keyWord == null) {
-			map.put("list", noticeService.listNotice());
-			return ResponseEntity.ok(map);
-		} else {
-			map.put("list", noticeService.listNoticeByKeyword(keyWord));
-			return ResponseEntity.ok(map);
-		}
+		map.put("list", noticeService.listNotice());
+		return ResponseEntity.ok(map);
+	}
+
+	@GetMapping("/find/title/{keyWord}")
+	public ResponseEntity<Map<String, Object>> findNoticeByTitle(
+		@PathVariable(value = "keyWord", required = false) String keyWord) {
+		System.out.println("title = " + keyWord);
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("list", noticeService.listNoticeByTitle(keyWord));
+		return ResponseEntity.ok(map);
+	}
+
+	@GetMapping("/find/content/{keyWord}")
+	public ResponseEntity<Map<String, Object>> findNoticeByContent(
+			@PathVariable(value = "keyWord", required = false) String keyWord) {
+		System.out.println("content = " + keyWord);
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("list", noticeService.listNoticeByContent(keyWord));
+		return ResponseEntity.ok(map);
 	}
 }

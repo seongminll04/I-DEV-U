@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import mate.domain.notice.NoticeBoard;
@@ -39,11 +40,20 @@ public class NoticeService {
 
 	// 리스트 조회
 	public List<NoticeBoard> listNotice() {
-		return noticeRepository.findAll();
+		return noticeRepository.findAll(Sort.by(Sort.Direction.DESC, "idx"));
 	}
 
-	// 검색어를 사용한 리스트 조회
-	public List<NoticeBoard> listNoticeByKeyword(String keyWord) {
-		return noticeRepository.findNoticeByTitleContaining(keyWord);
+	// 가장 최근 4개만 조회
+	public List<NoticeBoard> listNoticeTop4() {
+		return noticeRepository.findNoticeTop4OrderByIdxDesc();
+	}
+
+	// 검색어를 사용한 리스트 조회(제목)
+	public List<NoticeBoard> listNoticeByTitle(String keyWord) {
+		return noticeRepository.findNoticeByTitleContainingOrderByIdxDesc(keyWord);
+	}
+
+	public List<NoticeBoard> listNoticeByContent(String keyWord) {
+		return noticeRepository.findNoticeByContentContainingOrderByIdxDesc(keyWord);
 	}
 }

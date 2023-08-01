@@ -40,12 +40,13 @@ const Cam: React.FC = () => {
     })
     .then(res =>{
       // const token = res.data.token;
+      const map = res.data.map;
 
       // 토큰을 사용하여 OpenVidu에 접속하는 코드 (OpenVidu SDK를 사용)
       // 예: openVidu.joinSession(token);
 
       console.log(res)
-      navigate('/L1');  // 성공시 이동주소
+      navigate(map);  // 성공시 이동주소 L1 M1 S1 L2 M2 이런식으로 받아와서 navigate말고 바로 들어가는형식으로 ㅇㅇ
     })
     .catch(err=>{console.log(err)})
   }

@@ -7,7 +7,7 @@ import { AppState } from '../../store/state';
 import { Ssize1Scene } from '../map/Ssize1Scene';
 import { Lsize1Scene } from '../map/Lsize1Scene';
 import { Msize1Scene } from '../map/Msize1Scene';
-// import Cam from '../openvidu/cam/cam'
+import Cam from '../openvidu/cam/cam'
 
 const Myroom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
@@ -85,7 +85,8 @@ const Myroom: React.FC = () => {
     <div id="phaser_game" className={ssafytown_css.phaser_game} >
         <div id="my-video-container" className={ssafytown_css.my_video_bar}></div>
         <div id="videoContainer" className={ssafytown_css.op_video_bar}> </div>
-        {/* <div className={ssafytown_css.video_bar}><Cam /></div> */}
+        <div className={ssafytown_css.video_bar}><Cam /></div>
+        {/* 이거는 이제 여기가아니라 L이랑 M사이즈에서만 할거임 S사이즈에서는 카메라가 필요없잖슴. 나중에 위치옮겨주자 */}
         <button className={ssafytown_css.map_switch_button2} onClick={switchToSsize1Scene}>Ssize1Scene</button>
         <button className={ssafytown_css.map_switch_button3} onClick={switchToLsize1Scene}>Lsize1Scene</button>
         <button className={ssafytown_css.map_switch_button4} onClick={switchToMsize1Scene}>Msize1Scene</button>

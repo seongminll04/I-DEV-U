@@ -12,7 +12,7 @@
 .QnA_modal {
     background-color: rgba(109, 206, 245, 0.9);
     border-radius: 1rem;
-    width:70%;
+    width:50%;
     height: 500px;
     padding: 10px;
     box-sizing: border-box;
@@ -26,14 +26,15 @@
     justify-content: space-between;
 }
 
-.button {
+.createQnA {
     background-color: white;
-    width: 150px;
-    height: 50px;
+    height: 30px;
     border-radius: 0.5rem;
 }
+.createQnA:hover {
+    background-color: gray;
+}
 
-.button:hover,
 .movebtn:hover {
     color: gray;
 }
@@ -51,4 +52,19 @@
     display: flex;
     justify-content: space-between;
     margin: 0px 20px;
+}
+.search_frame select {
+    height: 30px;
+    border-radius: 0.5rem;
+    text-align-last: center;
+    text-align: center;
+    -ms-text-align-last: center;
+    -moz-text-align-last: center;
+    margin-right :2px;
+}
+.search_frame input {
+    height: 25px;
+    border-radius: 0.5rem;
+    margin-right:2px;
+    padding:0 10px;
 }

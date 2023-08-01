@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import mate_css from './3mate.module.css'
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -41,26 +41,11 @@ import MateFilter from '../filter/mateFilter';
 //   }
 // `;
 
-interface Props {
-  closeSidebar:()=>void;
-  closeModal:()=>void;
-}
-const Mate: React.FC<Props> = ({closeSidebar, closeModal}) => {
+const Mate: React.FC = () => {
   const dispatch = useDispatch();
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
   // const [isOn, setisOn] = useState(true);
 
-  useEffect(() => { //esc키로 끄기
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        if (isModalOpen!==null) {closeModal()} else {closeSidebar()}
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isModalOpen,closeSidebar,closeModal]);
 
   // const toggleHandler = () => {
   //   // isOn의 상태를 변경하는 메소드를 구현
@@ -199,7 +184,7 @@ const Mate: React.FC<Props> = ({closeSidebar, closeModal}) => {
                 </tr>
               ))} */}
       </div>
-      {isModalOpen==='동료찾기필터' ? <MateFilter onClose={()=>dispatch(setModal(null))} />:null}
+      {isModalOpen==='동료찾기필터' ? <MateFilter />:null}
     </div>
   );
 };

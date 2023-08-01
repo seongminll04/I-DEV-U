@@ -2,9 +2,9 @@ import express from 'express';
 import axios from 'axios';
 
 const app = express();
-const SERVER_URL = 'https://i9b206.p.ssafy.io:9090';
-const OPENVIDU_URL = 'https://YOUR_OPENVIDU_SERVER';  // 실제 OpenVidu 서버의 URL로 수정해주세요.
-const OPENVIDU_SECRET = 'YOUR_OPENVIDU_SECRET';      // OpenVidu 서버의 Secret으로 수정해주세요.
+const SERVER_URL = 'https://i9b206.p.ssafy.io:3000';
+const OPENVIDU_URL = 'https://i9b206.p.ssafy.io:4443';  // 실제 OpenVidu 서버의 URL로 수정해주세요.
+const OPENVIDU_SECRET = 'qkrgowhdB206';      // OpenVidu 서버의 Secret으로 수정해주세요.
 
 app.get('/create-session', async (req: express.Request, res: express.Response) => {
     const response = await createSession();
@@ -61,7 +61,7 @@ async function generateToken(sessionId: string) {
 }
 
 
-app.listen(9090, () => {
+app.listen(3000, () => {
     console.log(`Server started on ${SERVER_URL}`);
 });
 

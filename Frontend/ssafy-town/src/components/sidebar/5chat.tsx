@@ -3,21 +3,17 @@
   import { io, Socket } from "socket.io-client";
   import chat_css from "./5chat.module.css";
 
-import { useSelector,useDispatch } from 'react-redux';
-import { AppState } from '../../store/state';
+import { useDispatch } from 'react-redux';
 import { setAllowMove } from '../../store/actions';
 
   interface ChatMessage {
     content: string;
     sender: string;
   }
-  interface Props {
-    closeSidebar:()=>void;
-    closeModal:()=>void;
-  }
-  const Chat: React.FC<Props> = ({closeSidebar, closeModal}) => {
+
+  const Chat: React.FC = () => {
     const dispatch = useDispatch()
-    const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
+
     const [socket, setSocket] = useState<Socket | null>(null);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [messageInput, setMessageInput] = useState<string>("");
@@ -38,18 +34,6 @@ import { setAllowMove } from '../../store/actions';
       inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
     }
   }
-
-    useEffect(() => { //esc키로 끄기
-      const handleKeyDown = (event: KeyboardEvent) => {
-        if (event.key === 'Escape') {
-          if (isModalOpen!==null) {closeModal()} else {closeSidebar()}
-        }
-      };
-      document.addEventListener('keydown', handleKeyDown);
-      return () => {
-        document.removeEventListener('keydown', handleKeyDown);
-      };
-    }, [isModalOpen,closeSidebar,closeModal]);
 
     useEffect(() => {
       // Socket.IO 연결
@@ -172,7 +156,8 @@ import { setAllowMove } from '../../store/actions';
           </div>
           <hr />
           <div>
-            <input type="text" value={messageInput} onChange={handleInputChange} style={{width:'80%'}} onKeyDown={handlekeydown} />
+            <input type="text" value={messageInput} onChange={handleInputChange} style={{width:'80%'}} onKeyDown={handlekeydown} 
+            onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
             <button onClick={handleSendMessage}>전송</button>
           </div>
         </div>

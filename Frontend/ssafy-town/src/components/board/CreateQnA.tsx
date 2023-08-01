@@ -1,0 +1,63 @@
+import React from 'react';
+import Create_css from './CreateQnA.module.css';
+
+import { useDispatch } from 'react-redux';
+import { setModal } from '../../store/actions';
+
+interface Props {
+  onback : () => void;
+}
+
+const CreateQnA: React.FC<Props> = ({onback}) => {
+  const dispatch=useDispatch()
+
+  const handlekeydown = (event:React.KeyboardEvent<HTMLTextAreaElement>|React.KeyboardEvent<HTMLInputElement>) => {
+    const inputElement = event.currentTarget
+    const currentCursorPosition = inputElement.selectionStart || 0;
+    const maxCursorPosition = inputElement.value.length;
+    if (event.key === 'ArrowLeft' && currentCursorPosition!==0) {
+      inputElement.setSelectionRange(currentCursorPosition - 1, currentCursorPosition - 1);
+    } else if (event.key === 'ArrowRight') {
+      inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
+    } else if (event.key === ' '){
+      inputElement.value = inputElement.value.slice(0,currentCursorPosition)+ ' ' +inputElement.value.slice(currentCursorPosition,)
+      inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
+    } else if (event.key ==='ArrowUp' && currentCursorPosition >= 29) {
+      inputElement.setSelectionRange(currentCursorPosition-29 , currentCursorPosition-29);
+    } else if (event.key ==='ArrowDown' && currentCursorPosition+29 < maxCursorPosition) {
+      inputElement.setSelectionRange(currentCursorPosition+29 , currentCursorPosition+29);
+    }
+  }
+
+
+  return (
+      <div className={Create_css.modal}>
+        <p className={Create_css.closebtn} onClick={() => {dispatch(setModal(null))}}>닫기</p>
+        <p className={Create_css.backbtn} onClick={onback}>돌아가기</p>
+        <h1>새 QnA 생성</h1>
+        <hr />
+        <div className={Create_css.info}>
+          <div className={Create_css.input}>
+            <label>
+              <span>제</span><span>목</span>
+            </label>
+            <p> : </p>
+            <input type="text" onKeyDown={handlekeydown}/>
+          </div>
+          <div className={Create_css.input}>
+            <label><span>내</span><span>용</span></label>
+            <p> : </p>
+            <textarea name="" id="" ></textarea>
+          </div>
+          <div className={Create_css.input}>
+            <label><span>파</span><span>일</span></label>
+            <p> : </p>
+            <input type="file" />
+          </div>
+          <button onClick={()=>{}}>생성하기</button>
+        </div>
+      </div>
+  );
+};
+
+export default CreateQnA;

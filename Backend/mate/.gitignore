@@ -203,4 +203,5 @@ gradle-app.setting
 
 HELP.md
 
+application.properties
 # End of https://www.toptal.com/developers/gitignore/api/macos,java,intellij,gradle

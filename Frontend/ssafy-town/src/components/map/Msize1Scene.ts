@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import store from '../../store/store'
+// import { setModal } from '../../store/actions';
 
 type AssetKeys = 'A2' | 'B2' | 'C2' | 'D2' | 'E2' | 'F2' | 'G2' | 'H2' | 'I2' | 'J2' |
                  'K2' | 'L2' | 'M2' | 'N2' | 'O2' | 'P2' | 'Q2' | 'R2' | 'S2' | 'T2' |
@@ -160,23 +162,23 @@ export class Msize1Scene extends Phaser.Scene {
   
     update() {
 
-      if (this.cursors && this.character && !this.sittingOnBench) {
+      if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnBench) {
         let moved = false;
         if (this.cursors.left?.isDown) {
-          this.character.setVelocityX(-1280);
+          this.character.setVelocityX(-320);
           moved = true;
         } else if (this.cursors.right?.isDown) {
-          this.character.setVelocityX(1280);
+          this.character.setVelocityX(320);
           moved = true;
         } else {
           this.character.setVelocityX(0);
         }
     
         if (this.cursors.up?.isDown) {
-          this.character.setVelocityY(-1280);
+          this.character.setVelocityY(-320);
           moved = true;
         } else if (this.cursors.down?.isDown) {
-          this.character.setVelocityY(1280);
+          this.character.setVelocityY(320);
           moved = true;
         } else {
           this.character.setVelocityY(0);

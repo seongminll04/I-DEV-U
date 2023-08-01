@@ -51,6 +51,7 @@
 .usertable:hover {
     background-color: rgba(109, 206, 245, 1);
     border-radius: 0.5rem;
+    cursor:pointer;
 }
 .userInfo {
     width:70%;

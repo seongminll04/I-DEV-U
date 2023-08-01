@@ -1,34 +1,30 @@
-import React,{useEffect} from 'react';
+import React from 'react';
 import follow_css from './7follow.module.css'
 
-import { useSelector } from 'react-redux';
-import { AppState } from '../../store/state';
+import { useDispatch } from 'react-redux';
+import { setAllowMove } from '../../store/actions';
 
-
-
-interface Props {
-  closeSidebar:()=>void;
-  closeModal:()=>void;
-}
-const Follow: React.FC<Props> = ({closeSidebar, closeModal}) => {
-  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
-  useEffect(() => { //esc키로 끄기
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        if (isModalOpen!==null) {closeModal()} else {closeSidebar()}
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isModalOpen,closeSidebar,closeModal]);
-
+const Follow: React.FC = () => {
+  const dispatch = useDispatch()
+  // input 방향키 살리기
+  const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
+    const inputElement = event.currentTarget
+    const currentCursorPosition = inputElement.selectionStart || 0;
+    if (event.key === 'ArrowLeft' && currentCursorPosition!==0) {
+      inputElement.setSelectionRange(currentCursorPosition - 1, currentCursorPosition - 1);
+    } else if (event.key === 'ArrowRight') {
+      inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
+    } else if (event.key === ' '){
+      inputElement.value = inputElement.value.slice(0,currentCursorPosition)+ ' ' +inputElement.value.slice(currentCursorPosition,)
+      inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
+    }
+  }
   return (
     <div className='sidebar_modal'>
       <h1>내 친구목록</h1>
       <div className={follow_css.search}>
-        <input type="text" placeholder='검색어를 입력해주세요'/>
+        <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown}
+          onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
         <button>검색</button>
       </div>
       <hr style={{width:'75%', color:'black'}}/>

@@ -1,6 +1,6 @@
 package mate.service;
 
-import mate.domain.User;
+import mate.domain.user.User;
 import mate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,8 +32,7 @@ public class UserService {
         return userRepository.findByEmailAndPassword(email, password);
     }
 
-    public User findById(Integer userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
+    public User findUserByIdx(Integer idx) {
+        return userRepository.findByIdx(idx);
     }
 }

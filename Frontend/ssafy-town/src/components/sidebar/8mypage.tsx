@@ -1,17 +1,13 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import mypage_css from './8mypage.module.css';
 import axios from 'axios';
-import Modal from './8mypageModal';
+import EditAcount from '../account/edit';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
 import { setModal } from '../../store/actions';
 
-interface Props {
-  closeSidebar:()=>void;
-  closeModal:()=>void;
-}
 const ToggleContainer = styled.div`
   position: relative;
   cursor: pointer;
@@ -82,23 +78,10 @@ const getUser = async () => {
   })
 };
 
-const Mypage: React.FC<Props> = ({closeSidebar, closeModal}) => {
+const Mypage: React.FC = () => {
   const dispatch = useDispatch();
   // const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
-
-  
-  useEffect(() => { //esc키로 끄기
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        if (isModalOpen !==null) {closeModal()} else {closeSidebar()}
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isModalOpen,closeSidebar,closeModal]);
 
   getUser();
   // toggle
@@ -153,7 +136,7 @@ const Mypage: React.FC<Props> = ({closeSidebar, closeModal}) => {
           <button className={mypage_css.button}onClick={unregistMeeting}>소개팅 등록 취소</button>
           <button className={mypage_css.button}onClick={editMyInitSurvey}>최초 설문 수정</button>
         </div>
-        {isModalOpen==='회원정보수정' ? <Modal onClose={()=>dispatch(setModal(null))} user={user} /> : null}
+        {isModalOpen==='회원정보수정' ? <EditAcount user={user} /> : null}
       </div>
     </div>
     

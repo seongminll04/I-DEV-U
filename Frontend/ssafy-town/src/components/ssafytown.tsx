@@ -5,6 +5,8 @@ import Sidebar from './sidebar'
 import Navbar from './navbar'
 
 import Alert from './sidebar/1alert'
+import AllNotice from './notice/all_notice';
+import AllAlert from './notice/all_alert';
 import Logout from './account/logout'
 import MyRoom from './room/myroom';
 import FirstQA from './survey/firstQA';
@@ -56,7 +58,9 @@ const Town: React.FC = () => {
        
       {/* 모달창 오픈 */}
       { isModalOpen === '최초설문' ? <FirstQA />
-      : isModalOpen === '알림' ?  <Alert />
+      : isModalOpen === '공지알림' ?  <Alert />
+      : isModalOpen === '공지전체' ? <AllNotice />
+      : isModalOpen === '알림전체' ? <AllAlert />
       : isModalOpen === '로그아웃' ? <Logout />
       : isModalOpen === 'QnA게시판' ? <QnA />
       : null }

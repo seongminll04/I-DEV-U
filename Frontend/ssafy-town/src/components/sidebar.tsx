@@ -8,7 +8,7 @@ const Sidebar: React.FC= () => {
   const dispatch = useDispatch();
   return (
         <div className={ssafytown_css.sidebar}>
-          <img style={{marginTop:'20px'}} src={'assets/사이드바/알림.png'} alt={'알림 icon'} onClick={()=>dispatch(setModal('알림'))} />
+          <img style={{marginTop:'20px'}} src={'assets/사이드바/알림.png'} alt={'알림 icon'} onClick={()=>dispatch(setModal('공지알림'))} />
           <hr />
           <img src={'assets/사이드바/소개팅.png'} alt={'소개팅 icon'} onClick={()=>{dispatch(setSidebar('소개팅'));}} />
           <img src={'assets/사이드바/동료.png'} alt={'동료 icon'} onClick={()=>dispatch(setSidebar('동료'))} />

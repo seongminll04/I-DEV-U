@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 
 interface Notice {
+  idx: number;
   content: string;
   title: string;
   createdAt: string;
@@ -17,50 +18,22 @@ const Modal: React.FC = () => {
   // 0 처음 1 공지전체 2 알림전체    99 0->공지상세 98 0->알림상세 97 공지전체->공지상세 96 알림전체->알림상세
   const [search, setsearch] = useState<string>('');
   const [nowsearch, setnowsearch] = useState<boolean>(false);
-
+  const [noticeList,setNoticeList] =useState<Notice[]>([]);
   const searchdata = () => {
     setnowsearch(true)
     // 여기서 모든데이터 중 검색어랑 일치하는 것만 리스트화 하는 코드작성
 
   }
 
-  // 초기 데이터, 불러와지는것 성공하면 초깃값 비울 예정
-  let noticeList = useRef<any[]>([
-    {
-      idx: 1,
-      userIdx: 3,
-      title: 'TITLE title',
-      content: 'content content',
-      createdAt: '2023-07-31T02:17:37',
-      type: 'A',
-    },
-    {
-      idx: 4,
-      userIdx: 4,
-      title: 'TITLE 222',
-      content: 'content 222',
-      createdAt: '2023-07-31T04:15:09',
-      type: 'A',
-    },
-    {
-      idx: 5,
-      userIdx: 5,
-      title: 'TITLE 333',
-      content: 'content 333',
-      createdAt: '2023-07-31T04:15:09',
-      type: 'A',
-    },
-  ]);
-
   useEffect(()=>{
     // 모달창이 열렸다면 공지사항 데이터 불러오기
     axios({
       method:'get',
-      url:'https://i9b206.p.ssafy.io:9090/notice/list/TITLE',
+      url:'https://i9b206.p.ssafy.io:9090/notice/list/easy',
     })
     .then(res => {
       console.log(res.data)
-      noticeList.current = res.data.list;
+      setNoticeList(res.data.list);
     })
     .catch(err => {
       console.log(err)
@@ -82,10 +55,8 @@ const Modal: React.FC = () => {
               <p>공지사항</p>
                 <p className={alert_css.movebtn} onClick={() => setpage(1)}>전체보기</p>
             </div>
-            {noticeList.current.map((notice: Notice, index: number) => {
+            {noticeList.map((notice: Notice, index: number) => {
                 const date = new Date(notice.createdAt);
-                console.log(date);
-                // console.log(notice);
                 return (
                   <div
                     onClick={() => {
@@ -94,7 +65,7 @@ const Modal: React.FC = () => {
                     className={alert_css.notice}
                   >
                     <p>{index}</p>
-                    <p>{notice.content}</p>
+                    <p>{notice.title}</p>
                     <p>
                       {date.getMonth() + 1} / {date.getDate()}
                     </p>
@@ -162,6 +133,7 @@ const Modal: React.FC = () => {
      
           <br />
           <div onClick={()=> {setpage(97)}} className={alert_css.notice}>
+            {/* 공지사항 전체보기 */}
             <p>1</p>
             <p>금일 오후 12:00 에 점검 일정이 있습니다.</p>
             <p>07/19 00:00</p>

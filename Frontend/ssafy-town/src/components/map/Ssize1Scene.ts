@@ -191,7 +191,7 @@ export class Ssize1Scene extends Phaser.Scene {
     if (this.character) {
       const distanceToBed = Phaser.Math.Distance.Between(this.character.x, this.character.y, bedPosition.x, bedPosition.y);
       const distanceToBoard = Phaser.Math.Distance.Between(this.character.x, this.character.y, boardPosition.x, boardPosition.y);
-      
+
       if (distanceToBed <= 50 || distanceToBoard <= 64) {
           this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
 

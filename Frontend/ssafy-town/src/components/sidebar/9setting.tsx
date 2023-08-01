@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { setModal } from '../../store/actions';
+import { setModal, setSelectMap } from '../../store/actions';
 
 const Setting: React.FC = () => {
   const dispatch = useDispatch()
@@ -10,6 +10,7 @@ const Setting: React.FC = () => {
       <br /><br /><br /><br />
       <button onClick={()=>dispatch(setModal('QnA게시판'))}
       style={{width:'50%',height:'50%', color:'red', backgroundColor:'blue'}}>QnA게시판 열기</button>
+      <button onClick={()=>dispatch(setSelectMap('B'))}>B로 바꾸기</button>
     </div>
   );
 };

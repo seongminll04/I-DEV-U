@@ -12,3 +12,8 @@ export const setAllowMove = (value: boolean) => ({
   type: 'SET_ALLOWMOVE',
   payload: value,
 });
+
+export const setSelectMap = (value: string) => ({
+  type: 'SET_SELECTMAP',
+  payload: value,
+});

@@ -2,7 +2,7 @@ import React from 'react';
 import ssafytown_css from './ssafytown.module.css';
 
 import { useDispatch } from 'react-redux';
-import { setModal,setSidebar } from '../store/actions';
+import { setModal,setSidebar } from '../../store/actions';
 
 const Sidebar: React.FC= () => {
   const dispatch = useDispatch();

@@ -46,7 +46,7 @@ const Alert: React.FC = () => {
           <div>
             <h1 style={{margin:'-20px 0 20px 0'}}>공지사항 / 알림</h1>
               <div className={alert_css.container}>
-                <div className={alert_css.notice}>
+                <div className={alert_css.noticetype}>
                   <p>공지사항</p>
                   <p className={alert_css.movebtn} onClick={() => {dispatch(setModal('공지전체'))}}>전체보기</p>
                 </div>
@@ -62,7 +62,7 @@ const Alert: React.FC = () => {
               </div>
               <br />
               <div className={alert_css.container}>
-                <div className={alert_css.notice}>
+                <div className={alert_css.noticetype}>
                   <p>알림 </p>
                   <p className={alert_css.movebtn} onClick={() => {dispatch(setModal('알림전체'))}}>전체보기</p>
                 </div>

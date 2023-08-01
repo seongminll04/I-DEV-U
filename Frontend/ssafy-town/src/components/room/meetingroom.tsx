@@ -8,18 +8,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
 import { setAllowMove, setModal, setSidebar } from '../../store/actions';
 
-import { Ssize1Scene } from '../map/Ssize1Scene';
+import { Lsize1Scene } from '../map/Lsize1Scene';
 import ModalOpen from '../system/modalopen';
 
 // import Cam from '../openvidu/cam/cam'
 
-const MyRoom: React.FC = () => {
+const MeetingRoom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
   const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
 
-  const dispatch = useDispatch();
 
+  const dispatch = useDispatch();
   useEffect(() => { //esc키로 사이드바, 모달창 끄기 : 전역설정임
     if (isModalOpen) {
       dispatch(setAllowMove(false))
@@ -38,7 +38,6 @@ const MyRoom: React.FC = () => {
     };
     
   }, [dispatch,isModalOpen,isSidebarOpen]);
-
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
@@ -49,7 +48,7 @@ const MyRoom: React.FC = () => {
         default: 'arcade',
       },
       pixelArt: true, //  픽셀 아트 스타일의 게임에서 그래픽이 더 깔끔하고 정확하게 표시되도록 도와줍니다. 라네요
-      scene: Ssize1Scene
+      scene: Lsize1Scene //맵들 여기 다넣으면됨
     };
 
     const newGame = new Phaser.Game(config);
@@ -83,15 +82,17 @@ const MyRoom: React.FC = () => {
   return (
     <div className={ssafytown_css.container}>
       <Sidebar/>
+
+      {/* 사이드바 오픈 */}
       {isSidebarOpen ? <Navbar /> : null}
       <ModalOpen />
-      <div id="phaser_game" className={ssafytown_css.phaser_game} >
-          <div id="my-video-container" className={ssafytown_css.my_video_bar}></div>
-          <div id="videoContainer" className={ssafytown_css.op_video_bar}> </div>
-          {/* <div className={ssafytown_css.video_bar}><Cam /></div> */}
-      </div>
+    <div id="phaser_game" className={ssafytown_css.phaser_game} >
+        <div id="my-video-container" className={ssafytown_css.my_video_bar}></div>
+        <div id="videoContainer" className={ssafytown_css.op_video_bar}> </div>
+        {/* <div className={ssafytown_css.video_bar}><Cam /></div> */}
+    </div>
     </div>
   );
 }
 
-export default MyRoom;
+export default MeetingRoom;

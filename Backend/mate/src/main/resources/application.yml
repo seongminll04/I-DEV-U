@@ -19,15 +19,15 @@ logging.level:
 #  org.hibernate.type: trace
 
 # SSL
-#server:
-#  port: 443
-#  ssl:
-#    key-store: ${SSL_KEY_PATH}certificate.p12
-#    key-store-type: PKCS12
-#    key-store-password: ${SSL_PASSWORD}
+server:
+  port: 443
+  ssl:
+    key-store: ${SSL_KEY_PATH}certificate.p12
+    key-store-type: PKCS12
+    key-store-password: ${SSL_PASSWORD}
 
 jwt:
-  secretKey: ${jwt_secretKey}e
+  secretKey: ${jwt_secretKey}
 
   access:
     expiration: ${jwt_access_expiration} # 1시간(60분) (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h))

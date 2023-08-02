@@ -44,7 +44,6 @@ public class UserController {
 
     @GetMapping("/signUp/emailCheck/{email}")
     public ResponseEntity<?> emailCheck(@PathVariable String email) throws Exception{
-        System.out.println(email);
         if (userRepository.findByEmail(email).isPresent()) {
             return ResponseEntity.badRequest().build();
         }

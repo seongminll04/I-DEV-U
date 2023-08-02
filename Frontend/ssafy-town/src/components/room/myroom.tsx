@@ -6,18 +6,28 @@ import Navbar from '../system/navbar'
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
-import { setAllowMove, setModal, setSidebar } from '../../store/actions';
+import { setAllowMove, setModal, setSidebar, setLoginToken } from '../../store/actions';
 
+import {useNavigate} from 'react-router-dom'
 import { Ssize1Scene } from '../map/Ssize1Scene';
 import ModalOpen from '../system/modalopen';
 // import Cam from '../openvidu/cam/cam'
+
 
 const MyRoom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
   const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  useEffect(()=>{
+    const userToken = localStorage.getItem('usertoken');
+    if (userToken) {dispatch(setLoginToken(userToken))}
+    else {navigate('/login')}
+  },[dispatch, navigate])
+
 
   useEffect(() => { //esc키로 사이드바, 모달창 끄기 : 전역설정임
     if (isModalOpen) {

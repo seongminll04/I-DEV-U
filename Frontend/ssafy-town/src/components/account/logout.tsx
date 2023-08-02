@@ -14,7 +14,7 @@ const Modal: React.FC = () => {
         <div className={logout_css.logout_modal}>
         <h1>로그아웃 하시겠습니까?</h1>
             <div className={logout_css.button_icon}>
-                <button className={logout_css.button} onClick={()=>{dispatch(setModal(null));navigate('/login');}}>로그아웃</button>
+                <button className={logout_css.button} onClick={()=>{localStorage.removeItem('usertoken');navigate('/login');}}>로그아웃</button>
                 <button className={logout_css.button} onClick={()=>dispatch(setModal(null))}>뒤로가기</button>
             </div>
         </div>

@@ -55,7 +55,7 @@ const SignupForm = () => {
         setchkemail('yes');
         alert('사용할 수 있는 아이디입니다.')
       })
-      .catch(() => {
+      .catch(() => { 
         alert('중복된 아이디입니다.')
       })
     }

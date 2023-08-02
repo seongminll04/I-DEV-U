@@ -27,7 +27,7 @@ const MyRoom: React.FC = () => {
     if (userToken) {
       dispatch(setLoginToken(userToken))
       if (true) {
-        // dispatch(setModal(null))
+        dispatch(setModal('최초설문'))
       }
     }
     else {navigate('/login')}

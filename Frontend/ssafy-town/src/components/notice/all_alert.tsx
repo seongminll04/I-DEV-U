@@ -2,7 +2,8 @@ import React, {useState, useEffect } from 'react';
 import alert_css from '../sidebar/1alert.module.css';
 import axios from 'axios';
 
-import { useDispatch } from 'react-redux';
+import { AppState } from '../../store/state';
+import { useSelector , useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 import DetailAlert from './detail_alert';
 
@@ -15,10 +16,26 @@ interface Alert {
 
 const AllAlert: React.FC = () => {
   const dispatch = useDispatch()
+  const loginToken = useSelector((state: AppState) => state.loginToken);//사이드바 오픈여부
   const [page, setPage] = useState<Number>(0); 
   const [search, setsearch] = useState<string>('');
   const [nowsearch, setnowsearch] = useState<boolean>(false);
-  const [alertList,setAlertList] =useState<Alert[]>([]);
+  const [alertList,setAlertList] =useState<Alert[]>([{idx:1,content:'test1',title:'asdf',createdAt:'asdf'}]);
+  
+  useEffect(()=>{
+    axios({
+      method:'get',
+      url:'https://i9b206.p.ssafy.io:9090/user/login',
+      headers : {
+        Authorization: loginToken
+      }
+    })
+    .then(res => {
+      console.log(res)
+      setAlertList(res.data)
+    })
+    .catch(err => console.log(err))
+  })
 
   const searchdata = () => {
     setnowsearch(true)
@@ -46,14 +63,14 @@ const AllAlert: React.FC = () => {
                 </div>
                 </div>
                 <br />
-                
-                <div onClick={()=>setPage(2)} className={alert_css.notice}>
-                    {/* 알림 전체보기 */}
-                    <span>1</span>
-                    <span>금일 오후 12:00 에 점검 일정이 있습니다.</span>
-                    <span>07/19 00:00</span>
-                </div>
-                
+                {alertList.map((alert: Alert, index: number) => {
+                  return (
+                    <div onClick={()=>setPage(2)} className={alert_css.notice} key={index}>
+                      <span>{index+1}</span>
+                      <span>{alert.content}</span>
+                      <span>{alert.createdAt}</span>
+                    </div>
+                  )})}      
             </div>
             :  <DetailAlert backpage={backpage} /> }
         </div>

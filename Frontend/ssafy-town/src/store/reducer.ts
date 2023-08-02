@@ -1,7 +1,7 @@
 import { AppState } from './state';
 
 const initialState: AppState = {
-    isModalOpen: '최초설문',
+    isModalOpen: null,
     isSidebarOpen:null,
     isAllowMove:true,
     loginToken:'',

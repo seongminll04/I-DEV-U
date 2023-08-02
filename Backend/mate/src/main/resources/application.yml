@@ -12,6 +12,9 @@ spring:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 1000 # 최적화 옵션
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
 
 logging.level:
   org.hibernate.SQL: debug
@@ -38,3 +41,4 @@ jwt:
 OPENVIDU:
   PASSWORD: ${OPENVIDU_PASSWORD}
   URL: ${OPENVIDU_URL}
+

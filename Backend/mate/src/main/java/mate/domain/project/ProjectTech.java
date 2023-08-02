@@ -9,8 +9,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.Getter;
+
 @Entity
 @Table(name = "project_tech")
+@Getter
 public class ProjectTech {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

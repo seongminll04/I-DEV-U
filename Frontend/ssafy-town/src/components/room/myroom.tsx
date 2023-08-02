@@ -24,7 +24,12 @@ const MyRoom: React.FC = () => {
 
   useEffect(()=>{
     const userToken = localStorage.getItem('usertoken');
-    if (userToken) {dispatch(setLoginToken(userToken))}
+    if (userToken) {
+      dispatch(setLoginToken(userToken))
+      if (true) {
+        dispatch(setModal('최초설문'))
+      }
+    }
     else {navigate('/login')}
   },[dispatch, navigate])
 
@@ -45,7 +50,7 @@ const MyRoom: React.FC = () => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-    
+
   }, [dispatch,isModalOpen,isSidebarOpen]);
 
   useEffect(() => {

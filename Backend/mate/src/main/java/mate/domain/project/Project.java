@@ -13,10 +13,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.Getter;
 import mate.domain.user.User;
 
 @Entity
 @Table(name = "project")
+@Getter
 public class Project {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,7 +51,7 @@ public class Project {
 
 	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
 	private List<ProjectTech> projectTeches;
-	
+
 	// Getters and setters, constructors, and other methods
 	// ...
 }

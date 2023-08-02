@@ -1,12 +1,16 @@
 package mate.domain.user;
 
+import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import javax.persistence.*;
-import java.util.Date;
-import lombok.Data;
-import lombok.Getter;
+import java.time.LocalDate;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,13 +19,26 @@ public class User {
     private String password;
     private String name;
     private String nickname;
-    private Date birth;
-    private int gender; // 0 : 남자, 1 : 여자
+    private LocalDate birth;
+    @Enumerated(EnumType.STRING)
+    private UserGender gender; // MALE, FEMALE
     private String intro;
     @Enumerated(EnumType.STRING)
-    private UserStatus status; //
+    private UserStatus status; // A, B, C, D
     @Enumerated(EnumType.STRING)
-    private UserGrade grade; // ADMIN , USER
+    private Role role; // ADMIN , USER
+    private String refreshToken;
+
 
     // 생성자, 기타 메서드 생략
+
+    // 비밀번호 암호화 메소드
+    public void passwordEncode(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(this.password);
+    }
+
+
+    public void updateRefreshToken(String updateRefreshToken) {
+        this.refreshToken = updateRefreshToken;
+    }
 }

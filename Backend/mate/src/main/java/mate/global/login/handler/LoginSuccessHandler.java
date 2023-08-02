@@ -3,8 +3,10 @@ package mate.global.login.handler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mate.global.jwt.service.JwtService;
+import mate.global.jwt.service.RedisService;
 import mate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -18,6 +20,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
+//    private final RedisService redisService;
 
     @Value("${jwt.access.expiration}")
     private String accessTokenExpiration;
@@ -36,6 +39,8 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
                     user.updateRefreshToken(refreshToken);
                     userRepository.saveAndFlush(user);
                 });
+
+//        redisService.setRedis(email, refreshToken);
 
         log.info("로그인에 성공하였습니다. 이메일 : {}", email);
         log.info("로그인에 성공하였습니다. AccessToken : {}", accessToken);

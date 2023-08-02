@@ -1,15 +1,18 @@
 package mate.controller;
 
 import lombok.RequiredArgsConstructor;
+import mate.domain.user.User;
 import mate.dto.user.UserLoginDto;
 import mate.dto.user.UserSignUpDto;
 import mate.global.login.service.LoginService;
+import mate.repository.UserRepository;
 import mate.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -18,6 +21,7 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
 
     @GetMapping("/sleep")
@@ -35,6 +39,24 @@ public class UserController {
     public ResponseEntity<?> signup(@RequestBody UserSignUpDto userSignUpDto) throws Exception {
         userService.signUp(userSignUpDto);
 
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/signUp/emailCheck/{email}")
+    public ResponseEntity<?> emailCheck(@PathVariable String email) throws Exception{
+        System.out.println(email);
+        if (userRepository.findByEmail(email).isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/signUp/nicknameCheck/{nickname}")
+    public ResponseEntity<?> nicknameCheck(@PathVariable String nickname) throws Exception{
+
+        if (userRepository.findByNickname(nickname).isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok().build();
     }
 

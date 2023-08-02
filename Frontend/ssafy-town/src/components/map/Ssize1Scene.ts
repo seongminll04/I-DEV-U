@@ -41,6 +41,7 @@ export class Ssize1Scene extends Phaser.Scene {
   private character?: Phaser.Physics.Arcade.Sprite;
   private pet?: Phaser.Physics.Arcade.Sprite;
   private balloon!: Phaser.GameObjects.Sprite;
+  private heart!: Phaser.GameObjects.Sprite;
   private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
   private walls?: Phaser.Physics.Arcade.StaticGroup;
   private rows: string[] = [];
@@ -74,6 +75,7 @@ export class Ssize1Scene extends Phaser.Scene {
 
     this.load.image('character', 'assets/admin_character.png');
     this.load.image('balloon', 'assets/ekey.png');
+    this.load.image('heart', 'assets/heart.png');
     this.load.image('pet-down-1', 'assets/파아1.png')
     this.load.image('pet-down-2', 'assets/파아2.png')
     this.load.image('pet-down-3', 'assets/파아3.png')
@@ -96,6 +98,8 @@ export class Ssize1Scene extends Phaser.Scene {
 
   this.balloon = this.add.sprite(0, 0, 'balloon').setVisible(false);
   this.balloon.setDepth(2);
+  this.heart = this.add.sprite(0, 0, 'heart').setVisible(false);
+  this.heart.setDepth(2);
 
   const mapCenterX = this.rows[0].length * tileSize / 2;
   const mapCenterY = this.rows.length * tileSize / 2;
@@ -264,11 +268,17 @@ export class Ssize1Scene extends Phaser.Scene {
       const nearbyObject = this.NearbyObjects();
 
       console.log(this.character!.x + "@@" + this.character!.y)
-  
+      if (!store.getState().isAllowMove){
+        return
+      }
+
+
       if (nearbyObject === 'bed') {
         store.dispatch(setModal('로그아웃'))
       } else if(nearbyObject === 'board') {
         store.dispatch(setModal('QnA게시판'))
+      } else if(nearbyObject === 'pet'){
+        this.petheart();
       }
     }
   )}
@@ -295,7 +305,7 @@ export class Ssize1Scene extends Phaser.Scene {
     this.NearbyObjects();
   }
 
-  private NearbyObjects(): 'bed' | 'board' | null {
+  private NearbyObjects(): 'bed' | 'board' | 'pet'| null {
     const bedPosition = { x: 84, y: 131 }; // 침대
     const boardPosition = { x: 400, y: 100 }; // 게시판
 
@@ -309,7 +319,10 @@ export class Ssize1Scene extends Phaser.Scene {
 
           if(distanceToBed <= 50) return 'bed';
           if(distanceToBoard <= 64) return 'board';
-      } else {
+      } else if(Math.abs(this.pet!.x-this.character!.x)<50 && Math.abs(this.pet!.y-this.character!.y)<50){
+        return 'pet';
+      } 
+      else {
           this.balloon.setVisible(false);
       }
   }
@@ -356,4 +369,13 @@ export class Ssize1Scene extends Phaser.Scene {
   
     return ["B1", "D1", "K1", "F1", "A1", "G1", "J1", "E1", "I1","Z1"].includes(tile);
   }
+  petheart(){
+    const heart = this.add.image(this.pet!.x, this.pet!.y - this.pet!.height / 2 - this.heart.height / 2,'heart');
+
+    setTimeout(() => {
+        heart.destroy();
+    }, 300);
+  }
+
+
 }

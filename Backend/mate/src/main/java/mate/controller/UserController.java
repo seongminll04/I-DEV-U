@@ -52,7 +52,7 @@ public class UserController {
 
     @GetMapping("/signUp/nicknameCheck/{nickname}")
     public ResponseEntity<?> nicknameCheck(@PathVariable String nickname) throws Exception{
-        System.out.println(1);
+
         if (userRepository.findByNickname(nickname).isPresent()) {
             return ResponseEntity.badRequest().build();
         }

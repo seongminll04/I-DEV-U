@@ -1,10 +1,6 @@
 package mate.dto;
 
-import mate.domain.project.Project;
-import mate.domain.project.ProjectBoard;
-import mate.domain.project.ProjectBoardImage;
-import mate.domain.project.ProjectImage;
-import mate.domain.project.ProjectParticipation;
+import mate.domain.project.*;
 
 public class ProjectDto {
 	private Project project;

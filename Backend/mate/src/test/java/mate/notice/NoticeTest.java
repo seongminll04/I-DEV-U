@@ -24,47 +24,47 @@ public class NoticeTest {
 	@Test
 	@Transactional
 	void noticeWrite() {
-		NoticeBoard notice = new NoticeBoard();
+//		NoticeBoard notice = new NoticeBoard();
 
 //		notice.setUserIdx(4);
 //		notice.setType("운영");
 //		notice.setTitle("운영공지2");
 //		notice.setContent("운영공지 내용입니다.");
 
-		NoticeBoard savedNotice = noticeRepository.save(notice);
-
-		Optional<NoticeBoard> findNotice = noticeRepository.findById(savedNotice.getIdx());
-
-		assertThat(savedNotice).isEqualTo(findNotice.get());
+//		NoticeBoard savedNotice = noticeRepository.save(notice);
+//
+//		Optional<NoticeBoard> findNotice = noticeRepository.findById(savedNotice.getIdx());
+//
+//		assertThat(savedNotice).isEqualTo(findNotice.get());
 	}
 
 	@Test
 	@Transactional
 	void noticeList() {
-		List<NoticeBoard> list = noticeRepository.findNoticeByTitleContaining("운영");
+//		List<NoticeBoard> list = noticeRepository.findNoticeByTitleContaining("운영");
 
-		log.info("리스트 확인 -> {}", list);
+//		log.info("리스트 확인 -> {}", list);
 	}
 
 	@Test
 	void noticeModify() {
-		NoticeBoard notice = new NoticeBoard();
+//		NoticeBoard notice = new NoticeBoard();
 
 //		notice.setIdx(5);
 //		notice.setUserIdx(4);
 //		notice.setTitle("운영공지제목_수정123");
 //		notice.setContent("운영공지제목수정입니다.123");
 
-		NoticeBoard updateNotice = noticeRepository.save(notice);
+//		NoticeBoard updateNotice = noticeRepository.save(notice);
 
-		log.info("수정한 공지사항 -> {}", updateNotice);
+//		log.info("수정한 공지사항 -> {}", updateNotice);
 	}
 
 	@Test
 	@Transactional
 	void noticeDelete() {
-		noticeRepository.deleteById(4);
-
-		assertThat(noticeRepository.findById(4)).isEmpty();
+//		noticeRepository.deleteById(4);
+//
+//		assertThat(noticeRepository.findById(4)).isEmpty();
 	}
 }

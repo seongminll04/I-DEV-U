@@ -37,6 +37,7 @@
     display: flex;
     align-items: center;
     /* justify-content: center; */
+    align-items: flex-start;
     margin:auto;
     width:70%;
     font-size: large;
@@ -45,6 +46,7 @@
     width:20%;
     display: flex;
     justify-content: space-between;
+    margin: 10px 0;
 }
 .input p {
     margin: 10px 20px;

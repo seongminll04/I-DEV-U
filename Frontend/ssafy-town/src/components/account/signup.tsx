@@ -125,8 +125,7 @@ const SignupForm = () => {
         })
         .catch(err => {
           console.log(err)
-          alert('회원가입실패')
-        })
+          alert('회원가입실패')})
       }
     },
   });

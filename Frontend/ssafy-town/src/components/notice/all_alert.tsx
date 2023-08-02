@@ -16,7 +16,7 @@ interface Alert {
 
 const AllAlert: React.FC = () => {
   const dispatch = useDispatch()
-  const loginToken = useSelector((state: AppState) => state.loginToken);//사이드바 오픈여부
+  const loginToken = useSelector((state: AppState) => state.loginToken);
   const [page, setPage] = useState<Number>(0); 
   const [search, setsearch] = useState<string>('');
   const [nowsearch, setnowsearch] = useState<boolean>(false);
@@ -25,7 +25,7 @@ const AllAlert: React.FC = () => {
   useEffect(()=>{
     axios({
       method:'get',
-      url:'https://i9b206.p.ssafy.io:9090/user/login',
+      url:'https://i9b206.p.ssafy.io:9090/~~~~~/',
       headers : {
         Authorization: loginToken
       }

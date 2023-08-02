@@ -16,7 +16,7 @@ interface Notice {
 
 const AllNotice: React.FC = () => {
   const dispatch = useDispatch();
-  const loginToken = useSelector((state: AppState) => state.loginToken);//사이드바 오픈여부
+  const loginToken = useSelector((state: AppState) => state.loginToken);
   const [page, setPage] = useState<Number>(0); 
 
   const [search, setsearch] = useState<string>('');

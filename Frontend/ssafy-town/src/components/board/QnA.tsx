@@ -1,17 +1,43 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import QnA_css from './QnA.module.css';
+import axios from 'axios';
 
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 import CreateQnA from './CreateQnA';
 import DetailQnA from './DetailQnA';
 
+interface Question {
+  idx: number;
+  content: string;
+  title: string;
+  createdAt: string;
+  createAt: string;
+}
+
 const QnA: React.FC = () => {
   const dispatch=useDispatch()
   const [search, setsearch] = useState<string>('');
   const [nowsearch, setnowsearch] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
+  const [questionList,setQuestionList] =useState<Question[]>([]);
 
+  useEffect(()=>{
+    axios({
+      method:'get',
+      url:'https://i9b206.p.ssafy.io:9090/question/list/1',
+      headers :{ 
+        Authorization: '~~~~~~~'
+      }
+    })
+    .then(res => {
+      // console.log(res.data)
+      setQuestionList(res.data.list);
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  })
 
   const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget
@@ -54,11 +80,17 @@ const QnA: React.FC = () => {
             <button className={QnA_css.createQnA} onClick={()=>setPage(1)}>질문하기</button>
           </div>
           <br />
-          <div className={QnA_css.notice} onClick={()=>setPage(2)}>
-            <p>1</p>
-            <p>!!! 궁금해요.</p>
-            <p>07/19 00:00</p>
-          </div>
+          {questionList.map((question : Question, index: number) => {
+            const date = new Date(question.createdAt);
+            return (
+              <div className={QnA_css.notice} onClick={()=>setPage(2)}>
+                <p>{question.idx}</p>
+                <p>{question.title}</p>
+                <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span>
+              </div>
+            )
+          })}
+          
         </div>
         :  page===1 ? <CreateQnA onback={()=>setPage(0)} />
         : <DetailQnA onback={()=>setPage(0)} /> }

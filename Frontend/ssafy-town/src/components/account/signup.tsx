@@ -49,7 +49,7 @@ const SignupForm = () => {
     else if (!formik.errors.email) {
       axios({
         method:'get',
-        url:`https://i9b206.p.ssafy.io:9090/user/signup/emailcheck/${email}`
+        url:`https://i9b206.p.ssafy.io:9090/user/signUp/emailCheck/${email}`
       })
       .then(()=>{
         setchkemail('yes');
@@ -74,7 +74,7 @@ const SignupForm = () => {
     else if (!formik.errors.nickname) {
       axios({
         method:'get',
-        url:`https://i9b206.p.ssafy.io:9090/user/signup/nickcheck/${nickname}`
+        url:`https://i9b206.p.ssafy.io:9090/user/signUp/nicknameCheck/${nickname}`
       })
       .then(()=>{
         setchknickname('yes')
@@ -116,7 +116,7 @@ const SignupForm = () => {
       else {
         axios({
           method : 'post',
-          url : 'https://i9b206.p.ssafy.io:9090/user/signup',
+          url : 'https://i9b206.p.ssafy.io:9090/user/signUp',
           data : values,
         })
         .then(res => {
@@ -191,7 +191,7 @@ const SignupForm = () => {
           <label className={signup_css.split}>아이디
             <span style={{color:'darkgray'}}>
               {formik.values.email==='' ? '이메일 형식으로 입력해주세요':null}{ formik.values.email!=='' &&formik.touched.email && formik.errors.email ? formik.errors.email : null}
-           {chkemail === 'yes' ? '확인완료': null}
+            {chkemail === 'yes' ? '확인완료': null}
             </span>
           </label>
           <div className={signup_css.input_chk}>

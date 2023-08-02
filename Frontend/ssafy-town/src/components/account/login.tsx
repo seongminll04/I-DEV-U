@@ -24,8 +24,9 @@ const Login: React.FC = () => {
     })
     .then(res => {
       console.log(res)
-      const auth = res.headers.authorization
-      console.log(auth)
+      // const auth = res.headers.authorization
+      console.log(res.headers.authorization)
+
       // console.log(res.headers.getAuthorization)
       // if (saveId) { // 아이디 저장 누르면 on 상태
       //   localStorage.setItem('idx', res.data.user.idx);

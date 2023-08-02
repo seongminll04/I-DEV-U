@@ -51,6 +51,7 @@ public class Project {
 
 	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
 	private List<ProjectTech> projectTeches;
+
 	// Getters and setters, constructors, and other methods
 	// ...
 }

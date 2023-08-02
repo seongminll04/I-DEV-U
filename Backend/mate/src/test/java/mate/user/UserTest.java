@@ -6,7 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.transaction.Transactional;
 
 
-
 @Slf4j
 @SpringBootTest
 @Transactional

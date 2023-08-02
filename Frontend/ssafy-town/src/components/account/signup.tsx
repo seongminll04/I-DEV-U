@@ -29,9 +29,9 @@ const validationSchema = Yup.object().shape({
   birthday: Yup.string()
     .matches(/^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, '유효하지 않은 생년월일입니다')
     .required('생년월일을 입력해주세요'),
-  gender: Yup.number()
+  gender: Yup.string()
   .required('성별을 선택해주세요')
-  .oneOf([1, 2], '유효한 성별을 선택해주세요'),
+  .oneOf(['MALE', 'FEMALE'], '유효한 성별을 선택해주세요'),
 });
 
 
@@ -156,10 +156,10 @@ const SignupForm = () => {
                 <input
                   type="radio"
                   name="gender"
-                  value="1"
+                  value="MALE"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  checked={formik.values.gender === '1'}
+                  checked={formik.values.gender === 'MALE'}
                 />
                 남성
               </label>
@@ -167,10 +167,10 @@ const SignupForm = () => {
                 <input
                   type="radio"
                   name="gender"
-                  value="2"
+                  value="FEMALE"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  checked={formik.values.gender === '2'}
+                  checked={formik.values.gender === 'FEMALE'}
                 />
                 여성
               </label>

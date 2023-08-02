@@ -19,7 +19,7 @@ logging.level: #띄어쓰기 없음
 
 # SSL
 server:
-  port: 443
+  port: 444
   ssl:
     key-store: ${SSL_KEY_PATH}certificate.p12
     key-store-type: PKCS12

@@ -166,7 +166,7 @@ export class Ssize1Scene extends Phaser.Scene {
 //////
 
   this.time.addEvent({
-    delay: 2000, // 2초마다 움직임
+    delay: 1500, // 2초마다 움직임
     callback: () => {
         const randomDirection = Phaser.Math.Between(1, 4); // 1: 위, 2: 아래, 3: 왼쪽, 4: 오른쪽
         const petX = this.pet?.x!;
@@ -336,12 +336,24 @@ export class Ssize1Scene extends Phaser.Scene {
         break;
     }
   
-    const tileRow = this.rows[Math.floor(nextTileY / tileSize)];
-    if (!tileRow) return true; // 예외처리: 타일이 존재하지 않는 경우
+    const xIndex = Math.floor(nextTileX / tileSize) * 2;
+    const yIndex = Math.floor(nextTileY / tileSize);
+
+    const charXIndex = Math.floor(this.character!.x / tileSize) * 2;
+    const charYIndex = Math.floor(this.character!.y / tileSize);
+
+    const rowString = this.rows[yIndex];  // rows 배열에서 yIndex에 해당하는 행의 문자열을 가져옴
+    if (!rowString) return true;  // 예외처리: 해당 행이 존재하지 않는 경우
+
+    const tile = rowString.slice(xIndex, xIndex + 2);
+
+    if (charXIndex >= xIndex - 2 && 
+    charXIndex <= xIndex + 2 && 
+    charYIndex >= yIndex - 2 && 
+    charYIndex <= yIndex + 2) {
+      return true;  // 해당 타일에 캐릭터가 있다면 true
+  }
   
-    const tileValue = tileRow[Math.floor(nextTileX / tileSize)];
-    const tile = tileValue.toString() + "1";
-  
-    return ["B1", "D1", "K1", "F1", "A1", "G1", "J1", "E1", "I1"].includes(tile);
+    return ["B1", "D1", "K1", "F1", "A1", "G1", "J1", "E1", "I1","Z1"].includes(tile);
   }
 }

@@ -20,8 +20,8 @@ logging.level:
   org.hibernate.SQL: debug
 
 # SSL
-#server:
-#  port: 9090
+server:
+  port: 9090
 #  ssl:
 #    key-store: ${SSL_KEY_PATH}certificate.p12
 #    key-store-type: PKCS12

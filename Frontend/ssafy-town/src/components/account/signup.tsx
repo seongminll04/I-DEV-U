@@ -146,7 +146,7 @@ const SignupForm = () => {
           <label className={signup_css.split}>생년월일
           <span style={{color:'darkgray'}}>{formik.touched.birthday && formik.errors.birthday ? formik.errors.birthday : null}</span>
           </label>
-          <input className={signup_css.input} type="date" {...formik.getFieldProps('birthday')} />
+          <input className={signup_css.input} type="date" {...formik.getFieldProps('birthday')} max={'9999-12-31'} />
 
             <label className={signup_css.split}>성별
             <span style={{color:'darkgray', margin:'0'}}>{formik.touched.gender && formik.errors.gender ? formik.errors.gender : null}</span>

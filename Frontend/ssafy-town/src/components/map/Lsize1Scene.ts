@@ -131,8 +131,10 @@ export class Lsize1Scene extends Phaser.Scene {
     private socket?: Socket;
 
     private character?: Phaser.Physics.Arcade.Sprite;
+    private remoteCharacters: { [id: string]: Phaser.GameObjects.Sprite } = {};
     private balloon!: Phaser.GameObjects.Sprite;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
+    private prevPosition: { x: number, y: number } | null = null;
     private walls?: Phaser.Physics.Arcade.StaticGroup;
     private clockText!: Phaser.GameObjects.Text; //우하시계
     private clockText2!: Phaser.GameObjects.Text; //우상시계
@@ -186,8 +188,8 @@ export class Lsize1Scene extends Phaser.Scene {
       this.socket = io('http://your_backend_url');
 
       this.socket.on('playerData', (data: any) => {
-        // 여기서 원격 캐릭터의 움직임, 상태, 종류, 채팅을 처리
-        // 예: this.updateRemoteCharacter(data);
+        console.log("111")
+        this.updateRemoteCharacter(data);
       });
 
       const rows = pattern.trim().split('\n');
@@ -435,15 +437,34 @@ export class Lsize1Scene extends Phaser.Scene {
   
     update() {
 
-      if(this.character){
+      const currentPlayerPosition = { x: this.character!.x, y: this.character!.y };
+
+      if (!this.prevPosition || (this.prevPosition.x !== currentPlayerPosition.x || this.prevPosition.y !== currentPlayerPosition.y)) {
+        console.log("@@@@")
         const playerData = {
-          position: { x: this.character.x, y: this.character.y },
-          state: 'A', // 혹은 'B'
-          type: 1, // 1~10
-          // chat: 모르겠다아직
+            id: {},
+            position: currentPlayerPosition,
+            state: 'A', // 혹은 'B'
+            type: 1, // 1~10
+            // chat: ...
         };
         this.socket?.emit('playerData', playerData);
-      }
+
+        // 현재 위치를 이전 위치로 저장
+        this.prevPosition = currentPlayerPosition;
+    }
+
+      // if(this.cursors?.left?.isDown || this.cursors?.right?.isDown || this.cursors?.up?.isDown || this.cursors?.down?.isDown){
+      //   console.log("@@@")
+      //     const playerData = {
+      //       id:{},
+      //       position: { x: this.character!.x, y: this.character!.y },
+      //       state: 'A', // 혹은 'B'
+      //       type: 1, // 1~10
+      //       // chat: 모르겠다아직
+      //     };
+      //     this.socket?.emit('playerData', playerData);
+      // }
 
       if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnChair) {
         if (this.cursors.left?.isDown) {
@@ -663,5 +684,22 @@ export class Lsize1Scene extends Phaser.Scene {
           this.character!.setAlpha(0.4);
           this.sittingOnChair = true;
       }
+  }
+
+  updateRemoteCharacter(data: any){
+    // 원격 캐릭터의 ID나 식별자 // 각자 들어가나? let으로 하면? 30명이면 30!만큼이 되어버리나? 테스트 해보고싶네
+    let remoteChar = this.remoteCharacters[data.id];
+
+    // 원격 캐릭터가 게임에 없으면 만들고 위치세팅
+    if (!remoteChar) {
+        remoteChar = this.physics.add.sprite(data.position.x, data.position.y, data.type+'');
+        this.remoteCharacters[data.id] = remoteChar;
+    }
+
+    // 원격 캐릭터의 위치, 투명상태
+    remoteChar.setPosition(data.position.x, data.position.y);
+    if(data.state === 'B') {
+      remoteChar.setAlpha(0.4);
+    }
   }
 }

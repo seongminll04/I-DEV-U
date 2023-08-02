@@ -21,7 +21,7 @@ logging.level:
 
 # SSL
 server:
-  port: 443
+  port: 444
   ssl:
     key-store: ${SSL_KEY_PATH}certificate.p12
     key-store-type: PKCS12

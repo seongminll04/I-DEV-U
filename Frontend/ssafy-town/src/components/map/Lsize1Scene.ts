@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
-import { OpenVidu, Publisher, Session, /*Stream,*/ StreamEvent, StreamManager, Subscriber } from 'openvidu-browser';
 import store from '../../store/store'
 import { setModal } from '../../store/actions';
+import io, { Socket } from 'socket.io-client';
 
 type AssetKeys = 'A' | 'B' | 'C' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' 
                | 'T' | 'U' | 'V' | 'W' | 'X' | '1' | '2' | '3' | '4'
@@ -128,12 +128,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 export class Lsize1Scene extends Phaser.Scene {
 
-    private OV?: OpenVidu;
-    private session?: Session;
-    private publisher?: Publisher;
-    private subscribers: StreamManager[] = [];
-    private remoteCharacters: Record<string, Phaser.Physics.Arcade.Sprite> = {};
-
+    private socket?: Socket;
 
     private character?: Phaser.Physics.Arcade.Sprite;
     private balloon!: Phaser.GameObjects.Sprite;
@@ -186,28 +181,14 @@ export class Lsize1Scene extends Phaser.Scene {
     }
 
     create() {
-
-      this.OV = new OpenVidu();
-      this.session = this.OV.initSession();
-
-      this.publisher = this.OV.initPublisher('my-video-container', {
-          audioSource: undefined, // 기본 마이크
-          videoSource: undefined, // 기본 웹캠
-          publishAudio: true,     // 오디오 공유 여부
-          publishVideo: true,     // 비디오 공유 여부
-          resolution: '640x480',  // 해상도
-          frameRate: 30,          // 프레임레이트
-          insertMode: 'APPEND',   // 퍼블리셔가 DOM에 어떻게 삽입될지 결정
-          mirror: false           // 자신의 비디오 미러링 여부
-      });
-
-      // 사용자에게 화상채팅 참여 버튼 제공
-      const joinChatButton = this.add.text(1000, 1000, 'Join Chat', { color: '#0f0' });
-      joinChatButton.setInteractive();
-      joinChatButton.on('pointerdown', () => this.joinChat());
       
 
-      // TODO: 카메라 스트림을 어디에 보여줄지 결정해야 합니다.
+      this.socket = io('http://your_backend_url');
+
+      this.socket.on('playerData', (data: any) => {
+        // 여기서 원격 캐릭터의 움직임, 상태, 종류, 채팅을 처리
+        // 예: this.updateRemoteCharacter(data);
+      });
 
       const rows = pattern.trim().split('\n');
       const tileSize = 32; 
@@ -453,6 +434,17 @@ export class Lsize1Scene extends Phaser.Scene {
   
   
     update() {
+
+      if(this.character){
+        const playerData = {
+          position: { x: this.character.x, y: this.character.y },
+          state: 'A', // 혹은 'B'
+          type: 1, // 1~10
+          // chat: 모르겠다아직
+        };
+        this.socket?.emit('playerData', playerData);
+      }
+
       if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnChair) {
         if (this.cursors.left?.isDown) {
           this.character.setVelocityX(-640);
@@ -672,55 +664,4 @@ export class Lsize1Scene extends Phaser.Scene {
           this.sittingOnChair = true;
       }
   }
-
-  async joinChat() {
-    const SERVER_URL = 'https://i9b206.p.ssafy.io:9090';
-
-    // 1. 세션 생성 요청
-    const sessionResponse = await fetch(`${SERVER_URL}/create-session`);
-    const sessionData = await sessionResponse.json();
-  
-    // 2. 토큰 요청
-    const tokenResponse = await fetch(`${SERVER_URL}/generate-token/${sessionData.id}`);
-    const tokenData = await tokenResponse.json();
-  
-    // 3. OpenVidu 세션에 접속
-    if (this.session && this.publisher) {
-      this.session.connect(tokenData.token, 'MyClientName')
-        .then(() => {
-          this.session!.publish(this.publisher!);
-        })
-        .catch(error => {
-          console.error('There was an error connecting to the session:', error.code, error.message);
-        });
-  
-      // 다른 사용자의 스트림을 구독하는 이벤트 핸들러
-      this.session.on('streamCreated', (event: StreamEvent) => {
-        // 새로운 div를 동적으로 생성
-        const videoElementId = `video-${event.stream.streamId}`;
-        const videoElement = document.createElement('div');
-        videoElement.id = videoElementId;
-    
-        // videoContainer에 해당 div를 추가
-        document.getElementById('videoContainer')?.appendChild(videoElement);
-    
-        // OpenVidu 세션에서 스트림을 구독하고, 동적으로 생성한 div에 넣음
-        const subscriber: Subscriber = this.session!.subscribe(event.stream, videoElementId);
-        this.subscribers.push(subscriber);
-        
-        // 새로운 원격 캐릭터 생성 및 배열에 추가
-        const character = this.physics.add.sprite(1024, 1024, 'character').setOrigin(0.5, 0.5);
-        this.remoteCharacters[event.stream.streamId] = character;
-    });
-    
-      this.session.on('streamDestroyed', (event: StreamEvent) => {
-        const character = this.remoteCharacters[event.stream.streamId];
-        if(character) {
-            character.destroy();
-            delete this.remoteCharacters[event.stream.streamId];
-        }
-    });
-    }
-  }
-
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import mate.global.jwt.filter.JwtAuthenticationProcessingFilter;
 import mate.global.jwt.service.JwtService;
+import mate.global.jwt.service.RedisService;
 import mate.global.login.filter.CustomJsonUsernamePasswordAuthenticationFilter;
 import mate.global.login.handler.LoginFailureHandler;
 import mate.global.login.handler.LoginSuccessHandler;
@@ -40,6 +41,7 @@ public class SecurityConfig {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
+    private final RedisService redisService;
 
 
     @Bean
@@ -103,7 +105,7 @@ public class SecurityConfig {
      */
     @Bean
     public LoginSuccessHandler loginSuccessHandler() {
-        return new LoginSuccessHandler(jwtService, userRepository);
+        return new LoginSuccessHandler(jwtService, userRepository, redisService);
     }
 
     /**
@@ -132,7 +134,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
-        JwtAuthenticationProcessingFilter jwtAuthenticationFilter = new JwtAuthenticationProcessingFilter(jwtService, userRepository);
+        JwtAuthenticationProcessingFilter jwtAuthenticationFilter = new JwtAuthenticationProcessingFilter(jwtService, userRepository, redisService);
         return jwtAuthenticationFilter;
     }
 

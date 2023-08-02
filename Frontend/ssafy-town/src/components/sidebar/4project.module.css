@@ -67,9 +67,14 @@
     margin-left:10%;
     border-radius: 1rem;
 }
-/* .project:hover {
+.project_detail {
+    display: flex;
+    border-radius: 1rem;
+    cursor:pointer;
+}
+.project_detail:hover {
     background-color: rgba(109, 206, 245, 1);
-} */
+}
 .project img {
     width: 60px ;
     height: 60px;

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import sogae_css from './2sogae.module.css';
-import SecondQAModal from '../survey/secondQA';
 
-import { useSelector, useDispatch } from 'react-redux';
-import { AppState } from '../../store/state';
+import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
-import SogaeFilter from '../filter/sogaeFilter';
+
 
 
 type User = {
@@ -20,7 +18,6 @@ const ITEMS_PER_PAGE = 10;
 
 const Sogae: React.FC = () => {
   const dispatch = useDispatch();
-  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
   // const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   // const [data, setData] = useState<any | null>(null); //실제 상태용 데이터의 상황에따라 변화
   const [data, setData] = useState<any>(true); //개발용 항상 ok인 상태
@@ -40,8 +37,6 @@ const Sogae: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   // const [totalItems, setTotalItems] = useState(users.length);
   // const [selectedWord, setSelectedWord] = useState<string | null>(null);
-
-
 
   useEffect(() => {
     setCurrentPage(1)
@@ -65,10 +60,6 @@ const Sogae: React.FC = () => {
   // useEffect(() => {
   //   setTotalItems(users.length);
   // }, [users,]);
-
-  const handleConfirm = () => {
-    // 여기에 onConfirm 했을때의 로직
-};
 
 // const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 //   const wordValue = e.target.value;
@@ -175,8 +166,6 @@ const Sogae: React.FC = () => {
             </button>
           ))}
         </div> */}
-        {isModalOpen==='소개팅설문' ? <SecondQAModal onClose={()=>dispatch(setModal(null))} onConfirm={handleConfirm} />:null}
-        {isModalOpen==='소개팅필터' ? <SogaeFilter />:null}
       </div>
   
   );

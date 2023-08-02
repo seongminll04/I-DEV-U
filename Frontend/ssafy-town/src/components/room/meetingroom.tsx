@@ -85,11 +85,11 @@ const MeetingRoom: React.FC = () => {
       {/* 사이드바 오픈 */}
       {isSidebarOpen ? <Navbar /> : null}
       <ModalOpen />
-    <div id="phaser_game" className={ssafytown_css.phaser_game} >
+      <div id="phaser_game" className={ssafytown_css.phaser_game} >
         <div id="my-video-container" className={ssafytown_css.my_video_bar}></div>
         <div id="videoContainer" className={ssafytown_css.op_video_bar}> </div>
         <div className={ssafytown_css.video_bar}><Cam /></div>
-    </div>
+      </div>
     </div>
   );
 }

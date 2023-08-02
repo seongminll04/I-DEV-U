@@ -1,18 +1,14 @@
 import React, { useState } from "react";
 import project_css from "./4project.module.css";
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setAllowMove, setModal } from '../../store/actions';
-import { AppState } from '../../store/state';
+
 
 import axios from "axios";
-import ProjectFilter from "../filter/projectFilter";
-import CreateProject from "../board/CreateProject";
-import EnterProject from "../board/EnterProject";
 
 const Project: React.FC = () => {
     const dispatch = useDispatch()
-    const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
     const [projectList, setProjectList] = useState<string[]>(['프로젝트1','프로젝트2']);
 
   const loadproject = () => {
@@ -63,13 +59,15 @@ const Project: React.FC = () => {
             {projectList.map((project) => (
               <div>
                 <div className={project_css.project} key={project}>
-                  <img src="assets/default_profile.png" alt=""/>
-                  <div className={project_css.project_data}>
-                    <b>{project}</b>
-                    <p style={{color:'gray'}}>#Python #Java #JavaScript #React </p>
+                  <div className={project_css.project_detail} onClick={()=>dispatch(setModal('프로젝트상세정보'))}>
+                    <img src="assets/default_profile.png" alt=""/>
+                    <div className={project_css.project_data}>
+                      <b>{project}</b>
+                      <p style={{color:'gray'}}>#Python #Java #JavaScript #React </p>
+                    </div>
                   </div>
                   <div>
-                    <button className={project_css.btn} onClick={()=>{dispatch(setModal('참가신청'))}}>참가신청</button>
+                    <button className={project_css.btn} onClick={()=>{dispatch(setModal('프로젝트참가신청'))}}>참가신청</button>
                     <span>2/5</span>
                   </div>
                 </div>
@@ -78,10 +76,6 @@ const Project: React.FC = () => {
             ))} 
           </div>
         </div>
-        {isModalOpen==='프로젝트필터' ? <ProjectFilter />:
-        isModalOpen==='프로젝트생성' ? <CreateProject /> :
-        isModalOpen==='참가신청' ? <EnterProject /> :
-        null}
       </div>
     );
   };

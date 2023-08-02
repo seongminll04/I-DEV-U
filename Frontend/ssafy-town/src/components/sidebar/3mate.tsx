@@ -1,11 +1,8 @@
 import React from 'react';
 import mate_css from './3mate.module.css'
 
-import { useSelector, useDispatch } from 'react-redux';
-import { AppState } from '../../store/state';
+import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
-
-import MateFilter from '../filter/mateFilter';
 
 // import styled from 'styled-components';
 
@@ -43,7 +40,6 @@ import MateFilter from '../filter/mateFilter';
 
 const Mate: React.FC = () => {
   const dispatch = useDispatch();
-  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
   // const [isOn, setisOn] = useState(true);
 
 
@@ -184,7 +180,6 @@ const Mate: React.FC = () => {
                 </tr>
               ))} */}
       </div>
-      {isModalOpen==='동료찾기필터' ? <MateFilter />:null}
     </div>
   );
 };

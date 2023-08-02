@@ -20,6 +20,19 @@ const AllNotice: React.FC = () => {
   const [search, setsearch] = useState<string>('');
   const [nowsearch, setnowsearch] = useState<boolean>(false);
   const [noticeList,setNoticeList] =useState<Notice[]>([{idx:1,content:'strign',title:'asdf',createdAt:'asdf'}]);
+  
+  const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
+    const inputElement = event.currentTarget
+    const currentCursorPosition = inputElement.selectionStart || 0;
+    if (event.key === 'ArrowLeft' && currentCursorPosition!==0) {
+      inputElement.setSelectionRange(currentCursorPosition - 1, currentCursorPosition - 1);
+    } else if (event.key === 'ArrowRight') {
+      inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
+    } else if (event.key === ' '){
+      inputElement.value = inputElement.value.slice(0,currentCursorPosition)+ ' ' +inputElement.value.slice(currentCursorPosition,)
+      inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
+    }
+  }
 
   const searchdata = () => {
     setnowsearch(true)
@@ -40,11 +53,11 @@ const AllNotice: React.FC = () => {
                 <h1 style={{margin:'-20px 0 20px 0'}}>공지사항</h1>
                 <hr style={{border:'solid 1px gray'}}/>
                 <div style={{display:'flex', justifyContent:'space-between'}}>
+                  <div>
+                    <input type="text" value={search} onChange={(event) => {setsearch(event.target.value)}} onKeyDown={handlekeydown}/>
+                    <button onClick={searchdata}>검색</button>
                     {!nowsearch ? <span></span> : <span className={alert_css.movebtn} onClick={()=> {setsearch(''); setnowsearch(false)}}>검색취소</span>}
-                    <div>
-                        <input type="text" value={search} onChange={(event) => {setsearch(event.target.value);}}/>
-                        <button onClick={searchdata}>검색icon</button>
-                    </div>
+                  </div>
                 </div>
                 </div>
                 <br />

@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
-import { OpenVidu, Publisher, Session, /*Stream,*/ StreamEvent, StreamManager, Subscriber } from 'openvidu-browser';
 import store from '../../store/store'
 import { setModal } from '../../store/actions';
+import io, { Socket } from 'socket.io-client';
 
 type AssetKeys = 'A' | 'B' | 'C' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' 
                | 'T' | 'U' | 'V' | 'W' | 'X' | '1' | '2' | '3' | '4'
@@ -128,16 +128,13 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 export class Lsize1Scene extends Phaser.Scene {
 
-    private OV?: OpenVidu;
-    private session?: Session;
-    private publisher?: Publisher;
-    private subscribers: StreamManager[] = [];
-    private remoteCharacters: Record<string, Phaser.Physics.Arcade.Sprite> = {};
-
+    private socket?: Socket;
 
     private character?: Phaser.Physics.Arcade.Sprite;
+    private remoteCharacters: { [id: string]: Phaser.GameObjects.Sprite } = {};
     private balloon!: Phaser.GameObjects.Sprite;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
+    private prevPosition: { x: number, y: number } | null = null;
     private walls?: Phaser.Physics.Arcade.StaticGroup;
     private clockText!: Phaser.GameObjects.Text; //우하시계
     private clockText2!: Phaser.GameObjects.Text; //우상시계
@@ -186,28 +183,14 @@ export class Lsize1Scene extends Phaser.Scene {
     }
 
     create() {
-
-      this.OV = new OpenVidu();
-      this.session = this.OV.initSession();
-
-      this.publisher = this.OV.initPublisher('my-video-container', {
-          audioSource: undefined, // 기본 마이크
-          videoSource: undefined, // 기본 웹캠
-          publishAudio: true,     // 오디오 공유 여부
-          publishVideo: true,     // 비디오 공유 여부
-          resolution: '640x480',  // 해상도
-          frameRate: 30,          // 프레임레이트
-          insertMode: 'APPEND',   // 퍼블리셔가 DOM에 어떻게 삽입될지 결정
-          mirror: false           // 자신의 비디오 미러링 여부
-      });
-
-      // 사용자에게 화상채팅 참여 버튼 제공
-      const joinChatButton = this.add.text(1000, 1000, 'Join Chat', { color: '#0f0' });
-      joinChatButton.setInteractive();
-      joinChatButton.on('pointerdown', () => this.joinChat());
       
 
-      // TODO: 카메라 스트림을 어디에 보여줄지 결정해야 합니다.
+      this.socket = io('http://your_backend_url');
+
+      this.socket.on('playerData', (data: any) => {
+        console.log("111")
+        this.updateRemoteCharacter(data);
+      });
 
       const rows = pattern.trim().split('\n');
       const tileSize = 32; 
@@ -453,6 +436,36 @@ export class Lsize1Scene extends Phaser.Scene {
   
   
     update() {
+
+      const currentPlayerPosition = { x: this.character!.x, y: this.character!.y };
+
+      if (!this.prevPosition || (this.prevPosition.x !== currentPlayerPosition.x || this.prevPosition.y !== currentPlayerPosition.y)) {
+        console.log("@@@@")
+        const playerData = {
+            id: {},
+            position: currentPlayerPosition,
+            state: 'A', // 혹은 'B'
+            type: 1, // 1~10
+            // chat: ...
+        };
+        this.socket?.emit('playerData', playerData);
+
+        // 현재 위치를 이전 위치로 저장
+        this.prevPosition = currentPlayerPosition;
+    }
+
+      // if(this.cursors?.left?.isDown || this.cursors?.right?.isDown || this.cursors?.up?.isDown || this.cursors?.down?.isDown){
+      //   console.log("@@@")
+      //     const playerData = {
+      //       id:{},
+      //       position: { x: this.character!.x, y: this.character!.y },
+      //       state: 'A', // 혹은 'B'
+      //       type: 1, // 1~10
+      //       // chat: 모르겠다아직
+      //     };
+      //     this.socket?.emit('playerData', playerData);
+      // }
+
       if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnChair) {
         if (this.cursors.left?.isDown) {
           this.character.setVelocityX(-640);
@@ -673,54 +686,20 @@ export class Lsize1Scene extends Phaser.Scene {
       }
   }
 
-  async joinChat() {
-    const SERVER_URL = 'https://i9b206.p.ssafy.io:9090';
+  updateRemoteCharacter(data: any){
+    // 원격 캐릭터의 ID나 식별자 // 각자 들어가나? let으로 하면? 30명이면 30!만큼이 되어버리나? 테스트 해보고싶네
+    let remoteChar = this.remoteCharacters[data.id];
 
-    // 1. 세션 생성 요청
-    const sessionResponse = await fetch(`${SERVER_URL}/create-session`);
-    const sessionData = await sessionResponse.json();
-  
-    // 2. 토큰 요청
-    const tokenResponse = await fetch(`${SERVER_URL}/generate-token/${sessionData.id}`);
-    const tokenData = await tokenResponse.json();
-  
-    // 3. OpenVidu 세션에 접속
-    if (this.session && this.publisher) {
-      this.session.connect(tokenData.token, 'MyClientName')
-        .then(() => {
-          this.session!.publish(this.publisher!);
-        })
-        .catch(error => {
-          console.error('There was an error connecting to the session:', error.code, error.message);
-        });
-  
-      // 다른 사용자의 스트림을 구독하는 이벤트 핸들러
-      this.session.on('streamCreated', (event: StreamEvent) => {
-        // 새로운 div를 동적으로 생성
-        const videoElementId = `video-${event.stream.streamId}`;
-        const videoElement = document.createElement('div');
-        videoElement.id = videoElementId;
-    
-        // videoContainer에 해당 div를 추가
-        document.getElementById('videoContainer')?.appendChild(videoElement);
-    
-        // OpenVidu 세션에서 스트림을 구독하고, 동적으로 생성한 div에 넣음
-        const subscriber: Subscriber = this.session!.subscribe(event.stream, videoElementId);
-        this.subscribers.push(subscriber);
-        
-        // 새로운 원격 캐릭터 생성 및 배열에 추가
-        const character = this.physics.add.sprite(1024, 1024, 'character').setOrigin(0.5, 0.5);
-        this.remoteCharacters[event.stream.streamId] = character;
-    });
-    
-      this.session.on('streamDestroyed', (event: StreamEvent) => {
-        const character = this.remoteCharacters[event.stream.streamId];
-        if(character) {
-            character.destroy();
-            delete this.remoteCharacters[event.stream.streamId];
-        }
-    });
+    // 원격 캐릭터가 게임에 없으면 만들고 위치세팅
+    if (!remoteChar) {
+        remoteChar = this.physics.add.sprite(data.position.x, data.position.y, data.type+'');
+        this.remoteCharacters[data.id] = remoteChar;
+    }
+
+    // 원격 캐릭터의 위치, 투명상태
+    remoteChar.setPosition(data.position.x, data.position.y);
+    if(data.state === 'B') {
+      remoteChar.setAlpha(0.4);
     }
   }
-
 }

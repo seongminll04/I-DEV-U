@@ -13,6 +13,11 @@ export const setAllowMove = (value: boolean) => ({
   payload: value,
 });
 
+export const setLoginToken = (value: string) => ({
+  type: 'SET_LOGINTOKEN',
+  payload: value,
+});
+
 export const setSelectMap = (value: string) => ({
   type: 'SET_SELECTMAP',
   payload: value,

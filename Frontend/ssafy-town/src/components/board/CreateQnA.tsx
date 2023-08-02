@@ -42,17 +42,17 @@ const CreateQnA: React.FC<Props> = ({onback}) => {
               <span>제</span><span>목</span>
             </label>
             <p> : </p>
-            <input type="text" onKeyDown={handlekeydown}/>
+            <input type="text" onKeyDown={handlekeydown} placeholder='제목을 입력해주세요'/>
           </div>
           <div className={Create_css.input}>
             <label><span>내</span><span>용</span></label>
             <p> : </p>
-            <textarea name="" id="" ></textarea>
+            <textarea name="" id="" placeholder='내용을 작성해주세요'></textarea>
           </div>
           <div className={Create_css.input}>
             <label><span>파</span><span>일</span></label>
             <p> : </p>
-            <input type="file" />
+            <input type="file" style={{marginTop:'5px'}}/>
           </div>
           <button onClick={()=>{}}>생성하기</button>
         </div>

@@ -31,12 +31,13 @@
 }
 
 .info {
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 .input {
     display: flex;
     align-items: center;
     /* justify-content: center; */
+    align-items: flex-start;
     margin:auto;
     width:70%;
     font-size: large;
@@ -45,20 +46,22 @@
     width:20%;
     display: flex;
     justify-content: space-between;
+    margin: 15px 0;;
 }
 .input p {
-    margin: 10px 20px;
+    margin: 15px 20px;
 }
 .input input,textarea {
     width:60%;
     border-radius: 0.5rem;
     padding:5px 10px;
+    margin: 10px 0;
 }
 
 .input textarea {
-    resize:none;
+    resize: none;
     border: solid 2px;
-    height: 100px;
+    height: 200px;
 }
 .backbtn {
     margin:10px;

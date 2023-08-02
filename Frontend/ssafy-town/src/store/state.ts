@@ -2,6 +2,7 @@ export interface AppState {
   isModalOpen: string|null;
   isSidebarOpen: string|null;
   isAllowMove:boolean;
+  loginToken:string;
   SelectMap:string;
   }
   

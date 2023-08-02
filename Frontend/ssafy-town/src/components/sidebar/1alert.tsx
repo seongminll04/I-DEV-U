@@ -2,7 +2,8 @@ import React, {useState, useEffect} from 'react';
 import alert_css from './1alert.module.css';
 import axios from 'axios';
 
-import { useDispatch } from 'react-redux';
+import { AppState } from '../../store/state';
+import { useSelector , useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 
 import DetailAlert from '../notice/detail_alert';
@@ -17,6 +18,7 @@ interface Notice {
 
 const Alert: React.FC = () => {
   const dispatch = useDispatch()
+  const loginToken = useSelector((state: AppState) => state.loginToken);
   const [noticeList,setNoticeList] =useState<Notice[]>([]);
   const [page,setPage] = useState<Number>(0)
 
@@ -24,7 +26,10 @@ const Alert: React.FC = () => {
     // 모달창이 열렸다면 공지사항 데이터 불러오기
     axios({
       method:'get',
-      url:'https://i9b206.p.ssafy.io:9090/notice/list/easy',
+      url:'https://i9b206.p.ssafy.io:9090/notice/list/top',
+      headers :{ 
+        Authorization: loginToken
+      }
     })
     .then(res => {
       // console.log(res.data)

@@ -4,6 +4,7 @@ const initialState: AppState = {
     isModalOpen: null,
     isSidebarOpen:null,
     isAllowMove:true,
+    loginToken:'',
     SelectMap:'A',
 };
 
@@ -17,8 +18,10 @@ const reducer = (state: AppState = initialState, action: { type: string; payload
       else {return {...state, isSidebarOpen: action.payload,}}
     case 'SET_ALLOWMOVE':
         return {...state, isAllowMove: action.payload}
+    case 'SET_LOGINTOKEN':
+        return {...state, loginToken: action.payload}
     case 'SET_SELECTMAP':
-        return {...state, SelectMap: action.payload}
+      return {...state, SelectMap: action.payload}
     default:
       return state;
   }

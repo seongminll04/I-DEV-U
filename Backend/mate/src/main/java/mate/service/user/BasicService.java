@@ -38,7 +38,8 @@ public class BasicService {
                 List<String> tagList = survey.getTagList();
                 Integer surveyIdx = survey.getSurveyIdx();
                 for (String tag : tagList) {
-                    basicRepository.saveAndFlush(new BasicAnswer(user, surveyIdx,tag));
+                    basicRepository.saveAndFlush(BasicAnswer.builder()
+                            .user(user).surveyIdx(surveyIdx).tag(tag).build());
                 }
             }
         }

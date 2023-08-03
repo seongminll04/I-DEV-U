@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.openvidu.java.client.OpenVidu;
-import mate.service.UserService;
+import mate.service.user.UserService;
 import mate.service.video.VideoService;
 
 @RestController

@@ -5,9 +5,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mate.repository.UserRepository;
+import mate.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -88,11 +87,12 @@ public class JwtService {
     /**
      * AccessToken + RefreshToken 헤더에 실어서 보내기
      */
-    public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
+    public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken){
         response.setStatus(HttpServletResponse.SC_OK);
 
         setAccessTokenHeader(response, accessToken);
         setRefreshTokenHeader(response, refreshToken);
+
         log.info("Access Token, Refresh Token 헤더 설정 완료");
     }
 

@@ -4,15 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import mate.global.jwt.filter.JwtAuthenticationProcessingFilter;
 import mate.global.jwt.service.JwtService;
-import mate.global.jwt.service.RedisService;
 import mate.global.login.filter.CustomJsonUsernamePasswordAuthenticationFilter;
 import mate.global.login.handler.LoginFailureHandler;
 import mate.global.login.handler.LoginSuccessHandler;
 import mate.global.login.service.LoginService;
-import mate.repository.UserRepository;
+import mate.repository.user.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -23,10 +21,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  * 인증은 CustomJsonUsernamePasswordAuthenticationFilter에서 authenticate()로 인증된 사용자로 처리
@@ -41,7 +36,7 @@ public class SecurityConfig {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
-    private final RedisService redisService;
+//    private final RedisService redisService;
 
 
     @Bean
@@ -67,6 +62,8 @@ public class SecurityConfig {
                 // 기본 페이지, css, image, js 하위 폴더에 있는 자료들은 모두 접근 가능, h2-console에 접근 가능
                 .antMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
                 .antMatchers("/user/signUp/**").permitAll() // 회원가입 접근 가능
+                .antMatchers("/question/**").permitAll() // 회원가입 접근 가능
+                .antMatchers("/chatRoom/**").permitAll() // 회원가입 접근 가능
                 .anyRequest().authenticated() // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
                 .and();
 
@@ -105,7 +102,8 @@ public class SecurityConfig {
      */
     @Bean
     public LoginSuccessHandler loginSuccessHandler() {
-        return new LoginSuccessHandler(jwtService, userRepository, redisService);
+//        return new LoginSuccessHandler(jwtService, userRepository, redisService);
+        return new LoginSuccessHandler(jwtService, userRepository);
     }
 
     /**
@@ -134,7 +132,8 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
-        JwtAuthenticationProcessingFilter jwtAuthenticationFilter = new JwtAuthenticationProcessingFilter(jwtService, userRepository, redisService);
+//        JwtAuthenticationProcessingFilter jwtAuthenticationFilter = new JwtAuthenticationProcessingFilter(jwtService, userRepository, redisService);
+        JwtAuthenticationProcessingFilter jwtAuthenticationFilter = new JwtAuthenticationProcessingFilter(jwtService, userRepository);
         return jwtAuthenticationFilter;
     }
 

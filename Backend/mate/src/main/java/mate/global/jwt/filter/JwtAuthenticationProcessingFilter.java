@@ -5,16 +5,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mate.domain.user.User;
 import mate.global.jwt.service.JwtService;
-import mate.global.jwt.service.RedisService;
 import mate.global.jwt.util.PasswordUtil;
-import mate.repository.UserRepository;
+import mate.repository.user.UserRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -22,7 +20,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 
 /**
  * Jwt 인증 필터
@@ -45,7 +42,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
-    private final RedisService redisService;
+//    private final RedisService redisService;
 
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
@@ -95,15 +92,15 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                     jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(user.getEmail()),
                             reIssuedRefreshToken);
                 });
-        redisService.getRedis(refreshToken)
-                .ifPresent(email -> {
-                    userRepository.findByEmail(email)
-                        .ifPresent(user -> {
-                            String reIssuedRefreshToken = reIssueRefreshToken(user);
-                            jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(user.getEmail()),
-                                    reIssuedRefreshToken);
-                            });
-                });
+//        redisService.getRedis(refreshToken)
+//                .ifPresent(email -> {
+//                    userRepository.findByEmail(email)
+//                        .ifPresent(user -> {
+//                            String reIssuedRefreshToken = reIssueRefreshToken(user);
+//                            jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(user.getEmail()),
+//                                    reIssuedRefreshToken);
+//                            });
+//                });
 
     }
 
@@ -116,7 +113,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         String reIssuedRefreshToken = jwtService.createRefreshToken();
         user.updateRefreshToken(reIssuedRefreshToken);
         userRepository.saveAndFlush(user);
-        redisService.setRedis(reIssuedRefreshToken, user.getEmail());
+//        redisService.setRedis(reIssuedRefreshToken, user.getEmail());
         return reIssuedRefreshToken;
     }
 

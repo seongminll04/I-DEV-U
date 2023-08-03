@@ -7,20 +7,17 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-public class basicAnswer {
+public class BasicAnswer {
 
     @Id @GeneratedValue
     private int idx;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "survey_idx")
-    private basicSurvey basicSurvey;
-
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_idx")
     private User user;
 
-    private String tag;
+    private Integer surveyIdx;
 
+    private String tag;
 
 }

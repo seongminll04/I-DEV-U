@@ -82,6 +82,15 @@ public class NoticeController {
 		return ResponseEntity.ok(map);
 	}
 
+	@GetMapping("/list/top")
+	public ResponseEntity<Map<String, Object>> listNoticeTop() {
+		System.out.println("noticeAll");
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("list", noticeService.listNoticeTop4());
+		return ResponseEntity.ok(map);
+	}
+
 	@GetMapping("/find/title/{keyWord}")
 	public ResponseEntity<Map<String, Object>> findNoticeByTitle(
 		@PathVariable(value = "keyWord", required = false) String keyWord) {

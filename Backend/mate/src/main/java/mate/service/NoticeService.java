@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -41,9 +40,9 @@ public class NoticeService {
 	}
 
 	// 가장 최근 4개만 조회
-//	public List<NoticeBoard> listNoticeTop4() {
-//		return noticeRepository.findNoticeTop4OrderByIdxDesc();
-//	}
+	public List<NoticeBoard> listNoticeTop4() {
+		return noticeRepository.findTop4ByOrderByIdxDesc();
+	}
 
 	// 검색어를 사용한 리스트 조회(제목)
 	public List<NoticeBoard> listNoticeByTitle(String keyWord) {

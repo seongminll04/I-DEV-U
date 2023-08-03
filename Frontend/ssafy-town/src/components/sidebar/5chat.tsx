@@ -17,7 +17,6 @@ import { setAllowMove } from '../../store/actions';
     const stompClientRef = React.useRef<Client | null>(null);
     const [roomList, setRoomList] = useState<string[]>([]);
     
-    
     // input 방향키 살리기
     const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
       const inputElement = event.currentTarget

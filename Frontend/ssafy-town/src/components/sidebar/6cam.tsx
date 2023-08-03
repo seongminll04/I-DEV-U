@@ -3,8 +3,9 @@ import React,{ useState, useEffect } from 'react';
 import cam_css from './6cam.module.css'
 import axios from 'axios';
 
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { setAllowMove } from '../../store/actions';
+import { AppState } from '../../store/state';
 
 type ProjectDataType = {
   name: string; // 프로젝트 이름
@@ -14,6 +15,8 @@ type ProjectDataType = {
 
 const Cam: React.FC = () => {
   const dispatch = useDispatch()
+  const loginToken = useSelector((state: AppState) => state.loginToken);// 모달창 오픈여부 (알림, 로그아웃)
+
   const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
 
   const [camList, setCamList] = useState<ProjectDataType[]>([]);
@@ -35,7 +38,11 @@ const Cam: React.FC = () => {
   }
   // 유저의 화상방 데이터 가져오기
   useEffect(() => {
-    axios.get(BACKEND_SERVER_URL + '/video/list')
+    axios.get(BACKEND_SERVER_URL + '/video/list',{
+      headers : {
+        Authorization:loginToken
+      },
+    })
       .then(res => {
         setCamList(res.data.list);
         console.log(res);
@@ -52,6 +59,9 @@ const Cam: React.FC = () => {
   const EnterCam = (sessionId: string) => {
 
     axios.get(`${BACKEND_SERVER_URL}/video/enter`, {
+        headers : {
+          Authorization:loginToken
+        },
         params: {
             sessionId: sessionId,
         }

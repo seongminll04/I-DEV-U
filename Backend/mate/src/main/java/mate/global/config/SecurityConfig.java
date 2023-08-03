@@ -63,6 +63,7 @@ public class SecurityConfig {
                 .antMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
                 .antMatchers("/user/signUp/**").permitAll() // 회원가입 접근 가능
                 .antMatchers("/question/**").permitAll() // 회원가입 접근 가능
+                .antMatchers("/chatRoom/**").permitAll() // 회원가입 접근 가능
                 .anyRequest().authenticated() // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
                 .and();
 

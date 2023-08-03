@@ -12,6 +12,7 @@ import MeetingRoom from './components/room/meetingroom';
 import LMeetingRoom from './components/room/Lmeetingroom';
 
 import app_css from './App.module.css';
+import MyComponent from './components/TEST';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <div className={app_css.App}>
         <Routes>
           {/* 로그인여부에 따른 login, home 이동  */}
+          <Route path="/test" element={<MyComponent />} />
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} /> 
           <Route path="/signup" element={<SignupForm />} />

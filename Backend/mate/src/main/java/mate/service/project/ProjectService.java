@@ -25,9 +25,6 @@ public class ProjectService {
 	public void registerProject(ProjectDto projectDto) {
 
 		String session = makeRoomCode();
-
-		Project.builder().manager()
-
 	}
 
 	public String makeRoomCode() {

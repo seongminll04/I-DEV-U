@@ -32,7 +32,7 @@ import { setAllowMove } from '../../store/actions';
     }
     // 연결에 관한 것
     useEffect(() => {
-      const socket = new SockJS("http://localhost:8080/chatting");
+      const socket = new SockJS("https://localhost:8080/chatting");
       stompClientRef.current = Stomp.over(socket);
       // 연결 시도
       stompClientRef.current.activate();

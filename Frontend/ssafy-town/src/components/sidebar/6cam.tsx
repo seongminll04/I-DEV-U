@@ -17,8 +17,8 @@ const Cam: React.FC = () => {
   const dispatch = useDispatch()
   const loginToken = useSelector((state: AppState) => state.loginToken);// 모달창 오픈여부 (알림, 로그아웃)
 
-  const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
-
+  // const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
+  const BACKEND_SERVER_URL = 'https://i9b206.p.ssafy.io';
   const [camList, setCamList] = useState<ProjectDataType[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const ITEMS_PER_PAGE = 5;

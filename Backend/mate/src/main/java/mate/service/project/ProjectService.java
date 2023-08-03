@@ -1,15 +1,12 @@
 package mate.service.project;
 
 import lombok.RequiredArgsConstructor;
-import mate.domain.project.Project;
-import mate.domain.user.User;
 import mate.dto.project.ProjectDto;
 import mate.repository.project.ProjectRepository;
 import mate.repository.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Random;
 
 @Service

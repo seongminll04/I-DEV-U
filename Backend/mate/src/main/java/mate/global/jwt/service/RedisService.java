@@ -27,9 +27,11 @@ public class RedisService {
 
 
     public void setRedis(String token, String email) {
-        if (this.getRedis(token) != null)
-            this.deleteRedis(token);
-        redisTemplate.opsForValue().set(token, email, refreshTokenExpirationPeriod);
+        System.out.println(token);
+        if (this.getRedis(token) != null) this.deleteRedis(token);
+        System.out.println(token);
+        redisTemplate.opsForValue().set("Bearer " + token, email, refreshTokenExpirationPeriod);
+
     }
 
     public void deleteRedis(String key) {

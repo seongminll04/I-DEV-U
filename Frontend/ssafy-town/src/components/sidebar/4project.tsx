@@ -1,30 +1,43 @@
 import React, { useState } from "react";
 import project_css from "./4project.module.css";
-
 import { useDispatch } from 'react-redux';
 import { setAllowMove, setModal } from '../../store/actions';
-
-
 import axios from "axios";
 
-const Project: React.FC = () => {
-    const dispatch = useDispatch()
-    const [projectList, setProjectList] = useState<string[]>(['프로젝트1','프로젝트2']);
+const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
 
-  const loadproject = () => {
-    axios({
-      method:'get',
-      url:'https://i9b206.p.ssafy.io:9090',
-      // data
-    })
-    .then(res=>{
-      console.log(res)
-      setProjectList(res.data)
-    })
-    .catch(err=>{
-      console.log(err)
-    })
-  }
+type ProjectDataType = {
+    "title (VARCHAR)": string;
+    "totalNum (INT)": number;
+    "nowNum (INT)": number;
+    "front(INT)": number;
+    "maxFront(INT)": number;
+    "back(INT)": number;
+    "maxBack(INT)": number;
+    "language(List)": string[];
+};
+
+const Project: React.FC = () => {
+    const dispatch = useDispatch();
+    const [projectList, setProjectList] = useState<ProjectDataType[]>([]);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const ITEMS_PER_PAGE = 5;
+
+    const loadproject = () => {
+      axios.get(BACKEND_SERVER_URL + '/project/register')
+          .then(res => {
+              console.log(res);
+              if (res.data.resmsg === "프로젝트 리스트 조회 성공") {
+                  setProjectList(res.data.list);
+              }
+          })
+          .catch(err => {
+              console.log(err);
+          });
+    };
+
+    const displayList = projectList.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
 
   // input 방향키 살리기
   const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
@@ -56,28 +69,33 @@ const Project: React.FC = () => {
           </div>
           <hr style={{width:'75%', color:'black'}}/>
           <div className={project_css.scrollbox}>
-            {projectList.map((project) => (
-              <div>
-                <div className={project_css.project} key={project}>
-                  <div className={project_css.project_detail} onClick={()=>dispatch(setModal('프로젝트상세정보'))}>
-                    <img src="assets/default_profile.png" alt=""/>
-                    <div className={project_css.project_data}>
-                      <b>{project}</b>
-                      <p style={{color:'gray'}}>#Python #Java #JavaScript #React </p>
+                {displayList.map((project, idx) => (
+                    <div key={idx}>
+                        <div className={project_css.project}>
+                            <div className={project_css.project_detail} onClick={() => dispatch(setModal('프로젝트상세정보'))}>
+                                <img src="assets/default_profile.png" alt="" />
+                                <div className={project_css.project_data}>
+                                    <b>{project["title (VARCHAR)"]}</b>
+                                    <p style={{ color: 'gray' }}>#{project["language(List)"].join(' #')}</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button className={project_css.btn} onClick={() => { dispatch(setModal('프로젝트참가신청')) }}>참가신청</button>
+                                <span>{project["nowNum (INT)"]}/{project["totalNum (INT)"]}</span>
+                            </div>
+                        </div>
+                        <hr />
                     </div>
-                  </div>
-                  <div>
-                    <button className={project_css.btn} onClick={()=>{dispatch(setModal('프로젝트참가신청'))}}>참가신청</button>
-                    <span>2/5</span>
-                  </div>
-                </div>
-                <hr />
-              </div>
-            ))} 
-          </div>
+                ))}
+            </div>
+            <div>
+                <button onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}>이전</button>
+                <span>{currentPage}</span>
+                <button onClick={() => setCurrentPage(prev => Math.min(Math.ceil(projectList.length / ITEMS_PER_PAGE), prev + 1))}>다음</button>
+            </div>
         </div>
       </div>
     );
-  };
+};
 
   export default Project;

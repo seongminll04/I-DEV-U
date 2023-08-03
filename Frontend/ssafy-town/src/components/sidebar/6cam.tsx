@@ -1,5 +1,4 @@
 import React,{ useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import cam_css from './6cam.module.css'
 import axios from 'axios';
@@ -7,9 +6,9 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setAllowMove } from '../../store/actions';
 
-type CamProps = {
-  name: string;
-  info: string;
+type ProjectDataType = {
+  name: string; // 프로젝트 이름
+  participants: string[]; // 참가자 이름 리스트
   sessionId: string; // 각 화상방의 세션 ID
 };
 
@@ -17,9 +16,9 @@ const Cam: React.FC = () => {
   const dispatch = useDispatch()
   const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
 
-  const navigate = useNavigate()
-  const [camList, setCamList] = useState<CamProps[]>([
-    {name:'',info:'',sessionId: ''}]);
+  const [camList, setCamList] = useState<ProjectDataType[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const ITEMS_PER_PAGE = 5;
 
           // input 방향키 살리기
   const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
@@ -34,37 +33,42 @@ const Cam: React.FC = () => {
       inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
     }
   }
-    // 유저의 화상방 데이터 가져오기
-  useEffect(()=>{
-    axios.get(BACKEND_SERVER_URL+'/video/list', {
-      data : '', // 여기 유저 아이디가 들어가야할듯? 아이디 어떻게 받아왔는지 이전꺼에 하셨으면 통일합시다. (api명세서 빠져있어서 대충추가함)
-    })
-    .then(res =>{
-      setCamList(res.data); // 백엔드에서 잘 보내줘야할듯 name / info / sessionId 잘맞춰서 받아야함. 백엔드와 소통 ㄱ
-      console.log(res)
-    })
-    .catch(err=>{console.log(err)
-      setCamList([])})
-  })
+  // 유저의 화상방 데이터 가져오기
+  useEffect(() => {
+    axios.get(BACKEND_SERVER_URL + '/video/list')
+      .then(res => {
+        setCamList(res.data.list);
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+        setCamList([]);
+      });
+  });
+
+  const displayList = camList.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   // 접속 반응 추가하기
   const EnterCam = (sessionId: string) => {
-    axios.post(BACKEND_SERVER_URL+'/video/enter', {
-      // 이거 백엔드에 들어가서 세션과 유저 아이디를 사용해서 openvidu에서 토큰을 요청하고
-      // 받은 토큰을 DB(project_participation)에 저장하고 토큰을 다시 전해줘야함
-      sessionId: sessionId
-    })
-    .then(res =>{
-      // const token = res.data.token;
-      const map = res.data.map;
 
-      // 토큰을 사용하여 OpenVidu에 접속하는 코드 (OpenVidu SDK를 사용)
-      // 예: openVidu.joinSession(token);
-
-      console.log(res)
-      navigate(map);  // 성공시 이동주소 L1 M1 S1 L2 M2 이런식으로 받아와서 navigate말고 바로 들어가는형식으로 ㅇㅇ
+    axios.get(`${BACKEND_SERVER_URL}/video/enter`, {
+        params: {
+            sessionId: sessionId,
+        }
     })
-    .catch(err=>{console.log(err)})
+    .then(res => {
+      const token = res.data.token;  // 백엔드에서 전달받은 토큰
+      
+      localStorage.setItem("OVToken", token);  // 토큰을 로컬 스토리지에 저장
+
+      console.log(res);
+      
+      // meeting 페이지로 이동
+      window.location.href = "https://i9b206.p.ssafy.io/meeting";
+    })
+    .catch(err => {
+      console.log(err);
+    });
   }
 
   
@@ -80,25 +84,33 @@ const Cam: React.FC = () => {
       <hr style={{width:'75%', color:'black'}}/>
 
       <div className={cam_css.scrollbox}>
-      {camList.map((cam, index) => (
-        <>
-        <div className={cam_css.profile} key={index}>
-        <img src="assets/default_profile.png" alt=""/>
-        <div className={cam_css.profiledata}>
-          <b>{cam.name}</b>
-          <p style={{color:'gray'}}>{cam.info}</p>
-        </div>
-        <div>
-        <button className={cam_css.profilebtn} onClick={() => EnterCam(cam.sessionId)}>접속</button>
-          <button className={cam_css.profilebtn}>삭제</button>
+        {displayList.map((cam, index) => (
+          <div key={index}>
+            <div className={cam_css.profile}>
+              <img src="assets/default_profile.png" alt="" />
+              <div className={cam_css.profiledata}>
+                <b>{cam.name}</b>
+                <p style={{ color: 'gray' }}>
+                  {cam.participants.slice(0, 3).join(', ')}
+                  {cam.participants.length > 3 && '...'}
+                </p>
+              </div>
+              <div>
+                <button className={cam_css.profilebtn} onClick={() => EnterCam(cam.sessionId)}>접속</button>
+                <button className={cam_css.profilebtn}>나가기</button>
+              </div>
+            </div>
+            <hr />
           </div>
-        </div>
-        <hr />
-        </>
-      ))}
-
-      <p>-더 업슴-</p>
+        ))}
       </div>
+      
+      <div>
+        <button onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}>이전</button>
+        <span>{currentPage}</span>
+        <button onClick={() => setCurrentPage(prev => Math.min(Math.ceil(camList.length / ITEMS_PER_PAGE), prev + 1))}>다음</button>
+      </div>
+
     </div>
   );
 };

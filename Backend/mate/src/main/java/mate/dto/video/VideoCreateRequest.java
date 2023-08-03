@@ -13,4 +13,5 @@ public class VideoCreateRequest {
 	private String title;
 	private String content;
 	private VideoType type;
+	private String sessionId;
 }

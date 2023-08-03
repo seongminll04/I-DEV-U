@@ -1,9 +1,18 @@
 package mate.service.video;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.Random;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -24,8 +33,8 @@ public class VideoService {
 	private final UserRepository userRepository;
 
 	// 화상채팅방 생성
-	public String createVideo(VideoCreateRequest videoCreateRequest) {
-		String videoCode = makeRoomCode();
+	public String createVideo(VideoCreateRequest videoCreateRequest) throws IOException {
+		String userToken = generateToken("", "");
 
 		Optional<User> user = userRepository.findByEmail(videoCreateRequest.getEmail());
 
@@ -35,9 +44,9 @@ public class VideoService {
 			.content(videoCreateRequest.getContent())
 			.type(videoCreateRequest.getType())
 			.createdAt(LocalDateTime.now())
-			.videoCode(videoCode).build());
+			.videoCode(videoCreateRequest.getSessionId()).build());
 
-		return videoCode;
+		return userToken;
 	}
 
 	// 이미 생성되어 있는 화상채팅방에 들어감
@@ -55,17 +64,40 @@ public class VideoService {
 	// 	List<VideoParticipation> list = videoParticipationRepository
 	// }
 
-	public String makeRoomCode() {
-		int leftLimit = 48; // numeral '0'
-		int rightLimit = 122; // letter 'z'
-		int targetStringLength = 10;
-		Random random = new Random();
+	public static String generateToken(String sessionId, String role) throws
+		IOException {
+		String openViduUrl = "https://i9b206.p.ssafy.io:8445";
+		String openViduSecret = "PWB206206";
+		role = "publisher"; // or "subscriber" depending on the user's role
 
-		String generatedString = random.ints(leftLimit, rightLimit + 1)
-			.filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-			.limit(targetStringLength)
-			.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-			.toString();
-		return generatedString;
+		String url = openViduUrl + "/api/sessions/" + sessionId + "/connection";
+
+		HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpPost httpPost = new HttpPost(url);
+		httpPost.setHeader("Authorization",
+			"Basic " + java.util.Base64.getEncoder().encodeToString(("OPENVIDUAPP:" + openViduSecret).getBytes()));
+		httpPost.setHeader("Content-Type", "application/json");
+
+		JSONObject requestBody = new JSONObject();
+		requestBody.put("role", role);
+
+		StringEntity params = new StringEntity(requestBody.toString());
+		httpPost.setEntity(params);
+
+		HttpResponse response = httpClient.execute(httpPost);
+
+		if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+			StringBuilder result = new StringBuilder();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				result.append(line);
+			}
+
+			JSONObject jsonResponse = new JSONObject(result.toString());
+			return jsonResponse.getString("token");
+		} else {
+			throw new IOException("Failed to generate user token");
+		}
 	}
 }

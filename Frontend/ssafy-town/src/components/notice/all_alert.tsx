@@ -25,7 +25,7 @@ const AllAlert: React.FC = () => {
   useEffect(()=>{
     axios({
       method:'get',
-      url:'https://i9b206.p.ssafy.io:9090/~~~~~/',
+      url:'http://i9b206.p.ssafy.io:9090/~~~~~/',
       headers : {
         Authorization: loginToken
       }

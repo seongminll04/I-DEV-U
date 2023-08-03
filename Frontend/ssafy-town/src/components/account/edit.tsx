@@ -48,7 +48,7 @@ const EditAccount: React.FC<Props> = ({user}) => {
     setWithdraw(true)
     // axios({
     //   method: 'put',
-    //   url: https://i9b206.p.ssafy.io:9090/notice/?~~~~~',
+    //   url: http://i9b206.p.ssafy.io:9090/notice/?~~~~~',
     // })
     // .then(() => {
     //   console.log("탈퇴처리 되었습니다.")
@@ -68,7 +68,7 @@ const EditAccount: React.FC<Props> = ({user}) => {
     else if (!formik.errors.nickname) {
       axios({
         method:'get',
-        url:`https://i9b206.p.ssafy.io:9090/user/signup/nickcheck/${nickname}`
+        url:`http://i9b206.p.ssafy.io:9090/user/signup/nickcheck/${nickname}`
       })
       .then(()=>{
         setchknickname('yes')

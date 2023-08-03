@@ -21,23 +21,23 @@ import { setAllowMove } from '../../store/actions';
     const [selectedRoom, setSelectedRoom] = useState<string>("");
     const [oldestMessageTimestamp, setOldestMessageTimestamp] = useState<number | null>(null);
 
-      // input 방향키 살리기
-  const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
-    const inputElement = event.currentTarget
-    const currentCursorPosition = inputElement.selectionStart || 0;
-    if (event.key === 'ArrowLeft' && currentCursorPosition!==0) {
-      inputElement.setSelectionRange(currentCursorPosition - 1, currentCursorPosition - 1);
-    } else if (event.key === 'ArrowRight') {
-      inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
-    } else if (event.key === ' '){
-      inputElement.value = inputElement.value.slice(0,currentCursorPosition)+ ' ' +inputElement.value.slice(currentCursorPosition,)
-      inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
+    // input 방향키 살리기
+    const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
+      const inputElement = event.currentTarget
+      const currentCursorPosition = inputElement.selectionStart || 0;
+      if (event.key === 'ArrowLeft' && currentCursorPosition!==0) {
+        inputElement.setSelectionRange(currentCursorPosition - 1, currentCursorPosition - 1);
+      } else if (event.key === 'ArrowRight') {
+        inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
+      } else if (event.key === ' '){
+        inputElement.value = inputElement.value.slice(0,currentCursorPosition)+ ' ' +inputElement.value.slice(currentCursorPosition,)
+        inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
+      }
     }
-  }
 
     useEffect(() => {
       // Socket.IO 연결
-      const newSocket = io("https://i9b206.p.ssafy.io:9090"); // 백엔드 서버의 URL로 변경해주세요.
+      const newSocket = io("http://i9b206.p.ssafy.io:9090"); // 백엔드 서버의 URL로 변경해주세요.
       setSocket(newSocket);
     
       newSocket.on("connect", () => {

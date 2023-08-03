@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class TagList {
-    private List<String> tag;
+public class SurveyResult {
+    private List<Survey> survey;
 }
 

@@ -8,7 +8,7 @@ import java.util.List;
 public class UserBasicSurvey {
 
     private Integer userIdx;
-    private Integer surveyIdx;
-    private List<TagList> tagList;
+    private List<SurveyResult> surveyResult;
 
 }
+

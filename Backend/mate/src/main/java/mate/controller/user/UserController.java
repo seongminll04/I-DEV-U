@@ -6,7 +6,7 @@ import mate.domain.user.User;
 import mate.domain.user.UserStatus;
 import mate.dto.user.UserSignUpDto;
 import mate.repository.user.UserRepository;
-import mate.service.UserService;
+import mate.service.user.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

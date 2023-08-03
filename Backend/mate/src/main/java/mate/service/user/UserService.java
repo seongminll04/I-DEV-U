@@ -1,18 +1,14 @@
-package mate.service;
+package mate.service.user;
 
 import lombok.RequiredArgsConstructor;
-import mate.domain.basic.BasicAnswer;
 import mate.domain.user.Role;
 import mate.domain.user.User;
 import mate.domain.user.UserStatus;
-import mate.dto.user.UserLoginDto;
 import mate.dto.user.UserSignUpDto;
 import mate.repository.user.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional

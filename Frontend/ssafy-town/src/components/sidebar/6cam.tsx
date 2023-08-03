@@ -64,7 +64,7 @@ const Cam: React.FC = () => {
       console.log(res);
       
       // meeting 페이지로 이동
-      window.location.href = "https://i9b206.p.ssafy.io/meeting";
+      window.location.href = "https://i9b206.p.ssafy.io/large_meeting";
     })
     .catch(err => {
       console.log(err);

@@ -1,7 +1,8 @@
 import Phaser from 'phaser';
 import store from '../../store/store'
 import { setModal } from '../../store/actions';
-import io, { Socket } from 'socket.io-client';
+import io from 'socket.io-client';
+import { Socket } from 'socket.io-client';
 
 type AssetKeys = 'A' | 'B' | 'C' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' 
                | 'T' | 'U' | 'V' | 'W' | 'X' | '1' | '2' | '3' | '4'
@@ -128,40 +129,40 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 export class Lsize1Scene extends Phaser.Scene {
 
-    private socket?: Socket;
+    private peerConnections: { [id: string]: RTCPeerConnection } = {}; 
+    private dataChannels: { [id: string]: RTCDataChannel } = {}; 
+    private prevPosition: { x: number, y: number } | null = null;
+    private remoteCharacters: { [id: string]: Phaser.GameObjects.Sprite } = {};
+    public socket!: Socket;
 
     private character?: Phaser.Physics.Arcade.Sprite;
-    private remoteCharacters: { [id: string]: Phaser.GameObjects.Sprite } = {};
     private balloon!: Phaser.GameObjects.Sprite;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
-    private prevPosition: { x: number, y: number } | null = null;
     private walls?: Phaser.Physics.Arcade.StaticGroup;
     private clockText!: Phaser.GameObjects.Text; //우하시계
     private clockText2!: Phaser.GameObjects.Text; //우상시계
     private clockText3!: Phaser.GameObjects.Text; //좌하시계
     private deadzoneActive: boolean = false;  // 데드존 상태 추적 변수
 
-
     private doorParts: Phaser.GameObjects.Image[] = [];
     private doorOpenTween?: Phaser.Tweens.Tween;
     private doorOpened: boolean = false; // 현재 문의 상태
-
     private chairPositions: {x: number, y: number}[] = [];
     private sittingOnChair: boolean = false; // 현재 앉아있니?
 
-      private d1?: Phaser.Physics.Arcade.Sprite;
-      private d2?: Phaser.Physics.Arcade.Sprite;
-      private d3?: Phaser.Physics.Arcade.Sprite;
-      private d4?: Phaser.Physics.Arcade.Sprite;
-      private d5?: Phaser.Physics.Arcade.Sprite;
-      private d6?: Phaser.Physics.Arcade.Sprite;
-      private d7?: Phaser.Physics.Arcade.Sprite;
-      private d8?: Phaser.Physics.Arcade.Sprite;
-      private d9?: Phaser.Physics.Arcade.Sprite;
-      private d10?: Phaser.Physics.Arcade.Sprite;
-      private d11?: Phaser.Physics.Arcade.Sprite;
-      private water?: Phaser.Physics.Arcade.Sprite;
-      private copy?: Phaser.Physics.Arcade.Sprite;
+    private d1?: Phaser.Physics.Arcade.Sprite;
+    private d2?: Phaser.Physics.Arcade.Sprite;
+    private d3?: Phaser.Physics.Arcade.Sprite;
+    private d4?: Phaser.Physics.Arcade.Sprite;
+    private d5?: Phaser.Physics.Arcade.Sprite;
+    private d6?: Phaser.Physics.Arcade.Sprite;
+    private d7?: Phaser.Physics.Arcade.Sprite;
+    private d8?: Phaser.Physics.Arcade.Sprite;
+    private d9?: Phaser.Physics.Arcade.Sprite;
+    private d10?: Phaser.Physics.Arcade.Sprite;
+    private d11?: Phaser.Physics.Arcade.Sprite;
+    private water?: Phaser.Physics.Arcade.Sprite;
+    private copy?: Phaser.Physics.Arcade.Sprite;
   
     constructor() {
       super({ key: 'Lsize1Scene' });
@@ -171,27 +172,24 @@ export class Lsize1Scene extends Phaser.Scene {
         for (let char in ASSETS) {
             this.load.image(char, (ASSETS as Record<string, string>)[char]);
         }
-
         this.load.image('character', 'assets/admin_character.png');
         this.load.image('character2', 'assets/겨울나무6.png');
         this.load.image('balloon', 'assets/ekey.png');
         
-
         for (let i = 1; i <= 72; i++) {
             this.load.image('문' + i, 'assets/문' + i + '.png');
         }
     }
 
+
+
+
+
+
+
+
     create() {
       
-
-      this.socket = io('http://your_backend_url');
-
-      this.socket.on('playerData', (data: any) => {
-        console.log("111")
-        this.updateRemoteCharacter(data);
-      });
-
       const rows = pattern.trim().split('\n');
       const tileSize = 32; 
 
@@ -223,6 +221,8 @@ export class Lsize1Scene extends Phaser.Scene {
       this.character?.setDepth(2); // 캐릭터부터 생성했으니 depth를 줘야 캐릭터가 화면에 보임
       // this.physics.world.createDebugGraphic();  // 디버그 그래픽
   
+
+
       
       rows.forEach((row, rowIndex) => {
         for (let colIndex = 0; colIndex < row.length; colIndex ++) {
@@ -429,10 +429,186 @@ export class Lsize1Scene extends Phaser.Scene {
         this.sitdown(nearbyObject);
     }
   });
-      
-      
       this.loadDoorParts();
+      
+      
+
+      this.initializeWebRTC();
   }
+
+
+  /////////////////////////// WEBRTC
+
+  initializeSocket() {
+    this.socket = io(process.env.REACT_APP_FRONT_SERVER+'');
+    this.socket.on('offer', this.handleOffer.bind(this));
+    this.socket.on('answer', this.handleAnswer.bind(this));
+    this.socket.on('ice-candidate', this.handleIceCandidate.bind(this));
+
+    // 페이지를 벗어나거나 새로고침할 때 disconnect-user 이벤트 전송
+    window.addEventListener("beforeunload", () => {
+      this.socket.emit('disconnect-user', { userId: localStorage.getItem('OVSession') });
+  });
+  }
+
+  initializeWebRTC() {
+    this.initializeSocket();
+    this.joinSession();
+  }
+
+  joinSession() {
+    const sessionName = localStorage.getItem('OpenViduSessionName');
+    this.socket.emit('join-session', { sessionId: sessionName, userId: localStorage.getItem('OVSession') });
+  }
+  
+  handleDataChannelMessage(userId: string, event: any) {
+    const receivedData = JSON.parse(event.data);
+    if (receivedData.id && receivedData.position) {
+      let remoteChar = this.remoteCharacters[receivedData.id];
+
+      if (!remoteChar) {
+          remoteChar = this.physics.add.sprite(receivedData.position.x, receivedData.position.y, receivedData.type + '');
+          this.remoteCharacters[receivedData.id] = remoteChar;
+      }
+      remoteChar.setPosition(receivedData.position.x, receivedData.position.y);
+      if (receivedData.state === 'B') {
+          remoteChar.setAlpha(0.4);
+      }
+      if (receivedData.chat) {
+          // 메세지 처리하는 출근하고나서 만들어보자 ㅇㅇ...
+      }
+    }
+  }
+
+  async handleNewPeer(data: any) {
+    const otherUserId = data.userId;
+
+    const pc = this.createPeerConnection(otherUserId);
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+
+    this.socket.emit('offer', { offer, to: otherUserId });
+  }
+
+  createPeerConnection(userId: string): RTCPeerConnection {
+    const configuration: RTCConfiguration = {
+        iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+        ],
+    };
+
+    const pc = new RTCPeerConnection(configuration);
+    this.peerConnections[userId] = pc;
+      pc.onicecandidate = event => {
+        if (event.candidate) {
+            this.socket.emit('ice-candidate', { candidate: event.candidate, to: userId });
+        }
+      };
+
+    const dataChannel = pc.createDataChannel('dataChannel');
+    this.dataChannels[userId] = dataChannel;
+    dataChannel.onopen = this.handleDataChannelOpen.bind(this, userId);
+    dataChannel.onmessage = this.handleDataChannelMessage.bind(this, userId);
+
+    pc.onconnectionstatechange = (event) => {
+      if (pc.connectionState === "failed" || pc.connectionState === "closed" || pc.connectionState === "disconnected") {
+          this.cleanupPeerConnection(userId);
+      }
+    };
+    return pc;
+  }
+
+  cleanupPeerConnection(userId: string) {
+    // Data Channel 제거
+    const dataChannel = this.dataChannels[userId];
+    if (dataChannel) {
+      dataChannel.close();
+      delete this.dataChannels[userId];
+    }
+
+    // Peer Connection 제거
+    const pc = this.peerConnections[userId];
+    if (pc) {
+      pc.close();
+      delete this.peerConnections[userId];
+    }
+
+    // 유저의 캐릭터 제거
+    const remoteChar = this.remoteCharacters[userId];
+    if (remoteChar) {
+      remoteChar.destroy();
+      delete this.remoteCharacters[userId];
+    }
+  }
+
+
+  async handleOffer(data: any) {
+    const otherUserId = data.from;
+    if (!this.peerConnections[otherUserId]) {
+      this.createPeerConnection(otherUserId);
+    }
+
+    const pc = this.peerConnections[otherUserId];
+    await pc.setRemoteDescription(data.offer);
+    const answer = await pc.createAnswer();
+    await pc.setLocalDescription(answer);
+
+    this.socket.emit('answer', { answer, to: otherUserId });
+  }
+
+  async handleAnswer(data: any) {
+    const otherUserId = data.from;
+    const pc = this.peerConnections[otherUserId];
+    if (pc) {
+      await pc.setRemoteDescription(data.answer);
+    }
+  }
+
+  handleIceCandidate(data: any) {
+    const otherUserId = data.from;
+    const iceCandidate = new RTCIceCandidate(data.candidate);
+    const pc = this.peerConnections[otherUserId];
+    if (pc) {
+      pc.addIceCandidate(iceCandidate);
+    }
+  }
+
+  handleDataChannelOpen(userId: string, event: any) {
+    console.log(`연결완료 with user: ${userId}`);
+  }
+
+  // 메세지 처리과정
+  sendChatMessage(message: string) {
+    this.sendCharacterData(message);
+  }
+
+  // 캐릭터의 위치나 상태가 변경될 때 호출
+  sendCharacterData(message?: string) {
+    const currentUserId = localStorage.getItem('OVToken');
+
+    const dataToSend = {
+      id: currentUserId,
+      position: { x: this.character?.x || 0, y: this.character?.y || 0 },
+      state: this.sittingOnChair, //의자에 앉아 있으면 true 아니면 false
+      type: localStorage.getItem('SelectCharacter'),
+      chat: message,
+    };
+
+    // 모든 연결된 유저에게 데이터 전송
+    for (const userId in this.dataChannels) {
+      if (userId !== currentUserId) { // 현재 유저 제외
+        const targetDataChannel = this.dataChannels[userId];
+        if (targetDataChannel && targetDataChannel.readyState === 'open') {
+          targetDataChannel.send(JSON.stringify(dataToSend));
+        }
+      }
+    }
+  }
+
+
+/////////////////////////////
+
+
   
   
     update() {
@@ -440,31 +616,8 @@ export class Lsize1Scene extends Phaser.Scene {
       const currentPlayerPosition = { x: this.character!.x, y: this.character!.y };
 
       if (!this.prevPosition || (this.prevPosition.x !== currentPlayerPosition.x || this.prevPosition.y !== currentPlayerPosition.y)) {
-        console.log("@@@@")
-        const playerData = {
-            id: {},
-            position: currentPlayerPosition,
-            state: 'A', // 혹은 'B'
-            type: 1, // 1~10
-            // chat: ...
-        };
-        this.socket?.emit('playerData', playerData);
-
-        // 현재 위치를 이전 위치로 저장
-        this.prevPosition = currentPlayerPosition;
-    }
-
-      // if(this.cursors?.left?.isDown || this.cursors?.right?.isDown || this.cursors?.up?.isDown || this.cursors?.down?.isDown){
-      //   console.log("@@@")
-      //     const playerData = {
-      //       id:{},
-      //       position: { x: this.character!.x, y: this.character!.y },
-      //       state: 'A', // 혹은 'B'
-      //       type: 1, // 1~10
-      //       // chat: 모르겠다아직
-      //     };
-      //     this.socket?.emit('playerData', playerData);
-      // }
+        this.sendCharacterData();
+      }
 
       if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnChair) {
         if (this.cursors.left?.isDown) {
@@ -505,6 +658,8 @@ export class Lsize1Scene extends Phaser.Scene {
       this.NearbyObjects()
     }
 
+
+
     private NearbyObjects(): 'door' | 'board' | { x: number, y: number } | null {
       const doorPosition = { x: 1024, y: 768 }; // 문
       const boardPosition = { x: 1236, y: 835 }; // 게시판
@@ -539,7 +694,7 @@ export class Lsize1Scene extends Phaser.Scene {
       }
       this.balloon.setVisible(false);
       return null; // 주변에 아무 오브젝트도 없다면 null
-  }
+    }
     
 
     loadDoorParts() {
@@ -652,12 +807,12 @@ export class Lsize1Scene extends Phaser.Scene {
         this.doorOpened = false; // 문이 닫혔다는 상태로 업데이트
     }
 
-      addDoorCollisions() {
-        // 모든 문 부분의 충돌을 활성화
-        this.doorParts.forEach((part, index) => {
-            (part.body as Phaser.Physics.Arcade.Body).enable = true;
-        });
-      }
+    addDoorCollisions() {
+      // 모든 문 부분의 충돌을 활성화
+      this.doorParts.forEach((part, index) => {
+          (part.body as Phaser.Physics.Arcade.Body).enable = true;
+      });
+    }
 
     updateDoorSet(set: number) {
         this.doorParts.forEach((part, index) => {
@@ -684,22 +839,5 @@ export class Lsize1Scene extends Phaser.Scene {
           this.character!.setAlpha(0.4);
           this.sittingOnChair = true;
       }
-  }
-
-  updateRemoteCharacter(data: any){
-    // 원격 캐릭터의 ID나 식별자 // 각자 들어가나? let으로 하면? 30명이면 30!만큼이 되어버리나? 테스트 해보고싶네
-    let remoteChar = this.remoteCharacters[data.id];
-
-    // 원격 캐릭터가 게임에 없으면 만들고 위치세팅
-    if (!remoteChar) {
-        remoteChar = this.physics.add.sprite(data.position.x, data.position.y, data.type+'');
-        this.remoteCharacters[data.id] = remoteChar;
     }
-
-    // 원격 캐릭터의 위치, 투명상태
-    remoteChar.setPosition(data.position.x, data.position.y);
-    if(data.state === 'B') {
-      remoteChar.setAlpha(0.4);
-    }
-  }
 }

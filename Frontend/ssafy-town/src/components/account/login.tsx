@@ -35,6 +35,7 @@ const Login: React.FC = () => {
       
       // 로그인 시, 로컬 스토리지에 토큰 저장
       localStorage.setItem('usertoken',res.headers.authorization);
+      localStorage.setItem('saveid', res.data.userIdx);
 
       // if (res.data.user.status === "D") {
       //   throw new ValidationError("탈퇴처리된 회원입니다!");

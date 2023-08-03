@@ -43,14 +43,14 @@ const Cam: React.FC = () => {
       },
     })
       .then(res => {
-        setCamList(res.data.list);
+        setCamList(res.data.list || []);
         console.log(res);
       })
       .catch(err => {
         console.log(err);
         setCamList([]);
       });
-  });
+  },);
 
   // 접속 반응 추가하기
   const EnterCam = (sessionId: string) => {

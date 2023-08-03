@@ -50,7 +50,7 @@ const Cam: React.FC = () => {
         console.log(err);
         setCamList([]);
       });
-  },);
+  },[loginToken]);
 
   // 접속 반응 추가하기
   const EnterCam = (sessionId: string) => {

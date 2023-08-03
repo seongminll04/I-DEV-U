@@ -7,4 +7,5 @@ import mate.domain.project.Project;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Integer> {
+    Project findByIdx(int projectIdx);
 }

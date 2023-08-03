@@ -24,9 +24,11 @@ public class Project {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idx;
 
-	@ManyToOne
-	@JoinColumn(name = "manager_idx")
-	private User manager;
+//	@ManyToOne
+//	@JoinColumn(name = "manager_idx")
+//	private User manager;
+	@Column(name = "manager_idx")
+	private int userIdx;
 
 	@Column(name = "title")
 	private String title;

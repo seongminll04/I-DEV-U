@@ -1,5 +1,6 @@
 package mate.domain.basic;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Getter
 @RequiredArgsConstructor
 @Builder
+@AllArgsConstructor
 public class BasicAnswer {
 
     @Id @GeneratedValue

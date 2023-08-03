@@ -26,8 +26,6 @@ public class ProjectService {
 
 		String session = makeRoomCode();
 
-		Project.builder().manager()
-
 	}
 
 	public String makeRoomCode() {

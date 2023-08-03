@@ -43,7 +43,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
                     userRepository.saveAndFlush(user);
                 });
 //        redisService.setRedis(refreshToken, email);
-        String responseBody = "{\"message\": \"로그인에 성공하였습니다.\", \"userIdx\": \"" + loginUser.get().getIdx() + "\"}";
+        String responseBody = "{\"userIdx\": \"" + loginUser.get().getIdx() + "\"}";
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(responseBody);

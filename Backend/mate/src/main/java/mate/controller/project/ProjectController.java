@@ -1,6 +1,6 @@
-package mate.controller;
+package mate.controller.project;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import mate.controller.Result;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import mate.domain.project.Project;
-import mate.service.ProjectService;
+import mate.service.project.ProjectService;
 
 @RestController
 @RequestMapping("/project")
@@ -19,18 +19,13 @@ import mate.service.ProjectService;
 @RequiredArgsConstructor
 public class ProjectController {
 
-	@Autowired
-	ProjectService projectService;
+	private final ProjectService projectService;
 
 	@PostMapping("/register")
-	public ResponseEntity<?> registerProject(@RequestBody Project project) {
+	public Result registerProject(@RequestBody Project project) {
 
-		try {
-			projectService.registerProject(project);
+		System.out.println(project);
 
-			return new ResponseEntity<>("프로젝트구인 작성 성공", HttpStatus.valueOf(200));
-		} catch (Exception e) {
-			return new ResponseEntity<>("프로젝트구인 작성 실패", HttpStatus.valueOf(400));
-		}
+		return Result.builder().build();
 	}
 }

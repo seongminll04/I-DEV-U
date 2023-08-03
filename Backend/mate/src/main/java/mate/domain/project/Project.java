@@ -17,7 +17,6 @@ import lombok.Getter;
 import mate.domain.user.User;
 
 @Entity
-@Table(name = "project")
 @Getter
 public class Project {
 	@Id
@@ -28,23 +27,22 @@ public class Project {
 	@JoinColumn(name = "manager_idx")
 	private User manager;
 
-	@Column(name = "title")
 	private String title;
 
-	@Column(name = "content")
 	private String content;
 
-	@Column(name = "total_num")
 	private Integer totalNum;
 
-	@Column(name = "now_num")
 	private Integer nowNum;
 
-	@Column(name = "status")
 	private String status;
 
-	@Column(name = "type")
-	private String type;
+	private Integer front;
+	private Integer maxFront;
+	private Integer back;
+	private Integer maxBack;
+	private String text;
+
 
 	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
 	private List<ProjectParticipation> projectParticipation;

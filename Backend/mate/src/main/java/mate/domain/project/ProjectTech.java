@@ -12,7 +12,6 @@ import javax.persistence.Table;
 import lombok.Getter;
 
 @Entity
-@Table(name = "project_tech")
 @Getter
 public class ProjectTech {
 	@Id
@@ -23,8 +22,7 @@ public class ProjectTech {
 	@JoinColumn(name = "project_idx")
 	private Project project;
 
-	@Column(name = "tech")
-	private String tech;
+	private String language;
 
 	// Getters and setters, constructors, and other methods
 	// ...

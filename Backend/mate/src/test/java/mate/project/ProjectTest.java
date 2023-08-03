@@ -14,19 +14,5 @@ import mate.repository.project.ProjectParticipationRepository;
 @Transactional
 public class ProjectTest {
 
-	@Autowired
-	ProjectRepository projectRepository;
 
-	@Autowired
-	ProjectParticipationRepository projectParticipationRepository;
-
-	@Test
-	void 프로젝트_쿼리테스트() {
-		log.info("프로젝트 관련 데이터 -> {}", projectRepository.findAll());
-	}
-
-	@Test
-	void 프로젝트_참여자_쿼리테스트() {
-		log.info("프로젝트 참여자 -> {}", projectParticipationRepository.findAll());
-	}
 }

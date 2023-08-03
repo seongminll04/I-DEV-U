@@ -3,8 +3,6 @@ plugins {
     id 'org.springframework.boot' version '2.7.13'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 //    id 'checkstyle'
-    //querydsl 추가
-    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'ssafy'
@@ -55,27 +53,10 @@ dependencies {
 
     // openvidu
     implementation 'io.openvidu:openvidu-java-client:2.22.0'
-    // queryDSL 설정
-    implementation "com.querydsl:querydsl-jpa"
 }
 
 // Querydsl 설정부
-def querydslDir = "$buildDir/generated/querydsl"
 
-querydsl {
-    jpa = true
-    querydslSourcesDir = querydslDir
-}
-sourceSets {
-    main.java.srcDir querydslDir
-}
-configurations {
-    querydsl.extendsFrom compileClasspath
-}
-compileQuerydsl {
-    options.annotationProcessorPath = configurations.querydsl
-}
-//querydsl 추가 끝
 
 
 //tasks.named('test') {

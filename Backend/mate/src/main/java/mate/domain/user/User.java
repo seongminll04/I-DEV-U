@@ -1,6 +1,7 @@
 package mate.domain.user;
 
 import lombok.*;
+import mate.domain.basic.BasicAnswer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -28,6 +29,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role; // ADMIN , USER
     private String refreshToken;
+
 
 
     // 생성자, 기타 메서드 생략

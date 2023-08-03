@@ -8,10 +8,10 @@ import javax.persistence.Id;
 
 @Entity
 @Getter
-public class basicSurvey {
+public class BasicTitle {
 
     @Id @GeneratedValue
-    private int idx;
-
+    private Integer idx;
+    private Integer answerIdx;
     private String title;
 }

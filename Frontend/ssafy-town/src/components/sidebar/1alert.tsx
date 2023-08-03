@@ -26,7 +26,7 @@ const Alert: React.FC = () => {
     // 모달창이 열렸다면 공지사항 데이터 불러오기
     axios({
       method:'get',
-      url:'http://i9b206.p.ssafy.io:9090/notice/list/top',
+      url:'https://i9b206.p.ssafy.io:9090/notice/list/top',
       headers :{ 
         Authorization: loginToken
       }

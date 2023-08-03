@@ -18,7 +18,7 @@ const DetailAlert: React.FC<Props> = ({backpage}) => {
   useEffect(()=>{
     axios({
       method:'get',
-      url:'http://i9b206.p.ssafy.io:9090/user/login',
+      url:'https://i9b206.p.ssafy.io:9090/user/login',
       headers : {
         Authorization: loginToken
       }

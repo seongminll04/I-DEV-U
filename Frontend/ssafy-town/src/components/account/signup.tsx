@@ -49,7 +49,7 @@ const SignupForm = () => {
     else if (!formik.errors.email) {
       axios({
         method:'get',
-        url:`http://i9b206.p.ssafy.io:9090/user/signUp/emailCheck/${email}`
+        url:`https://i9b206.p.ssafy.io:9090/user/signUp/emailCheck/${email}`
       })
       .then(()=>{
         setchkemail('yes');
@@ -74,7 +74,7 @@ const SignupForm = () => {
     else if (!formik.errors.nickname) {
       axios({
         method:'get',
-        url:`http://i9b206.p.ssafy.io:9090/user/signUp/nicknameCheck/${nickname}`
+        url:`https://i9b206.p.ssafy.io:9090/user/signUp/nicknameCheck/${nickname}`
       })
       .then(()=>{
         setchknickname('yes')
@@ -116,7 +116,7 @@ const SignupForm = () => {
       else {
         axios({
           method : 'post',
-          url : 'http://i9b206.p.ssafy.io:9090/user/signUp',
+          url : 'https://i9b206.p.ssafy.io:9090/user/signUp',
           data : values,
         })
         .then(res => {

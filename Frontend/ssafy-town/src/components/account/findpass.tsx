@@ -28,7 +28,7 @@ const FindPassword: React.FC = () => {
       // Add 회원정보 찾기 logic here
       axios({
         method:'post',
-        url:'http://i9b206.p.ssafy.io:9090/user/~~~~',
+        url:'https://i9b206.p.ssafy.io:9090/user/~~~~',
         data:values
       })
       .then(res => {

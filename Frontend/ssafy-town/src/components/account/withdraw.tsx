@@ -34,7 +34,7 @@ const Withdraw: React.FC<Props> = ({ onBack, onClose }) => {
 
       axios({
         method: 'PUT',
-        url: 'http://i9b206.p.ssafy.io:9090/user/delete',
+        url: 'https://i9b206.p.ssafy.io:9090/user/delete',
       })
         .then((res) => {
           console.log('=== 유저 삭제 ===');

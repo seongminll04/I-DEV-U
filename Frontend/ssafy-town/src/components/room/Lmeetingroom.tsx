@@ -9,11 +9,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
 import { setAllowMove, setModal, setSidebar, setLoginToken } from '../../store/actions';
 
-import { Tsize1Scene } from '../map/Tsize1Scene';
+import { Lsize1Scene } from '../map/Lsize1Scene';
 import ModalOpen from '../system/modalopen';
 import Cam from '../openvidu/cam/cam'
 
-const MeetingRoom: React.FC = () => {
+const LMeetingRoom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
   const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
@@ -56,7 +56,7 @@ const MeetingRoom: React.FC = () => {
         default: 'arcade',
       },
       pixelArt: true, //  픽셀 아트 스타일의 게임에서 그래픽이 더 깔끔하고 정확하게 표시되도록 도와줍니다. 라네요
-      scene: Tsize1Scene //맵들 여기 다넣으면됨
+      scene: Lsize1Scene //맵들 여기 다넣으면됨
     };
 
     const newGame = new Phaser.Game(config);
@@ -103,4 +103,4 @@ const MeetingRoom: React.FC = () => {
   );
 }
 
-export default MeetingRoom;
+export default LMeetingRoom;

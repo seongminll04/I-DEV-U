@@ -9,6 +9,7 @@ import KakaoCallback from './components/account/kakaologin';
 import MyRoom from './components/room/myroom';
 import SogaeRoom from './components/room/sogaeroom';
 import MeetingRoom from './components/room/meetingroom';
+import LMeetingRoom from './components/room/Lmeetingroom';
 
 import app_css from './App.module.css';
 
@@ -26,6 +27,7 @@ function App() {
           {/* 맵 이동 관련 */}
           <Route path="/home" element={<MyRoom />} />
           <Route path="/meeting" element={<MeetingRoom />} />
+          <Route path="/large_meeting" element={<LMeetingRoom />} />
           <Route path="/love" element={<SogaeRoom />} />
         </Routes>
       </div>

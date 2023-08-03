@@ -25,7 +25,7 @@ const Login: React.FC = () => {
   const handleLogin = async () => {
     axios({
       method:'post',
-      url:'http://i9b206.p.ssafy.io:9090/user/login',
+      url:'https://i9b206.p.ssafy.io:9090/user/login',
       data:{'email': userId, 'password': userPassword,}
     })
     .then(res => {

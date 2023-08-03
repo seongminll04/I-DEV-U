@@ -34,7 +34,7 @@ const Sogae: React.FC = () => {
     // 소개팅 설문 여부 체크
     axios({
       method:'get',
-      url:'http://i9b206.p.ssafy.io:9090/~~~~~~~~~/',
+      url:'https://i9b206.p.ssafy.io:9090/~~~~~~~~~/',
     })
     .then(res => {
       setServey(res.data)
@@ -44,7 +44,7 @@ const Sogae: React.FC = () => {
     // 필터에 해당하는 유저 리스트
     axios({
       method:'get',
-      url:'http://i9b206.p.ssafy.io:9090/~~~~~~~~~/',
+      url:'https://i9b206.p.ssafy.io:9090/~~~~~~~~~/',
       // data: {}
     })
     .then(res => {

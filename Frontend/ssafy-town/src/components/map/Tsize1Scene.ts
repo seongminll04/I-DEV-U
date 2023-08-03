@@ -28,7 +28,7 @@ B3C3C3C3C3C3C3C3C3C3C3C3C3C3B3
 B3B3B3B3B3B3B3B3B3B3B3B3B3B3B3
 `;
 
-export class Ssize1Scene extends Phaser.Scene {
+export class Tsize1Scene extends Phaser.Scene {
 
   private character?: Phaser.Physics.Arcade.Sprite;
   private balloon!: Phaser.GameObjects.Sprite;

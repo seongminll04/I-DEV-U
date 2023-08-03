@@ -20,8 +20,7 @@ const Cam: React.FC = () => {
   // const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
   const BACKEND_SERVER_URL = 'https://i9b206.p.ssafy.io';
   const [camList, setCamList] = useState<ProjectDataType[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const ITEMS_PER_PAGE = 5;
+
 
           // input 방향키 살리기
   const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
@@ -52,8 +51,6 @@ const Cam: React.FC = () => {
         setCamList([]);
       });
   });
-
-  const displayList = camList.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   // 접속 반응 추가하기
   const EnterCam = (sessionId: string) => {
@@ -94,7 +91,7 @@ const Cam: React.FC = () => {
       <hr style={{width:'75%', color:'black'}}/>
 
       <div className={cam_css.scrollbox}>
-        {displayList.map((cam, index) => (
+        {camList.map((cam, index) => (
           <div key={index}>
             <div className={cam_css.profile}>
               <img src="assets/default_profile.png" alt="" />
@@ -114,13 +111,6 @@ const Cam: React.FC = () => {
           </div>
         ))}
       </div>
-      
-      <div>
-        <button onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}>이전</button>
-        <span>{currentPage}</span>
-        <button onClick={() => setCurrentPage(prev => Math.min(Math.ceil(camList.length / ITEMS_PER_PAGE), prev + 1))}>다음</button>
-      </div>
-
     </div>
   );
 };

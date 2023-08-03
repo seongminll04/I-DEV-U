@@ -20,8 +20,7 @@ type ProjectDataType = {
 const Project: React.FC = () => {
     const dispatch = useDispatch();
     const [projectList, setProjectList] = useState<ProjectDataType[]>([]);
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const ITEMS_PER_PAGE = 5;
+
 
     const loadproject = () => {
       axios.get(BACKEND_SERVER_URL + '/project/register')
@@ -36,7 +35,7 @@ const Project: React.FC = () => {
           });
     };
 
-    const displayList = projectList.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
 
 
   // input 방향키 살리기
@@ -69,7 +68,7 @@ const Project: React.FC = () => {
           </div>
           <hr style={{width:'75%', color:'black'}}/>
           <div className={project_css.scrollbox}>
-                {displayList.map((project, idx) => (
+                {projectList.map((project, idx) => (
                     <div key={idx}>
                         <div className={project_css.project}>
                             <div className={project_css.project_detail} onClick={() => dispatch(setModal('프로젝트상세정보'))}>
@@ -88,11 +87,7 @@ const Project: React.FC = () => {
                     </div>
                 ))}
             </div>
-            <div>
-                <button onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}>이전</button>
-                <span>{currentPage}</span>
-                <button onClick={() => setCurrentPage(prev => Math.min(Math.ceil(projectList.length / ITEMS_PER_PAGE), prev + 1))}>다음</button>
-            </div>
+
         </div>
       </div>
     );

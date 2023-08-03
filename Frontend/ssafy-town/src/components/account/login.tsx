@@ -29,8 +29,8 @@ const Login: React.FC = () => {
       data:{'email': userId, 'password': userPassword,}
     })
     .then(res => {
-      // 로그인 시, 로컬 스토리지에 토큰 저장
       console.log(res)
+      // 로그인 시, 로컬 스토리지에 토큰 저장
       localStorage.setItem('usertoken',res.headers.authorization);
       localStorage.setItem('saveid', res.data.userIdx);
       

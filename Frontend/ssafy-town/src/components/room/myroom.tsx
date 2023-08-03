@@ -27,11 +27,12 @@ const MyRoom: React.FC = () => {
     if (userToken) {
       dispatch(setLoginToken(userToken))
       const userIdx = localStorage.getItem('saveid')
+      console.log(userIdx, 'Bearer ' + userToken)
       axios({
         method:'get',
-        url:`https://i9b206.p.ssafy.io:9090/user/basicSurvey/${userIdx}`,
+        url:`https://i9b206.p.ssafy.io:9090/basicSurvey/${userIdx}`,
         headers : {
-          Authorization:userToken
+          Authorization: 'Bearer ' + userToken
         },
       })
       .then(res => {

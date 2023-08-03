@@ -98,10 +98,6 @@ const Mypage: React.FC = () => {
     console.log("이제 소개팅 안할래!");
   }
 
-  // 초기 설문 수정
-  function editMyInitSurvey(){
-    console.log("초기 설문 수정");
-  }
 
   return (
     <div>
@@ -134,7 +130,7 @@ const Mypage: React.FC = () => {
             </div>
           </div>
           <button className={mypage_css.button}onClick={unregistMeeting}>소개팅 등록 취소</button>
-          <button className={mypage_css.button}onClick={editMyInitSurvey}>최초 설문 수정</button>
+          <button className={mypage_css.button}onClick={()=>dispatch(setModal('Re최초설문'))}>최초 설문 수정</button>
         </div>
         {isModalOpen==='회원정보수정' ? <EditAcount user={user} /> : null}
       </div>

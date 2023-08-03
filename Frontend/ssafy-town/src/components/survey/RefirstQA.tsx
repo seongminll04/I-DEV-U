@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 import axios from 'axios';
 
-const QAModal: React.FC = () => {
+const ReQAModal: React.FC = () => {
   const dispatch = useDispatch()
   const [workingYears, setWorkingYears] = useState<string>("");
   const [currentJob, setCurrentJob] = useState<string>("");
@@ -48,17 +48,12 @@ const QAModal: React.FC = () => {
     // onConfirm(surveyResults);
     console.log(surveyResults)
     const userToken = localStorage.getItem('usertoken')
-    const userIdx = localStorage.getItem('saveid')
     axios({
-      method:'post',
-      url:`https://i9b206.p.ssafy.io:9090/basicSurvey/create`,
-      data:{
-        'userIdx':userIdx,
-        'surveyResult':surveyResults
-      },
-      headers : {
-        Authorization:userToken
-      },
+      method:'put',
+      url:`https://i9b206.p.ssafy.io:9090/basicSurvey/modify`,
+        headers : {
+          Authorization:userToken
+        },
     })
     .then(() =>{
       dispatch(setModal(null))
@@ -134,6 +129,7 @@ const QAModal: React.FC = () => {
   return (
     <div className={qa_css.modal_overlay}>
   <div className={qa_css.qa_modal}>
+    <p className={qa_css.closebtn} onClick={() => { dispatch(setModal(null))}}>닫기</p>
     <h1>I DEV U</h1>
     <h2>📝 신규 유저 설문조사</h2>
     <h3>* 저희 서비스를 이용하기 위해 첫 로그인시 설문조사가 필요합니다. *</h3>
@@ -143,4 +139,4 @@ const QAModal: React.FC = () => {
   );
 };
 
-export default QAModal;
+export default ReQAModal;

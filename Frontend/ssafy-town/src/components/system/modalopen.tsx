@@ -6,6 +6,7 @@ import AllNotice from '../notice/all_notice';
 import AllAlert from '../notice/all_alert';
 import Logout from '../account/logout'
 import FirstQA from '../survey/firstQA';
+import ReFirstQA from '../survey/RefirstQA';
 import QnA from '../board/QnA';
 
 import ProjectFilter from '../filter/projectFilter';
@@ -26,6 +27,7 @@ const ModalOpen: React.FC = () => {
   return (
     <>
       { isModalOpen === '최초설문' ? <FirstQA />
+      : isModalOpen === 'Re최초설문' ? <ReFirstQA />
       : isModalOpen === '공지알림' ? <Alert />
       : isModalOpen === '공지전체' ? <AllNotice />
       : isModalOpen === '알림전체' ? <AllAlert />

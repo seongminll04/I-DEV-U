@@ -5,16 +5,19 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import mate.service.UserService;
+
 @RestController
 @RequestMapping("/video")
 @CrossOrigin(origins = {})
 public class VideoController {
 
-    @Value("${OPENVIDU.URL}")
-    private String OPENVIDU_URL;
+	@Value("${OPENVIDU.URL}")
+	private String OPENVIDU_URL;
 
-    @Value("${OPENVIDU.PASSWORD}")
-    private String OPENVIDU_PASSWORD;
+	@Value("${OPENVIDU.PASSWORD}")
+	private String OPENVIDU_PASSWORD;
 
+	private UserService userService;
 
 }

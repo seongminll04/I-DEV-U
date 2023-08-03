@@ -14,12 +14,12 @@ const CreateProject: React.FC = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [total_num, setTotalNum] = useState('2');
-  const [frontendNum, setFrontendNum] = useState('0');
-  const [backendNum, setBackendNum] = useState('0');
+  const [frontendNum, setFrontendNum] = useState('1');
+  const [backendNum, setBackendNum] = useState('1');
   const languages = ["Python", "Java", "C", "C++", "C#", "Object-C", "Kotlin", "Swift", "Ruby", "Go", "Javascript", "typescript", "PyPy", "PHP", "Rust", "Text", "D", "기타"];
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [projectType, setProjectType] = useState('PROJECT');
-  const [selfPosition, setSelfPosition] = useState<'FRONT' | 'BACK' | null>(null);
+  const [selfPosition, setSelfPosition] = useState<'FRONT' | 'BACK' >('FRONT');
 
 
 
@@ -72,6 +72,14 @@ const CreateProject: React.FC = () => {
       alert('프로젝트명은 최소 6자 이상이어야 합니다.');
       return;
     }
+
+    const totalPeople = parseInt(frontendNum) + parseInt(backendNum);
+
+    if (totalPeople !== parseInt(total_num)) {
+      alert('프론트와 백엔드의 인원 합이 총 인원과 일치하지 않습니다.');
+      return;
+    }
+
     console.log("1단계")
     // OpenVidu 세션 생성
     axios.post(OPENVIDU_SERVER_URL +'/api/sessions', {}, {
@@ -80,6 +88,7 @@ const CreateProject: React.FC = () => {
         }
     })
     .then((response) => {
+      console.log("2단계")
         const sessionId = response.data.id;
         localStorage.setItem("OVSession",sessionId);
 

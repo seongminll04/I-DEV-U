@@ -18,6 +18,4 @@ public class ProjectDto {
 	private Integer back;
 	private Integer maxBack;
 	private List<String> language;
-	private String session;
-
 }

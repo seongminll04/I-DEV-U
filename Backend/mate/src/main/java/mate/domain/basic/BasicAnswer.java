@@ -1,5 +1,6 @@
 package mate.domain.basic;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import mate.domain.user.User;
@@ -9,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @RequiredArgsConstructor
+@Builder
 public class BasicAnswer {
 
     @Id @GeneratedValue
@@ -22,10 +24,4 @@ public class BasicAnswer {
 
     private String tag;
 
-
-    public BasicAnswer(User user, Integer surveyIdx, String tag) {
-        this.user = user;
-        this.surveyIdx = surveyIdx;
-        this.tag = tag;
-    }
 }

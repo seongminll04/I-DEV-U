@@ -36,7 +36,8 @@ const MyRoom: React.FC = () => {
         },
       })
       .then(res => {
-        if (res.data.survey==='NO') {
+        if (res.data.data.survey==='NO') {
+          console.log(2)
           dispatch(setModal('최초설문'))
         }
       })

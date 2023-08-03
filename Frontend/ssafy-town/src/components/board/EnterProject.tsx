@@ -20,7 +20,7 @@ const EnterProject: React.FC = () => {
       url: 'https://i9b206.p.ssafy.io/project/video/propose',
       data:{ 'userIdx' : 1, 'projectIdx' : wantPJTId },
       headers : {
-        Authorization:loginToken
+        Authorization: loginToken
       },
     })
     .then(res => {
@@ -38,7 +38,7 @@ const EnterProject: React.FC = () => {
         <div className={enter_css.modal}>
             <h1>OO 프로젝트</h1>
             <h2>참가신청 하시겠습니까?</h2>
-            <button onClick={enter}>참가</button><button>취소</button>
+            <button onClick={enter}>참가</button><button onClick={()=>dispatch(setModal(null))}>취소</button>
         </div>
 
   </div>

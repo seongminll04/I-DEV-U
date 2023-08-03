@@ -6,9 +6,9 @@ const MyComponent: React.FC = () => {
   const [messageInput, setMessageInput] = useState('');
   const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
   const stompClientRef = React.useRef<Client | null>(null);
-  const socket = new SockJS("https://i9b206.p.ssafy.io:9090/chatting");
   
   useEffect(() => { 
+    const socket = new SockJS("http://localhost:8080/chatting");
     stompClientRef.current = Stomp.over(socket);
 
     // 연결 시도
@@ -20,7 +20,7 @@ const MyComponent: React.FC = () => {
         stompClientRef.current.deactivate();
       }
     };
-  }, []);
+  }, [stompClientRef]);
 
   const onMessageReceived = (message: Message) => {
     const newMessage = message.body;

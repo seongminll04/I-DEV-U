@@ -1,6 +1,8 @@
 package mate.controller;
 
 import lombok.RequiredArgsConstructor;
+import mate.domain.user.User;
+import mate.domain.user.UserStatus;
 import mate.dto.user.UserSignUpDto;
 import mate.repository.UserRepository;
 import mate.service.UserService;
@@ -9,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
+import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/user")
@@ -25,7 +30,7 @@ public class UserController {
         Map<String, String> map = new HashMap<>();
         map.put("home", "hyeong Suck");
 
-        return ResponseEntity.ok(map);
+        return ok(map);
     }
 
     /*
@@ -34,26 +39,40 @@ public class UserController {
     @PostMapping("/signUp")
     public Result signup(@RequestBody UserSignUpDto userSignUpDto) throws Exception {
         userService.signUp(userSignUpDto);
-
-        return new Result(ResponseEntity.ok().body("회원 가입 성공"));
+        return Result.builder().status(ok().body("회원 가입 성공")).build();
     }
 
     @GetMapping("/signUp/emailCheck/{email}")
-    public ResponseEntity<?> emailCheck(@PathVariable String email) throws Exception{
+    public Result emailCheck(@PathVariable String email) throws Exception{
         if (userRepository.findByEmail(email).isPresent()) {
-            return ResponseEntity.badRequest().build();
+            return Result.builder().status(badRequest().body("이미 있는 이메일 입니다.")).build();
         }
-        return ResponseEntity.ok().build();
+        return Result.builder().status(ok().body("사용가능한 이메일 입니다.")).build();
     }
 
     @GetMapping("/signUp/nicknameCheck/{nickname}")
-    public ResponseEntity<?> nicknameCheck(@PathVariable String nickname) throws Exception{
+    public Result nicknameCheck(@PathVariable String nickname) throws Exception{
 
         if (userRepository.findByNickname(nickname).isPresent()) {
-            return ResponseEntity.badRequest().build();
+            return Result.builder().status(badRequest().body("이미 있는 닉네임 입니다.")).build();
         }
-        return ResponseEntity.ok().build();
+        return Result.builder().status(ok().body("사용가능한 닉네임 입니다.")).build();
     }
+
+    @GetMapping("/check/{userIdx}")
+    public Result emailCheck(@PathVariable Integer userIdx) throws Exception{
+        Optional<User> user = userRepository.findByIdx(userIdx);
+        if (user.isEmpty()) {
+            return Result.builder().status(badRequest().body("존재하지 않는 회원입니다.")).build();
+        }
+        UserStatus status = user.get().getStatus();
+        Map map = new HashMap();
+        map.put("status", status);
+        return Result.builder().status(ok().body("회원 상태 코드"))
+                .data(map).build();
+    }
+
+
 
 
 }

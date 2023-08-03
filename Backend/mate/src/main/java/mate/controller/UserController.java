@@ -1,10 +1,7 @@
 package mate.controller;
 
 import lombok.RequiredArgsConstructor;
-import mate.domain.user.User;
-import mate.dto.user.UserLoginDto;
 import mate.dto.user.UserSignUpDto;
-import mate.global.login.service.LoginService;
 import mate.repository.UserRepository;
 import mate.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -36,10 +32,10 @@ public class UserController {
      * 회원가입
      */
     @PostMapping("/signUp")
-    public ResponseEntity<?> signup(@RequestBody UserSignUpDto userSignUpDto) throws Exception {
+    public Result signup(@RequestBody UserSignUpDto userSignUpDto) throws Exception {
         userService.signUp(userSignUpDto);
 
-        return ResponseEntity.ok().build();
+        return new Result(ResponseEntity.ok().body("회원 가입 성공"));
     }
 
     @GetMapping("/signUp/emailCheck/{email}")

@@ -13,9 +13,10 @@ public class ChatRoom {
     @Id @GeneratedValue
     private int idx;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_idx")
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "manager_idx")
+//    private User user;
+    private int userIdx;
 
     private String title;
     @Enumerated(EnumType.STRING)

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import project_css from "./4project.module.css";
 import { useDispatch } from 'react-redux';
-import { setAllowMove, setModal } from '../../store/actions';
+import { setAllowMove, setModal, setWantPJTId } from '../../store/actions';
 import axios from "axios";
 
 const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
 
 type ProjectDataType = {
+    "idx":number;
     "title (VARCHAR)": string;
     "totalNum (INT)": number;
     "nowNum (INT)": number;
@@ -19,7 +20,17 @@ type ProjectDataType = {
 
 const Project: React.FC = () => {
     const dispatch = useDispatch();
-    const [projectList, setProjectList] = useState<ProjectDataType[]>([]);
+    const [projectList, setProjectList] = useState<ProjectDataType[]>([{
+      "idx":1,
+      "title (VARCHAR)": 'OO 프로젝트',
+      "totalNum (INT)": 4,
+      "nowNum (INT)": 2,
+      "front(INT)": 1,
+      "maxFront(INT)": 2,
+      "back(INT)": 1,
+      "maxBack(INT)": 2,
+      "language(List)": ['asdf',],
+    }]);
 
 
     const loadproject = () => {
@@ -79,7 +90,8 @@ const Project: React.FC = () => {
                                 </div>
                             </div>
                             <div>
-                                <button className={project_css.btn} onClick={() => { dispatch(setModal('프로젝트참가신청')) }}>참가신청</button>
+                                <button className={project_css.btn} onClick={() => { dispatch(setModal('프로젝트참가신청')) 
+                              dispatch(setWantPJTId(project.idx))}}>참가신청</button>
                                 <span>{project["nowNum (INT)"]}/{project["totalNum (INT)"]}</span>
                             </div>
                         </div>

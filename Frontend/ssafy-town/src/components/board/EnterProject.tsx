@@ -1,20 +1,34 @@
 import React from 'react';
 import enter_css from './EnterProject.module.css';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { setModal } from '../../store/actions';
+import {AppState} from '../../store/state';
 import axios from 'axios';
 
 const EnterProject: React.FC = () => {
   const dispatch=useDispatch()
+  const loginToken = useSelector((state: AppState) => state.loginToken);
+  const wantPJTId = useSelector((state: AppState) => state.wantPJTId);
 
   const enter = () => {
+
+    // console.log('참가신청 완료')
+    // dispatch(setModal(null))
     axios({
       method:'post',
-      url: 'https://~~~~~~.~~~/'
-      // data: {}
+      url: 'https://i9b206.p.ssafy.io/project/video/propose',
+      data:{ 'userIdx' : 1, 'projectIdx' : wantPJTId },
+      headers : {
+        Authorization:loginToken
+      },
     })
-    .then(res => {console.log(res)})
+    .then(res => {
+        console.log(res)
+        console.log('참가신청 완료')
+        dispatch(setModal(null))
+      }
+    )
     .catch(err => {console.log(err)})
   }
 

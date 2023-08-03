@@ -22,3 +22,8 @@ export const setSelectMap = (value: string) => ({
   type: 'SET_SELECTMAP',
   payload: value,
 });
+
+export const setWantPJTId = (value: number) => ({
+  type: 'SET_WANTPJT',
+  payload: value,
+});

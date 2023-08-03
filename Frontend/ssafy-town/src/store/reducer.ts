@@ -6,6 +6,7 @@ const initialState: AppState = {
     isAllowMove:true,
     loginToken:'',
     SelectMap:'A',
+    wantPJTId:null,
 };
 
 const reducer = (state: AppState = initialState, action: { type: string; payload: any }) => {
@@ -22,6 +23,8 @@ const reducer = (state: AppState = initialState, action: { type: string; payload
         return {...state, loginToken: action.payload}
     case 'SET_SELECTMAP':
       return {...state, SelectMap: action.payload}
+    case 'SET_WANTPJT':
+        return {...state, wantPJTId: action.payload}
     default:
       return state;
   }

@@ -17,7 +17,7 @@
     padding: 10px;
     box-sizing: border-box;
     color : white;
-    overflow-y: auto;
+    overflow-y: scroll;
 }
 
 .closebtn {
@@ -32,7 +32,7 @@
 }
 
 .info {
-    overflow-y: scroll;
+    overflow-y:none;
 }
 .input {
     display: flex;

@@ -71,6 +71,7 @@
     display: flex;
     border-radius: 1rem;
     cursor:pointer;
+    width:80%;
 }
 .project_detail:hover {
     background-color: rgba(109, 206, 245, 1);

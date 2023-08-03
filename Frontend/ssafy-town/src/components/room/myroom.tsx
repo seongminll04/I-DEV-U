@@ -12,7 +12,7 @@ import {useNavigate} from 'react-router-dom'
 import { Ssize1Scene } from '../map/Ssize1Scene';
 import ModalOpen from '../system/modalopen';
 // import Cam from '../openvidu/cam/cam'
-
+import axios from 'axios';
 
 const MyRoom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
@@ -26,9 +26,23 @@ const MyRoom: React.FC = () => {
     const userToken = localStorage.getItem('usertoken');
     if (userToken) {
       dispatch(setLoginToken(userToken))
-      if (true) {
-        dispatch(setModal('최초설문'))
-      }
+      const userIdx = localStorage.getItem('saveid')
+      axios({
+        method:'get',
+        url:`https://i9b206.p.ssafy.io:9090/user/basicSurvey/${userIdx}`,
+        headers : {
+          Authorization:userToken
+        },
+      })
+      .then(res => {
+        if (res.data.survey==='NO') {
+          dispatch(setModal('최초설문'))
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
     }
     else {navigate('/login')}
   },[dispatch, navigate])

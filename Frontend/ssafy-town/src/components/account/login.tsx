@@ -29,14 +29,11 @@ const Login: React.FC = () => {
       data:{'email': userId, 'password': userPassword,}
     })
     .then(res => {
-      console.log(res)
-      // const auth = res.headers.authorization
-      console.log(res.headers.authorization);
-      
       // 로그인 시, 로컬 스토리지에 토큰 저장
+      console.log(res)
       localStorage.setItem('usertoken',res.headers.authorization);
       localStorage.setItem('saveid', res.data.userIdx);
-
+      
       // if (res.data.user.status === "D") {
       //   throw new ValidationError("탈퇴처리된 회원입니다!");
       // } 

@@ -195,7 +195,7 @@ const CreateProject: React.FC = () => {
               <label><span>언</span><span>어</span></label>
               <p> : </p>
               {languages.map((lang, index) => (
-                <div key={index}>
+                <label key={index}>
                   <input
                     type="checkbox"
                     value={lang}
@@ -203,7 +203,7 @@ const CreateProject: React.FC = () => {
                     checked={selectedLanguages.includes(lang)}
                   />
                   {lang}
-                </div>
+                </label>
               ))}
             </div>
     

@@ -4,6 +4,7 @@ export interface AppState {
   isAllowMove:boolean;
   loginToken:string;
   SelectMap:string;
+  wantPJTId:number|null;
   }
   
 // export enum ActionTypes {

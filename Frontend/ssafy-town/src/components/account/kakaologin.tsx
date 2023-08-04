@@ -2,7 +2,12 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
+import { useDispatch } from 'react-redux';
+import { setLoginToken } from '../../store/actions';
+
+
 const KakaoCallback = () => {
+    const dispatch = useDispatch()
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -34,7 +39,7 @@ const KakaoCallback = () => {
                 );
 
                 console.log('User Info:', res.data);
-                localStorage.setItem('usertoken', access_token);
+                dispatch(setLoginToken(access_token))
                 navigate('/home');
 
             } catch (error) {
@@ -44,7 +49,7 @@ const KakaoCallback = () => {
 
         fetchKakaoToken();
 
-    }, [navigate]);
+    }, [navigate,dispatch]);
 
     return (
         <div></div>

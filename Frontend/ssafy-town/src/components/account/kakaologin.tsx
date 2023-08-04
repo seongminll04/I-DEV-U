@@ -32,7 +32,7 @@ const KakaoCallback = () => {
             )
             .then((res: any) => {
                 console.log('2번쨰', res);
-                localStorage.setItem('usertoken', access_token);
+                localStorage.setItem('usertoken', res.data.access_token);
                 navigate('/home'); // 로그인 성공 후 /home으로 이동
             })
         })

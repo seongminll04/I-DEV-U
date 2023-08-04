@@ -1,6 +1,7 @@
 package mate.controller.user;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mate.controller.Result;
 import mate.domain.basic.BasicAnswer;
 import mate.dto.user.UserBasicSurvey;
@@ -8,6 +9,7 @@ import mate.repository.user.BasicRepository;
 import mate.service.user.BasicService;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Console;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Map;
@@ -18,6 +20,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/basicSurvey")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
+@Slf4j
 public class BasicController {
 
     private final BasicRepository basicRepository;
@@ -37,7 +40,7 @@ public class BasicController {
 
     @PostMapping("/create")
     public Result surveyCreate(@RequestBody UserBasicSurvey userBasicSurvey) throws Exception{
-
+        log.info(userBasicSurvey.toString());
         basicService.insertSurvey(userBasicSurvey);
 
         return Result.builder().status(ok().body("설문 작성 완료")).build();

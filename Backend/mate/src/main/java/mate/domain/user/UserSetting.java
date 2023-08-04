@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Getter
 public class UserSetting {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idx;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_idx")

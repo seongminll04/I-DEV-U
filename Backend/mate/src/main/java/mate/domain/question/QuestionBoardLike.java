@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 public class QuestionBoardLike {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idx;
 
     @ManyToOne(fetch = FetchType.LAZY)

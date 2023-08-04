@@ -73,5 +73,17 @@ public class UserController {
                 .data(map).build();
     }
 
+//    @GetMapping("/detail/{userIdx}")
+//    public Result userDetail(@PathVariable Integer userIdx){
+//
+//        Optional<User> user = userRepository.findByIdx(userIdx);
+//        if (user.isEmpty()) {
+//            return Result.builder().status(badRequest().body("존재하지 않는 회원입니다.")).build();
+//        }
+//        User user1 = user.get();
+//
+//
+//    }
+
 
 }

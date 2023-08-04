@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 public class ChatMessage {
-    @Id @GeneratedValue
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idx;
 
     @ManyToOne(fetch = FetchType.LAZY)

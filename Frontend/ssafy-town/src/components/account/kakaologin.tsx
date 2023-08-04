@@ -34,7 +34,7 @@ const KakaoCallback = () => {
                 );
 
                 console.log('User Info:', res.data);
-                localStorage.setItem('usertoken', res.data.access_token);
+                localStorage.setItem('usertoken', access_token);
                 navigate('/home');
 
             } catch (error) {

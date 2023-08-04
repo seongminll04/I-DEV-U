@@ -38,8 +38,8 @@ const KakaoCallback = () => {
                         }
                     }
                 );
-
-                const nickname = res.data.properties.nickname;
+                
+                const nickname = res.data.id;
 
                 dispatch(setLoginToken(access_token))
                 dispatch(setNickname(nickname))
@@ -54,8 +54,20 @@ const KakaoCallback = () => {
     }, [navigate, dispatch]);
 
     useEffect(() => {
+        
         if (token && userNickname) {
-            navigate('/home');
+            axios({
+                method:'get',
+                url:`https://i9b206.p.ssafy.io:9090/user/signUp/emailCheck/${userNickname}`,
+              })
+              .then(res => {
+                if (res.data.status.statusCodeValue===200) {
+                    navigate('/home');
+                  }
+                else{
+                    navigate('/kakao');
+                }
+              })
         }
     }, [token, userNickname, navigate]);
     

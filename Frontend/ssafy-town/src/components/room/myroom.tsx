@@ -26,9 +26,11 @@ const MyRoom: React.FC = () => {
 
   useEffect(()=>{
     if (loginToken!==''){
+      console.log("토큰없음")
       localStorage.setItem('usertoken',loginToken)
     }
     if (nickname!=='') {
+      console.log("닉네임없음")
       localStorage.setItem('saveid',nickname)
     }
     const userToken = localStorage.getItem('usertoken');

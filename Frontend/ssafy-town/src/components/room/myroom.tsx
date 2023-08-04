@@ -27,6 +27,8 @@ const MyRoom: React.FC = () => {
   useEffect(()=>{
     if (loginToken!==''){
       localStorage.setItem('usertoken',loginToken)
+    }
+    if (nickname!=='') {
       localStorage.setItem('saveid',nickname)
     }
     const userToken = localStorage.getItem('usertoken');

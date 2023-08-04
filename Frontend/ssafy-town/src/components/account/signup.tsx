@@ -51,12 +51,18 @@ const SignupForm = () => {
         method:'get',
         url:`https://i9b206.p.ssafy.io:9090/user/signUp/emailCheck/${email}`
       })
-      .then(()=>{
-        setchkemail('yes');
-        alert('사용할 수 있는 아이디입니다.')
+      .then((res)=>{
+        console.log(res.data.status.statusCodeValue)
+        if (res.data.status.statusCodeValue) {
+          setchkemail('yes');
+          alert('사용할 수 있는 아이디입니다.')
+        }
+        else {
+          alert('중복된 아이디입니다.')
+        }
       })
-      .catch(() => { 
-        alert('중복된 아이디입니다.')
+      .catch((err) => { 
+        console.log(err)
       })
     }
     else {
@@ -76,12 +82,17 @@ const SignupForm = () => {
         method:'get',
         url:`https://i9b206.p.ssafy.io:9090/user/signUp/nicknameCheck/${nickname}`
       })
-      .then(()=>{
-        setchknickname('yes')
-        alert('사용할 수 있는 닉네임입니다.')
+      .then((res)=>{
+        if (res.data.status.statusCodeValue) {
+          setchknickname('yes')
+          alert('사용할 수 있는 닉네임입니다.')
+        }
+        else {
+          alert('중복된 닉네임입니다.')
+        }
       })
-      .catch(() => {
-        alert('중복된 닉네임입니다.')
+      .catch((err) => {
+        console.log(err)
       })
     }
     else {

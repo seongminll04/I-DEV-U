@@ -3,9 +3,9 @@ import React,{ useState, useEffect } from 'react';
 import cam_css from './6cam.module.css'
 import axios from 'axios';
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setAllowMove } from '../../store/actions';
-import { AppState } from '../../store/state';
+
 
 type ProjectDataType = {
   name: string; // 프로젝트 이름

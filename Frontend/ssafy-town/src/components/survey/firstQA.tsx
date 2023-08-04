@@ -70,6 +70,10 @@ const QAModal: React.FC = () => {
     
     const userToken = localStorage.getItem('usertoken')
     const userIdx = localStorage.getItem('saveid')
+    console.log({
+      'userIdx':userIdx,
+      'surveyResult':surveyResults
+    })
     axios({
       method:'post',
       url:`https://i9b206.p.ssafy.io:9090/basicSurvey/create`,

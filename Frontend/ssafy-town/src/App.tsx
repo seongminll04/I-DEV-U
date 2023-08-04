@@ -13,7 +13,7 @@ import LMeetingRoom from './components/room/Lmeetingroom';
 
 import app_css from './App.module.css';
 import MyComponent from './components/TEST';
-import KakaoLoading from './components/account/kakaoloading';
+import KakaoSignUp from './components/account/kakaosignup';
 
 function App() {
   return (
@@ -27,7 +27,7 @@ function App() {
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/findpassword" element={<Findpassword />} />
           <Route path="/kakao" element={<KakaoCallback />} />
-          <Route path="/kakaoloading" element={<KakaoLoading />} />
+          <Route path="/kakaosignup" element={<KakaoSignUp />} />
           {/* 맵 이동 관련 */}
           <Route path="/home" element={<MyRoom />} />
           <Route path="/meeting" element={<MeetingRoom />} />

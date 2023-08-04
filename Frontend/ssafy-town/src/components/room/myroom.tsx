@@ -23,9 +23,11 @@ const MyRoom: React.FC = () => {
   const navigate = useNavigate()
 
   useEffect(()=>{
+
     const userIdxStr = localStorage.getItem('userIdx')
     var userIdx:number|null;
     if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
+    
     const userToken = localStorage.getItem('userToken');
     if (userToken) {
       console.log(userIdx, 'Bearer ' + userToken)

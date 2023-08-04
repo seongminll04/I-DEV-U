@@ -36,8 +36,7 @@ const KakaoCallback = () => {
                 );
                 
                 setNickname('kakao_'+res.data.id)
-                setKakaotoken(access_token)
-                
+                setKakaotoken(access_token)    
             } catch (error) {
                 console.log(error);
             }
@@ -48,7 +47,6 @@ const KakaoCallback = () => {
     }, [navigate]);
 
     useEffect(() => {
-        
         if (kakaotoken && nickname) {
             axios({
                 method:'get',
@@ -56,10 +54,29 @@ const KakaoCallback = () => {
               })
               .then(res => {
                 if (res.data.status.statusCodeValue===200) {
-                    navigate('/home');
+                    navigate('/kakaosignup');
                   }
                 else{
-                    navigate('/kakao');
+                    axios({
+                        method:'post',
+                        url:'https://i9b206.p.ssafy.io:9090/user/kakaologin',
+                        data:{'email': nickname}
+                      })
+                      .then(res => {
+                        console.log(res)
+                        // 로그인 시, 로컬 스토리지에 토큰 저장
+                        localStorage.setItem('userToken',res.headers.authorization);
+                        localStorage.setItem('userIdx', res.data.userIdx);
+                        // if (res.data.user.status === "D") {
+                        //   throw new ValidationError("탈퇴처리된 회원입니다!");
+                        // } 
+                        navigate('/home')
+                      })
+                      .catch(err => {
+                        console.log(err)
+                        alert('카카오 로그인 실패')
+                        navigate('/login')
+                      })
                 }
               })
         }

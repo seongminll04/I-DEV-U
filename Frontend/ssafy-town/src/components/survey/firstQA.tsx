@@ -66,8 +66,6 @@ const QAModal: React.FC = () => {
     },
   ]
 
-    // onConfirm(surveyResults);
-    
     const userToken = localStorage.getItem('usertoken')
     var userIdxStr = localStorage.getItem('saveid')
     var userIdx:number|null;
@@ -77,11 +75,6 @@ const QAModal: React.FC = () => {
     else {
       userIdx=null
     }
-
-    console.log({
-      'userIdx':userIdx,
-      'surveyResult':surveyResults
-    })
     axios({
       method:'post',
       url:`https://i9b206.p.ssafy.io:9090/basicSurvey/create`,

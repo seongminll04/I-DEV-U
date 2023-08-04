@@ -53,7 +53,7 @@ const SignupForm = () => {
       })
       .then((res)=>{
         console.log(res.data.status.statusCodeValue)
-        if (res.data.status.statusCodeValue) {
+        if (res.data.status.statusCodeValue===200) {
           setchkemail('yes');
           alert('사용할 수 있는 아이디입니다.')
         }
@@ -83,7 +83,7 @@ const SignupForm = () => {
         url:`https://i9b206.p.ssafy.io:9090/user/signUp/nicknameCheck/${nickname}`
       })
       .then((res)=>{
-        if (res.data.status.statusCodeValue) {
+        if (res.data.status.statusCodeValue===200) {
           setchknickname('yes')
           alert('사용할 수 있는 닉네임입니다.')
         }

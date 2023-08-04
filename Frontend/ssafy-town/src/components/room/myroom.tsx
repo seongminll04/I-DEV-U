@@ -19,12 +19,14 @@ const MyRoom: React.FC = () => {
   const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
   const loginToken = useSelector((state: AppState) => state.loginToken);// 모달창 오픈여부 (알림, 로그아웃)
+  const nickname = useSelector((state: AppState) => state.nickname);// 모달창 오픈여부 (알림, 로그아웃)
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   useEffect(()=>{
-    localStorage.setItem('usertoken',loginToken)
+    // localStorage.setItem('usertoken',loginToken)
+    // localStorage.setItem('saveid',nickname)
     const userToken = localStorage.getItem('usertoken');
     if (userToken) {
       dispatch(setLoginToken(userToken))
@@ -49,7 +51,7 @@ const MyRoom: React.FC = () => {
 
     }
     else {navigate('/login')}
-  },[dispatch, navigate, loginToken])
+  },[dispatch, navigate, loginToken, nickname])
 
 
   useEffect(() => { //esc키로 사이드바, 모달창 끄기 : 전역설정임

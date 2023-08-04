@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
-import { setLoginToken } from '../../store/actions';
+import { setLoginToken, setNickname } from '../../store/actions';
 
 
 const KakaoCallback = () => {
@@ -38,8 +38,11 @@ const KakaoCallback = () => {
                     }
                 );
 
+                const nickname = res.data.properties.nickname;
+
                 console.log('User Info:', res.data);
                 dispatch(setLoginToken(access_token))
+                dispatch(setNickname(nickname))
                 navigate('/home');
 
             } catch (error) {

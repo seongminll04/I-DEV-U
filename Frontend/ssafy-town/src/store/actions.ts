@@ -18,6 +18,11 @@ export const setLoginToken = (value: string) => ({
   payload: value,
 });
 
+export const setNickname = (value: string) => ({
+  type: 'SET_NICKNAME',
+  payload: value,
+});
+
 export const setSelectMap = (value: string) => ({
   type: 'SET_SELECTMAP',
   payload: value,

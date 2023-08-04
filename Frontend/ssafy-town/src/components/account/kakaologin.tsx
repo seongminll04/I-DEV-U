@@ -54,7 +54,11 @@ const KakaoCallback = () => {
               })
               .then(res => {
                 if (res.data.status.statusCodeValue===200) {
-                    navigate('/kakaosignup');
+                    navigate('/kakaosignup',{
+                        state:{
+                            nickname:nickname,
+                        }
+                    });
                   }
                 else{
                     axios({

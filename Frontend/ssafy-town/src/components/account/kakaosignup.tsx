@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import * as Yup from 'yup';
 import signup_css from './signup.module.css';
 import axios from 'axios';
@@ -24,8 +24,11 @@ const validationSchema = Yup.object().shape({
 });
 
 const KakaoSignUp = () => {
+  const location = useLocation();
   const [chknickname, setchknickname] = useState('no');
   const nicknamecheck = (nickname:string) => {
+    let email = location.state.nickname;
+    console.log(email)
     setchknickname('no');
     if (nickname==='') {
       alert('닉네임을 입력해주세요.')

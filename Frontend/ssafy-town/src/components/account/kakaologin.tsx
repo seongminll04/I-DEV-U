@@ -2,12 +2,8 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
-import { useDispatch } from 'react-redux';
-import { setLoginToken, setNickname } from '../../store/actions';
-
 
 const KakaoCallback = () => {
-    const dispatch = useDispatch()
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -17,6 +13,21 @@ const KakaoCallback = () => {
             const grantType = "authorization_code";
             const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
             const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URL;
+            // const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
+
+            function generateRandomString(length:number) {
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                let result = '';
+            
+                for (let i = 0; i < length; i++) {
+                    const randomIndex = Math.floor(Math.random() * characters.length);
+                    result += characters.charAt(randomIndex);
+                }
+            
+                return result;
+            }
+            
+            const randomString = generateRandomString(14);       
 
             try {
                 const responseToken = await axios.post(
@@ -39,11 +50,8 @@ const KakaoCallback = () => {
                 );
 
                 const nickname = res.data.properties.nickname;
-
-                console.log('User Info:', res.data);
-                dispatch(setLoginToken(access_token))
-                dispatch(setNickname(nickname))
-                navigate('/home');
+                
+                localStorage.setItem("test",nickname);
 
             } catch (error) {
                 console.log(error);
@@ -52,7 +60,7 @@ const KakaoCallback = () => {
 
         fetchKakaoToken();
 
-    }, [navigate,dispatch]);
+    }, [navigate]);
 
     return (
         <div></div>

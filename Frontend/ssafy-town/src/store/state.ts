@@ -3,7 +3,7 @@ export interface AppState {
   isSidebarOpen: string|null;
   isAllowMove:boolean;
   loginToken:string;
-  nickname:string;
+  nickname:string
   SelectMap:string;
   wantPJTId:number|null;
   }

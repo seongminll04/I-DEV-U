@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { useNavigate, useLocation } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -26,9 +26,8 @@ const validationSchema = Yup.object().shape({
 const KakaoSignUp = () => {
   const location = useLocation();
   const [chknickname, setchknickname] = useState('no');
+  const [today,setToday] = useState('2023-12-31')
   const nicknamecheck = (nickname:string) => {
-    let email = location.state.nickname;
-    console.log(email)
     setchknickname('no');
     if (nickname==='') {
       alert('닉네임을 입력해주세요.')
@@ -57,12 +56,37 @@ const KakaoSignUp = () => {
     }
   };
 
+  useEffect(()=> {
+    const date = new Date()
+    var month:any; var day:any;
+    if (date.getMonth()+1 < 10){month='0'+(date.getMonth()+1)}
+    else {month=date.getMonth()+1}
+    if (date.getDate() < 10){day='0'+(date.getDate())}
+    else {day=date.getDate()}
+
+    setToday(date.getFullYear()+'-'+month+'-'+day)
+  },[setToday])
+
+  function generateRandomString(length:number) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters.charAt(randomIndex);
+    }
+
+    return result;
+  }
+  
+  const password = 'KAKAO_' + generateRandomString(8);  
+  const email = location.state.nickname;
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
-      confirmPassword: '',
+      email: email,
+      password: password,
+      confirmPassword: password,
       nickname: '',
       name: '',
       birthday: '',
@@ -107,7 +131,7 @@ const KakaoSignUp = () => {
           <label className={signup_css.split}>생년월일
           <span style={{color:'darkgray'}}>{formik.touched.birthday && formik.errors.birthday ? formik.errors.birthday : null}</span>
           </label>
-          <input className={signup_css.input} type="date" {...formik.getFieldProps('birthday')} max={'9999-12-31'} />
+          <input className={signup_css.input} type="date" {...formik.getFieldProps('birthday')} max={today} />
 
             <label className={signup_css.split}>성별
             <span style={{color:'darkgray', margin:'0'}}>{formik.touched.gender && formik.errors.gender ? formik.errors.gender : null}</span>

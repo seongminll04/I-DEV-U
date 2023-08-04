@@ -67,15 +67,10 @@ const QAModal: React.FC = () => {
       },
     ];
 
-    const userToken = localStorage.getItem('usertoken')
-    var userIdxStr = localStorage.getItem('saveid')
+    const userToken = localStorage.getItem('userToken')
+    const userIdxStr = localStorage.getItem('userIdx')
     var userIdx:number|null;
-    if (userIdxStr) {
-      userIdx=parseInt(userIdxStr,10)
-    }
-    else {
-      userIdx=null
-    }
+    if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
     axios({
       method:'post',
       url:`https://i9b206.p.ssafy.io:9090/basicSurvey/create`,

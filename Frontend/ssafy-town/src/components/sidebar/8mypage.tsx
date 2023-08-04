@@ -61,11 +61,13 @@ let user = {
 };
 
 const getUser = async () => {
-  const idx = parseInt(localStorage.getItem('idx') || '0', 10); // Parse to an integer
-  const userToken = localStorage.getItem('usertoken')
+  const userToken = localStorage.getItem('userToken')
+  const userIdxStr = localStorage.getItem('userIdx')
+  var userIdx:number|null;
+  if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
   axios({
     method: 'get',
-    url: `https://i9b206.p.ssafy.io:9090/user/${idx}`,
+    url: `https://i9b206.p.ssafy.io:9090/user/${userIdx}`,
     headers : {
       Authorization: 'Bearer ' + userToken
     },

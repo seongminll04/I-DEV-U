@@ -12,7 +12,7 @@ interface Props {
 
 const DetailQnA: React.FC<Props> = ({qnaid,onback}) => {
   const dispatch=useDispatch()
-  const userToken = localStorage.getItem('usertoken')
+  const userToken = localStorage.getItem('userToken')
   useEffect(()=>{
     axios({
       method:'get',

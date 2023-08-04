@@ -35,7 +35,7 @@ const Cam: React.FC = () => {
   }
   // 유저의 화상방 데이터 가져오기
   useEffect(() => {
-    const userToken = localStorage.getItem('usertoken')
+    const userToken = localStorage.getItem('userToken')
     axios.get(BACKEND_SERVER_URL + '/video/list',{
       headers : {
         Authorization: 'Bearer ' + userToken
@@ -53,7 +53,7 @@ const Cam: React.FC = () => {
 
   // 접속 반응 추가하기
   const EnterCam = (sessionId: string) => {
-    const userToken = localStorage.getItem('usertoken')
+    const userToken = localStorage.getItem('userToken')
     axios.get(`${BACKEND_SERVER_URL}/video/enter`, {
         headers : {
           Authorization: 'Bearer ' + userToken

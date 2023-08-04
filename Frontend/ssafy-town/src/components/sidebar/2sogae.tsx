@@ -31,7 +31,7 @@ const Sogae: React.FC = () => {
   ].sort((a, b) => b.matchRate - a.matchRate));
 
   useEffect(() => {
-    const userToken = localStorage.getItem('usertoken')
+    const userToken = localStorage.getItem('userToken')
     // 소개팅 설문 여부 체크
     axios({
       method:'get',

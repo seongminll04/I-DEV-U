@@ -6,7 +6,7 @@ import Navbar from '../system/navbar'
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
-import { setAllowMove, setModal, setSidebar, setLoginToken } from '../../store/actions';
+import { setAllowMove, setModal, setSidebar } from '../../store/actions';
 
 import {useNavigate} from 'react-router-dom'
 import { Ssize1Scene } from '../map/Ssize1Scene';
@@ -18,25 +18,16 @@ const MyRoom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
   const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
-  const loginToken = useSelector((state: AppState) => state.loginToken);// 모달창 오픈여부 (알림, 로그아웃)
-  const nickname = useSelector((state: AppState) => state.nickname);// 모달창 오픈여부 (알림, 로그아웃)
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   useEffect(()=>{
-    if (loginToken!==''){
-      console.log("토큰없음")
-      localStorage.setItem('usertoken',loginToken)
-    }
-    if (nickname!=='') {
-      console.log("닉네임없음")
-      localStorage.setItem('saveid',nickname)
-    }
-    const userToken = localStorage.getItem('usertoken');
+    const userIdxStr = localStorage.getItem('userIdx')
+    var userIdx:number|null;
+    if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
+    const userToken = localStorage.getItem('userToken');
     if (userToken) {
-      dispatch(setLoginToken(userToken))
-      const userIdx = localStorage.getItem('saveid')
       console.log(userIdx, 'Bearer ' + userToken)
       axios({
         method:'get',
@@ -57,7 +48,7 @@ const MyRoom: React.FC = () => {
 
     }
     else {navigate('/login')}
-  },[dispatch, navigate, loginToken, nickname])
+  },[dispatch, navigate])
 
 
   useEffect(() => { //esc키로 사이드바, 모달창 끄기 : 전역설정임

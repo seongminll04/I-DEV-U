@@ -6,7 +6,7 @@ import Navbar from '../system/navbar'
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
-import { setAllowMove, setModal, setSidebar, setLoginToken } from '../../store/actions';
+import { setAllowMove, setModal, setSidebar } from '../../store/actions';
 
 import { Msize1Scene } from '../map/Msize1Scene';
 import ModalOpen from '../system/modalopen';
@@ -23,10 +23,9 @@ const SogaeRoom: React.FC = () => {
   const navigate = useNavigate()
 
   useEffect(()=>{
-    const userToken = localStorage.getItem('usertoken');
-    if (userToken) {dispatch(setLoginToken(userToken))}
-    else {navigate('/login')}
-  },[dispatch, navigate])
+    const userToken = localStorage.getItem('userToken');
+    if (!userToken) {navigate('/login')}
+  },[navigate])
 
   useEffect(() => { //esc키로 사이드바, 모달창 끄기 : 전역설정임
     if (isModalOpen) {

@@ -1,15 +1,11 @@
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { setLoginToken, setNickname } from '../../store/actions';
-
 const KakaoCallback = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch()
-    const token = useSelector((state: any) => state.loginToken);
-    const userNickname = useSelector((state: any) => state.nickname);
+    const [kakaotoken, setKakaotoken] = useState('')
+    const [nickname, setNickname] = useState('')
 
     useEffect(() => {
         const fetchKakaoToken = async () => {
@@ -39,10 +35,8 @@ const KakaoCallback = () => {
                     }
                 );
                 
-                const nickname = res.data.id;
-
-                dispatch(setLoginToken(access_token))
-                dispatch(setNickname(nickname))
+                setNickname('kakao_'+res.data.id)
+                setKakaotoken(access_token)
                 
             } catch (error) {
                 console.log(error);
@@ -51,14 +45,14 @@ const KakaoCallback = () => {
 
         fetchKakaoToken();
 
-    }, [navigate, dispatch]);
+    }, [navigate]);
 
     useEffect(() => {
         
-        if (token && userNickname) {
+        if (kakaotoken && nickname) {
             axios({
                 method:'get',
-                url:`https://i9b206.p.ssafy.io:9090/user/signUp/emailCheck/${userNickname}`,
+                url:`https://i9b206.p.ssafy.io:9090/user/signUp/emailCheck/${nickname}`,
               })
               .then(res => {
                 if (res.data.status.statusCodeValue===200) {
@@ -69,7 +63,7 @@ const KakaoCallback = () => {
                 }
               })
         }
-    }, [token, userNickname, navigate]);
+    }, [kakaotoken, nickname, navigate]);
     
     return (
         <div></div>

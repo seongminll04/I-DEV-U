@@ -92,9 +92,13 @@ const CreateProject: React.FC = () => {
         const sessionId = response.data.id;
         localStorage.setItem("OVSession",sessionId);
 
+        const userIdxStr = localStorage.getItem('userIdx')
+        var userIdx:number|null;
+        if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
+        
         // 백엔드에 프로젝트 정보, 세션 ID 전송
         axios.post(BACKEND_SERVER_URL+'/project/register', {
-          user_idx: localStorage.getItem('saveid'),
+          user_idx: userIdx,
           title: title, //6~30자
           content: content, // ~1000자
           total_num: total_num, // 2~6

@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import login_css from './login.module.css';
-import { useDispatch } from 'react-redux';
-import { setNickname, setLoginToken } from '../../store/actions';
 
 class ValidationError extends Error {
   constructor(message : string) {
@@ -13,7 +11,6 @@ class ValidationError extends Error {
 }
 
 const Login: React.FC = () => {
-  const dispatch = useDispatch()
   const navigate = useNavigate();
   const [userId, setUserId] = useState(localStorage.getItem('savedId') || ''); // 로컬스토리지에 아이디 저장
   const [userPassword, setUserPassword] = useState('');
@@ -34,10 +31,8 @@ const Login: React.FC = () => {
     .then(res => {
       console.log(res)
       // 로그인 시, 로컬 스토리지에 토큰 저장
-      dispatch(setLoginToken(res.headers.authorization));
-      // localStorage.setItem('usertoken',res.headers.authorization);
-      // localStorage.setItem('saveid', res.data.userIdx);
-      dispatch(setNickname(res.data.userIdx));
+      localStorage.setItem('userToken',res.headers.authorization);
+      localStorage.setItem('userIdx', res.data.userIdx);
       // if (res.data.user.status === "D") {
       //   throw new ValidationError("탈퇴처리된 회원입니다!");
       // } 

@@ -6,6 +6,8 @@ import java.util.List;
 
 @Data
 public class SurveyResult {
-    private List<Survey> survey;
+    private Integer surveyIdx;
+    private String surveyTitle;
+    private List<String> tagList;
 }
 

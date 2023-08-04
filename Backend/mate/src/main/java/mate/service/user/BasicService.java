@@ -3,7 +3,6 @@ package mate.service.user;
 import lombok.RequiredArgsConstructor;
 import mate.domain.basic.BasicAnswer;
 import mate.domain.user.User;
-import mate.dto.user.Survey;
 import mate.dto.user.SurveyResult;
 import mate.dto.user.UserBasicSurvey;
 import mate.repository.user.BasicRepository;
@@ -32,15 +31,13 @@ public class BasicService {
         }
         List<SurveyResult> surveyResult = userBasicSurvey.getSurveyResult();
         User user = userTemp.get();
+
         for (SurveyResult result : surveyResult) {
-            List<Survey> surveys = result.getSurvey();
-            for (Survey survey : surveys) {
-                List<String> tagList = survey.getTagList();
-                Integer surveyIdx = survey.getSurveyIdx();
-                for (String tag : tagList) {
-                    basicRepository.saveAndFlush(BasicAnswer.builder()
-                            .user(user).surveyIdx(surveyIdx).tag(tag).build());
-                }
+            List<String> tagList = result.getTagList();
+            Integer surveyIdx = result.getSurveyIdx();
+            for (String tag : tagList) {
+                basicRepository.saveAndFlush(BasicAnswer.builder()
+                        .user(user).surveyIdx(surveyIdx).tag(tag).build());
             }
         }
     }

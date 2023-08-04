@@ -1,8 +1,9 @@
-import React from 'react';
+import React,{ useState } from 'react';
 import Create_css from './CreateQnA.module.css';
 
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
+import axios from 'axios';
 
 interface Props {
   onback : () => void;
@@ -10,6 +11,9 @@ interface Props {
 
 const CreateQnA: React.FC<Props> = ({onback}) => {
   const dispatch=useDispatch()
+  const [title,setTitle] = useState('')
+  const [content,setContent] = useState('')
+  
 
   const handlekeydown = (event:React.KeyboardEvent<HTMLTextAreaElement>|React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget
@@ -29,6 +33,28 @@ const CreateQnA: React.FC<Props> = ({onback}) => {
     }
   }
 
+  const create = () => {
+    const userToken = localStorage.getItem('usertoken')
+    const userIdx = localStorage.getItem('saveid')
+
+    axios({
+      method:'post',
+      url:`https://i9b206.p.ssafy.io:9090/qna/write`,
+      data:{
+        'userIdx' : userIdx,
+        'title':title,
+        'content':content,
+      },
+      headers : {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+    .then(res => {
+      console.log(res)
+      dispatch(setModal(null))
+    })
+    .catch(err => console.log(err))
+  }
 
   return (
       <div className={Create_css.modal}>
@@ -42,19 +68,21 @@ const CreateQnA: React.FC<Props> = ({onback}) => {
               <span>제</span><span>목</span>
             </label>
             <p> : </p>
-            <input type="text" onKeyDown={handlekeydown} placeholder='제목을 입력해주세요'/>
+            <input type="text" value={title} onKeyDown={handlekeydown} placeholder='제목을 입력해주세요'
+            onChange={(e) => setTitle(e.target.value)}/>
           </div>
           <div className={Create_css.input}>
             <label><span>내</span><span>용</span></label>
             <p> : </p>
-            <textarea name="" id="" placeholder='내용을 작성해주세요'></textarea>
+            <textarea name="" id="" value={content}  placeholder='내용을 작성해주세요' onKeyDown={handlekeydown}
+            onChange={(e) => setContent(e.target.value)}/>
           </div>
           <div className={Create_css.input}>
             <label><span>파</span><span>일</span></label>
             <p> : </p>
             <input type="file" style={{marginTop:'5px'}}/>
           </div>
-          <button onClick={()=>{}}>생성하기</button>
+          <button onClick={create}>생성하기</button>
         </div>
       </div>
   );

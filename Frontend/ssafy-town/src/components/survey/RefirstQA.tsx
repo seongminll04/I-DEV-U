@@ -68,7 +68,15 @@ const ReQAModal: React.FC = () => {
     // onConfirm(surveyResults);
     
     const userToken = localStorage.getItem('usertoken')
-    const userIdx = localStorage.getItem('saveid')
+    var userIdxStr = localStorage.getItem('saveid')
+    var userIdx:number|null;
+    if (userIdxStr) {
+      userIdx=parseInt(userIdxStr,10)
+    }
+    else {
+      userIdx=null
+    }
+
     axios({
       method:'put',
       url:`https://i9b206.p.ssafy.io:9090/basicSurvey/modify`,

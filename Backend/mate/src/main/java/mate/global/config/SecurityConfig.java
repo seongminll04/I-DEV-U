@@ -8,7 +8,7 @@ import mate.global.login.filter.CustomJsonUsernamePasswordAuthenticationFilter;
 import mate.global.login.handler.LoginFailureHandler;
 import mate.global.login.handler.LoginSuccessHandler;
 import mate.global.login.service.LoginService;
-import mate.repository.UserRepository;
+import mate.repository.user.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

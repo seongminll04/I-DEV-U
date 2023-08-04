@@ -55,6 +55,10 @@ dependencies {
     implementation 'io.openvidu:openvidu-java-client:2.22.0'
 }
 
+// Querydsl 설정부
+
+
+
 //tasks.named('test') {
 //    useJUnitPlatform()
 //}

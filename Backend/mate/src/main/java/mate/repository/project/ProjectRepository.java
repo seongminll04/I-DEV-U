@@ -1,11 +1,10 @@
-package mate.repository;
+package mate.repository.project;
 
+import mate.domain.project.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import mate.domain.project.Project;
-
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Integer> {
-    Project findByIdx(int projectIdx);
+
 }

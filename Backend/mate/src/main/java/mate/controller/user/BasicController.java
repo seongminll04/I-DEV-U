@@ -40,7 +40,8 @@ public class BasicController {
 
     @PostMapping("/create")
     public Result surveyCreate(@RequestBody UserBasicSurvey userBasicSurvey) throws Exception{
-        log.info(userBasicSurvey.toString());
+
+        System.out.println(userBasicSurvey);
         basicService.insertSurvey(userBasicSurvey);
 
         return Result.builder().status(ok().body("설문 작성 완료")).build();

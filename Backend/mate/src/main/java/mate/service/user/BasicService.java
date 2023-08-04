@@ -26,16 +26,18 @@ public class BasicService {
 
 
     public void insertSurvey(UserBasicSurvey userBasicSurvey) throws Exception{
-        log.info("123");
+        System.out.println("123");
         Optional<User> userTemp = userRepository.findByIdx(userBasicSurvey.getUserIdx());
         if (userTemp.isEmpty()) {
             throw new Exception("존재하지 않는 회원입니다.");
         }
-        log.info("123");
+        System.out.println("123");
+
 
         List<SurveyResult> surveyResult = userBasicSurvey.getSurveyResult();
         User user = userTemp.get();
-        log.info("123");
+        System.out.println("123");
+
 
         for (SurveyResult result : surveyResult) {
             List<String> tagList = result.getTagList();

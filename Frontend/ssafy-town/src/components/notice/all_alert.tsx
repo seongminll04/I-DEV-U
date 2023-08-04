@@ -2,8 +2,7 @@ import React, {useState, useEffect } from 'react';
 import alert_css from '../sidebar/1alert.module.css';
 import axios from 'axios';
 
-import { AppState } from '../../store/state';
-import { useSelector , useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 import DetailAlert from './detail_alert';
 
@@ -16,7 +15,7 @@ interface Alert {
 
 const AllAlert: React.FC = () => {
   const dispatch = useDispatch()
-  const loginToken = useSelector((state: AppState) => state.loginToken);
+  const userToken = localStorage.getItem('usertoken')
   const [page, setPage] = useState<Number>(0); 
   const [search, setsearch] = useState<string>('');
   const [nowsearch, setnowsearch] = useState<boolean>(false);
@@ -27,8 +26,8 @@ const AllAlert: React.FC = () => {
       method:'get',
       url:'https://i9b206.p.ssafy.io:9090/~~~~~/',
       headers : {
-        Authorization: loginToken
-      }
+        Authorization: 'Bearer ' + userToken
+      },
     })
     .then(res => {
       console.log(res)

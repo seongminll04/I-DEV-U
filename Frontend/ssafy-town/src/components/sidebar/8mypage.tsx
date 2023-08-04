@@ -62,9 +62,13 @@ let user = {
 
 const getUser = async () => {
   const idx = parseInt(localStorage.getItem('idx') || '0', 10); // Parse to an integer
+  const userToken = localStorage.getItem('usertoken')
   axios({
     method: 'get',
     url: `https://i9b206.p.ssafy.io:9090/user/${idx}`,
+    headers : {
+      Authorization: 'Bearer ' + userToken
+    },
   })
   .then(res => {
     console.log(res)

@@ -23,12 +23,13 @@ const QnA: React.FC = () => {
   const [questionList,setQuestionList] =useState<Question[]>([]);
 
   useEffect(()=>{
+    const userToken = localStorage.getItem('usertoken')
     axios({
       method:'get',
       url:'https://i9b206.p.ssafy.io:9090/question/list/1',
-      headers :{ 
-        Authorization: '~~~~~~~'
-      }
+      headers : {
+        Authorization: 'Bearer ' + userToken
+      },
     })
     .then(res => {
       // console.log(res.data)

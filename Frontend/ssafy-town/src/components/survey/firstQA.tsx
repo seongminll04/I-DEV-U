@@ -38,15 +38,36 @@ const QAModal: React.FC = () => {
   const handleSubmit = (event: React.FormEvent) => {
     console.log('제출버튼 클릭')
     event.preventDefault();
-    const surveyResults = {
-      '개발자로 근무한 기간을 선택하세요':workingYears,
-      '현재 직무는 무엇인가요?':currentJob,
-      '사용하는 언어가 무엇인가요? (최대 5개)':languages,
-      '거주중인 지역은 어디인가요?':location,
-      '프로젝트 경험이 있으신가요?':projectExperience
-    }
+
+    const surveyResults = [{
+      'surveyIdx':'1',
+      'surveyTitle':'개발자로 근무한 기간을 선택하세요',
+      'tagList':[workingYears,]
+    },
+    {
+      'surveyIdx':'2',
+      'surveyTitle':'현재 직무는 무엇인가요?',
+      'tagList':[currentJob,]
+    },
+    {
+      'surveyIdx':'3',
+      'surveyTitle':'사용하는 언어가 무엇인가요? (최대 5개)',
+      'tagList':[languages,]
+    },
+    {
+      'surveyIdx':'4',
+      'surveyTitle':'거주중인 지역은 어디인가요?',
+      'tagList':[location,]
+    },
+    {
+      'surveyIdx':'5',
+      'surveyTitle':'프로젝트 경험이 있으신가요?',
+      'tagList':[projectExperience,]
+    },
+  ]
+
     // onConfirm(surveyResults);
-    console.log(surveyResults)
+    
     const userToken = localStorage.getItem('usertoken')
     const userIdx = localStorage.getItem('saveid')
     axios({
@@ -57,7 +78,7 @@ const QAModal: React.FC = () => {
         'surveyResult':surveyResults
       },
       headers : {
-        Authorization:userToken
+        Authorization: 'Bearer ' + userToken
       },
     })
     .then(() =>{

@@ -15,8 +15,6 @@ type ProjectDataType = {
 
 const Cam: React.FC = () => {
   const dispatch = useDispatch()
-  const loginToken = useSelector((state: AppState) => state.loginToken);
-
   const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
   // const BACKEND_SERVER_URL = 'https://i9b206.p.ssafy.io';
   const [camList, setCamList] = useState<ProjectDataType[]>([]);
@@ -37,9 +35,10 @@ const Cam: React.FC = () => {
   }
   // 유저의 화상방 데이터 가져오기
   useEffect(() => {
+    const userToken = localStorage.getItem('usertoken')
     axios.get(BACKEND_SERVER_URL + '/video/list',{
       headers : {
-        Authorization:loginToken
+        Authorization: 'Bearer ' + userToken
       },
     })
       .then(res => {
@@ -50,14 +49,14 @@ const Cam: React.FC = () => {
         console.log(err);
         setCamList([]);
       });
-  },[loginToken, BACKEND_SERVER_URL]); //BACKEND_SERVER_URL는 환경변수라서 차피 안바뀌는데 에러나와서 그냥 넣어둠
+  },[BACKEND_SERVER_URL]); //BACKEND_SERVER_URL는 환경변수라서 차피 안바뀌는데 에러나와서 그냥 넣어둠
 
   // 접속 반응 추가하기
   const EnterCam = (sessionId: string) => {
-
+    const userToken = localStorage.getItem('usertoken')
     axios.get(`${BACKEND_SERVER_URL}/video/enter`, {
         headers : {
-          Authorization:loginToken
+          Authorization: 'Bearer ' + userToken
         },
         params: {
             sessionId: sessionId,

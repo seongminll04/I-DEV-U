@@ -34,7 +34,12 @@ const Project: React.FC = () => {
 
 
     const loadproject = () => {
-      axios.get(BACKEND_SERVER_URL + '/project/register')
+      const userToken = localStorage.getItem('usertoken')
+      axios.get(BACKEND_SERVER_URL + '/project/register',{
+        headers : {
+          Authorization: 'Bearer ' + userToken
+        },
+      })
           .then(res => {
               console.log(res);
               if (res.data.resmsg === "프로젝트 리스트 조회 성공") {

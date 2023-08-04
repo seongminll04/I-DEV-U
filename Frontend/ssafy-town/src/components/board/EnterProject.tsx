@@ -8,7 +8,7 @@ import axios from 'axios';
 
 const EnterProject: React.FC = () => {
   const dispatch=useDispatch()
-  const loginToken = useSelector((state: AppState) => state.loginToken);
+  const userToken = localStorage.getItem('usertoken')
   const wantPJTId = useSelector((state: AppState) => state.wantPJTId);
 
   const enter = () => {
@@ -20,7 +20,7 @@ const EnterProject: React.FC = () => {
       url: 'https://i9b206.p.ssafy.io/project/video/propose',
       data:{ 'userIdx' : 1, 'projectIdx' : wantPJTId },
       headers : {
-        Authorization: loginToken
+        Authorization: 'Bearer ' + userToken
       },
     })
     .then(res => {

@@ -31,10 +31,14 @@ const Sogae: React.FC = () => {
   ].sort((a, b) => b.matchRate - a.matchRate));
 
   useEffect(() => {
+    const userToken = localStorage.getItem('usertoken')
     // 소개팅 설문 여부 체크
     axios({
       method:'get',
       url:'https://i9b206.p.ssafy.io:9090/~~~~~~~~~/',
+      headers : {
+        Authorization: 'Bearer ' + userToken
+      },
     })
     .then(res => {
       setServey(res.data)
@@ -46,6 +50,9 @@ const Sogae: React.FC = () => {
       method:'get',
       url:'https://i9b206.p.ssafy.io:9090/~~~~~~~~~/',
       // data: {}
+      headers : {
+        Authorization: 'Bearer ' + userToken
+      },
     })
     .then(res => {
       setUsers(res.data)

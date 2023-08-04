@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import login_css from './login.module.css';
 import { useDispatch } from 'react-redux';
-import { setNickname } from '../../store/actions';
+import { setNickname, setLoginToken } from '../../store/actions';
 
 class ValidationError extends Error {
   constructor(message : string) {
@@ -34,7 +34,8 @@ const Login: React.FC = () => {
     .then(res => {
       console.log(res)
       // 로그인 시, 로컬 스토리지에 토큰 저장
-      localStorage.setItem('usertoken',res.headers.authorization);
+      dispatch(setLoginToken(res.headers.authorization));
+      // localStorage.setItem('usertoken',res.headers.authorization);
       // localStorage.setItem('saveid', res.data.userIdx);
       dispatch(setNickname(res.data.userIdx));
       // if (res.data.user.status === "D") {

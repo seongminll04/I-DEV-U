@@ -25,8 +25,8 @@ const MyRoom: React.FC = () => {
   const navigate = useNavigate()
 
   useEffect(()=>{
-    // localStorage.setItem('usertoken',loginToken)
-    // localStorage.setItem('saveid',nickname)
+    localStorage.setItem('usertoken',loginToken)
+    localStorage.setItem('saveid',nickname)
     const userToken = localStorage.getItem('usertoken');
     if (userToken) {
       dispatch(setLoginToken(userToken))

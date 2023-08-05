@@ -2,14 +2,7 @@ package mate.domain.video;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import lombok.*;
 import mate.domain.user.User;
@@ -21,8 +14,7 @@ import mate.domain.user.User;
 @AllArgsConstructor
 public class VideoRoom {
 
-	@Id
-	@GeneratedValue
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idx;
 
 	@ManyToOne(fetch = FetchType.LAZY)

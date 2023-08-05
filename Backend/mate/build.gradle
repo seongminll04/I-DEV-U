@@ -56,6 +56,10 @@ dependencies {
     implementation 'org.json:json:20210307' // Replace this with the latest version of the json library
 }
 
+// Querydsl 설정부
+
+
+
 //tasks.named('test') {
 //    useJUnitPlatform()
 //}

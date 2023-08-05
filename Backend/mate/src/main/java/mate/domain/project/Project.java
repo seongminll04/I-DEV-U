@@ -2,7 +2,6 @@ package mate.domain.project;
 
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,14 +10,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
-import lombok.Getter;
+import lombok.*;
 import mate.domain.user.User;
 
 @Entity
-@Table(name = "project")
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Project {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,29 +28,28 @@ public class Project {
 	@JoinColumn(name = "manager_idx")
 	private User manager;
 
-	@Column(name = "title")
 	private String title;
 
-	@Column(name = "content")
 	private String content;
 
-	@Column(name = "total_num")
 	private Integer totalNum;
 
-	@Column(name = "now_num")
 	private Integer nowNum;
 
-	@Column(name = "status")
 	private String status;
 
-	@Column(name = "type")
-	private String type;
+	private Integer front;
+	private Integer maxFront;
+	private Integer back;
+	private Integer maxBack;
+	private String text;
+
 
 	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
 	private List<ProjectParticipation> projectParticipation;
 
 	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-	private List<ProjectTech> projectTeches;
+	private List<ProjectLanguage> projectTeches;
 
 	// Getters and setters, constructors, and other methods
 	// ...

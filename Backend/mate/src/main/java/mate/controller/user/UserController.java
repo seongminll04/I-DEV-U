@@ -1,11 +1,12 @@
-package mate.controller;
+package mate.controller.user;
 
 import lombok.RequiredArgsConstructor;
+import mate.controller.Result;
 import mate.domain.user.User;
 import mate.domain.user.UserStatus;
 import mate.dto.user.UserSignUpDto;
-import mate.repository.UserRepository;
-import mate.service.UserService;
+import mate.repository.user.UserRepository;
+import mate.service.user.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,7 @@ public class UserController {
     }
 
     @GetMapping("/signUp/emailCheck/{email}")
-    public Result emailCheck(@PathVariable String email) throws Exception{
+    public Result emailCheck(@PathVariable String email){
         if (userRepository.findByEmail(email).isPresent()) {
             return Result.builder().status(badRequest().body("이미 있는 이메일 입니다.")).build();
         }
@@ -51,7 +52,7 @@ public class UserController {
     }
 
     @GetMapping("/signUp/nicknameCheck/{nickname}")
-    public Result nicknameCheck(@PathVariable String nickname) throws Exception{
+    public Result nicknameCheck(@PathVariable String nickname){
 
         if (userRepository.findByNickname(nickname).isPresent()) {
             return Result.builder().status(badRequest().body("이미 있는 닉네임 입니다.")).build();
@@ -60,7 +61,7 @@ public class UserController {
     }
 
     @GetMapping("/check/{userIdx}")
-    public Result emailCheck(@PathVariable Integer userIdx) throws Exception{
+    public Result statusCheck(@PathVariable Integer userIdx){
         Optional<User> user = userRepository.findByIdx(userIdx);
         if (user.isEmpty()) {
             return Result.builder().status(badRequest().body("존재하지 않는 회원입니다.")).build();
@@ -72,4 +73,20 @@ public class UserController {
                 .data(map).build();
     }
 
+<<<<<<< HEAD:Backend/mate/src/main/java/mate/controller/UserController.java
+=======
+//    @GetMapping("/detail/{userIdx}")
+//    public Result userDetail(@PathVariable Integer userIdx){
+//
+//        Optional<User> user = userRepository.findByIdx(userIdx);
+//        if (user.isEmpty()) {
+//            return Result.builder().status(badRequest().body("존재하지 않는 회원입니다.")).build();
+//        }
+//        User user1 = user.get();
+//
+//
+//    }
+
+
+>>>>>>> c68e50c6aedd4be6c3cddf52f306d3252f1decf3:Backend/mate/src/main/java/mate/controller/user/UserController.java
 }

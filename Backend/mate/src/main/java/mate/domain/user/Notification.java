@@ -9,12 +9,13 @@ import java.time.LocalDateTime;
 @Getter
 public class Notification {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idx;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_idx")
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_idx")
+//    private User user;
+    private int userIdx;
 
     private String content;
     private LocalDateTime creatAt;

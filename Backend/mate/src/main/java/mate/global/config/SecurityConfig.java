@@ -8,7 +8,7 @@ import mate.global.login.filter.CustomJsonUsernamePasswordAuthenticationFilter;
 import mate.global.login.handler.LoginFailureHandler;
 import mate.global.login.handler.LoginSuccessHandler;
 import mate.global.login.service.LoginService;
-import mate.repository.UserRepository;
+import mate.repository.user.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -63,6 +63,7 @@ public class SecurityConfig {
                 .antMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
                 .antMatchers("/user/signUp/**").permitAll() // 회원가입 접근 가능
                 .antMatchers("/question/**").permitAll() // 회원가입 접근 가능
+                .antMatchers("/chatRoom/**").permitAll() // 회원가입 접근 가능
                 .anyRequest().authenticated() // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
                 .and();
 

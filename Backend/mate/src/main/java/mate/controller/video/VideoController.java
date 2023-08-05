@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.openvidu.java.client.OpenVidu;
-import mate.service.UserService;
+import mate.service.user.UserService;
 import mate.service.video.VideoService;
 
 import java.io.IOException;

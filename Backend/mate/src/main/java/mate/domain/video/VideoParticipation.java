@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class VideoParticipation {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idx;
 
     @ManyToOne(fetch = FetchType.LAZY)

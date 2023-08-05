@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import mate.domain.user.User;
 import mate.global.jwt.service.JwtService;
 import mate.global.jwt.util.PasswordUtil;
-import mate.repository.UserRepository;
+import mate.repository.user.UserRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
@@ -20,7 +20,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 
 /**
  * Jwt 인증 필터

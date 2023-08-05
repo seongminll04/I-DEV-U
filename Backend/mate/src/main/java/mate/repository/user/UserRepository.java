@@ -1,4 +1,4 @@
-package mate.repository;
+package mate.repository.user;
 
 import mate.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +12,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String email);
     Optional<User> findByNickname(String nickname);
     Optional<User> findByRefreshToken(String refreshToken);
-    User findByEmailAndPassword(String email, String password);
     Optional<User> findByIdx(Integer idx);
-
 }

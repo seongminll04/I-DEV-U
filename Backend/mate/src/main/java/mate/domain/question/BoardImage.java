@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 public class BoardImage {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idx;
 
     @ManyToOne(fetch = FetchType.LAZY)

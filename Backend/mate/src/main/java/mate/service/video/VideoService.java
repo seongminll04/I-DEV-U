@@ -22,9 +22,14 @@ import lombok.extern.slf4j.Slf4j;
 import mate.domain.user.User;
 import mate.domain.video.VideoRoom;
 import mate.dto.video.VideoCreateRequest;
-import mate.repository.UserRepository;
+import mate.repository.user.UserRepository;
 import mate.repository.video.VideoParticipationRepository;
 import mate.repository.video.VideoRepository;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.Random;
 
 @Slf4j
 @Service

@@ -198,8 +198,8 @@ const KakaoSignUp = () => {
           }} />
           
           {formik.isValid && chknickname==='yes' ? 
-          <button className={signup_css.button} type="submit">Sign Up</button> : 
-          <> <button className={signup_css.button_disabled} type="submit" disabled>Sign Up</button>
+          <button className={signup_css.button} type="submit">Sign Up</button> 
+          : <> <button className={signup_css.button_disabled} type="submit" disabled>Sign Up</button>
             { errcount > 1 || errcount === -1 ? <span>빈칸을 모두 채워주세요</span>
             : errcount ===1 ? 
             <span>
@@ -218,8 +218,6 @@ const KakaoSignUp = () => {
            :null 
             }
            </>}
-           <p style={{width:'100%'}}><button className={signup_css.button_disabled} type="submit" disabled>Sign Up</button><br/>
-          빈칸을 모두 채워주세요.</p>
         </form>
       </div>
     </div>

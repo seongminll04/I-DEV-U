@@ -36,7 +36,6 @@ const ReQAModal: React.FC = () => {
   };
 
   const handleSubmit = (event: React.FormEvent) => {
-    console.log('제출버튼 클릭')
     event.preventDefault();
     const surveyResults = [
       {
@@ -74,7 +73,7 @@ const ReQAModal: React.FC = () => {
     if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
 
     axios({
-      method:'put',
+      method:'post',
       url:`https://i9b206.p.ssafy.io:9090/basicSurvey/modify`,
       data:{
         'userIdx':userIdx,
@@ -86,9 +85,9 @@ const ReQAModal: React.FC = () => {
     })
     .then(() =>{
       dispatch(setModal(null))
-      alert('설문에 참여해주셔서 감사합니다.')
+      alert('설문 수정 완료')
     })
-    .catch(err => console.log(err))
+    .catch(()=>alert('설문 수정 실패') )
   }
 
   const surveyForm = (

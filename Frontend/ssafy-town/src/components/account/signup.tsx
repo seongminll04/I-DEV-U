@@ -75,7 +75,6 @@ const SignupForm = () => {
         url:`https://i9b206.p.ssafy.io:9090/user/signUp/emailCheck/${email}`
       })
       .then((res)=>{
-        console.log(res.data.status.statusCodeValue)
         if (res.data.status.statusCodeValue===200) {
           setchkemail('yes');
           alert('사용할 수 있는 아이디입니다.')
@@ -84,8 +83,8 @@ const SignupForm = () => {
           alert('중복된 아이디입니다.')
         }
       })
-      .catch((err) => { 
-        console.log(err)
+      .catch(() => { 
+        alert('오류발생!')
       })
     }
     else {
@@ -114,8 +113,8 @@ const SignupForm = () => {
           alert('중복된 닉네임입니다.')
         }
       })
-      .catch((err) => {
-        console.log(err)
+      .catch(() => {
+        alert('오류 발생!')
       })
     }
     else {
@@ -136,7 +135,6 @@ const SignupForm = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log(values);
       // 회원가입 요청 로직
       if (chkemail !== 'yes' && chknickname !== 'yes') {
         alert('닉네임, 이메일 중복체크를 해주세요.')
@@ -153,12 +151,10 @@ const SignupForm = () => {
           url : 'https://i9b206.p.ssafy.io:9090/user/signUp',
           data : values,
         })
-        .then(res => {
-          console.log(res)
+        .then(() => {
           navigate('/login')
         })
-        .catch(err => {
-          console.log(err)
+        .catch(() => {
           alert('회원가입실패')})
       }
     },
@@ -175,7 +171,6 @@ const SignupForm = () => {
     if (formik.values.confirmPassword==='') {count+=1}
     if (count === 7 ) {count=-1}
     setErrCount(count)
-    console.log(count)
   },[formik, setErrCount])
   return (
     <div className={signup_css.background}>

@@ -37,7 +37,7 @@ const KakaoCallback = () => {
                 setNickname('kakao_'+res.data.id)
                 setKakaotoken(access_token)
             } catch (error) {
-                console.log(error);
+  
             }
         };
 
@@ -67,7 +67,6 @@ const KakaoCallback = () => {
                         data:{'email': nickname}
                       })
                       .then(res => {
-                        console.log(res)
                         // 로그인 시, 로컬 스토리지에 토큰 저장
                         localStorage.setItem('userToken',res.headers.authorization);
                         localStorage.setItem('userIdx', res.data.userIdx);
@@ -76,8 +75,7 @@ const KakaoCallback = () => {
                         // } 
                         navigate('/home')
                       })
-                      .catch(err => {
-                        console.log(err)
+                      .catch(() => {
                         alert('카카오 로그인 실패')
                         navigate('/login')
                       })

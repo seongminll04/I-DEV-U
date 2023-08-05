@@ -58,8 +58,8 @@ const KakaoSignUp = () => {
           alert('중복된 닉네임입니다.')
         }
       })
-      .catch((err) => {
-        console.log(err)
+      .catch(() => {
+        alert('오류발생!')
       })
     }
     else {
@@ -104,7 +104,6 @@ const KakaoSignUp = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log(values);
       // 회원가입 요청 로직
       if (chknickname !== 'yes') {
         alert('닉네임 중복체크를 해주세요.')
@@ -115,12 +114,29 @@ const KakaoSignUp = () => {
           url : 'https://i9b206.p.ssafy.io:9090/user/signUp',
           data : values,
         })
-        .then(res => {
-          console.log(res)
-          navigate('/login')
+        .then(() => {
+          axios({
+            method:'post',
+            url:'https://i9b206.p.ssafy.io:9090/user/kakaologin',
+            data:{'email': email }
+          })
+          .then(res => {
+            // 로그인 시, 로컬 스토리지에 토큰 저장
+            localStorage.setItem('userToken',res.headers.authorization);
+            localStorage.setItem('userIdx', res.data.userIdx);
+            // if (res.data.user.status === "D") {
+            //   throw new ValidationError("탈퇴처리된 회원입니다!");
+            // } 
+            navigate('/home')
+          })
+          .catch(() => {
+      
+            alert('카카오 로그인 실패')
+            navigate('/login')
+          })
         })
-        .catch(err => {
-          console.log(err)
+        .catch(() => {
+  
           alert('회원가입실패')})
       }
     },
@@ -133,7 +149,6 @@ const KakaoSignUp = () => {
     if (formik.values.nickname==='') {count+=1}
     if (count === 4 ) {count=-1}
     setErrCount(count)
-    console.log(count)
   },[formik, setErrCount])
   return (
     <div className={signup_css.background}>

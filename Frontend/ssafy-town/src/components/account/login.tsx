@@ -29,7 +29,6 @@ const Login: React.FC = () => {
       data:{'email': userId, 'password': userPassword,}
     })
     .then(res => {
-      console.log(res)
       // 로그인 시, 로컬 스토리지에 토큰 저장
       localStorage.setItem('userToken',res.headers.authorization);
       localStorage.setItem('userIdx', res.data.userIdx);
@@ -39,7 +38,6 @@ const Login: React.FC = () => {
       navigate('/home')
     })
     .catch(err => {
-      console.log(err)
       if (err instanceof ValidationError) {
         alert(err.message);
       } else {

@@ -36,7 +36,6 @@ const QAModal: React.FC = () => {
   };
 
   const handleSubmit = (event: React.FormEvent) => {
-    console.log('제출버튼 클릭')
     event.preventDefault();
 
     const surveyResults = [
@@ -86,9 +85,8 @@ const QAModal: React.FC = () => {
       dispatch(setModal(null))
       alert('설문에 참여해주셔서 감사합니다.')
     })
-    .catch(err => {console.log(err)
-      dispatch(setModal(null))
-      alert('설문에 참여해주셔서 감사합니다.')})
+    .catch(()=> {
+      alert('설문 등록 실패')})
 
     
   }

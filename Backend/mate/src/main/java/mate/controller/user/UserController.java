@@ -73,8 +73,6 @@ public class UserController {
                 .data(map).build();
     }
 
-<<<<<<< HEAD:Backend/mate/src/main/java/mate/controller/UserController.java
-=======
 //    @GetMapping("/detail/{userIdx}")
 //    public Result userDetail(@PathVariable Integer userIdx){
 //
@@ -86,7 +84,4 @@ public class UserController {
 //
 //
 //    }
-
-
->>>>>>> c68e50c6aedd4be6c3cddf52f306d3252f1decf3:Backend/mate/src/main/java/mate/controller/user/UserController.java
 }

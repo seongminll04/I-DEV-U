@@ -11,15 +11,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import mate.domain.user.User;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class VideoRoom {
 
 	@Id
@@ -37,20 +36,7 @@ public class VideoRoom {
 	private VideoType type;
 
 	private LocalDateTime createdAt;
-	private String videoCode;
-
-	@Builder
-	public VideoRoom(int idx, User user, String title, String content, int totalNumber, VideoType type,
-		LocalDateTime createdAt, String videoCode) {
-		this.idx = idx;
-		this.user = user;
-		this.title = title;
-		this.content = content;
-		this.totalNumber = totalNumber;
-		this.type = type;
-		this.createdAt = createdAt;
-		this.videoCode = videoCode;
-	}
+	private String ovSession;
 
 	public void updateTotalNumber() {
 		this.totalNumber += 1;

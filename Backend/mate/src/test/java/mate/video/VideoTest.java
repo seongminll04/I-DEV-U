@@ -1,39 +1,53 @@
 package mate.video;
 
+import lombok.extern.slf4j.Slf4j;
+import mate.domain.user.User;
+import mate.domain.video.VideoRoom;
+import mate.dto.video.VideoCreateRequest;
+import mate.repository.UserRepository;
+import mate.service.UserService;
+import mate.service.video.VideoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import lombok.extern.slf4j.Slf4j;
-import mate.domain.video.VideoType;
-import mate.dto.video.VideoCreateRequest;
-import mate.repository.video.VideoParticipationRepository;
-import mate.repository.video.VideoRepository;
-import mate.service.video.VideoService;
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @SpringBootTest
-// @Transactional
+//@Transactional
 public class VideoTest {
 
-	@Autowired
-	VideoRepository videoRepository;
+    @Autowired
+    VideoService videoService;
 
-	@Autowired
-	VideoService videoService;
+    @Autowired
+    UserRepository userRepository;
 
-	@Autowired
-	VideoParticipationRepository videoParticipationRepository;
+    @Test
+    void 화상채팅_생성() throws IOException {
+        VideoCreateRequest videoCreateRequest = new VideoCreateRequest();
 
-	@Test
-	void 화상채팅방_생성() {
-		VideoCreateRequest videoCreateRequest = new VideoCreateRequest();
+        videoCreateRequest.setTitle("화상채팅2");
+        videoCreateRequest.setUserIdx(5);
+        videoCreateRequest.setOvSession("Session2");
 
-		videoCreateRequest.setTitle("화상채팅방1");
-		videoCreateRequest.setContent("화상채팅방 내용");
-		videoCreateRequest.setEmail("gudtjr@ssafy");
-		videoCreateRequest.setType(VideoType.Project);
+        videoService.createVideo(videoCreateRequest);
+    }
 
-		videoService.createVideo(videoCreateRequest);
-	}
+    @Test
+    void 화상채팅_입장() {
+        videoService.enterVideo(videoService.findVideoRoomByIdx(1), 6);
+    }
+
+    @Test
+    void 화상채팅방_리스트조회() {
+        List<VideoRoom> list = videoService.videoRoomList(6);
+        for (VideoRoom room : list) {
+            System.out.println(room.getOvSession());
+        }
+    }
+
 }

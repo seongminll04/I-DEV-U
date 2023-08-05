@@ -72,7 +72,4 @@ public class UserController {
                 .data(map).build();
     }
 
-
-
-
 }

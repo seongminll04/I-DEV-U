@@ -9,7 +9,7 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 @Builder
-class Result<T> {
+public class Result<T> {
     private T data;
     private T status;
 }

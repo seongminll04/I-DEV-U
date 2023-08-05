@@ -1,17 +1,13 @@
 package mate.dto.video;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 import mate.domain.video.VideoType;
 
-@Getter
-@NoArgsConstructor
-@Setter
+@Data
 public class VideoCreateRequest {
-	private String email;
+	private int userIdx;
 	private String title;
 	private String content;
 	private VideoType type;
-	private String sessionId;
+	private String ovSession;
 }

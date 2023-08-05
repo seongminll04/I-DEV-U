@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
+import mate.domain.video.VideoParticipation;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -33,71 +35,37 @@ public class VideoService {
 	private final UserRepository userRepository;
 
 	// 화상채팅방 생성
-	public String createVideo(VideoCreateRequest videoCreateRequest) throws IOException {
-		String userToken = generateToken("", "");
+	public void createVideo(VideoCreateRequest videoCreateRequest) throws IOException {
+		User user = userRepository.findById(videoCreateRequest.getUserIdx()).get();
 
-		Optional<User> user = userRepository.findByEmail(videoCreateRequest.getEmail());
-
-		videoRepository.save(VideoRoom.builder()
-			.user(user.get())
+		VideoRoom videoRoom = videoRepository.save(VideoRoom.builder()
+			.user(user)
 			.title(videoCreateRequest.getTitle())
 			.content(videoCreateRequest.getContent())
 			.type(videoCreateRequest.getType())
 			.createdAt(LocalDateTime.now())
-			.videoCode(videoCreateRequest.getSessionId()).build());
+			.ovSession(videoCreateRequest.getOvSession()).build());
 
-		return userToken;
+		videoParticipationRepository.save(VideoParticipation.builder()
+				.videoRoom(videoRoom)
+				.user(user).build());
 	}
 
-	// 이미 생성되어 있는 화상채팅방에 들어감
-	// public VideoRoom enterVideo(String videoCode) {
-	//
-	// 	// 해당 방 인원 추가
-	//
-	// 	// VideoParticipation 추가
-	//
-	// }
+	public VideoRoom findVideoRoomByIdx(int idx) {
+		return videoRepository.findVideoRoomByIdx(idx);
+	}
+
+	public void enterVideo(VideoRoom videoRoom, int userIdx) {
+		videoParticipationRepository.save(VideoParticipation.builder()
+				.videoRoom(videoRoom)
+				.user(userRepository.findById(userIdx).get())
+				.build());
+	}
 
 	// 내가 접속해있는 화상채팅방 목록 조회
-	// public List<VideoRoom> videoRoomList(String email) {
-	// 	// 일단 email을 가진 유저가 접속해있는 방 번호 리턴
-	// 	List<VideoParticipation> list = videoParticipationRepository
-	// }
-
-	public static String generateToken(String sessionId, String role) throws
-		IOException {
-		String openViduUrl = "https://i9b206.p.ssafy.io:8445";
-		String openViduSecret = "PWB206206";
-		role = "publisher"; // or "subscriber" depending on the user's role
-
-		String url = openViduUrl + "/api/sessions/" + sessionId + "/connection";
-
-		HttpClient httpClient = HttpClientBuilder.create().build();
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setHeader("Authorization",
-			"Basic " + java.util.Base64.getEncoder().encodeToString(("OPENVIDUAPP:" + openViduSecret).getBytes()));
-		httpPost.setHeader("Content-Type", "application/json");
-
-		JSONObject requestBody = new JSONObject();
-		requestBody.put("role", role);
-
-		StringEntity params = new StringEntity(requestBody.toString());
-		httpPost.setEntity(params);
-
-		HttpResponse response = httpClient.execute(httpPost);
-
-		if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-			StringBuilder result = new StringBuilder();
-			String line;
-			while ((line = reader.readLine()) != null) {
-				result.append(line);
-			}
-
-			JSONObject jsonResponse = new JSONObject(result.toString());
-			return jsonResponse.getString("token");
-		} else {
-			throw new IOException("Failed to generate user token");
-		}
-	}
+	 public List<VideoRoom> videoRoomList(int userIdx) {
+	 	// userIdx와 일치하는 유저가 접속해있는 방 번호 리턴
+//	 	return videoParticipationRepository.findRoomIdxByUserIdx(userIdx);
+		 return videoParticipationRepository.findRoomIdxByUserIdx(userIdx);
+	 }
 }

@@ -5,7 +5,9 @@ import org.springframework.stereotype.Repository;
 
 import mate.domain.video.VideoRoom;
 
+import java.util.List;
+
 @Repository
 public interface VideoRepository extends JpaRepository<VideoRoom, Integer> {
-	VideoRoom findVideoRoomByVideoCode(String videoCode);
+	VideoRoom findVideoRoomByIdx(int idx);
 }

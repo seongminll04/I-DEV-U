@@ -86,7 +86,7 @@ const KakaoCallback = () => {
                 }
               })
         }
-    }, [kakaotoken, nickname, navigate]);
+    }, [kakaotoken, nickname, navigate, chkdata]);
     
     return (
         <div></div>

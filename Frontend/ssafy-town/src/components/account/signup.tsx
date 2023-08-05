@@ -8,11 +8,13 @@ import axios from 'axios';
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email('유효하지 않은 이메일입니다')
+    .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,}$/, '유효하지 않은 이메일입니다')
     .max(50, '이메일의 글자 수는 50자 이내로 설정해주세요')
     .required('이메일을 입력해주세요'),
   password: Yup.string()
     .min(8, '8~14 자리, 특수문자 사용불가')
     .max(14, '8~14 자리, 특수문자 사용불가')
+    .matches(/^[A-Za-z0-9]+$/, '8~14 자리, 특수문자 사용불가')
     .required('비밀번호를 입력해주세요'),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password') as any, null], '비밀번호가 일치하지 않음')
@@ -20,11 +22,12 @@ const validationSchema = Yup.object().shape({
   nickname: Yup.string()
     .min(2, '2~12 자리, 특수문자 사용불가')
     .max(12, '2~12 자리, 특수문자 사용불가')
+    .matches(/^[A-Za-z0-9가-힣ㄱ-ㅎ\s]+$/, '2~12 자리, 특수문자 사용불가')
     .required('닉네임을 입력해주세요'),
   name: Yup.string()
     .min(1, '1~12 자리, 특수문자 사용불가')
     .max(12, '1~12 자리, 특수문자 사용불가')
-    .matches(/^[가-힣]+$/, '한글로만 작성해주세요')
+    .matches(/^[가-힣]+$/, '한글 이름을 작성해주세요')
     .required('이름을 입력해주세요'),
   birthday: Yup.string()
     .matches(/^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, '유효하지 않은 생년월일입니다')
@@ -39,6 +42,7 @@ const SignupForm = () => {
   const [chkemail, setchkemail] = useState('no');
   const [chknickname, setchknickname] = useState('no');
   const [today,setToday] = useState('2023-12-31')
+  const [errcount,setErrCount] = useState<number>(-1)
   useEffect(()=> {
     const date = new Date()
     var month:any; var day:any;
@@ -46,7 +50,7 @@ const SignupForm = () => {
     else {month=date.getMonth()+1}
     if (date.getDate() < 10){day='0'+(date.getDate())}
     else {day=date.getDate()}
-
+    
     setToday(date.getFullYear()+'-'+month+'-'+day)
   },[setToday])
 
@@ -151,7 +155,20 @@ const SignupForm = () => {
       }
     },
   });
+  useEffect(()=>{
+    var count=0
+    if (formik.values.name==='') {count+=1}
+    if (formik.values.birthday==='') {count+=1}
+    if (formik.values.gender===null) {count+=1}
 
+    if (formik.values.nickname==='') {count+=1}
+    if (formik.values.email==='') {count+=1}
+    if (formik.values.password==='') {count+=1}
+    if (formik.values.confirmPassword==='') {count+=1}
+    if (count === 7 ) {count=-1}
+    setErrCount(count)
+    console.log(count)
+  },[formik, setErrCount])
   return (
     <div className={signup_css.background}>
       <div className={signup_css.modal} >
@@ -236,9 +253,34 @@ const SignupForm = () => {
           }} />
           
           {formik.isValid && chkemail==='yes' && chknickname==='yes' ? 
-          <button className={signup_css.button} type="submit">Sign Up</button> : 
-          <p style={{width:'100%'}}><button className={signup_css.button_disabled} type="submit" disabled>Sign Up</button><br/>
-          빈칸을 모두 채워주세요.</p>}
+          <button className={signup_css.button} type="submit">Sign Up</button>
+           : <> <button className={signup_css.button_disabled} type="submit" disabled>Sign Up</button>
+            { errcount === 2 && formik.values.password==='' && formik.values.confirmPassword==='' ? <span>비밀번호를 입력해주세요</span> 
+            : errcount > 1 || errcount === -1 ? <span>빈칸을 모두 채워주세요</span>
+            : errcount ===1 ? 
+            <span>
+              { formik.values.name==='' ? '이름을 입력해주세요'
+              : formik.values.birthday==='' ? '생년월일을 입력해주세요'
+              : formik.values.gender===null ? '성별을 입력해주세요'
+              : formik.values.nickname==='' ? '닉네임을 입력해주세요'
+              : formik.values.email==='' ? '아이디를 입력해주세요'
+              : formik.values.password==='' ? '비밀번호를 입력해주세요' 
+              : formik.errors.password ? '비밀번호를 확인해주세요' : '비밀번호 확인을 입력해주세요' }
+            </span>
+           : errcount===0 ? <span>
+              { formik.errors.name ? '이름을 확인해주세요'
+            : formik.errors.birthday ? '생년월일을 확인해주세요'
+            : formik.errors.gender ? '성별을 확인해주세요'
+            : formik.errors.nickname ? '닉네임을 확인해주세요'
+            : formik.errors.email ? '아이디를 확인해주세요'
+            : formik.errors.confirmPassword ? '비밀번호 확인이 일치하지 않습니다':null}</span>
+           :null 
+            }
+           </>
+          }
+         
+
+
         </form>
       </div>
     </div>

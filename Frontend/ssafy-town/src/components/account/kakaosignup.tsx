@@ -9,18 +9,19 @@ const validationSchema = Yup.object().shape({
   nickname: Yup.string()
     .min(2, '2~12 자리, 특수문자 사용불가')
     .max(12, '2~12 자리, 특수문자 사용불가')
+    .matches(/^[A-Za-z0-9가-힣ㄱ-ㅎ\s]+$/, '2~12 자리, 특수문자 사용불가')
     .required('닉네임을 입력해주세요'),
   name: Yup.string()
     .min(1, '1~12 자리, 특수문자 사용불가')
     .max(12, '1~12 자리, 특수문자 사용불가')
-    .matches(/^[가-힣]+$/, '한글로만 작성해주세요')
+    .matches(/^[가-힣]+$/, '한글 이름을 작성해주세요')
     .required('이름을 입력해주세요'),
   birthday: Yup.string()
     .matches(/^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, '유효하지 않은 생년월일입니다')
     .required('생년월일을 입력해주세요'),
   gender: Yup.string()
-  .required('성별을 선택해주세요')
-  .oneOf(['MALE', 'FEMALE'], '유효한 성별을 선택해주세요'),
+    .required('성별을 선택해주세요')
+    .oneOf(['MALE', 'FEMALE'], '유효한 성별을 선택해주세요'),
 });
 
 const KakaoSignUp = () => {

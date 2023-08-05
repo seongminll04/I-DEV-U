@@ -34,9 +34,9 @@ const KakaoCallback = () => {
                         }
                     }
                 );
-                
+                console.log(res.data)
                 setNickname('kakao_'+res.data.id)
-                setKakaotoken(access_token)    
+                setKakaotoken(access_token)
             } catch (error) {
                 console.log(error);
             }
@@ -48,6 +48,7 @@ const KakaoCallback = () => {
 
     useEffect(() => {
         if (kakaotoken && nickname) {
+
             axios({
                 method:'get',
                 url:`https://i9b206.p.ssafy.io:9090/user/signUp/emailCheck/${nickname}`,

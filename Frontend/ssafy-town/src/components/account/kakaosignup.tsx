@@ -28,6 +28,8 @@ const KakaoSignUp = () => {
   const location = useLocation();
   const [chknickname, setchknickname] = useState('no');
   const [today,setToday] = useState('2023-12-31')
+  const [errcount,setErrCount] = useState<number>(-1)
+
   const nicknamecheck = (nickname:string) => {
     setchknickname('no');
     if (nickname==='') {
@@ -68,11 +70,9 @@ const KakaoSignUp = () => {
     setToday(date.getFullYear()+'-'+month+'-'+day)
   },[setToday])
 
-  const chkdata = location.state.data;
   function generateRandomString(length:number) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let result = '';
-    console.log(chkdata)
     for (let i = 0; i < length; i++) {
         const randomIndex = Math.floor(Math.random() * characters.length);
         result += characters.charAt(randomIndex);
@@ -117,7 +117,16 @@ const KakaoSignUp = () => {
       }
     },
   });
-
+  useEffect(()=>{
+    var count=0
+    if (formik.values.name==='') {count+=1}
+    if (formik.values.birthday==='') {count+=1}
+    if (formik.values.gender===null) {count+=1}
+    if (formik.values.nickname==='') {count+=1}
+    if (count === 4 ) {count=-1}
+    setErrCount(count)
+    console.log(count)
+  },[formik, setErrCount])
   return (
     <div className={signup_css.background}>
       <div className={signup_css.modal} >
@@ -182,8 +191,27 @@ const KakaoSignUp = () => {
           
           {formik.isValid && chknickname==='yes' ? 
           <button className={signup_css.button} type="submit">Sign Up</button> : 
-          <p style={{width:'100%'}}><button className={signup_css.button_disabled} type="submit" disabled>Sign Up</button><br/>
-          빈칸을 모두 채워주세요.</p>}
+          <> <button className={signup_css.button_disabled} type="submit" disabled>Sign Up</button>
+            { errcount > 1 || errcount === -1 ? <span>빈칸을 모두 채워주세요</span>
+            : errcount ===1 ? 
+            <span>
+              { formik.values.name==='' ? '이름을 입력해주세요'
+              : formik.values.birthday==='' ? '생년월일을 입력해주세요'
+              : formik.values.gender===null ? '성별을 입력해주세요'
+              : formik.values.nickname==='' ? '닉네임을 입력해주세요'
+              : null }
+            </span>
+           : errcount===0 ? <span>
+            { formik.errors.name ? '이름을 확인해주세요'
+            : formik.errors.birthday ? '생년월일을 확인해주세요'
+            : formik.errors.gender ? '성별을 확인해주세요'
+            : formik.errors.nickname ? '닉네임을 확인해주세요'
+            : chknickname==='no' ? '닉네임 중복을 확인해주세요' : null  }</span>
+           :null 
+            }
+           </>}
+           <p style={{width:'100%'}}><button className={signup_css.button_disabled} type="submit" disabled>Sign Up</button><br/>
+          빈칸을 모두 채워주세요.</p>
         </form>
       </div>
     </div>

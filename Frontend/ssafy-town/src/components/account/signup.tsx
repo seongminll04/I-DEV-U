@@ -273,7 +273,10 @@ const SignupForm = () => {
             : formik.errors.gender ? '성별을 확인해주세요'
             : formik.errors.nickname ? '닉네임을 확인해주세요'
             : formik.errors.email ? '아이디를 확인해주세요'
-            : formik.errors.confirmPassword ? '비밀번호 확인이 일치하지 않습니다':null}</span>
+            : formik.errors.confirmPassword ? '비밀번호 확인이 일치하지 않습니다'
+            : chkemail==='no' && chknickname ==='no' ? '닉네임, 아이디 중복을 확인해주세요'
+            : chkemail==='no' ? '아이디 중복을 확인해주세요'
+            : chknickname==='no' ? '닉네임 중복을 확인해주세요' : null  }</span>
            :null 
             }
            </>

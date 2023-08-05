@@ -61,7 +61,8 @@ const MyRoom: React.FC = () => {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        if (isModalOpen !== null) {dispatch(setModal(null))}
+        if (isModalOpen === '최초설문') {}
+        else if (isModalOpen !== null) {dispatch(setModal(null))}
         else if (isSidebarOpen !== null) {dispatch(setSidebar(null))}
       }
     };

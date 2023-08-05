@@ -17,7 +17,15 @@ const validationSchema = Yup.object().shape({
     .matches(/^[가-힣]+$/, '한글 이름을 작성해주세요')
     .required('이름을 입력해주세요'),
   birthday: Yup.string()
-    .matches(/^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, '유효하지 않은 생년월일입니다')
+    .matches(/^(19[0-9]{2}|20[0-2]{1}[0-9]{1})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, '유효한 생년월일이 아닙니다')
+    .test('maxDate', '유효한 생년월일이 아닙니다', function (value) {
+      if (!value) {
+        return
+      }
+      const selectedDate = new Date(value);
+      const tday=new Date();
+      return selectedDate <= tday;
+    })
     .required('생년월일을 입력해주세요'),
   gender: Yup.string()
     .required('성별을 선택해주세요')
@@ -142,7 +150,7 @@ const KakaoSignUp = () => {
           <label className={signup_css.split}>생년월일
           <span style={{color:'darkgray'}}>{formik.touched.birthday && formik.errors.birthday ? formik.errors.birthday : null}</span>
           </label>
-          <input className={signup_css.input} type="date" {...formik.getFieldProps('birthday')} max={today} />
+          <input className={signup_css.input} type="date" {...formik.getFieldProps('birthday')} min={'1900-01-01'} max={today} />
 
             <label className={signup_css.split}>성별
             <span style={{color:'darkgray', margin:'0'}}>{formik.touched.gender && formik.errors.gender ? formik.errors.gender : null}</span>

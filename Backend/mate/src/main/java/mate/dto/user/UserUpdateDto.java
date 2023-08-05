@@ -6,15 +6,14 @@ import mate.domain.user.UserGender;
 import java.time.LocalDate;
 
 @Data
-public class UserSignUpDto {
-
+public class UserUpdateDto {
+    private Integer userIdx;
     private String email;
-    private String password;
     private String name;
     private String nickname;
-    private LocalDate birthday;
+    private LocalDate birth;
     private UserGender gender;
+    private String intro;
     private String image;
-
-
+    private String password;
 }

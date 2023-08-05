@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import mate.controller.Result;
 import mate.domain.user.User;
 import mate.domain.user.UserStatus;
-import mate.dto.user.UserSignUpDto;
+import mate.dto.user.*;
 import mate.repository.user.UserRepository;
 import mate.service.user.UserService;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -45,43 +48,68 @@ public class UserController {
 
     @GetMapping("/signUp/emailCheck/{email}")
     public Result emailCheck(@PathVariable String email){
-        if (userRepository.findByEmail(email).isPresent()) {
-            return Result.builder().status(badRequest().body("이미 있는 이메일 입니다.")).build();
-        }
-        return Result.builder().status(ok().body("사용가능한 이메일 입니다.")).build();
+        return userRepository.findByEmail(email)
+                .map(user -> Result.builder().status(badRequest().body("이미 있는 이메일 입니다.")).build())
+                .orElse(Result.builder().status(ok().body("사용가능한 이메일 입니다.")).build());
     }
 
     @GetMapping("/signUp/nicknameCheck/{nickname}")
     public Result nicknameCheck(@PathVariable String nickname){
-
-        if (userRepository.findByNickname(nickname).isPresent()) {
-            return Result.builder().status(badRequest().body("이미 있는 닉네임 입니다.")).build();
-        }
-        return Result.builder().status(ok().body("사용가능한 닉네임 입니다.")).build();
+        return userRepository.findByNickname(nickname)
+                .map(user -> Result.builder().status(badRequest().body("이미 있는 닉네임 입니다.")).build())
+                .orElse(Result.builder().status(ok().body("사용가능한 닉네임 입니다.")).build());
     }
 
     @GetMapping("/check/{userIdx}")
     public Result statusCheck(@PathVariable Integer userIdx){
-        Optional<User> user = userRepository.findByIdx(userIdx);
-        if (user.isEmpty()) {
-            return Result.builder().status(badRequest().body("존재하지 않는 회원입니다.")).build();
-        }
-        UserStatus status = user.get().getStatus();
-        Map map = new HashMap();
-        map.put("status", status);
-        return Result.builder().status(ok().body("회원 상태 코드"))
-                .data(map).build();
+        return userRepository.findByIdx(userIdx)
+                .map(user -> {
+                    UserStatus status = user.getStatus();
+                    Map<String, UserStatus> map = Map.of("status", status);
+                    return Result.builder().status(ok().body("회원 상태 코드")).data(map).build();
+                })
+                .orElse(Result.builder().status(badRequest().body("존재하지 않는 회원입니다.")).build());
     }
 
-//    @GetMapping("/detail/{userIdx}")
-//    public Result userDetail(@PathVariable Integer userIdx){
-//
-//        Optional<User> user = userRepository.findByIdx(userIdx);
-//        if (user.isEmpty()) {
-//            return Result.builder().status(badRequest().body("존재하지 않는 회원입니다.")).build();
-//        }
-//        User user1 = user.get();
-//
-//
-//    }
+    @GetMapping("/detail/{userIdx}")
+    public Result userDetail(@PathVariable Integer userIdx){
+
+        return userRepository.findByIdx(userIdx).map(user -> {
+            UserDto userDto = new UserDto();
+            userDto.setUserIdx(user.getIdx());
+            userDto.setEmail(user.getEmail());
+            userDto.setName(user.getName());
+            userDto.setNickname(user.getNickname());
+            userDto.setBirth(user.getBirth());
+            userDto.setGender(user.getGender());
+
+            Optional.ofNullable(user.getIntro()).ifPresent(userDto::setIntro);
+            Optional.ofNullable(user.getImage()).ifPresent(userDto::setImage);
+
+            return Result.builder().data(userDto).status(ok().body("조회 성공")).build();
+        }).orElse(Result.builder().status(badRequest().body("조회 실패")).build());
+    }
+
+    @PutMapping("/modify")
+    public Result userUpdate(@RequestBody UserUpdateDto userUpdateDto) throws Exception {
+        return userService.update(userUpdateDto);
+    }
+
+    @DeleteMapping("/delete/{userIdx}")
+    public Result userDelete(@PathVariable Integer userIdx) {
+        return userRepository.findByIdx(userIdx)
+                .map(user -> {
+                    userRepository.deleteByIdx(userIdx);
+                    return Result.builder().data(user.getName()).status(ok().body("삭제 성공")).build();
+                })
+                .orElse(Result.builder().status(ok().body("삭제 실패")).build());
+    }
+
+    @PostMapping("modify/check")
+    public Result userModifyCheck(@RequestBody UserCheckDto userCheckDto){
+
+        return userService.check(userCheckDto);
+
+    }
+
 }

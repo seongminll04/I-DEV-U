@@ -3,6 +3,7 @@ package mate.controller;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Map;
 

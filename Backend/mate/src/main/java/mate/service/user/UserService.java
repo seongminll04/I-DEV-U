@@ -1,14 +1,23 @@
 package mate.service.user;
 
 import lombok.RequiredArgsConstructor;
+import mate.controller.Result;
 import mate.domain.user.Role;
 import mate.domain.user.User;
 import mate.domain.user.UserStatus;
-import mate.dto.user.UserSignUpDto;
+import mate.dto.user.*;
 import mate.repository.user.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
+import static org.springframework.http.ResponseEntity.badRequest;
+import static org.springframework.http.ResponseEntity.ok;
 
 @Service
 @Transactional
@@ -38,11 +47,58 @@ public class UserService {
                 .gender(userSignUpDto.getGender())
                 .status(UserStatus.A)
                 .role(Role.USER)
+                .image(Optional.ofNullable(userSignUpDto.getImage()).orElse(userSignUpDto.getImage()))
                 .build();
+
+        if (userSignUpDto.getEmail().startsWith("kakao_")) user.setKakao();
 
         user.passwordEncode(passwordEncoder);
         userRepository.save(user);
 
     }
+    public Result update(UserUpdateDto userUpdateDto) throws Exception {
+        if (userRepository.findUserByEmailAndNotIdx(userUpdateDto.getUserIdx(), userUpdateDto.getEmail()).isPresent()) {
+            throw new Exception("이미 존재하는 이메일입니다.");
+        }
+
+        if (userRepository.findUserByNicknameAndNotIdx(userUpdateDto.getUserIdx(), userUpdateDto.getNickname()).isPresent()) {
+            throw new Exception("이미 존재하는 닉네임입니다.");
+        }
+        System.out.println(userUpdateDto);
+        return userRepository.findByIdx(userUpdateDto.getUserIdx()).map(user -> {
+            user = user.builder().idx(userUpdateDto.getUserIdx())
+                    .email(userUpdateDto.getEmail())
+                    .name(userUpdateDto.getName())
+                    .nickname(userUpdateDto.getNickname())
+                    .birth(userUpdateDto.getBirth())
+                    .gender(userUpdateDto.getGender())
+                    .password(user.getPassword())
+                    .intro(Optional.ofNullable(userUpdateDto.getIntro()).orElse(user.getIntro()))
+                    .image(Optional.ofNullable(userUpdateDto.getImage()).orElse(user.getImage()))
+                    .role(user.getRole())
+                    .status(user.getStatus())
+                    .build();
+
+            userRepository.save(user);
+
+            return Result.builder().status(ok().body("유저 수정 성공")).build();
+        }).orElse(Result.builder().status(badRequest().body("유저 수정 실패")).build());
+
+    }
+
+    public Result check(UserCheckDto userCheckDto){
+
+        User user = userRepository.findByIdx(userCheckDto.getUserIdx())
+                .orElseThrow(() -> new UsernameNotFoundException("해당 화원아 존재하지 않습니다."));
+        if (user.getEmail().startsWith("kakao_")) userCheckDto.setPassword("kakao");
+        System.out.println(userCheckDto.getPassword());
+        System.out.println(user.getPassword());
+        if (passwordEncoder.matches(userCheckDto.getPassword(), user.getPassword())){
+            return Result.builder().status(ok().body("비밀번호 일치")).build();
+        }
+       return Result.builder().status(badRequest().body("비밀번호 불일치")).build();
+
+    }
+
 
 }

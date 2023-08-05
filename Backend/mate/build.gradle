@@ -53,7 +53,13 @@ dependencies {
 
     // openvidu
     implementation 'io.openvidu:openvidu-java-client:2.22.0'
+
     implementation 'org.json:json:20210307' // Replace this with the latest version of the json library
+
+
+    //email
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 }
 
 // Querydsl 설정부

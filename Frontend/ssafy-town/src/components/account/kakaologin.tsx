@@ -6,7 +6,7 @@ const KakaoCallback = () => {
     const navigate = useNavigate();
     const [kakaotoken, setKakaotoken] = useState('')
     const [nickname, setNickname] = useState('')
-
+    const [chkdata, setdata] =useState()
     useEffect(() => {
         const fetchKakaoToken = async () => {
             const params = new URL(document.location.toString()).searchParams;
@@ -34,7 +34,7 @@ const KakaoCallback = () => {
                         }
                     }
                 );
-                console.log(res.data)
+                setdata(res.data)
                 setNickname('kakao_'+res.data.id)
                 setKakaotoken(access_token)
             } catch (error) {
@@ -58,6 +58,7 @@ const KakaoCallback = () => {
                     navigate('/kakaosignup',{
                         state:{
                             nickname:nickname,
+                            data:chkdata,
                         }
                     });
                   }

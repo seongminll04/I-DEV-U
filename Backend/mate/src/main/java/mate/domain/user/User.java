@@ -29,6 +29,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role; // ADMIN , USER
     private String refreshToken;
+    private String image;
 
 
 
@@ -37,6 +38,9 @@ public class User {
     // 비밀번호 암호화 메소드
     public void passwordEncode(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
+    }
+    public void setKakao(){
+        this.password = "kakao";
     }
 
 

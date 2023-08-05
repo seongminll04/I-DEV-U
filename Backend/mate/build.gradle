@@ -53,6 +53,9 @@ dependencies {
 
     // openvidu
     implementation 'io.openvidu:openvidu-java-client:2.22.0'
+
+    //email
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 // Querydsl 설정부

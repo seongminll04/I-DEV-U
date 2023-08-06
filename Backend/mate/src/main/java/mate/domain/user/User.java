@@ -30,8 +30,7 @@ public class User {
     private Role role; // ADMIN , USER
     private String refreshToken;
     private String image;
-
-
+    private String invite;
 
     // 생성자, 기타 메서드 생략
 
@@ -41,6 +40,15 @@ public class User {
     }
     public void setKakao(){
         this.password = "kakao";
+    }
+
+    public void setPw(String password){
+        this.password = password;
+    }
+
+    public void setSetting(String invite){
+        if (invite.equals("true")) this.invite = "true";
+        else this.invite = "false";
     }
 
 

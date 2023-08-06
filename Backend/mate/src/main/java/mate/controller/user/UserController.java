@@ -5,6 +5,7 @@ import mate.controller.Result;
 import mate.domain.user.User;
 import mate.domain.user.UserStatus;
 import mate.dto.user.*;
+import mate.repository.user.FollowRepository;
 import mate.repository.user.UserRepository;
 import mate.service.user.UserService;
 import org.springframework.data.jpa.repository.Modifying;
@@ -82,6 +83,7 @@ public class UserController {
             userDto.setNickname(user.getNickname());
             userDto.setBirth(user.getBirth());
             userDto.setGender(user.getGender());
+            userDto.setInvite(user.getInvite());
 
             Optional.ofNullable(user.getIntro()).ifPresent(userDto::setIntro);
             Optional.ofNullable(user.getImage()).ifPresent(userDto::setImage);
@@ -109,7 +111,38 @@ public class UserController {
     public Result userModifyCheck(@RequestBody UserCheckDto userCheckDto){
 
         return userService.check(userCheckDto);
+    }
 
+    @PostMapping("/findPw")
+    public Result userPassword(@RequestBody UserPwDto userPwDto){
+        return userRepository.findByEmailAndName(userPwDto.getEmail(), userPwDto.getName())
+                .map(user -> Result.builder().status(ok().body("확인 성공")).build())
+                .orElse(Result.builder().status(badRequest().body("확인 실패")).build());
+    }
+
+    @PutMapping("/findPw")
+    public Result userChangePasswod(@RequestBody UserCheckDto userCheckDto){
+        return userService.changePw(userCheckDto);
+    }
+
+    @PutMapping("/setting")
+    public Result userSetting(@RequestBody UserSettingDto userSettingDto){
+        return userRepository.findByIdx(userSettingDto.getUserIdx())
+                .map(user -> {
+                    user.setSetting(userSettingDto.getInvite());
+                    return Result.builder().status(ok().body("설정 성공")).build();
+                })
+                .orElse(Result.builder().status(badRequest().body("설정 실패")).build());
+    }
+
+    @PostMapping("/follow")
+    public Result userFollow(@RequestBody UserFollowDto userFollowDto){
+        return userService.follow(userFollowDto);
+    }
+
+    @DeleteMapping("/unfollow")
+    public Result userUnfollow(@RequestBody UserFollowDto userFollowDto){
+        return userService.unfollow(userFollowDto);
     }
 
 }

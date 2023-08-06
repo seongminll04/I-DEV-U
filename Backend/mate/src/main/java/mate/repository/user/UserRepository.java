@@ -17,6 +17,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByNickname(String nickname);
     Optional<User> findByRefreshToken(String refreshToken);
     Optional<User> findByIdx(Integer idx);
+    Optional<User> findByEmailAndName(String email, String name);
+
     @Query("select u from User u where u.idx != :idx and u.email = :email")
     Optional<User> findUserByEmailAndNotIdx(@Param("idx") Integer userIdx, @Param("email") String email);
 
@@ -27,6 +29,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     void deleteByIdx(Integer idx);
 
-    boolean existsUserByIdxAndPassword(Integer idx, String password);
 
 }

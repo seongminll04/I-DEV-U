@@ -1,11 +1,14 @@
 package mate.domain.user;
 
-import lombok.Getter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Follow {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

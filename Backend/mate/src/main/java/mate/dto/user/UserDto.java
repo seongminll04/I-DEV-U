@@ -33,4 +33,5 @@ public class UserDto {
     private UserGender gender;
     private String intro;
     private String image;
+    private String invite;
 }

@@ -2,10 +2,12 @@ package mate.service.user;
 
 import lombok.RequiredArgsConstructor;
 import mate.controller.Result;
+import mate.domain.user.Follow;
 import mate.domain.user.Role;
 import mate.domain.user.User;
 import mate.domain.user.UserStatus;
 import mate.dto.user.*;
+import mate.repository.user.FollowRepository;
 import mate.repository.user.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,6 +28,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final FollowRepository followRepository;
 
 
     public void signUp(UserSignUpDto userSignUpDto) throws Exception {
@@ -89,7 +92,7 @@ public class UserService {
     public Result check(UserCheckDto userCheckDto){
 
         User user = userRepository.findByIdx(userCheckDto.getUserIdx())
-                .orElseThrow(() -> new UsernameNotFoundException("해당 화원아 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("해당 화원이 존재하지 않습니다."));
         if (user.getEmail().startsWith("kakao_")) userCheckDto.setPassword("kakao");
         System.out.println(userCheckDto.getPassword());
         System.out.println(user.getPassword());
@@ -100,5 +103,39 @@ public class UserService {
 
     }
 
+    public Result changePw(UserCheckDto userCheckDto){
+        return userRepository.findByIdx(userCheckDto.getUserIdx())
+                .map(user -> {
+                    user.setPw(userCheckDto.getPassword());
+                    user.passwordEncode(passwordEncoder);
+                    return Result.builder().status(ok().body("비밀번호 변경 성공")).build();
+                }).orElse(Result.builder().status(badRequest().body("비밀번호 변경 실패")).build());
+    }
+
+    public Result follow(UserFollowDto userFollowDto){
+
+        User user = userRepository.findByIdx(userFollowDto.getUserIdx())
+                .orElseThrow(() -> new UsernameNotFoundException("해당 화원이 존재하지 않습니다."));
+        User followUser = userRepository.findByIdx(userFollowDto.getFollowIdx())
+                .orElseThrow(() -> new UsernameNotFoundException("해당 화원이 존재하지 않습니다."));
+
+        // 중복 체크
+        if (followRepository.existsByUserAndFollowUser(user, followUser)) {
+            return Result.builder().status(badRequest().body("이미 팔로우한 사용자입니다.")).build();
+        }
+
+        Follow follow = Follow.builder()
+                .user(user)
+                .followUser(followUser)
+                .build();
+        followRepository.save(follow);
+
+        return Result.builder().status(ok().body("팔로우 성공")).build();
+    }
+
+    public Result unfollow(UserFollowDto userFollowDto){
+        followRepository.deleteByIdxAndFollow(userFollowDto.getUserIdx(), userFollowDto.getFollowIdx());
+        return Result.builder().status(ok().body("언팔로우 성공")).build();
+    }
 
 }

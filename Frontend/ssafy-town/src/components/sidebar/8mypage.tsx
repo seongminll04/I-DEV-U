@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import mypage_css from './8mypage.module.css';
 import axios from 'axios';
@@ -62,35 +62,33 @@ let user = {
   grade: 0, // 1 : 관리자(운영자), 2 : 일반
 };
 
-const getUser = async () => {
-  const userToken = localStorage.getItem('userToken')
-  const userIdxStr = localStorage.getItem('userIdx')
-  var userIdx:number|null;
-  if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
-  axios({
-    method: 'get',
-    url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
-    headers : {
-      Authorization: 'Bearer ' + userToken
-    },
-  })
-  .then(res => {
-    // console.log(res)
-    user = res.data.data;
-    // const alert_data=res.data 
-  })
-  .catch(err => {
-    console.log(err)
-    console.log("유저 정보가 정확하지 않음")
-  })
-};
-
 const Mypage: React.FC = () => {
   const dispatch = useDispatch();
   // const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
-
-  getUser();
+  useEffect(()=>{
+    // 프로필정보 로딩
+    const userToken = localStorage.getItem('userToken')
+    const userIdxStr = localStorage.getItem('userIdx')
+    var userIdx:number|null;
+    if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
+    axios({
+      method: 'get',
+      url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
+      headers : {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+    .then(res => {
+      // console.log(res)
+      user = res.data.data;
+      // const alert_data=res.data 
+    })
+    .catch(err => {
+      console.log(err)
+      console.log("유저 정보가 정확하지 않음")
+    })
+  },[])
   // toggle
   const [isOn, setisOn] = useState(true);
 

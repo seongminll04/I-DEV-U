@@ -1,6 +1,8 @@
 package mate.dto.project;
 
 import lombok.Data;
+import mate.domain.project.ProjectLanguage;
+import mate.domain.project.ProjectTech;
 
 import java.util.List;
 
@@ -17,5 +19,7 @@ public class ProjectDto {
 	private Integer maxFront;
 	private Integer back;
 	private Integer maxBack;
-	private List<String> language;
+	private String type;
+	private List<ProjectLanguage> languageList;
+	private List<ProjectTech> techList;
 }

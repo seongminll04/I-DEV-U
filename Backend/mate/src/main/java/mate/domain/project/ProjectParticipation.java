@@ -8,12 +8,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import lombok.Getter;
+import lombok.*;
 import mate.domain.user.User;
 
 @Entity
 @Table(name = "project_participation")
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class ProjectParticipation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -7,10 +7,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import lombok.Getter;
+import lombok.*;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class ProjectLanguage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

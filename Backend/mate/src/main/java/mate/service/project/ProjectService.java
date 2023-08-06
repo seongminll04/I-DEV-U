@@ -1,12 +1,23 @@
 package mate.service.project;
 
 import lombok.RequiredArgsConstructor;
+import mate.domain.project.Project;
+import mate.domain.project.ProjectLanguage;
+import mate.domain.project.ProjectParticipation;
+import mate.domain.project.ProjectTech;
+import mate.domain.user.User;
 import mate.dto.project.ProjectDto;
+import mate.dto.project.ProjectTechDto;
+import mate.repository.project.ProjectLanguageRepository;
+import mate.repository.project.ProjectParticipationRepository;
 import mate.repository.project.ProjectRepository;
+import mate.repository.project.ProjectTechRepository;
 import mate.repository.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -16,12 +27,54 @@ public class ProjectService {
 
 	private final ProjectRepository projectRepository;
 	private final UserRepository userRepository;
+	private final ProjectParticipationRepository projectParticipationRepository;
+	private final ProjectTechRepository projectTechRepository;
+	private final ProjectLanguageRepository projectLanguageRepository;
 
+	public Project registerProject(ProjectDto projectDto) {
 
+		User user = userRepository.findById(projectDto.getManagerIdx()).get();
 
-	public void registerProject(ProjectDto projectDto) {
+		Project project = projectRepository.save(Project.builder()
+						.manager(user)
+						.title(projectDto.getTitle())
+						.content(projectDto.getContent())
+						.totalNum(projectDto.getTotalNum())
+						.nowNum(projectDto.getNowNum())
+						.front(projectDto.getFront())
+						.maxFront(projectDto.getMaxFront())
+						.back(projectDto.getBack())
+						.maxBack(projectDto.getMaxBack())
+						.type(projectDto.getType()).build());
 
-		String session = makeRoomCode();
+		projectParticipationRepository.save(ProjectParticipation.builder()
+						.project(project)
+						.user(user).build());
+
+		List<ProjectTech> techs = new ArrayList<>();
+
+		// 일단 비어있는 projectTechDto의 project에 방금 생성된 project 삽입
+		for (ProjectTech tech : projectDto.getTechList()) {
+			techs.add(ProjectTech.builder()
+					.project(project)
+					.tech(tech.getTech())
+					.build());
+		}
+
+		List<ProjectLanguage> languages = new ArrayList<>();
+
+		// 일단 비어있는 projectLanguageDto의 project에 방금 생성된 project 삽입
+		for (ProjectLanguage language : projectDto.getLanguageList()) {
+			languages.add(ProjectLanguage.builder()
+					.project(project)
+					.language(language.getLanguage())
+					.build());
+		}
+
+		projectTechRepository.saveAll(techs);
+		projectLanguageRepository.saveAll(languages);
+
+		return project;
 	}
 
 	public String makeRoomCode() {

@@ -7,12 +7,6 @@ import mate.domain.video.VideoType;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-
-//"title (VARCHAR)": "화상채팅방 이름",
-//        "OVSession(VARCHAR)": "화상채팅방 세션값"
-//        "totalNum (INT)": "총 인원",
-//        "nowNum (INT)": "현재 모집된 인원",
-//        "modify (boolean)": "내가
 @Data
 public class VideoDto {
     private int idx;

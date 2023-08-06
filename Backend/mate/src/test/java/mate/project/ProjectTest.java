@@ -57,8 +57,6 @@ public class ProjectTest {
         languages.add(ProjectLanguage.builder()
                 .project(project)
                 .language("JS").build());
-
-        projectService.registerProjectTechsAndLanguages(techs, languages);
     }
 
 }

@@ -18,7 +18,7 @@ const Login: React.FC = () => {
 
   useEffect(()=>{
     
-    const userToken = localStorage.getItem('usertoken');
+    const userToken = localStorage.getItem('userToken');
     if (userToken) {navigate('/home')}
   },[navigate])
   

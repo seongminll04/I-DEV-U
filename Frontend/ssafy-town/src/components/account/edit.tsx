@@ -84,7 +84,7 @@ const EditAccount: React.FC<Props> = ({user}) => {
 
   const formik = useFormik({
     initialValues: {
-      userIdx : localStorage.getItem("saveid"),
+      userIdx : localStorage.getItem("userIdx"),
       email: user.email,
       nickname: user.nickname,
       name: user.name,
@@ -97,7 +97,7 @@ const EditAccount: React.FC<Props> = ({user}) => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log(values);
-      const userToken = localStorage.getItem('usertoken');
+      const userToken = localStorage.getItem('userToken');
       axios({
         method : 'put',
         url : 'https://i9b206.p.ssafy.io:9090/user/modify',

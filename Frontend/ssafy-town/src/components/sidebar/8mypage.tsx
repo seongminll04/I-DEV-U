@@ -69,7 +69,7 @@ const getUser = async () => {
   if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
   axios({
     method: 'get',
-    url: `https://i9b206.p.ssafy.io:9090/user/${userIdx}`,
+    url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
     headers : {
       Authorization: 'Bearer ' + userToken
     },
@@ -96,8 +96,8 @@ const Mypage: React.FC = () => {
 
   const toggleHandler = () => {
     // isOn의 상태를 변경하는 메소드를 구현
-    const userToken = localStorage.getItem('usertoken');
-    const userIdx = localStorage.getItem('saveid');
+    const userToken = localStorage.getItem('userToken');
+    const userIdx = localStorage.getItem('userIdx');
     setisOn(!isOn);
 
     axios({

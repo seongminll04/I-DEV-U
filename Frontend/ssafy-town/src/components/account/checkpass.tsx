@@ -25,8 +25,8 @@ const CheckPass: React.FC = () => {
   }
   
   const checkPass = () => {
-    const userToken = localStorage.getItem('usertoken')
-    const userIdx = localStorage.getItem('saveid')
+    const userToken = localStorage.getItem('userToken')
+    const userIdx = localStorage.getItem('userIdx')
 
     axios({
       method: 'post',

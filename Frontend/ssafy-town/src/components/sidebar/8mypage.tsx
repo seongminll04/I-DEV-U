@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import mypage_css from './8mypage.module.css';
 import axios from 'axios';
 import EditAcount from '../account/edit';
+import CheckPass from '../account/checkpass'
+
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
@@ -53,7 +55,7 @@ let user = {
   password: '',
   name: '',
   nickname: '',
-  birthdate: '',
+  birth: '',
   gender: 0,
   intro: '', // 자기소개
   status: '', // active or not (회원탈퇴여부)
@@ -61,19 +63,18 @@ let user = {
 };
 
 const getUser = async () => {
-  const idx = parseInt(localStorage.getItem('idx') || '0', 10); // Parse to an integer
+  const idx = parseInt(localStorage.getItem('saveid') || '0', 10); // Parse to an integer
   const userToken = localStorage.getItem('usertoken')
   axios({
     method: 'get',
-    url: `https://i9b206.p.ssafy.io:9090/user/${idx}`,
+    url: `https://i9b206.p.ssafy.io:9090/user/detail/${idx}`,
     headers : {
       Authorization: 'Bearer ' + userToken
     },
   })
   .then(res => {
-    console.log(res)
-    user = res.data.user;
-    console.log(user);
+    // console.log(res)
+    user = res.data.data;
     // const alert_data=res.data 
   })
   .catch(err => {
@@ -93,7 +94,29 @@ const Mypage: React.FC = () => {
 
   const toggleHandler = () => {
     // isOn의 상태를 변경하는 메소드를 구현
-    setisOn(!isOn)
+    const userToken = localStorage.getItem('usertoken');
+    const userIdx = localStorage.getItem('saveid');
+    setisOn(!isOn);
+
+    axios({
+      method: 'put',
+      url: 'https://i9b206.p.ssafy.io:9090/user/setting',
+      headers: {
+        Authorization: 'Bearer ' + userToken
+      },
+      data: {
+        'userIdx': userIdx,
+        'invite': "true"
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        console.log("초대설정 성공")
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log("초대설정 실패")
+      });
   };
 
 
@@ -114,7 +137,7 @@ const Mypage: React.FC = () => {
           <div className={mypage_css.mypage_welcome}>
           안녕하세요! {user.name} 님
           </div>
-          <button className={mypage_css.button} onClick={()=>dispatch(setModal('회원정보수정'))}>회원정보 수정</button>
+          <button className={mypage_css.button} onClick={()=>dispatch(setModal('회원정보수정1'))}>회원정보 수정</button>
           <div className={mypage_css.mypage_togglebox}>
             <div className={mypage_css.mypage_toggle}>
               {isOn === false ?
@@ -136,7 +159,8 @@ const Mypage: React.FC = () => {
           <button className={mypage_css.button}onClick={unregistMeeting}>소개팅 등록 취소</button>
           <button className={mypage_css.button}onClick={()=>dispatch(setModal('Re최초설문'))}>최초 설문 수정</button>
         </div>
-        {isModalOpen==='회원정보수정' ? <EditAcount user={user} /> : null}
+        {isModalOpen==='회원정보수정1' ? <CheckPass/> : null}
+        {isModalOpen==='회원정보수정2' ? <EditAcount user={user} /> : null}
       </div>
     </div>
     

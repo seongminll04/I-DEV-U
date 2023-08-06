@@ -14,7 +14,7 @@ interface Props {
     password: string;
     name: string;
     nickname: string;
-    birthdate: string;
+    birth: string;
     gender: number;
     intro: string; // 자기소개
     status: string; // active or not (회원탈퇴여부)
@@ -26,8 +26,6 @@ const EditAccount: React.FC<Props> = ({user}) => {
   const dispatch = useDispatch()
   const [isWithdraw, setWithdraw] = useState(false);
   const [chknickname, setchknickname] = useState('no');
-
-  console.log(user.email)
 
   const validationSchema = Yup.object().shape({
     password: Yup.string()
@@ -68,7 +66,7 @@ const EditAccount: React.FC<Props> = ({user}) => {
     else if (!formik.errors.nickname) {
       axios({
         method:'get',
-        url:`https://i9b206.p.ssafy.io:9090/user/signup/nickcheck/${nickname}`
+        url:`https://i9b206.p.ssafy.io:9090/user/signUp/nicknameCheck/${nickname}`
       })
       .then(()=>{
         setchknickname('yes')
@@ -86,21 +84,39 @@ const EditAccount: React.FC<Props> = ({user}) => {
 
   const formik = useFormik({
     initialValues: {
+      userIdx : localStorage.getItem("saveid"),
       email: user.email,
       nickname: user.nickname,
       name: user.name,
-      birthday: user.birthdate,
+      birth: user.birth,
       gender: user.gender,
       password: user.password,
       confirmPassword: '',
-      intro: '',
+      intro: user.intro,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      alert("변경 완료")
       console.log(values);
-      // Add signup logic here
-    },
+      const userToken = localStorage.getItem('usertoken');
+      axios({
+        method : 'put',
+        url : 'https://i9b206.p.ssafy.io:9090/user/modify',
+        headers : {
+          Authorization: 'Bearer ' + userToken,
+        },
+        data : values,
+      })
+      .then(res => {
+        console.log(res);
+        alert("회원정보 변경 완료");
+        dispatch(setModal(null));
+      })
+      .catch(err => {
+        console.log(err)
+        alert("회원정보 변경 실패")
+        dispatch(setModal(null));
+      })
+    }
   });
 
   // input 방향키 살리기
@@ -136,7 +152,7 @@ const EditAccount: React.FC<Props> = ({user}) => {
             <div className={edit_css.mypage_info}>
               <span>생년월일</span>
             </div>
-            <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('birthday')} readOnly/>
+            <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('birth')} readOnly/>
             <div className={edit_css.mypage_info}>
               <span>성별</span>
             </div>
@@ -165,7 +181,7 @@ const EditAccount: React.FC<Props> = ({user}) => {
               <span>사진</span>
             </div>
             <input type="file" className={edit_css.mypage_input}/>
-            <button className={edit_css.mypage_button} type="submit" disabled={chknickname==='no' ||!formik.isValid || formik.isSubmitting}>수정</button>
+            <button className={edit_css.mypage_button} type="submit" disabled={chknickname==='no' ||!formik.isValid || formik.isSubmitting }>수정</button>
           </form>
           <p className={edit_css.mypage_withdrawal} onClick={goWithdrawal}>회원탈퇴</p>
         </div>:

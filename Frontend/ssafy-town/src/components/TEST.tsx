@@ -29,7 +29,7 @@ const MyComponent: React.FC = () => {
 
   useEffect(() => {
     // 구독 설정
-    const userIdx = localStorage.getItem('userIdx')
+    // const userIdx = localStorage.getItem('userIdx')
     if (stompClientRef.current) {
       
       stompClientRef.current.onConnect = (frame) => {

@@ -39,7 +39,7 @@ const validationSchema = Yup.object().shape({
       const tday=new Date();
       return selectedDate <= tday;
     })
-    .required('생년월일을 입력해주세요'),
+    .required('유효한 생년월일이 아닙니다'),
   gender: Yup.string()
   .required('성별을 선택해주세요')
   .oneOf(['MALE', 'FEMALE'], '유효한 성별을 선택해주세요'),
@@ -51,6 +51,7 @@ const SignupForm = () => {
   const [chknickname, setchknickname] = useState('no');
   const [today,setToday] = useState('2023-12-31')
   const [errcount,setErrCount] = useState<number>(-1)
+ 
   useEffect(()=> {
     const date = new Date()
     var month:any; var day:any;
@@ -130,7 +131,7 @@ const SignupForm = () => {
       confirmPassword: '',
       nickname: '',
       name: '',
-      birthday: '',
+      birthday: null,
       gender: null,
     },
     validationSchema: validationSchema,
@@ -162,7 +163,7 @@ const SignupForm = () => {
   useEffect(()=>{
     var count=0
     if (formik.values.name==='') {count+=1}
-    if (formik.values.birthday==='') {count+=1}
+    if (formik.values.birthday===null||'') {count+=1}
     if (formik.values.gender===null) {count+=1}
 
     if (formik.values.nickname==='') {count+=1}
@@ -172,6 +173,7 @@ const SignupForm = () => {
     if (count === 7 ) {count=-1}
     setErrCount(count)
   },[formik, setErrCount])
+
   return (
     <div className={signup_css.background}>
       <div className={signup_css.modal} >
@@ -181,17 +183,17 @@ const SignupForm = () => {
 
         <form className={signup_css.signup_form} onSubmit={formik.handleSubmit}>
           <label className={signup_css.split}>이름
-          <span style={{color:'darkgray'}}>{formik.touched.name && formik.errors.name ? formik.errors.name : null}</span>
+          <span style={{color:'red'}}>{formik.values.name==='' ? '이름을 입력해주세요':  formik.errors.name ? formik.errors.name : <span style={{color:'green'}}>완료</span>}</span>
           </label>
           <input className={signup_css.input} type="text" placeholder="이름" {...formik.getFieldProps('name')} />
 
           <label className={signup_css.split}>생년월일
-          <span style={{color:'darkgray'}}>{formik.touched.birthday && formik.errors.birthday ? formik.errors.birthday : null}</span>
+          <span style={{color:'red'}}>{formik.values.birthday===null ? '생년월일을 입력해주세요' :  formik.errors.birthday ? formik.errors.birthday : <span style={{color:'green'}}>완료</span>}</span>
           </label>
           <input className={signup_css.input} type="date" {...formik.getFieldProps('birthday')} min={'1900-01-01'} max={today} />
 
             <label className={signup_css.split}>성별
-            <span style={{color:'darkgray', margin:'0'}}>{formik.touched.gender && formik.errors.gender ? formik.errors.gender : null}</span>
+            <span style={{color:'red', margin:'0'}}>{formik.values.gender===null ? '성별을 선택해주세요': formik.errors.gender ? formik.errors.gender : <span style={{color:'green'}}>완료</span>}</span>
             </label>
             <div className={signup_css.split}>
               <label>
@@ -222,16 +224,16 @@ const SignupForm = () => {
           
 
           <label className={signup_css.split}>닉네임
-          <span style={{color:'darkgray'}}>{formik.touched.nickname && formik.errors.nickname ? formik.errors.nickname : null}{chknickname === 'yes' ? '확인완료': null}</span>
+          <span style={{color:'red'}}>
+            {formik.values.nickname==='' ? '닉네임을 입력해주세요': formik.errors.nickname ? formik.errors.nickname : chknickname==='no' ? '중복확인을 해주세요': <span style={{color:'green'}}>완료</span>}</span>
           </label>
           <div className={signup_css.input_chk}>
           <input className={signup_css.input} type="text" placeholder="닉네임" {...formik.getFieldProps('nickname')}  onChange={(event) => {formik.handleChange(event); setchknickname('no');}} />
           <div className={signup_css.chk_input} onClick={()=>nicknamecheck(formik.values.nickname)}>중복확인</div>
           </div>
           <label className={signup_css.split}>아이디
-            <span style={{color:'darkgray'}}>
-              {formik.values.email==='' ? '이메일 형식으로 입력해주세요':null}{ formik.values.email!=='' &&formik.touched.email && formik.errors.email ? formik.errors.email : null}
-            {chkemail === 'yes' ? '확인완료': null}
+            <span style={{color:'red'}}>
+              {formik.values.email==='' ? '이메일 형식으로 입력해주세요': formik.errors.email ? formik.errors.email : chkemail==='no' ? '중복확인을 해주세요':<span style={{color:'green'}}>완료</span>}
             </span>
           </label>
           <div className={signup_css.input_chk}>
@@ -240,12 +242,12 @@ const SignupForm = () => {
           </div>
 
           <label className={signup_css.split}>비밀번호
-          <span style={{color:'darkgray'}}>{formik.touched.password && formik.errors.password ? formik.errors.password : null}</span>
+          <span style={{color:'red'}}>{formik.values.password==='' ? '비밀번호를 입력해주세요': formik.errors.password ? formik.errors.password : <span style={{color:'green'}}>완료</span>}</span>
           </label>
           <input className={signup_css.input} type="password" placeholder="비밀번호" {...formik.getFieldProps('password')} />
           
           <label className={signup_css.split}>비밀번호 확인
-          <span style={{color:'darkgray'}}>{formik.touched.confirmPassword && formik.errors.confirmPassword ? formik.errors.confirmPassword : null}</span>
+          <span style={{color:'red'}}>{formik.values.confirmPassword==='' ? '비밀번호를 입력해주세요': formik.errors.confirmPassword ? formik.errors.confirmPassword : <span style={{color:'green'}}>완료</span>}</span>
           </label>
           <input className={signup_css.input} type="password" placeholder="비밀번호 확인" {...formik.getFieldProps('confirmPassword')} />
 
@@ -262,7 +264,7 @@ const SignupForm = () => {
             : errcount ===1 ? 
             <span>
               { formik.values.name==='' ? '이름을 입력해주세요'
-              : formik.values.birthday==='' ? '생년월일을 입력해주세요'
+              : formik.values.birthday===null||'' ? '생년월일을 입력해주세요'
               : formik.values.gender===null ? '성별을 입력해주세요'
               : formik.values.nickname==='' ? '닉네임을 입력해주세요'
               : formik.values.email==='' ? '아이디를 입력해주세요'

@@ -29,14 +29,26 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role; // ADMIN , USER
     private String refreshToken;
-
-
+    private String image;
+    private String invite;
 
     // 생성자, 기타 메서드 생략
 
     // 비밀번호 암호화 메소드
     public void passwordEncode(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
+    }
+    public void setKakao(){
+        this.password = "kakao";
+    }
+
+    public void setPw(String password){
+        this.password = password;
+    }
+
+    public void setSetting(String invite){
+        if (invite.equals("true")) this.invite = "true";
+        else this.invite = "false";
     }
 
 

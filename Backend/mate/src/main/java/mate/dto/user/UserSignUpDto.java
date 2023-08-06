@@ -15,8 +15,6 @@ public class UserSignUpDto {
     private LocalDate birthday;
     private UserGender gender;
     private String image;
-    private String originalFileName;
-    private String storedFileName;
 
 
 }

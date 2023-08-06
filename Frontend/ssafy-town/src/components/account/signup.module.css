@@ -111,9 +111,12 @@
   padding: 3px;
   border:solid 1px black;
   border-radius: 0.5rem;
-  background-color: rgb(109, 206, 245);
+  background-color: rgba(109, 206, 245,0.5);
+  cursor: pointer;
 }
-
+.chk_input:hover {
+  background-color: gray;
+}
 .signup_form {
   display: flex;
   flex-direction: column;

@@ -7,7 +7,7 @@ import Navbar from '../system/navbar'
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
-import { setAllowMove, setModal, setSidebar, setLoginToken } from '../../store/actions';
+import { setAllowMove, setModal, setSidebar } from '../../store/actions';
 
 import { Tsize1Scene } from '../map/Tsize1Scene';
 import ModalOpen from '../system/modalopen';
@@ -23,10 +23,9 @@ const MeetingRoom: React.FC = () => {
   const navigate = useNavigate()
 
   useEffect(()=>{
-    const userToken = localStorage.getItem('usertoken');
-    if (userToken) {dispatch(setLoginToken(userToken))}
-    else {navigate('/login')}
-  },[dispatch, navigate])
+    const userToken = localStorage.getItem('userToken');
+    if (!userToken) {navigate('/login')}
+  },[navigate])
 
   useEffect(() => { //esc키로 사이드바, 모달창 끄기 : 전역설정임
     if (isModalOpen) {
@@ -36,7 +35,8 @@ const MeetingRoom: React.FC = () => {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        if (isModalOpen !== null) {dispatch(setModal(null))}
+        if (isModalOpen === '최초설문') {}
+        else if (isModalOpen !== null) {dispatch(setModal(null))}
         else if (isSidebarOpen !== null) {dispatch(setSidebar(null))}
       }
     };

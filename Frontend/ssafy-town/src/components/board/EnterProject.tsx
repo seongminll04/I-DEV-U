@@ -8,17 +8,19 @@ import axios from 'axios';
 
 const EnterProject: React.FC = () => {
   const dispatch=useDispatch()
-  const userToken = localStorage.getItem('usertoken')
+  const userToken = localStorage.getItem('userToken')
   const wantPJTId = useSelector((state: AppState) => state.wantPJTId);
 
   const enter = () => {
-
+    const userIdxStr = localStorage.getItem('userIdx')
+    var userIdx:number|null;
+    if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
     // console.log('참가신청 완료')
     // dispatch(setModal(null))
     axios({
       method:'post',
       url: 'https://i9b206.p.ssafy.io/project/video/propose',
-      data:{ 'userIdx' : 1, 'projectIdx' : wantPJTId },
+      data:{ 'userIdx' : userIdx, 'projectIdx' : wantPJTId },
       headers : {
         Authorization: 'Bearer ' + userToken
       },

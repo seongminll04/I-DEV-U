@@ -34,8 +34,10 @@ const CreateQnA: React.FC<Props> = ({onback}) => {
   }
 
   const create = () => {
-    const userToken = localStorage.getItem('usertoken')
-    const userIdx = localStorage.getItem('saveid')
+    const userToken = localStorage.getItem('userToken')
+    const userIdxStr = localStorage.getItem('userIdx')
+    var userIdx:number|null;
+    if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
 
     axios({
       method:'post',

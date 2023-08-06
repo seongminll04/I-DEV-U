@@ -17,7 +17,7 @@ interface Notice {
 
 const Alert: React.FC = () => {
   const dispatch = useDispatch()
-  const userToken = localStorage.getItem('usertoken')
+  const userToken = localStorage.getItem('userToken')
   const [noticeList,setNoticeList] =useState<Notice[]>([]);
   const [page,setPage] = useState<Number>(0)
 

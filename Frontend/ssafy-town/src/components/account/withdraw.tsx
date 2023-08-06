@@ -31,7 +31,7 @@ const Withdraw: React.FC<Props> = ({ onBack, onClose }) => {
       setErr(true);
     } else {
       // 백엔드 에 따라 수정할 곳
-      const userToken=localStorage.getItem('usertoken')
+      const userToken=localStorage.getItem('userToken')
       axios({
         method: 'PUT',
         url: 'https://i9b206.p.ssafy.io:9090/user/delete',

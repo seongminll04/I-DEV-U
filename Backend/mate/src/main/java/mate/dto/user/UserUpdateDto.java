@@ -16,4 +16,6 @@ public class UserUpdateDto {
     private String intro;
     private String image;
     private String password;
+    private String originalFileName;
+    private String storedFileName;
 }

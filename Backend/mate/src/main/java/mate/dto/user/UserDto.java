@@ -32,6 +32,8 @@ public class UserDto {
     private LocalDate birth;
     private UserGender gender;
     private String intro;
-    private String image;
     private String invite;
+    private String originalFileName;
+    private String storedFileName;
+
 }

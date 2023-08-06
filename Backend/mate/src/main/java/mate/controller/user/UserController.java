@@ -1,6 +1,7 @@
 package mate.controller.user;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mate.controller.Result;
 import mate.domain.user.User;
 import mate.domain.user.UserStatus;
@@ -13,7 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -86,7 +90,8 @@ public class UserController {
             userDto.setInvite(user.getInvite());
 
             Optional.ofNullable(user.getIntro()).ifPresent(userDto::setIntro);
-            Optional.ofNullable(user.getImage()).ifPresent(userDto::setImage);
+            Optional.ofNullable(user.getOriginalFileName()).ifPresent(userDto::setOriginalFileName);
+            Optional.ofNullable(user.getStoredFileName()).ifPresent(userDto::setStoredFileName);
 
             return Result.builder().data(userDto).status(ok().body("조회 성공")).build();
         }).orElse(Result.builder().status(badRequest().body("조회 실패")).build());
@@ -144,5 +149,13 @@ public class UserController {
     public Result userUnfollow(@RequestBody UserFollowDto userFollowDto){
         return userService.unfollow(userFollowDto);
     }
+
+    //
+    @PostMapping("/uploadFile")
+    public Result uploadFile(@RequestPart(name = "file") MultipartFile multipartFile, @RequestParam(name = "userIdx") Integer userIdx) throws IOException {
+        return userService.uploadFile(multipartFile, userIdx);
+    }
+
+
 
 }

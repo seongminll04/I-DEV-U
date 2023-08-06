@@ -1,6 +1,7 @@
 package mate.service.user;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mate.controller.Result;
 import mate.domain.user.Follow;
 import mate.domain.user.Role;
@@ -9,13 +10,18 @@ import mate.domain.user.UserStatus;
 import mate.dto.user.*;
 import mate.repository.user.FollowRepository;
 import mate.repository.user.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 import static org.springframework.http.ResponseEntity.badRequest;
@@ -24,11 +30,15 @@ import static org.springframework.http.ResponseEntity.ok;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final FollowRepository followRepository;
+
+    @Value("${spring.servlet.multipart.location}")
+    private String uploadDir;
 
 
     public void signUp(UserSignUpDto userSignUpDto) throws Exception {
@@ -50,7 +60,6 @@ public class UserService {
                 .gender(userSignUpDto.getGender())
                 .status(UserStatus.A)
                 .role(Role.USER)
-                .image(Optional.ofNullable(userSignUpDto.getImage()).orElse(userSignUpDto.getImage()))
                 .build();
 
         if (userSignUpDto.getEmail().startsWith("kakao_")) user.setKakao();
@@ -77,9 +86,10 @@ public class UserService {
                     .gender(userUpdateDto.getGender())
                     .password(user.getPassword())
                     .intro(Optional.ofNullable(userUpdateDto.getIntro()).orElse(user.getIntro()))
-                    .image(Optional.ofNullable(userUpdateDto.getImage()).orElse(user.getImage()))
                     .role(user.getRole())
                     .status(user.getStatus())
+                    .originalFileName(user.getOriginalFileName())
+                    .storedFileName(user.getStoredFileName())
                     .build();
 
             userRepository.save(user);
@@ -137,5 +147,59 @@ public class UserService {
         followRepository.deleteByIdxAndFollow(userFollowDto.getUserIdx(), userFollowDto.getFollowIdx());
         return Result.builder().status(ok().body("언팔로우 성공")).build();
     }
+
+
+    public Result uploadFile(MultipartFile multipartFile, Integer userIdx) throws IOException {
+
+        // 파일이 첨부되지 않은 경우
+        if (multipartFile == null) throw new IllegalArgumentException("파일이 첨부되지 않았습니다.");
+        // 확장자명이 존재하지 않을 경우 에러
+        validateContentType(multipartFile);
+
+        File directory = new File(uploadDir);
+        if (!directory.exists()) {
+            boolean mkdirsResult = directory.mkdirs();
+            if (mkdirsResult) {
+                System.out.println("디렉토리 생성 성공");
+            } else {
+                System.out.println("디렉토리 생성 실패");
+            }
+        }
+
+
+        User user = userRepository.findByIdx(userIdx)
+                .orElseThrow(() -> new UsernameNotFoundException("해당 화원이 존재하지 않습니다."));
+
+        if (user.getStoredFileName() != null){
+            File originalFilePath = new File(user.getStoredFileName());
+            if (originalFilePath.exists()){
+                if(!originalFilePath.delete()) log.error("기존에 설정된 프로필 사진 삭제에 실패했습니다.");
+            }
+        }
+
+        String fileName = user.getIdx() + "_" + multipartFile.getOriginalFilename();
+        String filePath = uploadDir  + fileName;
+
+        File file = new File(filePath);
+        multipartFile.transferTo(file);
+
+        user.uploadFile(fileName, filePath);
+        return Result.builder().status(ok().body("업로드 성공")).build();
+    }
+
+    private void validateContentType(MultipartFile multipartFile) {
+        // 파일의 확장자 추출
+        String contentType = multipartFile.getContentType();
+
+        if(ObjectUtils.isEmpty(contentType)) {
+            throw new IllegalArgumentException("사진 파일만 업로드해주세요.");
+        }
+        // 확장자가 jpeg, png인 파일들만 받아서 처리
+        else if(!contentType.contains("image/jpeg") && !contentType.contains("image/png")) {
+
+            throw new IllegalArgumentException("사진 파일만 업로드해주세요.");
+        }
+    }
+
 
 }

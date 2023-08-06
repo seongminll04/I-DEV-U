@@ -12,6 +12,7 @@ const QAModal: React.FC<QAModalProps> = ({ onClose, onConfirm }) => {
     const [desiredAgeRange, setDesiredAgeRange] = useState<string>("");
     const [desiredFaceShape, setDesiredFaceShape] = useState<string>("");
     const [myFaceShape, setMyFaceShape] = useState<string>("");
+    const [myLocation, setMyLocation] = useState<string>("");
     const [desiredLocation, setDesiredLocation] = useState<string>("");
     const [myPay, setMyPay] = useState<string>("");
     // 여기까지 1페이지 질문
@@ -58,6 +59,7 @@ const QAModal: React.FC<QAModalProps> = ({ onClose, onConfirm }) => {
             desiredLocation,
             myPay,
             myFaceShape,
+            myLocation,
             desiredWorkType,
             colorPreference,
             musicWhileCoding,
@@ -96,6 +98,17 @@ const QAModal: React.FC<QAModalProps> = ({ onClose, onConfirm }) => {
                             {option}
                         </label>
                     ))}
+                </div>
+
+                <div>
+                    <p>🗺️ 나의 지역</p>
+                    <select name="myLocation" onChange={(e) => setMyLocation(e.target.value)}>
+                        {locationOptions.map(option => (
+                            <option key={option} value={option}>
+                            {option}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
                 <div>

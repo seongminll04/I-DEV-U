@@ -42,11 +42,17 @@ import axios from "axios";
       })
       .then(res => setRoomList(res.data))
       .catch(err=>console.log(err))
-    })
+    },[])
+
     // 연결에 관한 것
     useEffect(() => {
-      const socket = new SockJS("https://localhost:8080/chatting");
+      const userToken = localStorage.getItem('userToken')
+      const socket = new SockJS("https://i9b206.p.ssafy.io:9090/chatting");
+
       stompClientRef.current = Stomp.over(socket);
+      stompClientRef.current.connectHeaders={
+        Authorization: "Bearer " + userToken
+      }
       // 연결 시도
       stompClientRef.current.activate();
 

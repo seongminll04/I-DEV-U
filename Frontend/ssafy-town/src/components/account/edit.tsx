@@ -144,10 +144,6 @@ const EditAccount: React.FC<Props> = ({user}) => {
             <div className={edit_css.mypage_info}>
               <span>이름</span>
             </div>
-            <input id="name" type="text" className={edit_css.mypage_input} {...formik.getFieldProps('name')} readOnly/>
-            <div className={edit_css.mypage_info}>
-              <span>이메일</span>
-            </div>
             <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('email')} readOnly/>
             <div className={edit_css.mypage_info}>
               <span>생년월일</span>
@@ -170,11 +166,15 @@ const EditAccount: React.FC<Props> = ({user}) => {
             </div>
             <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('intro')} onKeyDown={handlekeydown}/>
             <div className={edit_css.mypage_info}>
-              <span>비밀번호</span>
+              <span>현재 비밀번호</span>
             </div>
             <input type="password" className={edit_css.mypage_input} {...formik.getFieldProps('password')} onKeyDown={handlekeydown} />
             <div className={edit_css.mypage_info}>
-              <span>비밀번호 확인</span>
+              <span>변경할 비밀번호</span>
+            </div>
+            <input type="password" className={edit_css.mypage_input} {...formik.getFieldProps('password')} onKeyDown={handlekeydown} />
+            <div className={edit_css.mypage_info}>
+              <span>변경할 비밀번호 확인</span>
             </div>
             <input type="password" className={edit_css.mypage_input} {...formik.getFieldProps('confirmPassword')} placeholder="비밀번호 확인" onKeyDown={handlekeydown}/>
             <div className={edit_css.mypage_info}>

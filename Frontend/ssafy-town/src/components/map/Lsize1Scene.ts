@@ -229,12 +229,13 @@ export class Lsize1Scene extends Phaser.Scene {
       const mapWidth = rows[0].length * tileSize;
       const mapHeight = rows.length * tileSize;
 
+
       // 사용자 캐릭터 선택
       const userCharacter = localStorage.getItem("character") || '0';
 
       // 일단 개발용도, 나중에 if else 다빼고 2만 남기자
       if(userCharacter==='0'){
-        this.character = this.physics.add.sprite(mapCenterX, mapCenterY, `character`).setOrigin(0.5, 0.5);
+        this.character = this.physics.add.sprite(mapCenterX, mapCenterY, `02`).setOrigin(0.5, 0.5);
       }
       else{
         this.character = this.physics.add.sprite(mapCenterX, mapCenterY, `${userCharacter}2`).setOrigin(0.5, 0.5);

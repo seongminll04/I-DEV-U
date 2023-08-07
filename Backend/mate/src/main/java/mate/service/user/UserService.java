@@ -22,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.IdentityHashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.springframework.http.ResponseEntity.badRequest;
@@ -180,11 +182,14 @@ public class UserService {
         String fileName = user.getIdx() + "_" + multipartFile.getOriginalFilename();
         String filePath = uploadDir  + fileName;
 
+        Map<String, String> map = new IdentityHashMap<>();
+        map.put("uploadDir", uploadDir);
+
         File file = new File(filePath);
         multipartFile.transferTo(file);
 
         user.uploadFile(fileName, filePath);
-        return Result.builder().status(ok().body("업로드 성공")).build();
+        return Result.builder().status(ok().body("업로드 성공")).data(map).build();
     }
 
     private void validateContentType(MultipartFile multipartFile) {

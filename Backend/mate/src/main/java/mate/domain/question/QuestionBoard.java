@@ -16,10 +16,10 @@ public class QuestionBoard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idx;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_idx")
-//    private User user;
-    private int userIdx;
+    @ManyToOne
+    @JoinColumn(name = "user_idx")
+    private User user;
+//    private int userIdx;
 
     private String title;
 

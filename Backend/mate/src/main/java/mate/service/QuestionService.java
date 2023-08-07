@@ -48,4 +48,8 @@ public class QuestionService {
     public List<QuestionBoard> findQuestionByContent(String keyWord) {
         return questionRepository.findByContentContainingOrderByIdxDesc(keyWord);
     }
+
+//    public List<QuestionBoard> findQuestionByName(String name) {
+//        return questionRepository.findByNameOrderByIdxDesc(name);
+//    }
 }

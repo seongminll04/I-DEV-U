@@ -19,9 +19,8 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @PostMapping("/write")
-    public ResponseEntity<Map<String, Object>> writeNotice(QuestionBoard question) {
+    public ResponseEntity<Map<String, Object>> writeNotice(@RequestBody QuestionBoard question) {
         Map<String, Object> map = new HashMap<>();
-
         questionService.writeQuestion(question);
         map.put("resmsg", "Q&A 글 작성 성공");
 
@@ -41,7 +40,7 @@ public class QuestionController {
     }
 
     @PutMapping("/modify")
-    public ResponseEntity<Map<String, Object>> modifyQuestion(QuestionBoard question) {
+    public ResponseEntity<Map<String, Object>> modifyQuestion(@RequestBody QuestionBoard question) {
         Map<String, Object> map = new HashMap<>();
 
         questionService.modifyQuestion(question);
@@ -114,7 +113,7 @@ public class QuestionController {
 //    }
 
     @PostMapping("/like")
-    public ResponseEntity<Map<String, Object>> likeQuestion(QuestionBoardLike like) {
+    public ResponseEntity<Map<String, Object>> likeQuestion(@RequestBody QuestionBoardLike like) {
         questionService.writeQuestionBoardLike(like);
         Map<String, Object> map = new HashMap<>();
         map.put("resmsg", "Q&A 글 리스트 조회 성공");
@@ -123,7 +122,7 @@ public class QuestionController {
     }
 
     @PostMapping("/comment/write")
-    public ResponseEntity<Map<String, Object>> writeComment(QuestionBoardComment comment) {
+    public ResponseEntity<Map<String, Object>> writeComment(@RequestBody QuestionBoardComment comment) {
         questionService.writeQuestionBoardComment(comment);
         Map<String, Object> map = new HashMap<>();
         map.put("resmsg", "Q&A 댓글 작성 성공");
@@ -132,7 +131,7 @@ public class QuestionController {
     }
 
     @PutMapping("/comment/modify")
-    public ResponseEntity<Map<String, Object>> modifyComment(QuestionBoardComment comment) {
+    public ResponseEntity<Map<String, Object>> modifyComment(@RequestBody QuestionBoardComment comment) {
         questionService.writeQuestionBoardComment(comment);
         Map<String, Object> map = new HashMap<>();
         map.put("resmsg", "Q&A 댓글 수정 성공");

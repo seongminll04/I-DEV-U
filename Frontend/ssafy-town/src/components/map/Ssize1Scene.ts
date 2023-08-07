@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import store from '../../store/store'
 import { setModal } from '../../store/actions';
 
-type AssetKeys = 'A1' | 'B1' | 'C1' | 'D1' | 'E1' | 'F1' | 'G1' | 'H1' | 'I1' | 'J1' | 'K1';
+type AssetKeys = 'A1' | 'B1' | 'C1' | 'D1' | 'E1' | 'F1' | 'G1' | 'H1' | 'I1' | 'J1' | 'K1' | 'L1';
 const ASSETS: Record<AssetKeys, string> = {
   'A1': '/assets/L1-B1.png',
   'B1': '/assets/L1-C4.png',
@@ -15,12 +15,13 @@ const ASSETS: Record<AssetKeys, string> = {
   'I1': '/assets/컴퓨터1.png',
   'J1': '/assets/식물1.png',
   'K1': '/assets/에어컨1.png',
+  'L1': '/assets/mirror.png',
 };
 
 const pattern = `
 B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1
-B1K1K1F1F1A1A1A1I1I1A1G1G1G1B1
-B1D1D1F1F1C1C1C1I1I1C1G1G1G1B1
+B1K1K1F1F1L1A1A1I1I1A1G1G1G1B1
+B1D1D1F1F1L1C1C1I1I1C1G1G1G1B1
 B1D1D1C1C1C1C1C1C1C1C1C1C1C1B1
 B1D1D1C1C1C1C1C1C1C1C1C1C1C1B1
 B1D1D1C1C1C1C1C1C1C1C1C1C1C1B1
@@ -54,6 +55,7 @@ export class Ssize1Scene extends Phaser.Scene {
   private computer?: Phaser.Physics.Arcade.Sprite;
   private plant?: Phaser.Physics.Arcade.Sprite;
   private aircondition?: Phaser.Physics.Arcade.Sprite;
+  private mirror?: Phaser.Physics.Arcade.Sprite;
   private addedBed: boolean = false;
   private addedTable: boolean = false;
   private addedWardrobe: boolean = false;
@@ -62,6 +64,7 @@ export class Ssize1Scene extends Phaser.Scene {
   private addedComputer: boolean = false;
   private addedPlant: boolean = false;
   private addedAircondition: boolean = false;
+  private addedMirror: boolean = false;
   
 
   constructor() {
@@ -256,8 +259,13 @@ export class Ssize1Scene extends Phaser.Scene {
             this.aircondition.setOrigin(0, 0).setDisplaySize(64, 32).setImmovable(true); // 2x1
             this.addedAircondition = true;
             this.physics.add.collider(this.character!, this.aircondition);
+          } else if (tileID === 'L1' && !this.addedMirror) {  // L1 
+            this.mirror = this.physics.add.sprite((colIndex / 2) * tileSize, rowIndex * tileSize, tileID);
+            this.mirror.setOrigin(0, 0).setDisplaySize(32, 64).setImmovable(true); // 1x2 
+            this.addedMirror = true;
+            this.physics.add.collider(this.character!, this.mirror);
           } else if (tileID !== 'D1' && tileID !== 'E1' && tileID !== 'F1' && tileID !== 'G1' && tileID !== 'H1' && tileID !== 'I1'
-          && tileID !== 'J1' && tileID !== 'K1') {
+          && tileID !== 'J1' && tileID !== 'K1' && tileID !== 'L1') {
             this.add.image((colIndex / 2) * tileSize, rowIndex * tileSize, tileID).setOrigin(0, 0);
           }
         }

@@ -9,13 +9,14 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
+    //spring_servlet_multipart_location=/mate-server/upload/img/user/
     @Value("${spring.servlet.multipart.location}")
     private String uploadDir;
 
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/image/**").addResourceLocations("file:///" + uploadDir)
+        registry.addResourceHandler("/img/**").addResourceLocations("file:///" + uploadDir)
                 .setCachePeriod(3600)
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver());

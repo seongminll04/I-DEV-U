@@ -182,7 +182,7 @@ public class UserService {
             }
         }
         String ext = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf("."));
-        String fileName = user.getIdx() + "_" + "." + ext;
+        String fileName = user.getIdx() + "_" + ext;
         String loadPath = loadDir  + fileName;
         String filePath = uploadDir + fileName;
 

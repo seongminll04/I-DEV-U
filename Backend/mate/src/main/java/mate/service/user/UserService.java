@@ -37,7 +37,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final FollowRepository followRepository;
 
-    @Value("${spring.servlet.multipart.location}")
+    @Value("${custom.path.upload-images}")
     private String uploadDir;
 
 

@@ -13,7 +13,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     private final String uploadDir;
 
-    public WebMvcConfiguration(@Value("${spring.servlet.multipart.location}") String uploadDir) {
+    public WebMvcConfiguration(@Value("${custom.path.upload-images}") String uploadDir) {
         this.uploadDir = uploadDir;
     }
 

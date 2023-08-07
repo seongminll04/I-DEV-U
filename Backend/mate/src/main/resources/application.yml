@@ -46,4 +46,6 @@ jwt:
 #  PASSWORD: ${OPENVIDU_PASSWORD}
 #  URL: ${OPENVIDU_URL}
 
-
+custom:
+  path:
+    upload-images: ${custom_path_upload-images}

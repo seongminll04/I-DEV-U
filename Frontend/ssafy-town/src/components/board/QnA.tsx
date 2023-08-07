@@ -21,7 +21,7 @@ const QnA: React.FC = () => {
   const [nowsearch, setnowsearch] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
   const [qnaid, setQnaid] = useState<number>(0);
-  const [questionList,setQuestionList] =useState<Question[]>([]);
+  const [questionList,setQuestionList] =useState<Question[]>([{idx:1,content:'1',title:'2',createdAt:'2019-01-01 00:00:00',createAt:'2019-01-01 00:00:00'}]);
 
   useEffect(()=>{
     const userToken = localStorage.getItem('userToken')

@@ -42,6 +42,9 @@ public class UserService {
     @Value("${custom.path.upload-images}")
     private String uploadDir;
 
+    @Value("${custom_path_load-images}")
+    private String loadDir;
+
 
     public void signUp(UserSignUpDto userSignUpDto) throws Exception {
 
@@ -179,11 +182,13 @@ public class UserService {
             }
         }
 
-        String fileName = user.getIdx() + "_" + multipartFile.getOriginalFilename();
-        String filePath = uploadDir  + fileName;
+        String fileName = user.getIdx() + "_";
+        String loadPath = loadDir  + fileName;
+        String filePath = uploadDir + fileName;
 
         Map<String, String> map = new IdentityHashMap<>();
-        map.put("uploadDir", uploadDir);
+        map.put("fileName", multipartFile.getOriginalFilename());
+        map.put("loadPath", loadPath);
 
         File file = new File(filePath);
         multipartFile.transferTo(file);

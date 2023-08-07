@@ -45,3 +45,4 @@ jwt:
 custom:
   path:
     upload-images: ${custom_path_upload-images}
+    load-images : ${custom_path_load-images}

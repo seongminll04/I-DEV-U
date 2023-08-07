@@ -2,6 +2,8 @@ package mate.service;
 
 import lombok.RequiredArgsConstructor;
 import mate.domain.question.QuestionBoard;
+import mate.domain.question.QuestionBoardLike;
+import mate.repository.QuestionLikeRepository;
 import mate.repository.QuestionRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.util.Optional;
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
+    private final QuestionLikeRepository questionLikeRepository;
 
     public void writeQuestion(QuestionBoard questionBoard) {
         questionRepository.save(questionBoard);
@@ -47,5 +50,13 @@ public class QuestionService {
 
     public List<QuestionBoard> findQuestionByContent(String keyWord) {
         return questionRepository.findByContentContainingOrderByIdxDesc(keyWord);
+    }
+
+    public List<QuestionBoard> findQuestionByName(String name) {
+        return questionRepository.findByNameOrderByIdxDesc(name);
+    }
+
+    public void writeQuestionLike(QuestionBoardLike like){
+        questionLikeRepository.save(like);
     }
 }

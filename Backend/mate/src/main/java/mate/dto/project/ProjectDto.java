@@ -1,14 +1,15 @@
 package mate.dto.project;
 
+import java.util.List;
+
 import lombok.Data;
 import mate.domain.project.ProjectLanguage;
 import mate.domain.project.ProjectTech;
 
-import java.util.List;
-
 @Data
 public class ProjectDto {
 
+	private Integer idx;
 	private Integer managerIdx;
 	private String title;
 	private String content;

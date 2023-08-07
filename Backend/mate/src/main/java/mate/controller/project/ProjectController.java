@@ -5,9 +5,11 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,9 +42,39 @@ public class ProjectController {
 	public ResponseEntity<Map<String, Object>> detailProject(@PathVariable("projectIdx") int projectIdx) {
 		Map<String, Object> map = new HashMap<>();
 
+		Project project = projectService.detailProject(projectIdx);
+
+		map.put("project", project);
 		map.put("resmsg", "프로젝트 조회 성공");
 
 		return ResponseEntity.ok(map);
 	}
 
+	@PutMapping("/modify")
+	public ResponseEntity<Map<String, Object>> modifyProject(@RequestBody ProjectDto projectDto) {
+		Map<String, Object> map = new HashMap<>();
+
+		try {
+			Project project = projectService.modifyProject(projectDto);
+			map.put("resmsg", "프로젝트 수정 성공");
+		} catch (Exception e) {
+			map.put("resmsg", "프로젝트 수정 실패");
+		}
+
+		return ResponseEntity.ok(map);
+	}
+
+	@DeleteMapping("/delete/{projectIdx}")
+	public ResponseEntity<Map<String, Object>> deleteProject(@PathVariable("projectIdx") int projectIdx) {
+		Map<String, Object> map = new HashMap<>();
+
+		try {
+			projectService.deleteProject(projectIdx);
+			map.put("resmsg", "프로젝트 삭제 성공");
+		} catch (Exception e) {
+			map.put("resmsg", "프로젝트 삭제 실패");
+		}
+		
+		return ResponseEntity.ok(map);
+	}
 }

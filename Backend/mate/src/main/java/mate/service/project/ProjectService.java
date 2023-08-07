@@ -32,7 +32,6 @@ public class ProjectService {
 	private final ProjectLanguageRepository projectLanguageRepository;
 
 	public Project registerProject(ProjectDto projectDto) {
-
 		User user = userRepository.findById(projectDto.getManagerIdx()).get();
 
 		Project project = projectRepository.save(Project.builder()
@@ -78,7 +77,59 @@ public class ProjectService {
 	}
 
 	public Project detailProject(int projectIdx) {
-		return projectRepository.findById(projectIdx).get();
+		Project project = projectRepository.findById(projectIdx).get();
+
+		return project;
+	}
+
+	public Project modifyProject(ProjectDto projectDto) {
+		User user = userRepository.findById(projectDto.getManagerIdx()).get();
+
+		Project project = projectRepository.save(Project.builder()
+			.idx(projectDto.getIdx())
+			.manager(user)
+			.title(projectDto.getTitle())
+			.content(projectDto.getContent())
+			.totalNum(projectDto.getTotalNum())
+			.nowNum(projectDto.getNowNum())
+			.front(projectDto.getFront())
+			.maxFront(projectDto.getMaxFront())
+			.back(projectDto.getBack())
+			.maxBack(projectDto.getMaxBack())
+			.type(projectDto.getType()).build());
+
+		List<ProjectTech> techs = new ArrayList<>();
+
+		for (ProjectTech tech : projectDto.getTechList()) {
+			techs.add(ProjectTech.builder()
+				// .idx(tech.getIdx())
+				.project(project)
+				.tech(tech.getTech())
+				.build());
+		}
+
+		List<ProjectLanguage> languages = new ArrayList<>();
+
+		// 일단 비어있는 projectLanguageDto의 project에 방금 생성된 project 삽입
+		for (ProjectLanguage language : projectDto.getLanguageList()) {
+			languages.add(ProjectLanguage.builder()
+				// .idx(language.getIdx())
+				.project(project)
+				.language(language.getLanguage())
+				.build());
+		}
+
+		projectTechRepository.deleteProjectTechsByProject(project);
+		projectLanguageRepository.deleteProjectLanguagesByProject(project);
+
+		projectTechRepository.saveAll(techs);
+		projectLanguageRepository.saveAll(languages);
+
+		return project;
+	}
+
+	public void deleteProject(int projectIdx) {
+		projectRepository.deleteById(projectIdx);
 	}
 
 	public String makeRoomCode() {

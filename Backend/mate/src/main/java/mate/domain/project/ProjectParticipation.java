@@ -1,32 +1,34 @@
 package mate.domain.project;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import mate.domain.user.User;
 
 @Entity
 @Table(name = "project_participation")
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class ProjectParticipation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int idx;
+	private Integer idx;
 
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "project_idx")
 	private Project project;
-//	@Column(name = "project_idx")
-//	private int projectIdx;
 
-//	@ManyToOne
-//	@JoinColumn(name = "user_idx")
-//	private User user;
-	@Column(name = "user_idx")
-	private int userIdx;
+	@ManyToOne
+	@JoinColumn(name = "user_idx")
+	private User user;
 
 	// Getters and setters, constructors, and other methods
 	// ...

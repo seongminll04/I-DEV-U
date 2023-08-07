@@ -2,6 +2,7 @@ package mate.domain.project;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,7 +12,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import mate.domain.user.User;
 
 @Entity
@@ -24,6 +31,7 @@ public class Project {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idx;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "manager_idx")
 	private User manager;
@@ -40,12 +48,13 @@ public class Project {
 	private String text;
 	private String type;
 
-	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+	@JsonIgnore
+	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<ProjectParticipation> projectParticipation;
 
-	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<ProjectLanguage> projectLanguages;
 
-	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<ProjectTech> projectTechs;
 }

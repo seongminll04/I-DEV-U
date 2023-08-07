@@ -7,7 +7,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -19,6 +25,7 @@ public class ProjectLanguage {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idx;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "project_idx")
 	private Project project;

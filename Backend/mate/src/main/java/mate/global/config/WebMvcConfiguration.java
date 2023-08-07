@@ -13,11 +13,12 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     @Value("${spring.servlet.multipart.location}")
     private String uploadDir;
 
-    // file://home/ubuntu/mate-server/upload/img/user/
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/img/**").addResourceLocations("file:///" + uploadDir)
-                .setCachePeriod(3600);
-
+                .setCachePeriod(3600)
+                .setCachePeriod(3600)
+                .resourceChain(true)
+                .addResolver(new PathResourceResolver());
     }
 }

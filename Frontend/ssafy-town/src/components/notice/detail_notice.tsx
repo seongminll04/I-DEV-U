@@ -11,7 +11,7 @@ interface Props {
 
 const DetailNotice: React.FC<Props> = ({backpage}) => {
   const dispatch = useDispatch()
-  const userToken = localStorage.getItem('usertoken')
+  const userToken = localStorage.getItem('userToken')
   const [notice, setNotice] = useState<any>([]);
   useEffect(()=>{
     axios({

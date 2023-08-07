@@ -4,7 +4,8 @@ import chat_css from "./5chat.module.css";
 import { Client, Message, Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { useDispatch } from 'react-redux';
-import { setAllowMove } from '../../store/actions';
+import { setAllowMove, setSidebar } from '../../store/actions';
+import axios from "axios";
 
   // interface ChatMessage {
   //   content: string;
@@ -13,9 +14,8 @@ import { setAllowMove } from '../../store/actions';
 
   const Chat: React.FC = () => {
     const dispatch = useDispatch()
-
     const stompClientRef = React.useRef<Client | null>(null);
-    const [roomList, setRoomList] = useState<string[]>([]);
+    const [roomList, setRoomList] = useState<string[]>(['1','2']);
     
     // input 방향키 살리기
     const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
@@ -30,10 +30,29 @@ import { setAllowMove } from '../../store/actions';
         inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
       }
     }
+
+    useEffect(()=>{
+      const userToken = localStorage.getItem('userToken')
+      axios({
+        method:'get',
+        url:'',
+        headers : {
+          Authorization: 'Bearer ' + userToken
+        },
+      })
+      .then(res => setRoomList(res.data))
+      .catch(err=>console.log(err))
+    },[])
+
     // 연결에 관한 것
     useEffect(() => {
-      const socket = new SockJS("https://localhost:8080/chatting");
+      const userToken = localStorage.getItem('userToken')
+      const socket = new SockJS("http://localhost:8080/chatting");
+
       stompClientRef.current = Stomp.over(socket);
+      stompClientRef.current.connectHeaders={
+        Authorization: "Bearer " + userToken
+      }
       // 연결 시도
       stompClientRef.current.activate();
 
@@ -73,7 +92,7 @@ import { setAllowMove } from '../../store/actions';
           <div className={chat_css.scrollbox}>
             {roomList.map((room) => (
               <div>
-                <div className={chat_css.chat_room} key={room}  onClick={() => {}}>
+                <div className={chat_css.chat_room} key={room}  onClick={() => {dispatch(setSidebar('채팅방'))}}>
                   <img src="assets/default_profile.png" alt=""/>
                   <div className={chat_css.chat_roomdata}>
                     <div className={chat_css.roomdata} style={{marginBottom:'10px'}}>
@@ -91,29 +110,6 @@ import { setAllowMove } from '../../store/actions';
             ))} 
           </div>
         </div>
-       
-        {/*  <div style={{width:'80%'}}>
-           <div className={chat_css.chatstatus}>
-             <p onClick={() => {setSelectedRoom('')}}>back</p>
-             <h3>{selectedRoom}</h3>
-             <p>나가기</p>
-           </div>
-           <hr />
-           <div onScroll={handleScroll} style={{height:'80vh'}}>
-             {messages.map((message, index) => (
-               <div key={index}>
-                 <strong>{message.sender}: </strong>
-                 {message.content}
-               </div>
-             ))}
-           </div>
-           <hr />
-           <div>
-             <input type="text" value={messageInput} onChange={handleInputChange} style={{width:'80%'}} onKeyDown={handlekeydown} 
-             onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
-             <button onClick={handleSendMessage}>전송</button>
-          </div>
-         </div> */}
       </div>
     );
   };

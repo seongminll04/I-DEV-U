@@ -36,49 +36,44 @@ const ReQAModal: React.FC = () => {
   };
 
   const handleSubmit = (event: React.FormEvent) => {
-    console.log('제출버튼 클릭')
     event.preventDefault();
-    const surveyResults = [{
-      'surveyIdx':'1',
-      'surveyTitle':'개발자로 근무한 기간을 선택하세요',
-      'tagList':[workingYears,]
-    },
-    {
-      'surveyIdx':'2',
-      'surveyTitle':'현재 직무는 무엇인가요?',
-      'tagList':[currentJob,]
-    },
-    {
-      'surveyIdx':'3',
-      'surveyTitle':'사용하는 언어가 무엇인가요? (최대 5개)',
-      'tagList':[languages,]
-    },
-    {
-      'surveyIdx':'4',
-      'surveyTitle':'거주중인 지역은 어디인가요?',
-      'tagList':[location,]
-    },
-    {
-      'surveyIdx':'5',
-      'surveyTitle':'프로젝트 경험이 있으신가요?',
-      'tagList':[projectExperience,]
-    },
-  ]
+    const surveyResults = [
+      {
+        surveyIdx: 1,
+        surveyTitle: '개발자로 근무한 기간을 선택하세요',
+        tagList: [workingYears],
+      },
+      {
+        surveyIdx: 2,
+        surveyTitle: '현재 직무는 무엇인가요?',
+        tagList: [currentJob],
+      },
+      {
+        surveyIdx: 3,
+        surveyTitle: '사용하는 언어가 무엇인가요? (최대 5개)',
+        tagList: languages,
+      },
+      {
+        surveyIdx: 4,
+        surveyTitle: '거주중인 지역은 어디인가요?',
+        tagList: [location],
+      },
+      {
+        surveyIdx: 5,
+        surveyTitle: '프로젝트 경험이 있으신가요?',
+        tagList: [projectExperience],
+      },
+    ];
 
     // onConfirm(surveyResults);
     
-    const userToken = localStorage.getItem('usertoken')
-    var userIdxStr = localStorage.getItem('saveid')
+    const userToken = localStorage.getItem('userToken')
+    const userIdxStr = localStorage.getItem('userIdx')
     var userIdx:number|null;
-    if (userIdxStr) {
-      userIdx=parseInt(userIdxStr,10)
-    }
-    else {
-      userIdx=null
-    }
+    if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
 
     axios({
-      method:'put',
+      method:'post',
       url:`https://i9b206.p.ssafy.io:9090/basicSurvey/modify`,
       data:{
         'userIdx':userIdx,
@@ -90,9 +85,9 @@ const ReQAModal: React.FC = () => {
     })
     .then(() =>{
       dispatch(setModal(null))
-      alert('설문에 참여해주셔서 감사합니다.')
+      alert('설문 수정 완료')
     })
-    .catch(err => console.log(err))
+    .catch(()=>alert('설문 수정 실패') )
   }
 
   const surveyForm = (

@@ -34,8 +34,10 @@ const CreateQnA: React.FC<Props> = ({onback}) => {
   }
 
   const create = () => {
-    const userToken = localStorage.getItem('usertoken')
-    const userIdx = localStorage.getItem('saveid')
+    const userToken = localStorage.getItem('userToken')
+    const userIdxStr = localStorage.getItem('userIdx')
+    var userIdx:number|null;
+    if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
 
     axios({
       method:'post',
@@ -77,11 +79,11 @@ const CreateQnA: React.FC<Props> = ({onback}) => {
             <textarea name="" id="" value={content}  placeholder='내용을 작성해주세요' onKeyDown={handlekeydown}
             onChange={(e) => setContent(e.target.value)}/>
           </div>
-          <div className={Create_css.input}>
+          {/* <div className={Create_css.input}>
             <label><span>파</span><span>일</span></label>
             <p> : </p>
             <input type="file" style={{marginTop:'5px'}}/>
-          </div>
+          </div> */}
           <button onClick={create}>생성하기</button>
         </div>
       </div>

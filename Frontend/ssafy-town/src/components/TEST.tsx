@@ -8,9 +8,12 @@ const MyComponent: React.FC = () => {
   const stompClientRef = React.useRef<Client | null>(null);
   
   useEffect(() => { 
-    const socket = new SockJS("https://localhost:8080/chatting");
+    // const userToken = localStorage.getItem('userToken')
+    const socket = new SockJS("http://localhost:8080/chatting");
     stompClientRef.current = Stomp.over(socket);
-
+    // stompClientRef.current.connectHeaders={
+    //   Authorization: "Bearer " + userToken
+    // }
     // 연결 시도
     stompClientRef.current.activate();
 
@@ -29,17 +32,22 @@ const MyComponent: React.FC = () => {
 
   useEffect(() => {
     // 구독 설정
+    // const userIdx = localStorage.getItem('userIdx')
     if (stompClientRef.current) {
+      
       stompClientRef.current.onConnect = (frame) => {
-        stompClientRef.current!.subscribe('/topic/1', onMessageReceived);
+        console.log(frame)
+        stompClientRef.current!.subscribe(`/topic/1`, onMessageReceived);
+        // 등록을 해둿으니 여기에서 구독한것들은 다 들어온다!!!
       };
     }
   }, []);
 
   const sendMessage = (message: string) => {
+    const userIdx = localStorage.getItem('userIdx')
     if (stompClientRef.current) {
     const data = {
-        'sender': 'userId', // Set the sender's userId here
+        'sender': userIdx, // Set the sender's userId here
         'contents': message,
         };
     stompClientRef.current.publish({

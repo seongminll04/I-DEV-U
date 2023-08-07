@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import mypage_css from './8mypage.module.css';
 import axios from 'axios';
 import EditAcount from '../account/edit';
+import CheckPass from '../account/checkpass'
+
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
@@ -48,16 +50,17 @@ const Desc = styled.div`
   margin: 20px;
 `;
 
-let user = {
+let userdata = {
   email: '',
   password: '',
   name: '',
   nickname: '',
-  birthdate: '',
+  birth: '',
   gender: 0,
   intro: '', // 자기소개
   status: '', // active or not (회원탈퇴여부)
   grade: 0, // 1 : 관리자(운영자), 2 : 일반
+<<<<<<< HEAD
 };
 
 const getUser = async () => {
@@ -80,20 +83,74 @@ const getUser = async () => {
     console.log(err)
     console.log("유저 정보가 정확하지 않음")
   })
+=======
+  invite: ''
+>>>>>>> 87762e1338d9078ce4a4479483a0c6a24dee1ebe
 };
 
 const Mypage: React.FC = () => {
   const dispatch = useDispatch();
   // const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
+  const [user,setUser] = useState(userdata)
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
+  useEffect(()=>{
+    // 프로필정보 로딩
+    const userToken = localStorage.getItem('userToken')
+    const userIdxStr = localStorage.getItem('userIdx')
+    var userIdx:number|null;
+    if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
 
-  getUser();
+    axios({
+      method: 'get',
+      url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
+      headers : {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+    .then(res => {
+      console.log(res)
+      setUser(res.data.data)
+
+      if (userdata.invite === "true") {
+        setisOn(true);
+      } else {
+        setisOn(false);
+      }
+      // const alert_data=res.data 
+    })
+    .catch(err => {
+      console.log(err)
+      console.log("유저 정보가 정확하지 않음")
+    })
+  },[setUser])
   // toggle
-  const [isOn, setisOn] = useState(true);
+  const [isOn, setisOn] = useState(false);
 
   const toggleHandler = () => {
     // isOn의 상태를 변경하는 메소드를 구현
-    setisOn(!isOn)
+    const userToken = localStorage.getItem('userToken');
+    const userIdx = localStorage.getItem('userIdx');
+    setisOn(!isOn);
+
+    axios({
+      method: 'put',
+      url: 'https://i9b206.p.ssafy.io:9090/user/setting',
+      headers: {
+        Authorization: 'Bearer ' + userToken
+      },
+      data: {
+        'userIdx': userIdx,
+        'invite': "true"
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        console.log("초대설정 성공")
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log("초대설정 실패")
+      });
   };
 
 
@@ -114,7 +171,7 @@ const Mypage: React.FC = () => {
           <div className={mypage_css.mypage_welcome}>
           안녕하세요! {user.name} 님
           </div>
-          <button className={mypage_css.button} onClick={()=>dispatch(setModal('회원정보수정'))}>회원정보 수정</button>
+          <button className={mypage_css.button} onClick={()=>dispatch(setModal('회원정보수정1'))}>회원정보 수정</button>
           <div className={mypage_css.mypage_togglebox}>
             <div className={mypage_css.mypage_toggle}>
               {isOn === false ?
@@ -136,7 +193,8 @@ const Mypage: React.FC = () => {
           <button className={mypage_css.button}onClick={unregistMeeting}>소개팅 등록 취소</button>
           <button className={mypage_css.button}onClick={()=>dispatch(setModal('Re최초설문'))}>최초 설문 수정</button>
         </div>
-        {isModalOpen==='회원정보수정' ? <EditAcount user={user} /> : null}
+        {isModalOpen==='회원정보수정1' ? <CheckPass/> : null}
+        {isModalOpen==='회원정보수정2' ? <EditAcount user={user} /> : null}
       </div>
     </div>
     

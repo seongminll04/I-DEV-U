@@ -15,7 +15,7 @@ interface Alert {
 
 const AllAlert: React.FC = () => {
   const dispatch = useDispatch()
-  const userToken = localStorage.getItem('usertoken')
+  const userToken = localStorage.getItem('userToken')
   const [page, setPage] = useState<Number>(0); 
   const [search, setsearch] = useState<string>('');
   const [nowsearch, setnowsearch] = useState<boolean>(false);

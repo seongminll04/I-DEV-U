@@ -2,6 +2,7 @@ package mate.domain.question;
 
 import lombok.Getter;
 import mate.domain.user.User;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -22,9 +23,7 @@ public class QuestionBoardComment {
     private User user;
 
     private String content;
+
+    @CreatedDate
     private LocalDateTime createdAt;
-
-
-
-
 }

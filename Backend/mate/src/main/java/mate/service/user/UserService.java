@@ -193,7 +193,7 @@ public class UserService {
         File file = new File(filePath);
         multipartFile.transferTo(file);
 
-        user.uploadFile(fileName, filePath);
+        user.uploadFile(multipartFile.getOriginalFilename(), filePath);
         return Result.builder().status(ok().body("업로드 성공")).data(map).build();
     }
 

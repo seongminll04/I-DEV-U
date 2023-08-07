@@ -2,6 +2,8 @@ package mate.controller;
 
 import lombok.RequiredArgsConstructor;
 import mate.domain.question.QuestionBoard;
+import mate.domain.question.QuestionBoardComment;
+import mate.domain.question.QuestionBoardLike;
 import mate.service.QuestionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -110,4 +112,48 @@ public class QuestionController {
 //        map.put("Q&A", questionService.findQuestionByName(name));
 //        return ResponseEntity.ok(map);
 //    }
+
+    @PostMapping("/like")
+    public ResponseEntity<Map<String, Object>> likeQuestion(QuestionBoardLike like) {
+        questionService.writeQuestionBoardLike(like);
+        Map<String, Object> map = new HashMap<>();
+        map.put("resmsg", "Q&A 글 리스트 조회 성공");
+
+        return ResponseEntity.ok(map);
+    }
+
+    @PostMapping("/comment/write")
+    public ResponseEntity<Map<String, Object>> writeComment(QuestionBoardComment comment) {
+        questionService.writeQuestionBoardComment(comment);
+        Map<String, Object> map = new HashMap<>();
+        map.put("resmsg", "Q&A 댓글 작성 성공");
+
+        return ResponseEntity.ok(map);
+    }
+
+    @PutMapping("/comment/modify")
+    public ResponseEntity<Map<String, Object>> modifyComment(QuestionBoardComment comment) {
+        questionService.writeQuestionBoardComment(comment);
+        Map<String, Object> map = new HashMap<>();
+        map.put("resmsg", "Q&A 댓글 수정 성공");
+
+        return ResponseEntity.ok(map);
+    }
+
+    @DeleteMapping("/comment/delete/{commentIdx}")
+    public ResponseEntity<Map<String, Object>> deleteComment(int commentIdx) {
+        questionService.deleteQuestionBoardComment(commentIdx);
+        Map<String, Object> map = new HashMap<>();
+        map.put("resmsg", "Q&A 댓글 삭제 성공");
+
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/comment/{boardIdx}")
+    public ResponseEntity<Map<String, Object>> findComment(int boardIdx) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("resmsg", "Q&A 댓글 조회 성공");
+        map.put("comments", questionService.findCommentByBoard(boardIdx));
+        return ResponseEntity.ok(map);
+    }
 }

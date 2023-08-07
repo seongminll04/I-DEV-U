@@ -26,7 +26,7 @@ const validationSchema = Yup.object().shape({
       const tday=new Date();
       return selectedDate <= tday;
     })
-    .required('생년월일을 입력해주세요'),
+    .required('유효한 생년월일이 아닙니다'),
   gender: Yup.string()
     .required('성별을 선택해주세요')
     .oneOf(['MALE', 'FEMALE'], '유효한 성별을 선택해주세요'),
@@ -144,7 +144,7 @@ const KakaoSignUp = () => {
   useEffect(()=>{
     var count=0
     if (formik.values.name==='') {count+=1}
-    if (formik.values.birthday==='') {count+=1}
+    if (formik.values.birthday===null||'') {count+=1}
     if (formik.values.gender===null) {count+=1}
     if (formik.values.nickname==='') {count+=1}
     if (count === 4 ) {count=-1}
@@ -158,17 +158,17 @@ const KakaoSignUp = () => {
         <p>최초 로그인 : 추가 정보를 입력해주세요</p>
         <form className={signup_css.signup_form} onSubmit={formik.handleSubmit}>
           <label className={signup_css.split}>이름
-          <span style={{color:'darkgray'}}>{formik.touched.name && formik.errors.name ? formik.errors.name : null}</span>
+          <span style={{color:'red'}}>{formik.values.name==='' ? '이름을 입력해주세요':  formik.errors.name ? formik.errors.name : <span style={{color:'green'}}>완료</span>}</span>
           </label>
           <input className={signup_css.input} type="text" placeholder="이름" {...formik.getFieldProps('name')} />
 
           <label className={signup_css.split}>생년월일
-          <span style={{color:'darkgray'}}>{formik.touched.birthday && formik.errors.birthday ? formik.errors.birthday : null}</span>
+          <span style={{color:'red'}}>{formik.values.birthday===null ? '생년월일을 입력해주세요' :  formik.errors.birthday ? formik.errors.birthday : <span style={{color:'green'}}>완료</span>}</span>
           </label>
           <input className={signup_css.input} type="date" {...formik.getFieldProps('birthday')} min={'1900-01-01'} max={today} />
 
             <label className={signup_css.split}>성별
-            <span style={{color:'darkgray', margin:'0'}}>{formik.touched.gender && formik.errors.gender ? formik.errors.gender : null}</span>
+            <span style={{color:'red', margin:'0'}}>{formik.values.gender===null ? '성별을 선택해주세요': formik.errors.gender ? formik.errors.gender : <span style={{color:'green'}}>완료</span>}</span>
             </label>
             <div className={signup_css.split}>
               <label>
@@ -200,17 +200,18 @@ const KakaoSignUp = () => {
           
 
           <label className={signup_css.split}>닉네임
-          <span style={{color:'darkgray'}}>{formik.touched.nickname && formik.errors.nickname ? formik.errors.nickname : null}{chknickname === 'yes' ? '확인완료': null}</span>
+          <span style={{color:'red'}}>
+            {formik.values.nickname==='' ? '닉네임을 입력해주세요': formik.errors.nickname ? formik.errors.nickname : chknickname==='no' ? '중복확인을 해주세요': <span style={{color:'green'}}>완료</span>}</span>
           </label>
           <div className={signup_css.input_chk}>
           <input className={signup_css.input} type="text" placeholder="닉네임" {...formik.getFieldProps('nickname')}  onChange={(event) => {formik.handleChange(event); setchknickname('no');}} />
           <div className={signup_css.chk_input} onClick={()=>nicknamecheck(formik.values.nickname)}>중복확인</div>
           </div>
 
-          <label className={signup_css.split}>프로필 사진 등록(선택)</label>
+          {/* <label className={signup_css.split}>프로필 사진 등록(선택)</label>
           <input  className={signup_css.split} type="file" name="photo" onChange={(event) => {
             formik.setFieldValue("photo", event?.currentTarget?.files?.[0]);
-          }} />
+          }} /> */}
           
           {formik.isValid && chknickname==='yes' ? 
           <button className={signup_css.button} type="submit">Sign Up</button> 
@@ -233,6 +234,31 @@ const KakaoSignUp = () => {
            :null 
             }
            </>}
+
+           {formik.isValid && chknickname==='yes' ? 
+          <button className={signup_css.button} type="submit">Sign Up</button>
+           : <> <button className={signup_css.button_disabled} type="submit" disabled>Sign Up</button>
+            { errcount > 1 || errcount === -1 ? <span>빈칸을 모두 채워주세요</span>
+            : errcount ===1 ? 
+            <span>
+              { formik.values.name==='' ? '이름을 입력해주세요'
+              : formik.values.birthday===null||'' ? '생년월일을 입력해주세요'
+              : formik.values.gender===null ? '성별을 입력해주세요'
+              : formik.values.nickname==='' ? '닉네임을 입력해주세요' 
+              : null }
+            </span>
+           : errcount===0 ? <span>
+              { formik.errors.name ? '이름을 확인해주세요'
+            : formik.errors.birthday ? '생년월일을 확인해주세요'
+            : formik.errors.gender ? '성별을 확인해주세요'
+            : formik.errors.nickname ? '닉네임을 확인해주세요'
+            : chknickname==='no' ? '닉네임 중복을 확인해주세요' : null  }</span>
+           :null 
+            }
+           </>
+          }
+
+
         </form>
       </div>
     </div>

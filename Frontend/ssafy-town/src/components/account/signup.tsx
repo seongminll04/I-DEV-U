@@ -251,10 +251,11 @@ const SignupForm = () => {
           </label>
           <input className={signup_css.input} type="password" placeholder="비밀번호 확인" {...formik.getFieldProps('confirmPassword')} />
 
-          <label className={signup_css.split}>프로필 사진 등록(선택)</label>
+          {/*  마이페이지에서만 등록하게 설정 변경  */}
+          {/* <label className={signup_css.split}>프로필 사진 등록(선택)</label>
           <input  className={signup_css.split} type="file" name="photo" onChange={(event) => {
             formik.setFieldValue("photo", event?.currentTarget?.files?.[0]);
-          }} />
+          }} /> */}
           
           {formik.isValid && chkemail==='yes' && chknickname==='yes' ? 
           <button className={signup_css.button} type="submit">Sign Up</button>

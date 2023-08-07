@@ -1,0 +1,70 @@
+.modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.QnA_modal {
+    background-color: rgba(109, 206, 245, 0.9);
+    border-radius: 1rem;
+    width:50%;
+    height: 500px;
+    padding: 10px;
+    box-sizing: border-box;
+    color : white;
+}
+
+.button_icon {
+    margin: 0 100px;
+    margin-top:100px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.createQnA {
+    background-color: white;
+    height: 30px;
+    border-radius: 0.5rem;
+}
+.createQnA:hover {
+    background-color: gray;
+}
+
+.movebtn:hover {
+    color: gray;
+}
+.closebtn {
+    margin:10px;
+    text-align: right;
+    cursor: pointer;
+}
+
+.closebtn:hover{
+    color:gray;
+    cursor: pointer;
+}
+.notice {
+    display: flex;
+    justify-content: space-between;
+    margin: 0px 20px;
+}
+.search_frame select {
+    height: 30px;
+    border-radius: 0.5rem;
+    text-align-last: center;
+    text-align: center;
+    -ms-text-align-last: center;
+    -moz-text-align-last: center;
+    margin-right :2px;
+}
+.search_frame input {
+    height: 25px;
+    border-radius: 0.5rem;
+    margin-right:2px;
+    padding:0 10px;
+}

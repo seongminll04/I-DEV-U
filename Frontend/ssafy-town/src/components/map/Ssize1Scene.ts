@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import store from '../../store/store'
+import { setModal } from '../../store/actions';
 
 type AssetKeys = 'A1' | 'B1' | 'C1' | 'D1' | 'E1' | 'F1' | 'G1' | 'H1' | 'I1' | 'J1' | 'K1';
 const ASSETS: Record<AssetKeys, string> = {
@@ -37,8 +39,12 @@ B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1
 export class Ssize1Scene extends Phaser.Scene {
 
   private character?: Phaser.Physics.Arcade.Sprite;
+  private pet?: Phaser.Physics.Arcade.Sprite;
+  private balloon!: Phaser.GameObjects.Sprite;
+  private heart!: Phaser.GameObjects.Sprite;
   private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
   private walls?: Phaser.Physics.Arcade.StaticGroup;
+  private rows: string[] = [];
 
   private bed?: Phaser.Physics.Arcade.Sprite;
   private table?: Phaser.Physics.Arcade.Sprite;
@@ -68,26 +74,142 @@ export class Ssize1Scene extends Phaser.Scene {
     }
 
     this.load.image('character', 'assets/admin_character.png');
+    this.load.image('balloon', 'assets/ekey.png');
+    this.load.image('heart', 'assets/heart.png');
+    this.load.image('pet-down-1', 'assets/파아1.png')
+    this.load.image('pet-down-2', 'assets/파아2.png')
+    this.load.image('pet-down-3', 'assets/파아3.png')
+    this.load.image('pet-up-1', 'assets/파위1.png')
+    this.load.image('pet-up-2', 'assets/파위2.png')
+    this.load.image('pet-up-3', 'assets/파위3.png')
+    this.load.image('pet-right-1', 'assets/파오1.png')
+    this.load.image('pet-right-2', 'assets/파오2.png')
+    this.load.image('pet-right-3', 'assets/파오3.png')
+    this.load.image('pet-left-1', 'assets/파왼1.png')
+    this.load.image('pet-left-2', 'assets/파왼2.png')
+    this.load.image('pet-left-3', 'assets/파왼3.png')
   }
 
   create() {
-  const rows = pattern.trim().split('\n');
+  this.rows = pattern.trim().split('\n');
   const tileSize = 32;  
 
   this.walls = this.physics.add.staticGroup();
 
-  const mapCenterX = rows[0].length * tileSize / 2;
-  const mapCenterY = rows.length * tileSize / 2;
+  this.balloon = this.add.sprite(0, 0, 'balloon').setVisible(false);
+  this.balloon.setDepth(2);
+  this.heart = this.add.sprite(0, 0, 'heart').setVisible(false);
+  this.heart.setDepth(2);
+
+  const mapCenterX = this.rows[0].length * tileSize / 2;
+  const mapCenterY = this.rows.length * tileSize / 2;
   
   this.character = this.physics.add.sprite(mapCenterX - 240, mapCenterY, 'character');
+  this.pet = this.physics.add.sprite(mapCenterX - 160, mapCenterY + 90, 'pet-down-2');
   this.character.setCollideWorldBounds(true);
+  this.pet.setCollideWorldBounds(true);
   this.physics.add.collider(this.character, this.walls);  // 캐릭터와 벽 사이의 충돌 설정
+  this.physics.add.collider(this.pet, this.walls);
+  this.physics.add.collider(this.pet, this.character);
+  this.pet.setImmovable(true);  // pet이 밀리지 않게 설정
   this.cursors = this.input.keyboard?.createCursorKeys();
   this.cameras.main.startFollow(this.character);
   this.character?.setDepth(1); // 캐릭터부터 생성했으니 depth를 줘야 캐릭터가 화면에 보임
+  this.pet?.setDepth(1);
   // this.physics.world.createDebugGraphic();  // 디버그 그래픽
 
-  rows.forEach((row, rowIndex) => {
+  ///여기부터 펫의 움직임///
+  
+  
+
+
+  this.anims.create({
+    key: 'pet-walk-up',
+    frames: [
+      { key: 'pet-up-1'},
+      { key: 'pet-up-3'},
+      { key: 'pet-up-2'},
+    ],
+    frameRate: 10,
+    repeat: -1
+  });
+
+  this.anims.create({
+    key: 'pet-walk-left',
+    frames: [
+      { key: 'pet-left-1'},
+      { key: 'pet-left-3'},
+      { key: 'pet-left-2'},
+    ],
+    frameRate: 10,
+    repeat: -1
+  });
+
+  this.anims.create({
+    key: 'pet-walk-right',
+    frames: [
+      { key: 'pet-right-1'},
+      { key: 'pet-right-3'},
+      { key: 'pet-right-2'},
+    ],
+    frameRate: 10,
+    repeat: -1
+  });
+
+  this.anims.create({
+    key: 'pet-walk-down',
+    frames: [
+      { key: 'pet-down-1'},
+      { key: 'pet-down-3'},
+      { key: 'pet-down-2'},
+    ],
+    frameRate: 10,
+    repeat: -1
+  });
+  
+//////
+
+  this.time.addEvent({
+    delay: 1500, // 2초마다 움직임
+    callback: () => {
+        const randomDirection = Phaser.Math.Between(1, 4); // 1: 위, 2: 아래, 3: 왼쪽, 4: 오른쪽
+        const petX = this.pet?.x!;
+        const petY = this.pet?.y!;
+
+        if (!this.isObstacleAhead(petX, petY, randomDirection)) {
+        switch (randomDirection) {
+            case 1:
+                this.pet?.setVelocityY(-tileSize); // 위로 움직이기
+                this.pet?.anims.play('pet-walk-up', true);
+                break;
+            case 2:
+                this.pet?.setVelocityY(tileSize);  // 아래로 움직이기
+                this.pet?.anims.play('pet-walk-down', true);
+                break;
+            case 3:
+                this.pet?.setVelocityX(-tileSize); // 왼쪽으로 움직이기
+                this.pet?.anims.play('pet-walk-left', true);
+                break;
+            case 4:
+                this.pet?.setVelocityX(tileSize);  // 오른쪽으로 움직이기
+                this.pet?.anims.play('pet-walk-right', true);
+                break;
+        }
+      }
+
+        // 일정 시간 후 속도를 0으로 설정하여 펫이 움직임을 멈추게 함
+        this.time.delayedCall(1000, () => {
+            this.pet?.setVelocity(0, 0);
+            this.pet?.anims.stop();
+        });
+    },
+    loop: true
+  });
+
+
+
+
+  this.rows.forEach((row, rowIndex) => {
     for (let colIndex = 0; colIndex < row.length; colIndex += 2) {
         const tileID = row.substring(colIndex, colIndex + 2) as AssetKeys;
   
@@ -141,11 +263,29 @@ export class Ssize1Scene extends Phaser.Scene {
         }
       }
     });
-}
+
+    this.input.keyboard?.on('keydown-E', () => {
+      const nearbyObject = this.NearbyObjects();
+
+      console.log(this.character!.x + "@@" + this.character!.y)
+      if (!store.getState().isAllowMove){
+        return
+      }
+
+
+      if (nearbyObject === 'bed') {
+        store.dispatch(setModal('로그아웃'))
+      } else if(nearbyObject === 'board') {
+        store.dispatch(setModal('QnA게시판'))
+      } else if(nearbyObject === 'pet'){
+        this.petheart();
+      }
+    }
+  )}
 
 
   update() {
-    if (this.cursors && this.character) {
+    if (store.getState().isAllowMove && this.cursors && this.character) {
       if (this.cursors.left?.isDown) {
         this.character.setVelocityX(-320);
       } else if (this.cursors.right?.isDown) {
@@ -162,5 +302,80 @@ export class Ssize1Scene extends Phaser.Scene {
         this.character.setVelocityY(0);
       }
     }
+    this.NearbyObjects();
   }
+
+  private NearbyObjects(): 'bed' | 'board' | 'pet'| null {
+    const bedPosition = { x: 84, y: 131 }; // 침대
+    const boardPosition = { x: 400, y: 100 }; // 게시판
+
+    if (this.character) {
+      const distanceToBed = Phaser.Math.Distance.Between(this.character.x, this.character.y, bedPosition.x, bedPosition.y);
+      const distanceToBoard = Phaser.Math.Distance.Between(this.character.x, this.character.y, boardPosition.x, boardPosition.y);
+
+      if (distanceToBed <= 50 || distanceToBoard <= 64) {
+          this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
+
+
+          if(distanceToBed <= 50) return 'bed';
+          if(distanceToBoard <= 64) return 'board';
+      } else if(Math.abs(this.pet!.x-this.character!.x)<50 && Math.abs(this.pet!.y-this.character!.y)<50){
+        return 'pet';
+      } 
+      else {
+          this.balloon.setVisible(false);
+      }
+  }
+    return null; // 주변에 아무 오브젝트도 없다면 null
+  }
+
+  isObstacleAhead(x: number, y: number, direction: number): boolean {
+    const tileSize = 32;
+    let nextTileX = x;
+    let nextTileY = y;
+  
+    switch (direction) {
+      case 1:
+        nextTileY -= tileSize;
+        break;
+      case 2:
+        nextTileY += tileSize;
+        break;
+      case 3:
+        nextTileX -= tileSize;
+        break;
+      case 4:
+        nextTileX += tileSize;
+        break;
+    }
+  
+    const xIndex = Math.floor(nextTileX / tileSize) * 2;
+    const yIndex = Math.floor(nextTileY / tileSize);
+
+    const charXIndex = Math.floor(this.character!.x / tileSize) * 2;
+    const charYIndex = Math.floor(this.character!.y / tileSize);
+
+    const rowString = this.rows[yIndex];  // rows 배열에서 yIndex에 해당하는 행의 문자열을 가져옴
+    if (!rowString) return true;  // 예외처리: 해당 행이 존재하지 않는 경우
+
+    const tile = rowString.slice(xIndex, xIndex + 2);
+
+    if (charXIndex >= xIndex - 2 && 
+    charXIndex <= xIndex + 2 && 
+    charYIndex >= yIndex - 2 && 
+    charYIndex <= yIndex + 2) {
+      return true;  // 해당 타일에 캐릭터가 있다면 true
+  }
+  
+    return ["B1", "D1", "K1", "F1", "A1", "G1", "J1", "E1", "I1","Z1"].includes(tile);
+  }
+  petheart(){
+    const heart = this.add.image(this.pet!.x, this.pet!.y - this.pet!.height / 2 - this.heart.height / 2,'heart');
+
+    setTimeout(() => {
+        heart.destroy();
+    }, 300);
+  }
+
+
 }

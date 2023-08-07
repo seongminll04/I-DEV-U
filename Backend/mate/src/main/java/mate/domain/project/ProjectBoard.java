@@ -20,13 +20,17 @@ public class ProjectBoard {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idx;
 
-	@ManyToOne
-	@JoinColumn(name = "project_idx")
-	private Project project;
+//	@ManyToOne
+//	@JoinColumn(name = "project_idx")
+//	private Project project;
+	@Column(name = "project_idx")
+	private int projectIdx;
 
-	@ManyToOne
-	@JoinColumn(name = "user_idx")
-	private User user;
+//	@ManyToOne
+//	@JoinColumn(name = "user_idx")
+//	private User user;
+	@Column(name = "user_idx")
+	private int userIdx;
 
 	@Column(name = "title")
 	private String title;

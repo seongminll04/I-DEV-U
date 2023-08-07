@@ -1,26 +1,21 @@
-import React,{useEffect} from 'react';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { setModal } from '../../store/actions';
 
-interface Props {
-  onModal: string|null;
-  closeSidebar:()=>void;
-  closeModal:()=>void;
-}
-const Setting: React.FC<Props> = ({onModal, closeSidebar, closeModal}) => {
-  useEffect(() => { //esc키로 끄기
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        if (onModal!==null) {closeModal()} else {closeSidebar()}
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [onModal,closeSidebar,closeModal]);
-
+const Setting: React.FC = () => {
+  const dispatch = useDispatch()
   return (
     <div className='sidebar_modal'>
-      Setting
+      <h1>Setting</h1>
+      <br /><br /><br /><br />
+      <button onClick={()=>dispatch(setModal('QnA게시판'))}
+      style={{width:'50%',height:'30%', color:'red', backgroundColor:'blue'}}>QnA게시판 열기</button>
+
+      <hr />
+      <h1>방 이동하기</h1>
+      <button onClick={()=>{window.location.href = 'https://i9b206.p.ssafy.io/home';}}>마이룸</button>
+      <button onClick={()=>{window.location.href = 'https://i9b206.p.ssafy.io/meeting';}}>회의룸</button>
+      <button onClick={()=>{window.location.href = 'https://i9b206.p.ssafy.io/love';}}>소개팅룸</button>
     </div>
   );
 };

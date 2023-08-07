@@ -49,3 +49,4 @@ public class Project {
 	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
 	private List<ProjectTech> projectTechs;
 }
+

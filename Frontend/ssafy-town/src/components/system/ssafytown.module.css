@@ -1,0 +1,175 @@
+.container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+
+.game_container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* sidebar.tsx 관련 css */
+.sidebar {
+    width: 5%;  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100vh; 
+    background-color: rgb(109, 206, 245);
+    flex-shrink: 0; 
+}
+
+.sidebar hr {
+    width: 60%; /* 가로 선의 길이 조정 */
+    height: 1px;
+    background-color: black; /* 가로 선의 색상 설정 */
+    margin: 10px 0; /* 아이콘과 가로 선 사이의 간격 조정 */
+    border: none; /* 기본적으로 존재하는 테두리 제거 */
+}
+.sidebar img {
+    width: auto;  
+    height: 5%;
+    cursor: pointer;
+    /* margin: -5px 0; */
+}
+
+.sidebar img:hover {
+    transform: scale(1.2);
+}
+
+/* navbar.tsx 의 css */
+.navigation_bar {
+    width: 25%;  
+    height: 100vh; 
+    background-color: lightgray;
+    flex-shrink: 0; 
+}
+
+.phaser_game {
+    width: 100%; 
+    height: 100%;
+    overflow: hidden;
+}
+
+
+  .map_switch_button2 {
+    position: absolute;
+    top: 50px;
+    right: 20px;
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 14px;
+    padding: 8px;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  .map_switch_button3 {
+    position: absolute;
+    top: 80px;
+    right: 20px;
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 14px;
+    padding: 8px;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  .map_switch_button4 {
+    position: absolute;
+    top: 110px;
+    right: 20px;
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 14px;
+    padding: 8px;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+
+
+
+  /* 내화상 우측 하단 */
+.my_video_bar {
+    position: absolute;
+    right: 0px;  
+    bottom: 0px;
+    z-index: 1; 
+}
+
+.my_video_bar video {
+    width: 320px;
+    height: 240px;
+}
+
+  /* 다른사람은 상단 */
+.op_video_bar {
+    position: absolute;
+    top: 20px; 
+    left: 50%; 
+    transform: translateX(-50%); /* 중앙을 기준으로 위치 */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    z-index: 1; 
+}
+
+.op_video_bar video {
+    width: 400px;
+    height: 300px;
+    margin: 0;
+}
+
+
+
+
+
+
+.video_bar {
+    position: absolute;
+    z-index: 1; 
+    
+}
+
+.video_bar button{ /*이부분 이미지로 */
+    z-index: 1; 
+    cursor: pointer;
+}
+
+.video_bar button:nth-of-type(1) {
+    transform: translateX(770%) translateY(1250%);
+}
+
+.video_bar button:nth-of-type(2) {
+    transform: translateX(810%) translateY(1250%);
+}
+
+.video_bar button:nth-of-type(3) {
+    transform: translateX(820%) translateY(1250%);
+}
+
+.video_bar button:nth-of-type(4) {
+    transform: translateX(830%) translateY(1250%);
+}
+
+.video_bar button:nth-of-type(5) {
+    transform: translateX(840%) translateY(1250%);
+}
+
+
+.video_bar video {
+    width: 320px;
+    height: 240px;
+}

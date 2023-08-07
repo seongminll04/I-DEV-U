@@ -2,6 +2,7 @@ package mate.controller;
 
 import lombok.RequiredArgsConstructor;
 import mate.domain.question.QuestionBoard;
+import mate.domain.question.QuestionBoardLike;
 import mate.service.QuestionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -108,6 +109,16 @@ public class QuestionController {
 
         map.put("resmsg", "Q&A 글 리스트 조회 성공");
         map.put("Q&A", questionService.findQuestionByName(name));
+        return ResponseEntity.ok(map);
+    }
+
+    @PostMapping("/like")
+    public ResponseEntity<Map<String, Object>> like(QuestionBoardLike like) {
+        Map<String, Object> map = new HashMap<>();
+
+        questionService.writeQuestionLike(like);
+        map.put("resmsg", "Q&A 글 좋아요 성공");
+
         return ResponseEntity.ok(map);
     }
 }

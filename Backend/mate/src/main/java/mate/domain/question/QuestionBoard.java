@@ -3,6 +3,7 @@ package mate.domain.question;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import mate.domain.user.User;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,5 +26,6 @@ public class QuestionBoard {
 
     private String content;
 
+    @CreatedDate
     private LocalDateTime createAt;
 }

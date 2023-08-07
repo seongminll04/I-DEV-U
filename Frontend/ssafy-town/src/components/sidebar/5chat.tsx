@@ -47,7 +47,7 @@ import axios from "axios";
     // 연결에 관한 것
     useEffect(() => {
       const userToken = localStorage.getItem('userToken')
-      const socket = new SockJS("https://localhost:8080/chatting");
+      const socket = new SockJS("http://localhost:8080/chatting");
 
       stompClientRef.current = Stomp.over(socket);
       stompClientRef.current.connectHeaders={

@@ -13,17 +13,11 @@ public class ChatMessage {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idx;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_idx")
-    private ChatParticipation user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_idx")
-    private ChatParticipation room;
-
+    private Integer userIdx;
+    private Integer roomIdx;
     private String message;
-
     private LocalDateTime createdAt;
+    private String name;
 
 
 

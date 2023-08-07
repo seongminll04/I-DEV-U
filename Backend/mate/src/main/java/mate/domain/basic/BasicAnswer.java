@@ -15,7 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class BasicAnswer {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

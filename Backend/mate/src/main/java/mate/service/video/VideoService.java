@@ -1,5 +1,22 @@
 package mate.service.video;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import mate.domain.video.VideoParticipation;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.json.JSONObject;
+import org.springframework.stereotype.Service;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mate.domain.user.User;
@@ -23,48 +40,48 @@ public class VideoService {
 	private final UserRepository userRepository;
 
 	// 화상채팅방 생성
-	public String createVideo(VideoCreateRequest videoCreateRequest) {
-		String videoCode = makeRoomCode();
+	public void createVideo(VideoCreateRequest videoCreateRequest) throws IOException {
 
-		Optional<User> user = userRepository.findByEmail(videoCreateRequest.getEmail());
+		System.out.println(videoCreateRequest);
 
-		videoRepository.save(VideoRoom.builder()
-			.user(user.get())
+		User user = userRepository.findById(videoCreateRequest.getUserIdx()).get();
+
+		VideoRoom videoRoom = videoRepository.save(VideoRoom.builder()
+			.user(user)
 			.title(videoCreateRequest.getTitle())
 			.content(videoCreateRequest.getContent())
 			.type(videoCreateRequest.getType())
 			.createdAt(LocalDateTime.now())
-			.videoCode(videoCode).build());
+			.ovSession(videoCreateRequest.getOvSession()).build());
 
-		return videoCode;
+		videoParticipationRepository.save(VideoParticipation.builder()
+				.videoRoom(videoRoom)
+				.user(user).build());
 	}
 
-	// 이미 생성되어 있는 화상채팅방에 들어감
-	// public VideoRoom enterVideo(String videoCode) {
-	//
-	// 	// 해당 방 인원 추가
-	//
-	// 	// VideoParticipation 추가
-	//
-	// }
+	public VideoRoom findVideoRoomByIdx(int idx) {
+		return videoRepository.findVideoRoomByIdx(idx);
+	}
+
+	public String enterVideo(int roomIdx, int userIdx) {
+		VideoRoom videoRoom = videoRepository.findVideoRoomByIdx(roomIdx);
+
+		videoParticipationRepository.save(VideoParticipation.builder()
+				.videoRoom(videoRoom)
+				.user(userRepository.findById(userIdx).get())
+				.build());
+
+		return videoRoom.getOvSession();
+	}
 
 	// 내가 접속해있는 화상채팅방 목록 조회
-	// public List<VideoRoom> videoRoomList(String email) {
-	// 	// 일단 email을 가진 유저가 접속해있는 방 번호 리턴
-	// 	List<VideoParticipation> list = videoParticipationRepository
-	// }
+	 public List<VideoRoom> videoRoomList(int userIdx) {
+	 	// userIdx와 일치하는 유저가 접속해있는 방 번호 리턴
+		 return videoParticipationRepository.findRoomIdxByUserIdx(userIdx);
+	 }
 
-	public String makeRoomCode() {
-		int leftLimit = 48; // numeral '0'
-		int rightLimit = 122; // letter 'z'
-		int targetStringLength = 10;
-		Random random = new Random();
-
-		String generatedString = random.ints(leftLimit, rightLimit + 1)
-			.filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-			.limit(targetStringLength)
-			.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-			.toString();
-		return generatedString;
+	 // 화살채팅방 영원히 나가기
+	public void leaveVideo(int roomIdx, int userIdx) {
+		videoParticipationRepository.deleteByUserIdxAndRoomIdx(roomIdx, userIdx);
 	}
 }

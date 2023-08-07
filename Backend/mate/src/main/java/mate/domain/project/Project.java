@@ -31,28 +31,23 @@ public class Project {
 	private int userIdx;
 
 	private String title;
-
 	private String content;
-
 	private Integer totalNum;
-
 	private Integer nowNum;
-
 	private String status;
-
 	private Integer front;
 	private Integer maxFront;
 	private Integer back;
 	private Integer maxBack;
 	private String text;
-
+	private String type;
 
 	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
 	private List<ProjectParticipation> projectParticipation;
 
 	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-	private List<ProjectLanguage> projectTeches;
+	private List<ProjectLanguage> projectLanguages;
 
-	// Getters and setters, constructors, and other methods
-	// ...
+	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+	private List<ProjectTech> projectTechs;
 }

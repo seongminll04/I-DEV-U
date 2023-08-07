@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Getter
 public class MatchAnswer {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idx;
 
     @OneToOne(fetch = FetchType.LAZY)

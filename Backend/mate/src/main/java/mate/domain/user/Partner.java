@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Getter
 public class Partner {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idx;
 
     @ManyToOne(fetch = FetchType.LAZY)

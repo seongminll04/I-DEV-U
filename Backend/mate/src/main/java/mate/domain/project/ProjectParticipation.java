@@ -10,7 +10,6 @@ import mate.domain.user.User;
 @Entity
 @Table(name = "project_participation")
 @Getter
-@Setter
 public class ProjectParticipation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

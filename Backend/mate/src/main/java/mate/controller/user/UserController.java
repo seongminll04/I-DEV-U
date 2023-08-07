@@ -163,6 +163,7 @@ public class UserController {
 	@PostMapping("/uploadFile")
 	public Result uploadFile(@RequestPart(name = "file") MultipartFile multipartFile,
 		@RequestParam(name = "userIdx") Integer userIdx) throws IOException {
+        System.out.println(userIdx);
 		return userService.uploadFile(multipartFile, userIdx);
 	}
 

@@ -181,8 +181,8 @@ public class UserService {
                 if(!originalFilePath.delete()) log.error("기존에 설정된 프로필 사진 삭제에 실패했습니다.");
             }
         }
-
-        String fileName = user.getIdx() + "_";
+        String ext = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf("."));
+        String fileName = user.getIdx() + "_" + "." + ext;
         String loadPath = loadDir  + fileName;
         String filePath = uploadDir + fileName;
 

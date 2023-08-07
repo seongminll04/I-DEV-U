@@ -60,6 +60,7 @@ let userdata = {
   intro: '', // 자기소개
   status: '', // active or not (회원탈퇴여부)
   grade: 0, // 1 : 관리자(운영자), 2 : 일반
+  invite: ''
 };
 
 const Mypage: React.FC = () => {
@@ -82,8 +83,14 @@ const Mypage: React.FC = () => {
       },
     })
     .then(res => {
-      // console.log(res)
+      console.log(res)
       setUser(res.data.data)
+
+      if (userdata.invite === "true") {
+        setisOn(true);
+      } else {
+        setisOn(false);
+      }
       // const alert_data=res.data 
     })
     .catch(err => {
@@ -92,7 +99,7 @@ const Mypage: React.FC = () => {
     })
   },[setUser])
   // toggle
-  const [isOn, setisOn] = useState(true);
+  const [isOn, setisOn] = useState(false);
 
   const toggleHandler = () => {
     // isOn의 상태를 변경하는 메소드를 구현

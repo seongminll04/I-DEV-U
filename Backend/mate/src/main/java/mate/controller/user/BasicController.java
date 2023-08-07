@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.Console;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.Map;
 import static org.springframework.http.ResponseEntity.badRequest;
@@ -28,7 +29,7 @@ public class BasicController {
 
     @GetMapping("/{userIdx}")
     public Result surveyCheck(@PathVariable Integer userIdx){
-        Optional<BasicAnswer> basicAnswer = basicRepository.findByUser(userIdx);
+        List<BasicAnswer> basicAnswer = basicRepository.findByUser(userIdx);
         Map map = new HashMap();
         if (basicAnswer.isEmpty()){
             map.put("survey", "NO");

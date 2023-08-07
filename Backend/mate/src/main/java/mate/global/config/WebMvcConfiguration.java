@@ -11,8 +11,8 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
-//    @Value("${spring.servlet.multipart.location}")
-//    private String uploadDir;
+    @Value("${spring.servlet.multipart.location}")
+    private String uploadDir;
 
 
     @Override

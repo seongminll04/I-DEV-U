@@ -35,7 +35,7 @@ import mate.repository.user.UserRepository;
 import mate.service.user.UserService;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class UserController {

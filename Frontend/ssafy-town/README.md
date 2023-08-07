@@ -44,3 +44,85 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+```
+ssafy-town
+├─ .gitignore
+├─ .prettierrc.yml
+├─ package-lock.json
+├─ package.json
+├─ public
+│  ├─ assets
+│  │  ├─ ... (Excluded PNG files)
+│  ├─ favicon.ico
+│  ├─ fonts
+│  │  └─ neodgm.woff
+│  ├─ index.html
+│  ├─ logo192.png
+│  ├─ logo512.png
+│  ├─ manifest.json
+│  └─ robots.txt
+├─ README.md
+│  ├─ App.module.css
+│  ├─ App.test.tsx
+│  ├─ App.tsx
+│  ├─ components
+│  │  ├─ account
+│  │  │  ├─ findpass.module.css
+│  │  │  ├─ findpass.tsx
+│  │  │  ├─ kakaologin.tsx
+│  │  │  ├─ login.module.css
+│  │  │  ├─ login.tsx
+│  │  │  ├─ logout.module.css
+│  │  │  ├─ logout.tsx
+│  │  │  ├─ signup.module.css
+│  │  │  ├─ signup.tsx
+│  │  │  ├─ withdraw.module.css
+│  │  │  └─ withdraw.tsx
+│  │  ├─ map
+│  │  │  ├─ Lsize1Scene.ts
+│  │  │  ├─ Msize1Scene.ts
+│  │  │  └─ Ssize1Scene.ts
+│  │  ├─ navbar.tsx
+│  │  ├─ room
+│  │  │  └─ myroom.tsx
+│  │  ├─ sidebar
+│  │  │  ├─ 1alert.module.css
+│  │  │  ├─ 1alert.tsx
+│  │  │  ├─ 2sogae.module.css
+│  │  │  ├─ 2sogae.tsx
+│  │  │  ├─ 3mate.module.css
+│  │  │  ├─ 3mate.tsx
+│  │  │  ├─ 4project.tsx
+│  │  │  ├─ 5chat.module.css
+│  │  │  ├─ 5chat.tsx
+│  │  │  ├─ 6cam.module.css
+│  │  │  ├─ 6cam.tsx
+│  │  │  ├─ 7follow.module.css
+│  │  │  ├─ 7follow.tsx
+│  │  │  ├─ 8mypage.module.css
+│  │  │  ├─ 8mypage.tsx
+│  │  │  ├─ 8mypageModal.module.css
+│  │  │  ├─ 8mypageModal.tsx
+│  │  │  └─ 9setting.tsx
+│  │  ├─ sidebar.tsx
+│  │  ├─ ssafytown.module.css
+│  │  ├─ ssafytown.tsx
+│  │  ├─ survey
+│  │  │  ├─ firstQA.module.css
+│  │  │  ├─ firstQA.tsx
+│  │  │  ├─ secondQA.module.css
+│  │  │  └─ secondQA.tsx
+│  │  └─ WebRTC.tsx
+│  ├─ index.css
+│  ├─ index.tsx
+│  ├─ react-app-env.d.ts
+│  ├─ reportWebVitals.ts
+│  ├─ setupTests.ts
+│  └─ store
+│     ├─ reducer.ts
+│     ├─ state.ts
+│     └─ store.ts
+└─ tsconfig.json
+
+```

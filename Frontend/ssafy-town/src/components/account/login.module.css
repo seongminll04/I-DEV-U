@@ -76,6 +76,7 @@
   text-decoration: none;
   align-self: flex-start;
   margin-bottom: 1em;
+  cursor: pointer;
 }
 
 .kakao_login {

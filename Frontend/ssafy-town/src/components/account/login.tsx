@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import login_css from './login.module.css';
@@ -11,29 +11,34 @@ class ValidationError extends Error {
 }
 
 const Login: React.FC = () => {
+
   const navigate = useNavigate();
   const [userId, setUserId] = useState(localStorage.getItem('savedId') || ''); // 로컬스토리지에 아이디 저장
   const [userPassword, setUserPassword] = useState('');
   const [saveId, setSaveId] = useState(Boolean(localStorage.getItem('savedId'))); // 아이디 저장되어있으면 버튼 on상태
 
+  useEffect(()=>{
+    const userToken = localStorage.getItem('usertoken');
+    if (userToken) {navigate('/home')}
+  },[navigate])
+  
   const handleLogin = async () => {
     axios({
       method:'post',
-      url:'http://localhost:8080/user/login',
+      url:'https://i9b206.p.ssafy.io:9090/user/login',
       data:{'email': userId, 'password': userPassword,}
     })
     .then(res => {
       console.log(res)
-      if (saveId) { // 아이디 저장 누르면 on 상태
-        localStorage.setItem('idx', res.data.user.idx);
-        localStorage.setItem('savedId', userId);
-      } else { // 꺼놓으면 로컬에서 삭제하자
-        localStorage.removeItem('savedId');
-      }
+      // const auth = res.headers.authorization
+      console.log(res.headers.authorization);
       
-      if (res.data.user.status === "D") {
-        throw new ValidationError("탈퇴처리된 회원입니다!");
-      } 
+      // 로그인 시, 로컬 스토리지에 토큰 저장
+      localStorage.setItem('usertoken',res.headers.authorization);
+
+      // if (res.data.user.status === "D") {
+      //   throw new ValidationError("탈퇴처리된 회원입니다!");
+      // } 
       navigate('/home')
     })
     .catch(err => {
@@ -76,8 +81,8 @@ const Login: React.FC = () => {
         <img src="assets/kakao_logo.png" alt="" style={{width:'30px', height:'20px'}}/>
         <span>카카오 로그인</span><p></p></button>
         <div className={login_css.checkContainer2}>
-          <a className={login_css.link} href="/signup">회원가입</a>
-          <a className={login_css.link} href="/findpassword">비밀번호 찾기</a>
+          <p className={login_css.link} onClick={()=>navigate('/signup')}>회원가입</p>
+          <p className={login_css.link} onClick={()=>navigate('/findpassword')}>비밀번호 찾기</p>
         </div>
       </div>
     </div>

@@ -1,53 +1,69 @@
 import React,{useState, useEffect} from 'react';
-import ssafytown_css from '../ssafytown.module.css';
+import ssafytown_css from '../system/ssafytown.module.css';
 
+import Sidebar from '../system/sidebar'
+import Navbar from '../system/navbar'
+
+import { useSelector, useDispatch } from 'react-redux';
+import { AppState } from '../../store/state';
+import { setAllowMove, setModal, setSidebar, setLoginToken } from '../../store/actions';
+
+import {useNavigate} from 'react-router-dom'
 import { Ssize1Scene } from '../map/Ssize1Scene';
-import { Lsize1Scene } from '../map/Lsize1Scene';
-import { Msize1Scene } from '../map/Msize1Scene';
+import ModalOpen from '../system/modalopen';
+// import Cam from '../openvidu/cam/cam'
 
-interface Props {
-    onSidebar : string|null;
-    onModal : string|null;
-}
 
-const Myroom: React.FC<Props> = ({onSidebar, onModal}) => {
+const MyRoom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
-  
-  
-  // 맵전환에 대한건 나중에 없앨 수도?
-  const [currentScene, setCurrentScene] = useState<'Ssize1Scene' | 'Lsize1Scene' | 'Msize1Scene'>('Ssize1Scene'); //맵
-  const switchToSsize1Scene = () => {
-    if (game) {
-      game.scene.switch(currentScene, 'Ssize1Scene');
-      setCurrentScene('Ssize1Scene');
-    }
-  };
+  const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
+  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
 
-  const switchToLsize1Scene = () => {
-    if (game) {
-      game.scene.switch(currentScene, 'Lsize1Scene');
-      setCurrentScene('Lsize1Scene');
-    }
-  };
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-  const switchToMsize1Scene = () => {
-    if (game) {
-      game.scene.switch(currentScene, 'Msize1Scene');
-      setCurrentScene('Msize1Scene');
+  useEffect(()=>{
+    const userToken = localStorage.getItem('usertoken');
+    if (userToken) {
+      dispatch(setLoginToken(userToken))
+      if (true) {
+        dispatch(setModal('최초설문'))
+      }
     }
-  };
+    else {navigate('/login')}
+  },[dispatch, navigate])
+
+
+  useEffect(() => { //esc키로 사이드바, 모달창 끄기 : 전역설정임
+    if (isModalOpen) {
+      dispatch(setAllowMove(false))
+    }
+    else {dispatch(setAllowMove(true))}
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (isModalOpen !== null) {dispatch(setModal(null))}
+        else if (isSidebarOpen !== null) {dispatch(setSidebar(null))}
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+
+  }, [dispatch,isModalOpen,isSidebarOpen]);
 
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
       parent: "phaser_game",
-      width: window.innerWidth * (onSidebar ? 0.7 : 0.95),
+      width: window.innerWidth * (isSidebarOpen ? 0.7 : 0.95),
       height: window.innerHeight,
       physics: {
         default: 'arcade',
       },
       pixelArt: true, //  픽셀 아트 스타일의 게임에서 그래픽이 더 깔끔하고 정확하게 표시되도록 도와줍니다. 라네요
-      scene: [Ssize1Scene, Lsize1Scene, Msize1Scene], //맵들 여기 다넣으면됨
+      scene: Ssize1Scene
     };
 
     const newGame = new Phaser.Game(config);
@@ -62,18 +78,9 @@ const Myroom: React.FC<Props> = ({onSidebar, onModal}) => {
   }, []);
 
   useEffect(() => {
-    console.log(game?.isPaused)
-    if (game?.isPaused!== undefined) {
-      if (onModal || onSidebar) {
-        game.isPaused=true
-      }
-      else {
-        game.isPaused=false
-      }
-    }
     if(game) {
       const resize = () => {
-        const width = window.innerWidth * (onSidebar ? 0.7 : 0.95);
+        const width = window.innerWidth * (isSidebarOpen ? 0.7 : 0.95);
         const height = window.innerHeight;
         game.scale.resize(width, height);
         game.scene.scenes[0].cameras.main.setViewport(0, 0, width, height);
@@ -86,14 +93,19 @@ const Myroom: React.FC<Props> = ({onSidebar, onModal}) => {
         window.removeEventListener('resize', resize);
       };
     }
-  }, [onModal,onSidebar, game]);
+  }, [isModalOpen,isSidebarOpen, game, dispatch]);
   return (
-    <div id="phaser_game" className={ssafytown_css.phaser_game} >
-        <button className={ssafytown_css.map_switch_button2} onClick={switchToSsize1Scene}>Ssize1Scene</button>
-        <button className={ssafytown_css.map_switch_button3} onClick={switchToLsize1Scene}>Lsize1Scene</button>
-        <button className={ssafytown_css.map_switch_button4} onClick={switchToMsize1Scene}>Msize1Scene</button>
+    <div className={ssafytown_css.container}>
+      <Sidebar/>
+      {isSidebarOpen ? <Navbar /> : null}
+      <ModalOpen />
+      <div id="phaser_game" className={ssafytown_css.phaser_game} >
+          <div id="my-video-container" className={ssafytown_css.my_video_bar}></div>
+          <div id="videoContainer" className={ssafytown_css.op_video_bar}> </div>
+          {/* <div className={ssafytown_css.video_bar}><Cam /></div> */}
+      </div>
     </div>
   );
 }
 
-export default Myroom;
+export default MyRoom;

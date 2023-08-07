@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import mate.domain.user.User;
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Getter
@@ -18,15 +19,17 @@ public class NoticeBoard {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idx;
 
-	//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "user_idx")
-	//	private User user;
-	private int userIdx;
+//	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
+	@JoinColumn(name = "user_idx")
+	private User user;
+//	private int userIdx;
 
 	private String title;
 
 	private String content;
 
+	@CreatedDate
 	private LocalDateTime createdAt;
 
 	@Enumerated(EnumType.STRING)

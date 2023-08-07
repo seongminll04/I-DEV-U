@@ -132,6 +132,11 @@ public class ProjectService {
 		projectRepository.deleteById(projectIdx);
 	}
 
+	public List<Project> listProject(String keyword) {
+		if (keyword == null) return projectRepository.findAll();
+		else return projectRepository.findProjectsByTitleOrContent(keyword);
+	}
+
 	public String makeRoomCode() {
 		int leftLimit = 48; // numeral '0'
 		int rightLimit = 122; // letter 'z'

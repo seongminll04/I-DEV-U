@@ -60,32 +60,7 @@ let userdata = {
   intro: '', // 자기소개
   status: '', // active or not (회원탈퇴여부)
   grade: 0, // 1 : 관리자(운영자), 2 : 일반
-<<<<<<< HEAD
-};
-
-const getUser = async () => {
-  const idx = parseInt(localStorage.getItem('userIdx') || '0'); // Parse to an integer
-  const userToken = localStorage.getItem('usertoken')
-  axios({
-    method: 'get',
-    url: `https://i9b206.p.ssafy.io:9090/user/${idx}`,
-    headers : {
-      Authorization: 'Bearer ' + userToken
-    },
-  })
-  .then(res => {
-    console.log(res)
-    user = res.data.user;
-    console.log(user);
-    // const alert_data=res.data 
-  })
-  .catch(err => {
-    console.log(err)
-    console.log("유저 정보가 정확하지 않음")
-  })
-=======
   invite: ''
->>>>>>> 87762e1338d9078ce4a4479483a0c6a24dee1ebe
 };
 
 const Mypage: React.FC = () => {

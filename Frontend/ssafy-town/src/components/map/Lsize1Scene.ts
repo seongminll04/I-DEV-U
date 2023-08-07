@@ -202,11 +202,6 @@ export class Lsize1Scene extends Phaser.Scene {
 
 
 
-
-
-
-
-
     create() {
       
       const rows = pattern.trim().split('\n');
@@ -240,6 +235,8 @@ export class Lsize1Scene extends Phaser.Scene {
       else{
         this.character = this.physics.add.sprite(mapCenterX, mapCenterY, `${userCharacter}2`).setOrigin(0.5, 0.5);
       }
+
+      console.log(userCharacter+"sdfsdf")
 
       this.physics.add.collider(this.character, this.walls);  // 캐릭터와 벽 사이의 충돌 설정
       

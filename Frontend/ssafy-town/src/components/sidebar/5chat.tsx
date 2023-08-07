@@ -5,6 +5,7 @@ import { Client, Message, Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { useDispatch } from 'react-redux';
 import { setAllowMove, setSidebar } from '../../store/actions';
+import axios from "axios";
 
   // interface ChatMessage {
   //   content: string;
@@ -29,6 +30,19 @@ import { setAllowMove, setSidebar } from '../../store/actions';
         inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
       }
     }
+
+    useEffect(()=>{
+      const userToken = localStorage.getItem('userToken')
+      axios({
+        method:'get',
+        url:'',
+        headers : {
+          Authorization: 'Bearer ' + userToken
+        },
+      })
+      .then(res => setRoomList(res.data))
+      .catch(err=>console.log(err))
+    })
     // 연결에 관한 것
     useEffect(() => {
       const socket = new SockJS("https://localhost:8080/chatting");

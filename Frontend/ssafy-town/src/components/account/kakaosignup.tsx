@@ -99,7 +99,7 @@ const KakaoSignUp = () => {
       confirmPassword: password,
       nickname: '',
       name: '',
-      birthday: '',
+      birthday: null,
       gender: null,
     },
     validationSchema: validationSchema,
@@ -163,7 +163,7 @@ const KakaoSignUp = () => {
           <input className={signup_css.input} type="text" placeholder="이름" {...formik.getFieldProps('name')} />
 
           <label className={signup_css.split}>생년월일
-          <span style={{color:'red'}}>{formik.values.birthday===null ? '생년월일을 입력해주세요' :  formik.errors.birthday ? formik.errors.birthday : <span style={{color:'green'}}>완료</span>}</span>
+          <span style={{color:'red'}}>{formik.values.birthday===null||'' ? '생년월일을 입력해주세요' :  formik.errors.birthday ? formik.errors.birthday : <span style={{color:'green'}}>완료</span>}</span>
           </label>
           <input className={signup_css.input} type="date" {...formik.getFieldProps('birthday')} min={'1900-01-01'} max={today} />
 
@@ -213,28 +213,6 @@ const KakaoSignUp = () => {
             formik.setFieldValue("photo", event?.currentTarget?.files?.[0]);
           }} /> */}
           
-          {formik.isValid && chknickname==='yes' ? 
-          <button className={signup_css.button} type="submit">Sign Up</button> 
-          : <> <button className={signup_css.button_disabled} type="submit" disabled>Sign Up</button>
-            { errcount > 1 || errcount === -1 ? <span>빈칸을 모두 채워주세요</span>
-            : errcount ===1 ? 
-            <span>
-              { formik.values.name==='' ? '이름을 입력해주세요'
-              : formik.values.birthday==='' ? '생년월일을 입력해주세요'
-              : formik.values.gender===null ? '성별을 입력해주세요'
-              : formik.values.nickname==='' ? '닉네임을 입력해주세요'
-              : null }
-            </span>
-           : errcount===0 ? <span>
-            { formik.errors.name ? '이름을 확인해주세요'
-            : formik.errors.birthday ? '생년월일을 확인해주세요'
-            : formik.errors.gender ? '성별을 확인해주세요'
-            : formik.errors.nickname ? '닉네임을 확인해주세요'
-            : chknickname==='no' ? '닉네임 중복을 확인해주세요' : null  }</span>
-           :null 
-            }
-           </>}
-
            {formik.isValid && chknickname==='yes' ? 
           <button className={signup_css.button} type="submit">Sign Up</button>
            : <> <button className={signup_css.button_disabled} type="submit" disabled>Sign Up</button>

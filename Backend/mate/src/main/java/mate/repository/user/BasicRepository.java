@@ -8,12 +8,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface BasicRepository extends JpaRepository<BasicAnswer, Integer> {
     @Query("select b from BasicAnswer b where b.user.idx = :idx")
-    Optional<BasicAnswer> findByUser(@Param("idx") Integer idx);
+    List<BasicAnswer> findByUser(@Param("idx") Integer idx);
 
     @Modifying
     @Transactional

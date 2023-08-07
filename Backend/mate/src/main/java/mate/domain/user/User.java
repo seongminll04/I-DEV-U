@@ -1,5 +1,6 @@
 package mate.domain.user;
 
+import com.sun.istack.NotNull;
 import lombok.*;
 import mate.domain.basic.BasicAnswer;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,8 +30,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role; // ADMIN , USER
     private String refreshToken;
-    private String image;
     private String invite;
+    private String originalFileName;
+    private String storedFileName;
 
     // 생성자, 기타 메서드 생략
 
@@ -50,9 +52,14 @@ public class User {
         if (invite.equals("true")) this.invite = "true";
         else this.invite = "false";
     }
-
-
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
     }
+
+    public void uploadFile(String originalFileName, String storedFileName){
+        this.originalFileName = originalFileName;
+        this.storedFileName = storedFileName;
+    }
+
+
 }

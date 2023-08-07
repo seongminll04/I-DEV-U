@@ -16,10 +16,8 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     // file://home/ubuntu/mate-server/upload/img/user/
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/img/**").addResourceLocations("file://home/ubuntu/mate-server/upload/img/user")
-                .setCachePeriod(3600)
-                .resourceChain(true)
-                .addResolver(new PathResourceResolver());
-                                    //mate-server/upload/images/user/17_꼬부기.png
+        registry.addResourceHandler("/img/**").addResourceLocations("file:///" + uploadDir)
+                .setCachePeriod(3600);
+
     }
 }

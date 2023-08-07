@@ -8,5 +8,6 @@ import java.util.List;
 public interface QuestionRepository extends JpaRepository<QuestionBoard, Integer> {
     List<QuestionBoard> findByTitleContainingOrderByIdxDesc(String keyWord);
     List<QuestionBoard> findByContentContainingOrderByIdxDesc(String keyWord);
+//    List<QuestionBoard> findByNameOrderByIdxDesc(String name);
     List<QuestionBoard> findTop4ByOrderByIdxDesc();
 }

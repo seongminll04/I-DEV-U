@@ -27,5 +27,5 @@ public class QuestionBoard {
     private String content;
 
     @CreatedDate
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 }

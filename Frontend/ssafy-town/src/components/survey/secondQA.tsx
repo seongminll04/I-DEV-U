@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import qa_css from './secondQA.module.css';
 
 interface QAModalProps {
-    isOpen: boolean;
     onClose: () => void;
     onConfirm: (surveyResults: any) => void;
 }
 
-const QAModal: React.FC<QAModalProps> = ({ isOpen, onClose, onConfirm }) => {
+const QAModal: React.FC<QAModalProps> = ({ onClose, onConfirm }) => {
     const [currentPage, setCurrentPage] = useState(1);
     // 페이지 관리
     const [desiredAgeRange, setDesiredAgeRange] = useState<string>("");
@@ -74,9 +73,6 @@ const QAModal: React.FC<QAModalProps> = ({ isOpen, onClose, onConfirm }) => {
         onConfirm(surveyResults);
     };
 
-    if (!isOpen) {
-        return null;
-    }
 
     let surveyForm;
     if (currentPage === 1) {
@@ -138,7 +134,7 @@ const QAModal: React.FC<QAModalProps> = ({ isOpen, onClose, onConfirm }) => {
                         </label>
                     ))}
                 </div>
-                
+                <br />
                 <button type="button" onClick={() => setCurrentPage(2)}>다음 페이지</button>
             </form>
         );
@@ -252,13 +248,12 @@ const QAModal: React.FC<QAModalProps> = ({ isOpen, onClose, onConfirm }) => {
     return (
         <div className={qa_css.modal_overlay}>
             <div className={qa_css.qa_modal}>
+            <button onClick={onCloseHandler}>
+                나중에 하기 (작성중인 설문이 초기화됩니다)</button>
                 <h1>I DEV U</h1>
                 <h2>📝 소개팅 설문조사</h2>
                 <h3>* 질문의 답변들이 이용할 정보가 됩니다. *</h3>
                 {surveyForm}
-                <button onClick={onCloseHandler}>
-                나중에 하기(개발용, 나중에는 없애고 강제시킬예정)
-                </button>
             </div>
         </div>
     );

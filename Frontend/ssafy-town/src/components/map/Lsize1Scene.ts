@@ -1,4 +1,7 @@
 import Phaser from 'phaser';
+import store from '../../store/store'
+import { setModal } from '../../store/actions';
+import io, { Socket } from 'socket.io-client';
 
 type AssetKeys = 'A' | 'B' | 'C' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' 
                | 'T' | 'U' | 'V' | 'W' | 'X' | '1' | '2' | '3' | '4'
@@ -125,8 +128,13 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 export class Lsize1Scene extends Phaser.Scene {
 
+    private socket?: Socket;
+
     private character?: Phaser.Physics.Arcade.Sprite;
+    private remoteCharacters: { [id: string]: Phaser.GameObjects.Sprite } = {};
+    private balloon!: Phaser.GameObjects.Sprite;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
+    private prevPosition: { x: number, y: number } | null = null;
     private walls?: Phaser.Physics.Arcade.StaticGroup;
     private clockText!: Phaser.GameObjects.Text; //우하시계
     private clockText2!: Phaser.GameObjects.Text; //우상시계
@@ -165,6 +173,8 @@ export class Lsize1Scene extends Phaser.Scene {
         }
 
         this.load.image('character', 'assets/admin_character.png');
+        this.load.image('character2', 'assets/겨울나무6.png');
+        this.load.image('balloon', 'assets/ekey.png');
         
 
         for (let i = 1; i <= 72; i++) {
@@ -173,6 +183,15 @@ export class Lsize1Scene extends Phaser.Scene {
     }
 
     create() {
+      
+
+      this.socket = io('http://your_backend_url');
+
+      this.socket.on('playerData', (data: any) => {
+        console.log("111")
+        this.updateRemoteCharacter(data);
+      });
+
       const rows = pattern.trim().split('\n');
       const tileSize = 32; 
 
@@ -184,6 +203,9 @@ export class Lsize1Scene extends Phaser.Scene {
       this.clockText3.setDepth(10);
   
       this.walls = this.physics.add.staticGroup();
+
+      this.balloon = this.add.sprite(0, 0, 'balloon').setVisible(false);
+      this.balloon.setDepth(2);
 
       const mapCenterX = rows[0].length * tileSize / 2;
       const mapCenterY = rows.length * tileSize / 2;
@@ -396,9 +418,13 @@ export class Lsize1Scene extends Phaser.Scene {
 
     this.input.keyboard?.on('keydown-E', () => {
       const nearbyObject = this.NearbyObjects();
+
+      console.log(this.character!.x + "@@" + this.character!.y)
   
       if (nearbyObject === 'door') {
-          this.openDoor();
+        this.openDoor();
+      } else if(nearbyObject === 'board') {
+        store.dispatch(setModal('QnA게시판'))
       } else if (nearbyObject && typeof nearbyObject !== 'string') {
         this.sitdown(nearbyObject);
     }
@@ -410,19 +436,49 @@ export class Lsize1Scene extends Phaser.Scene {
   
   
     update() {
-      if (this.cursors && this.character && !this.sittingOnChair) {
+
+      const currentPlayerPosition = { x: this.character!.x, y: this.character!.y };
+
+      if (!this.prevPosition || (this.prevPosition.x !== currentPlayerPosition.x || this.prevPosition.y !== currentPlayerPosition.y)) {
+        console.log("@@@@")
+        const playerData = {
+            id: {},
+            position: currentPlayerPosition,
+            state: 'A', // 혹은 'B'
+            type: 1, // 1~10
+            // chat: ...
+        };
+        this.socket?.emit('playerData', playerData);
+
+        // 현재 위치를 이전 위치로 저장
+        this.prevPosition = currentPlayerPosition;
+    }
+
+      // if(this.cursors?.left?.isDown || this.cursors?.right?.isDown || this.cursors?.up?.isDown || this.cursors?.down?.isDown){
+      //   console.log("@@@")
+      //     const playerData = {
+      //       id:{},
+      //       position: { x: this.character!.x, y: this.character!.y },
+      //       state: 'A', // 혹은 'B'
+      //       type: 1, // 1~10
+      //       // chat: 모르겠다아직
+      //     };
+      //     this.socket?.emit('playerData', playerData);
+      // }
+
+      if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnChair) {
         if (this.cursors.left?.isDown) {
-          this.character.setVelocityX(-1280);
+          this.character.setVelocityX(-640);
         } else if (this.cursors.right?.isDown) {
-          this.character.setVelocityX(1280);
+          this.character.setVelocityX(640);
         } else {
           this.character.setVelocityX(0);
         }
   
         if (this.cursors.up?.isDown) {
-          this.character.setVelocityY(-1280);
+          this.character.setVelocityY(-640);
         } else if (this.cursors.down?.isDown) {
-          this.character.setVelocityY(1280);
+          this.character.setVelocityY(640);
         } else {
           this.character.setVelocityY(0);
         }
@@ -445,23 +501,34 @@ export class Lsize1Scene extends Phaser.Scene {
       this.clockText.setText(`${hours}:${minutes}:${seconds}`);
       this.clockText2.setText(`${hours}:${minutes}:${seconds}`);
       this.clockText3.setText(`${hours}:${minutes}:${seconds}`);
+
+      this.NearbyObjects()
     }
 
-    private NearbyObjects(): 'door' | { x: number, y: number } | null {
+    private NearbyObjects(): 'door' | 'board' | { x: number, y: number } | null {
       const doorPosition = { x: 1024, y: 768 }; // 문
+      const boardPosition = { x: 1236, y: 835 }; // 게시판
       const chairPositions = this.chairPositions; // 의자
 
       if (this.character) {
           const distanceToDoor = Phaser.Math.Distance.Between(this.character.x, this.character.y, doorPosition.x, doorPosition.y);
-          if (distanceToDoor <= 160 && distanceToDoor > 32) {
+          if (distanceToDoor <= 140 && distanceToDoor > 32) {
+            this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
               return 'door';
           }
+
+          const distanceToBoard = Phaser.Math.Distance.Between(this.character.x, this.character.y, boardPosition.x, boardPosition.y);
+          if (distanceToBoard <= 64) {
+            this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
+            return 'board';
+        }
   
           let nearestChair: { x: number, y: number } | null = null;
           let nearestDistance: number = Infinity;
           for (const chairPos of chairPositions) {
               const distanceToChair = Phaser.Math.Distance.Between(this.character.x, this.character.y, chairPos.x, chairPos.y);
               if (distanceToChair < 32 && distanceToChair < nearestDistance) {
+                this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
                   nearestChair = chairPos;
                   nearestDistance = distanceToChair;
               }
@@ -470,6 +537,7 @@ export class Lsize1Scene extends Phaser.Scene {
               return nearestChair;
           }
       }
+      this.balloon.setVisible(false);
       return null; // 주변에 아무 오브젝트도 없다면 null
   }
     
@@ -600,7 +668,7 @@ export class Lsize1Scene extends Phaser.Scene {
 
     removeDoorCollisions() {
         // 모든 문 부분의 충돌을 비활성화
-        this.doorParts.forEach((part, index) => {
+        this.doorParts.forEach((part) => {
             (part.body as Phaser.Physics.Arcade.Body).enable = false;
         });
     }
@@ -616,5 +684,22 @@ export class Lsize1Scene extends Phaser.Scene {
           this.character!.setAlpha(0.4);
           this.sittingOnChair = true;
       }
+  }
+
+  updateRemoteCharacter(data: any){
+    // 원격 캐릭터의 ID나 식별자 // 각자 들어가나? let으로 하면? 30명이면 30!만큼이 되어버리나? 테스트 해보고싶네
+    let remoteChar = this.remoteCharacters[data.id];
+
+    // 원격 캐릭터가 게임에 없으면 만들고 위치세팅
+    if (!remoteChar) {
+        remoteChar = this.physics.add.sprite(data.position.x, data.position.y, data.type+'');
+        this.remoteCharacters[data.id] = remoteChar;
+    }
+
+    // 원격 캐릭터의 위치, 투명상태
+    remoteChar.setPosition(data.position.x, data.position.y);
+    if(data.state === 'B') {
+      remoteChar.setAlpha(0.4);
+    }
   }
 }

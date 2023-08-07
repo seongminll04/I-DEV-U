@@ -173,8 +173,27 @@ export class Lsize1Scene extends Phaser.Scene {
             this.load.image(char, (ASSETS as Record<string, string>)[char]);
         }
         this.load.image('character', 'assets/admin_character.png');
-        this.load.image('character2', 'assets/겨울나무6.png');
         this.load.image('balloon', 'assets/ekey.png');
+
+        for (let i = 0; i <= 9; i++) {
+          for (let j = 1; j <= 12; j++) {
+              let secondChar;
+              if (j <= 9) {
+                  secondChar = j;
+              } else if (j === 10) {
+                  secondChar = 'A';
+              } else if (j === 11) {
+                  secondChar = 'B';
+              } else {
+                  secondChar = 'C';
+              }
+              
+              const imageKey = `${i}${secondChar}`;
+              const imagePath = `assets/${imageKey}.png`;
+              
+              this.load.image(imageKey, imagePath);
+          }
+      }
         
         for (let i = 1; i <= 72; i++) {
             this.load.image('문' + i, 'assets/문' + i + '.png');
@@ -210,13 +229,24 @@ export class Lsize1Scene extends Phaser.Scene {
       const mapWidth = rows[0].length * tileSize;
       const mapHeight = rows.length * tileSize;
 
-  
-      this.character = this.physics.add.sprite(mapCenterX, mapCenterY, 'character').setOrigin(0.5, 0.5);
+      // 사용자 캐릭터 선택
+      const userCharacter = localStorage.getItem("character") || '0';
+
+      // 일단 개발용도, 나중에 if else 다빼고 2만 남기자
+      if(userCharacter==='0'){
+        this.character = this.physics.add.sprite(mapCenterX, mapCenterY, `character`).setOrigin(0.5, 0.5);
+      }
+      else{
+        this.character = this.physics.add.sprite(mapCenterX, mapCenterY, `${userCharacter}2`).setOrigin(0.5, 0.5);
+      }
+
       this.physics.add.collider(this.character, this.walls);  // 캐릭터와 벽 사이의 충돌 설정
       
       this.cameras.main.setBounds(0, 0, mapWidth, mapHeight); // 카메라가 이동 가능한 범위 설정
       this.cursors = this.input.keyboard?.createCursorKeys();
       this.cameras.main.startFollow(this.character);
+
+      this.createAnimationsForCharacter(userCharacter); // 방향 애니메이션
 
       this.character?.setDepth(2); // 캐릭터부터 생성했으니 depth를 줘야 캐릭터가 화면에 보임
       // this.physics.world.createDebugGraphic();  // 디버그 그래픽
@@ -435,6 +465,41 @@ export class Lsize1Scene extends Phaser.Scene {
 
       this.initializeWebRTC();
   }
+  /////////////////////////// 캐릭터 이동 애니메이션
+  
+  createAnimationsForCharacter(characterKey : string) {
+    // 위를 바라보는 애니메이션
+    this.anims.create({
+      key: `${characterKey}-up`,
+      frames: this.anims.generateFrameNames(characterKey, { start: 1, end: 3 }),
+      frameRate: 10,
+      repeat: -1
+    });
+  
+    // 오른쪽을 바라보는 애니메이션
+    this.anims.create({
+      key: `${characterKey}-right`,
+      frames: this.anims.generateFrameNames(characterKey, { start: 4, end: 6 }),
+      frameRate: 10,
+      repeat: -1
+    });
+  
+    // 아래를 바라보는 애니메이션
+    this.anims.create({
+      key: `${characterKey}-down`,
+      frames: this.anims.generateFrameNames(characterKey, { start: 7, end: 9 }),
+      frameRate: 10,
+      repeat: -1
+    });
+  
+    // 왼쪽을 바라보는 애니메이션
+    this.anims.create({
+      key: `${characterKey}-left`,
+      frames: this.anims.generateFrameNames(characterKey, { start: 10, end: 12 }),
+      frameRate: 10,
+      repeat: -1
+    });
+  }
 
 
   /////////////////////////// WEBRTC
@@ -622,16 +687,20 @@ export class Lsize1Scene extends Phaser.Scene {
       if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnChair) {
         if (this.cursors.left?.isDown) {
           this.character.setVelocityX(-640);
+          this.character.play(`${localStorage.getItem("character") || 'character'}-left`, true);
         } else if (this.cursors.right?.isDown) {
           this.character.setVelocityX(640);
+          this.character.play(`${localStorage.getItem("character") || 'character'}-right`, true);
         } else {
           this.character.setVelocityX(0);
         }
   
         if (this.cursors.up?.isDown) {
           this.character.setVelocityY(-640);
+          this.character.play(`${localStorage.getItem("character") || 'up'}-left`, true);
         } else if (this.cursors.down?.isDown) {
           this.character.setVelocityY(640);
+          this.character.play(`${localStorage.getItem("character") || 'down'}-left`, true);
         } else {
           this.character.setVelocityY(0);
         }

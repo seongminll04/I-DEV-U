@@ -61,7 +61,7 @@ let user = {
 };
 
 const getUser = async () => {
-  const idx = parseInt(localStorage.getItem('idx') || '0', 10); // Parse to an integer
+  const idx = parseInt(localStorage.getItem('userIdx') || '0'); // Parse to an integer
   const userToken = localStorage.getItem('usertoken')
   axios({
     method: 'get',

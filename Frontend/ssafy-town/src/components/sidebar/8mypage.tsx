@@ -50,7 +50,7 @@ const Desc = styled.div`
   margin: 20px;
 `;
 
-let user = {
+let userdata = {
   email: '',
   password: '',
   name: '',
@@ -65,6 +65,7 @@ let user = {
 const Mypage: React.FC = () => {
   const dispatch = useDispatch();
   // const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
+  const [user,setUser] = useState(userdata)
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
   useEffect(()=>{
     // 프로필정보 로딩
@@ -72,6 +73,7 @@ const Mypage: React.FC = () => {
     const userIdxStr = localStorage.getItem('userIdx')
     var userIdx:number|null;
     if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
+
     axios({
       method: 'get',
       url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
@@ -81,14 +83,14 @@ const Mypage: React.FC = () => {
     })
     .then(res => {
       // console.log(res)
-      user = res.data.data;
+      setUser(res.data.data)
       // const alert_data=res.data 
     })
     .catch(err => {
       console.log(err)
       console.log("유저 정보가 정확하지 않음")
     })
-  },[])
+  },[setUser])
   // toggle
   const [isOn, setisOn] = useState(true);
 

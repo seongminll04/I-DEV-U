@@ -34,7 +34,7 @@ const MyComponent: React.FC = () => {
       
       stompClientRef.current.onConnect = (frame) => {
         console.log(frame)
-        stompClientRef.current!.subscribe(`/topic/${8}`, onMessageReceived);
+        stompClientRef.current!.subscribe(`/topic/1`, onMessageReceived);
         // 등록을 해둿으니 여기에서 구독한것들은 다 들어온다!!!
       };
     }

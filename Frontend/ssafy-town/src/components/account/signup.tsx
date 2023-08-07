@@ -29,9 +29,9 @@ const validationSchema = Yup.object().shape({
   birthday: Yup.string()
     .matches(/^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, '유효하지 않은 생년월일입니다')
     .required('생년월일을 입력해주세요'),
-  gender: Yup.number()
+  gender: Yup.string()
   .required('성별을 선택해주세요')
-  .oneOf([1, 2], '유효한 성별을 선택해주세요'),
+  .oneOf(['MALE', 'FEMALE'], '유효한 성별을 선택해주세요'),
 });
 
 
@@ -49,13 +49,13 @@ const SignupForm = () => {
     else if (!formik.errors.email) {
       axios({
         method:'get',
-        url:`http://localhost:8080/user/signup/emailcheck/${email}`
+        url:`https://i9b206.p.ssafy.io:9090/user/signUp/emailCheck/${email}`
       })
       .then(()=>{
         setchkemail('yes');
         alert('사용할 수 있는 아이디입니다.')
       })
-      .catch(() => {
+      .catch(() => { 
         alert('중복된 아이디입니다.')
       })
     }
@@ -74,7 +74,7 @@ const SignupForm = () => {
     else if (!formik.errors.nickname) {
       axios({
         method:'get',
-        url:`http://localhost:8080/user/signup/nickcheck/${nickname}`
+        url:`https://i9b206.p.ssafy.io:9090/user/signUp/nicknameCheck/${nickname}`
       })
       .then(()=>{
         setchknickname('yes')
@@ -116,7 +116,7 @@ const SignupForm = () => {
       else {
         axios({
           method : 'post',
-          url : 'http://localhost:8080/user/signup',
+          url : 'https://i9b206.p.ssafy.io:9090/user/signUp',
           data : values,
         })
         .then(res => {
@@ -125,8 +125,7 @@ const SignupForm = () => {
         })
         .catch(err => {
           console.log(err)
-          alert('회원가입실패')
-        })
+          alert('회원가입실패')})
       }
     },
   });
@@ -147,7 +146,7 @@ const SignupForm = () => {
           <label className={signup_css.split}>생년월일
           <span style={{color:'darkgray'}}>{formik.touched.birthday && formik.errors.birthday ? formik.errors.birthday : null}</span>
           </label>
-          <input className={signup_css.input} type="date" {...formik.getFieldProps('birthday')} />
+          <input className={signup_css.input} type="date" {...formik.getFieldProps('birthday')} max={'9999-12-31'} />
 
             <label className={signup_css.split}>성별
             <span style={{color:'darkgray', margin:'0'}}>{formik.touched.gender && formik.errors.gender ? formik.errors.gender : null}</span>
@@ -157,10 +156,10 @@ const SignupForm = () => {
                 <input
                   type="radio"
                   name="gender"
-                  value="1"
+                  value="MALE"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  checked={formik.values.gender === '1'}
+                  checked={formik.values.gender === 'MALE'}
                 />
                 남성
               </label>
@@ -168,10 +167,10 @@ const SignupForm = () => {
                 <input
                   type="radio"
                   name="gender"
-                  value="2"
+                  value="FEMALE"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  checked={formik.values.gender === '2'}
+                  checked={formik.values.gender === 'FEMALE'}
                 />
                 여성
               </label>
@@ -191,7 +190,7 @@ const SignupForm = () => {
           <label className={signup_css.split}>아이디
             <span style={{color:'darkgray'}}>
               {formik.values.email==='' ? '이메일 형식으로 입력해주세요':null}{ formik.values.email!=='' &&formik.touched.email && formik.errors.email ? formik.errors.email : null}
-           {chkemail === 'yes' ? '확인완료': null}
+            {chkemail === 'yes' ? '확인완료': null}
             </span>
           </label>
           <div className={signup_css.input_chk}>

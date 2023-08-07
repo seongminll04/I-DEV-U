@@ -13,6 +13,19 @@ const Withdraw: React.FC<Props> = ({ onBack, onClose }) => {
   const [text, setText] = useState('');
   const [bye, setBye] = useState(false);
   const navigate = useNavigate();
+  const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
+    const inputElement = event.currentTarget
+    const currentCursorPosition = inputElement.selectionStart || 0;
+    if (event.key === 'ArrowLeft' && currentCursorPosition!==0) {
+      inputElement.setSelectionRange(currentCursorPosition - 1, currentCursorPosition - 1);
+    } else if (event.key === 'ArrowRight') {
+      inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
+    } else if (event.key === ' '){
+      inputElement.value = inputElement.value.slice(0,currentCursorPosition)+ ' ' +inputElement.value.slice(currentCursorPosition,)
+      inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
+    }
+  }
+
   const withdraw = () => {
     if (text.split('/')[0] !== '유저' || text.split('/')[1] !== '회원탈퇴') {
       setErr(true);
@@ -21,7 +34,7 @@ const Withdraw: React.FC<Props> = ({ onBack, onClose }) => {
 
       axios({
         method: 'PUT',
-        url: 'http://localhost:8080/user/delete',
+        url: 'https://i9b206.p.ssafy.io:9090/user/delete',
       })
         .then((res) => {
           console.log('=== 유저 삭제 ===');
@@ -84,6 +97,7 @@ const Withdraw: React.FC<Props> = ({ onBack, onClose }) => {
               setErr(false);
               setText(e.target.value);
             }}
+            onKeyDown={handlekeydown}
           />
           <br />
           <div className={withdraw_css.btn}>

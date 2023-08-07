@@ -1,0 +1,47 @@
+.container {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+#session {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#session-header {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px; /* This will give space between each button */
+}
+
+button:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* A light gray shade on hover */
+}
+
+#video-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap; /* Allow the video components to wrap to next row if required */
+    gap: 10px;
+}
+
+.stream-container {
+    position: relative; /* For any absolute positioning inside */
+}
+
+.stream-container span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}

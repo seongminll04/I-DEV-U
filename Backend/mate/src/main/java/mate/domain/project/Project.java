@@ -24,11 +24,9 @@ public class Project {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idx;
 
-//	@ManyToOne
-//	@JoinColumn(name = "manager_idx")
-//	private User manager;
-	@Column(name = "manager_idx")
-	private int userIdx;
+	@ManyToOne
+	@JoinColumn(name = "manager_idx")
+	private User manager;
 
 	private String title;
 	private String content;
@@ -51,3 +49,4 @@ public class Project {
 	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
 	private List<ProjectTech> projectTechs;
 }
+

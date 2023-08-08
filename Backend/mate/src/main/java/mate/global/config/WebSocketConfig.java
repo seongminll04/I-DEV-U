@@ -49,7 +49,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
 //        registry.enableSimpleBroker("/topic", "/queue");
-        registry.enableSimpleBroker("/sub");
+        registry.enableSimpleBroker("/sub","/chatroom");
 //        registry.setApplicationDestinationPrefixes("/app");
         registry.setApplicationDestinationPrefixes("/pub");
     }

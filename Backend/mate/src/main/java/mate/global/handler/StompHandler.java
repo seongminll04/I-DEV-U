@@ -24,7 +24,9 @@ public class StompHandler implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
         if (StompCommand.CONNECT == accessor.getCommand()) {
+            System.out.println(accessor);
             if (!jwtService.isTokenValid(extractToken(accessor))) {
+                System.out.println(extractToken(accessor));
                 throw new AccessDeniedException("연결 거부");
             }
         }

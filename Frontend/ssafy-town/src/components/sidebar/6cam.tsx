@@ -63,9 +63,9 @@ const Cam: React.FC = () => {
         }
     })
     .then(res => {
-      const token = res.data.token;  // 백엔드에서 전달받은 토큰
+      const OVsession = res.data.ovSession;  // 백엔드에서 전달받은 토큰
       
-      localStorage.setItem("OVToken", token);  // 토큰을 로컬 스토리지에 저장
+      localStorage.setItem("OVsession", OVsession);  // 토큰을 로컬 스토리지에 저장
 
       console.log(res);
       

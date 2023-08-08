@@ -62,9 +62,6 @@ const Mypage: React.FC = () => {
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
 
   const toggleHandler = () => {
-    if (user.invite==='true') {user.invite='false'}
-    else {user.invite='true'}
-
     const userToken = localStorage.getItem('userToken')
     const userIdxStr = localStorage.getItem('userIdx')
     var userIdx: number | null;
@@ -75,16 +72,27 @@ const Mypage: React.FC = () => {
       url:`https://i9b206.p.ssafy.io:9090/user/setting`,
       data: {
         userIdx:userIdx,
-        invite:user.invite
+        invite: user.invite === 'true' ? 'false' : 'true'
       },
       headers: {
         Authorization: 'Bearer ' + userToken
       },
     })
-    .then(res=>{
-      console.log(res,'12312421')
+    .then(()=>{
+      axios({
+        method: 'get',
+        url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        },
+      })
+        .then(res => {
+          setUser(res.data.data)
+        })
+        .catch(() => {
+          console.log("유저 정보가 정확하지 않음")
+        })
     })
-    console.log(user)
   };
 
   useEffect(() => {
@@ -102,8 +110,7 @@ const Mypage: React.FC = () => {
       .then(res => {
         setUser(res.data.data)
       })
-      .catch(err => {
-        console.log(err)
+      .catch(() => {
         console.log("유저 정보가 정확하지 않음")
       })
   }, [])
@@ -142,7 +149,7 @@ const Mypage: React.FC = () => {
             안녕하세요! {user.name} 님
           </div>
           <button className={mypage_css.button} onClick={() => dispatch(setModal('회원정보수정1'))}>회원정보 수정</button>
-
+          
           <p style={{display:'flex',justifyContent:'center',alignItems:'center',marginTop:'0', fontSize:'small'}}>내 정보 검색허용 
             <ToggleContainer onClick={()=>{toggleHandler()}}>
               <div className={`toggle-container ${user.invite === 'true' ? "toggle--checked" : null}`}/>

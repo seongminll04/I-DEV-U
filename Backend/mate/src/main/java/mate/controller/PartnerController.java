@@ -25,7 +25,7 @@ public class PartnerController {
 	private final PartnerService partnerService;
 
 	@GetMapping("/list")
-	public ResponseEntity<Map<String, Object>> listPartner(@RequestBody Map<String, List<TagDto>> input) {
+	public ResponseEntity<Map<String, Object>> listPartner(@RequestBody Map<String, List<String>> input) {
 		Map<String, Object> map = new HashMap<>();
 
 		try {

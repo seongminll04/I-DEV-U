@@ -22,7 +22,7 @@ public interface PartnerRepository extends JpaRepository<Partner, Integer> {
 
 	@Query("SELECT ba.user.idx as user, ba.tag "
 		+ "FROM BasicAnswer as ba "
-		+ "WHERE ba.user.idx = 17 AND ba.surveyIdx = 3"
+		+ "WHERE ba.user.idx = :userIdx AND ba.surveyIdx = 3"
 		+ "GROUP BY ba.user.idx, ba.tag")
-	Object detailPartner(@Param("userIdx") long userIdx);
+	List<Object> findTech(@Param("userIdx") int userIdx);
 }

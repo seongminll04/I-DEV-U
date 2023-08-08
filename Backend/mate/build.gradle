@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '2.7.13'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 //    id 'checkstyle'
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'ssafy'
@@ -23,6 +24,9 @@ configurations {
 
 repositories {
     mavenCentral()
+}
+ext {
+    queryDslVersion = "5.0.0"
 }
 
 dependencies {
@@ -46,6 +50,11 @@ dependencies {
     //jwt
     implementation 'com.auth0:java-jwt:4.2.1'
 
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
     /*
     Redis
     */
@@ -57,12 +66,33 @@ dependencies {
     implementation 'org.json:json:20210307' // Replace this with the latest version of the json library
 
 
-    //email
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    //QueryDsl
+    implementation 'com.querydsl:querydsl-apt:${queryDslVersion}'
+
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 
 }
 
 // Querydsl 설정부
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
 
 
 

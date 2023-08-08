@@ -49,8 +49,8 @@ public class User {
     }
 
     public void setSetting(String invite){
-        if (invite.equals("true")) this.invite = "true";
-        else this.invite = "false";
+        if (invite.equals("true")) this.invite = "false";
+        else this.invite = "true";
     }
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;

@@ -44,8 +44,8 @@ const CreateQnA: React.FC<Props> = ({onback}) => {
       url:`https://i9b206.p.ssafy.io:9090/qna/write`,
       data:{
         'userIdx' : userIdx,
-        'title':title,
-        'content':content,
+        'title': title,
+        'content': content,
       },
       headers : {
         Authorization: 'Bearer ' + userToken

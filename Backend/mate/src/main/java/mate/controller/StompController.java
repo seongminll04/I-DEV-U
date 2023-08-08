@@ -15,7 +15,7 @@ public class StompController {
 
     @MessageMapping("/chat/send")
     public void sendMsg(@Payload Map<String,Object> data){
-        simpMessagingTemplate.convertAndSend("/sub/1",data);
+        simpMessagingTemplate.convertAndSend("/sub/room/1",data);
     }
 
 }

@@ -88,14 +88,11 @@ public class ProjectService {
 		User user = userRepository.findByIdx(dto.getUserIdx()).get();
 		Project project = projectRepository.findById(dto.getProjectIdx()).get();
 
-		// ProjectParticipationDto projectParticipationDto = new ProjectParticipationDto();
-		// projectParticipationDto.setProject(project);
-		// projectParticipationDto.setUser(user);
-
-		projectParticipationRepository.save(ProjectParticipation.builder()
+		ProjectParticipation projectParticipation = projectParticipationRepository.save(ProjectParticipation.builder()
 			.project(project)
 			.user(user)
 			.build());
+		
 	}
 
 	public Project modifyProject(ProjectDto projectDto) {

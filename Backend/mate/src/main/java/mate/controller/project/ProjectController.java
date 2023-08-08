@@ -23,7 +23,7 @@ import mate.service.project.ProjectService;
 
 @RestController
 @RequestMapping("/project")
-@CrossOrigin(origins = {})
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class ProjectController {
 

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
+import mate.dto.notice.NoticeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,21 +22,19 @@ public class NoticeController {
 	private final NoticeService noticeService;
 
 	@PostMapping("/write")
-	public ResponseEntity<Map<String, Object>> writeNotice(@RequestBody NoticeBoard notice) {
+	public ResponseEntity<Map<String, Object>> writeNotice(@RequestBody NoticeDto noticeDto) {
 		Map<String, Object> map = new HashMap<>();
-
-		noticeService.writeNotice(notice);
-
+		noticeService.writeNotice(noticeDto);
 		return ResponseEntity.ok(map);
 	}
 
 	@GetMapping("/detail/{noticeIdx}")
-	public ResponseEntity<Map<String, Object>> detailNotice(@RequestParam("noticeIdx") int noticeIdx) {
+	public ResponseEntity<Map<String, Object>> detailNotice(@PathVariable("noticeIdx") int noticeIdx) {
 		Map<String, Object> map = new HashMap<>();
 
 		NoticeBoard notice = noticeService.detailNotice(noticeIdx);
 
-		map.put("notification", notice);
+		map.put("notice", notice);
 
 		return ResponseEntity.ok(map);
 	}

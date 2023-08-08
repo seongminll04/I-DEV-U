@@ -89,17 +89,15 @@ class Cam extends Component<{}, AppState> {
     async joinSession() {
         this.OV = new OpenVidu();
         const session = this.OV.initSession();
-    
+
         session.on('streamCreated', (event: any) => {
+            // publisher의 스트림인지 확인
+            if (this.state.publisher && event.stream.streamId === this.state.publisher.stream.streamId) {
+                return;
+            }
             const subscriber = session.subscribe(event.stream, undefined);
             const subscribers = [...this.state.subscribers, subscriber];
             this.setState({ subscribers });
-        });
-    
-        session.on('streamDestroyed', (event: any) => {
-            this.setState(prevState => ({
-                subscribers: prevState.subscribers.filter(sub => sub !== event.stream.streamManager)
-            }));
         });
     
         try {

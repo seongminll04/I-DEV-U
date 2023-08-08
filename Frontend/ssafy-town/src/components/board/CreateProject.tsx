@@ -95,12 +95,10 @@ const CreateProject: React.FC = () => {
         const userIdxStr = localStorage.getItem('userIdx')
         var userIdx:number|null;
         if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
-        
+
+    
         // 백엔드에 프로젝트 정보, 세션 ID 전송
         axios.post(BACKEND_SERVER_URL+'/project/register', {
-          headers: {
-            Authorization: 'Bearer ' + userToken
-          },
           data:{
             userIdx: userIdx,
             title: title, //6~30자
@@ -112,9 +110,13 @@ const CreateProject: React.FC = () => {
             max_front: frontendNum, // 최대6     // 스터디 누르면 null
             back: backValue,  // 0아니면 1      // 스터디 누르면 null
             max_back: backendNum, // 최대 6      // 스터디 누르면 null
-            languageList:languages, // 배열 최대 5개
-            session: sessionId
-          }
+            languageList:selectedLanguages, // 배열 최대 5개
+            session: sessionId,
+            techList: [],
+          },
+          headers: {
+            Authorization: 'Bearer ' + userToken
+          },
         }) 
         .then((res) => {
           console.log(res);

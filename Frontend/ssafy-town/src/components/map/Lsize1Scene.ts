@@ -5,9 +5,9 @@ import io from 'socket.io-client';
 import { Socket } from 'socket.io-client';
 
 type AssetKeys = 'A' | 'B' | 'C' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' 
-               | 'T' | 'U' | 'V' | 'W' | 'X' | '1' | '2' | '3' | '4'
-               | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's'
-               | 't' | 'u' | 'z';
+              | 'T' | 'U' | 'V' | 'W' | 'X' | '1' | '2' | '3' | '4'
+              | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's'
+              | 't' | 'u' | 'z';
 const ASSETS: Record<AssetKeys, string> = {
   'A': '/assets/L1-B1.png',
   'B': '/assets/L1-C4.png',
@@ -518,7 +518,7 @@ export class Lsize1Scene extends Phaser.Scene {
 
     // 페이지를 벗어나거나 새로고침할 때 disconnect-user 이벤트 전송
     window.addEventListener("beforeunload", () => {
-      this.socket.emit('disconnect-user', { userId: localStorage.getItem('OVSession') });
+      this.socket.emit('disconnect-user', { userId: localStorage.getItem('OVsession') });
   });
   }
 
@@ -528,8 +528,8 @@ export class Lsize1Scene extends Phaser.Scene {
   }
 
   joinSession() {
-    const sessionName = localStorage.getItem('OpenViduSessionName');
-    this.socket.emit('join-session', { sessionId: sessionName, userId: localStorage.getItem('OVSession') });
+    const sessionName = localStorage.getItem('OVsession');
+    this.socket.emit('join-session', { sessionId: sessionName, userId: localStorage.getItem('userIdx') });
   }
   
   handleDataChannelMessage(userId: string, event: any) {

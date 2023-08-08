@@ -89,7 +89,7 @@ const CreateProject: React.FC = () => {
     .then((response) => {
       console.log("2단계")
         const sessionId = response.data.id;
-        localStorage.setItem("OVSession",sessionId);
+        localStorage.setItem("OVsession",sessionId);
 
         const userIdxStr = localStorage.getItem('userIdx')
         var userIdx:number|null;
@@ -97,17 +97,17 @@ const CreateProject: React.FC = () => {
         
         // 백엔드에 프로젝트 정보, 세션 ID 전송
         axios.post(BACKEND_SERVER_URL+'/project/register', {
-          user_idx: userIdx,
+          userIdx: userIdx,
           title: title, //6~30자
           content: content, // ~1000자
-          total_num: total_num, // 2~6
-          now_num: 1,
-          status: projectType, // PROJECT or STUDY로 보내짐,
+          totalNum: total_num, // 2~6
+          nowNum: 1,
+          type: projectType, // PROJECT or STUDY로 보내짐,
           front: frontValue,  // 0아니면 1     // 스터디 누르면 null
-          maxFront: frontendNum, // 최대6     // 스터디 누르면 null
+          max_front: frontendNum, // 최대6     // 스터디 누르면 null
           back: backValue,  // 0아니면 1      // 스터디 누르면 null
-          maxBack: backendNum, // 최대 6      // 스터디 누르면 null
-          language:languages, // 배열 최대 5개
+          max_back: backendNum, // 최대 6      // 스터디 누르면 null
+          languageList:languages, // 배열 최대 5개
           session: sessionId
         }) 
         .then((res) => {

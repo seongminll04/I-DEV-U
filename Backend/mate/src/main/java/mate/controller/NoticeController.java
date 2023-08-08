@@ -21,7 +21,7 @@ public class NoticeController {
 	private final NoticeService noticeService;
 
 	@PostMapping("/write")
-	public ResponseEntity<Map<String, Object>> writeNotice(NoticeBoard notice) {
+	public ResponseEntity<Map<String, Object>> writeNotice(@RequestBody NoticeBoard notice) {
 		Map<String, Object> map = new HashMap<>();
 
 		noticeService.writeNotice(notice);
@@ -41,7 +41,7 @@ public class NoticeController {
 	}
 
 	@PutMapping("/modify")
-	public ResponseEntity<Map<String, Object>> modifyNotice(NoticeBoard notice) {
+	public ResponseEntity<Map<String, Object>> modifyNotice(@RequestBody NoticeBoard notice) {
 		Map<String, Object> map = new HashMap<>();
 
 		noticeService.modifyNotice(notice);

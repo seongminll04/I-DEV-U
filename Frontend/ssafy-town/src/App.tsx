@@ -90,13 +90,13 @@ function App() {
 
         // 채팅방 연결시 채팅대화 코드
         if (isSidebarOpen==='채팅방'){
-          stompClientRef.current.subscribe(`/chatroom/1`, function(message: Message) {
+          stompClientRef.current.subscribe(`/sub/chatroom/1`, function(message: Message) {
             const newMessage = message.body;
             dispatch(setReceiveMessages([...receivedMessages, newMessage]))
           });
         }
         else {
-          stompClientRef.current.unsubscribe(`/chatroom/1`);
+          stompClientRef.current.unsubscribe(`sub/chatroom/1`);
         }
 
         // 내 화상방 라이브 상태 코드

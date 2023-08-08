@@ -1,12 +1,10 @@
 package mate.dto.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import java.time.LocalDate;
+import java.util.List;
+
 import lombok.Data;
 import mate.domain.user.UserGender;
-
-import java.time.LocalDate;
-
 
 /*
     {
@@ -25,15 +23,17 @@ import java.time.LocalDate;
  */
 @Data
 public class UserDto {
-    private Integer userIdx;
-    private String email;
-    private String name;
-    private String nickname;
-    private LocalDate birth;
-    private UserGender gender;
-    private String intro;
-    private String invite;
-    private String originalFileName;
-    private String storedFileName;
+	private Integer userIdx;
+	private String email;
+	private String name;
+	private String nickname;
+	private LocalDate birth;
+	private UserGender gender;
+	private String intro;
+	private String invite;
+	private String originalFileName;
+	private String storedFileName;
 
+	// 동료 상세보기 시도 시, 조회되는 데이터
+	private List<String> techList;
 }

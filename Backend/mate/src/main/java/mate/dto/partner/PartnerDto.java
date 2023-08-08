@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class PartnerDto {
-    private String name;
-    private String nickname;
-    private int percent;
+
+	private String name;
+	private String nickname;
+	private long percent;
 }

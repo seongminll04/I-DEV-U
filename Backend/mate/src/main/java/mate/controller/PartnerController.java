@@ -1,17 +1,20 @@
 package mate.controller;
 
-import lombok.RequiredArgsConstructor;
-import mate.domain.basic.BasicAnswer;
-import mate.domain.partner.PartnerDto;
-import mate.dto.partner.TagDto;
-import mate.dto.project.ProjectDto;
-import mate.service.partner.PartnerService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
+import mate.dto.partner.TagDto;
+import mate.service.partner.PartnerService;
 
 @RestController
 @RequestMapping("/partner")
@@ -19,24 +22,34 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PartnerController {
 
-    private final PartnerService partnerService;
+	private final PartnerService partnerService;
 
-    @GetMapping("/list")
-    public ResponseEntity<Map<String, Object>> listPartner(@RequestBody Map<String, List<TagDto>> input) {
-        Map<String, Object> map = new HashMap<>();
+	@GetMapping("/list")
+	public ResponseEntity<Map<String, Object>> listPartner(@RequestBody Map<String, List<TagDto>> input) {
+		Map<String, Object> map = new HashMap<>();
 
-        System.out.println(input.get("tagList"));
+		try {
+			map.put("userList", partnerService.listPartner(input.get("tagList")));
+			map.put("resmsg", "동료 리스트 조회 성공");
+		} catch (Exception e) {
+			map.put("resmsg", "동료 리스트 조회 실패");
+		}
 
-//        try {
-            List<PartnerDto> list = partnerService.listPartner(input.get("tagList"));
+		return ResponseEntity.ok(map);
+	}
 
-            map.put("userList", list);
-            map.put("resmsg", "동료 리스트 조회 성공");
-//        } catch (Exception e) {
-//            map.put("resmsg", "동료 리스트 조회 실패");
-//        }
+	@GetMapping("/detail/{userIdx}")
+	public ResponseEntity<Map<String, Object>> detailPartner(@PathVariable("userIdx") int userIdx) {
+		Map<String, Object> map = new HashMap<>();
 
-        return ResponseEntity.ok(map);
-    }
+		try {
+			map.put("resmsg", "동료 상세정보 조회 성공");
+			map.put("user", partnerService.detailPartner(userIdx));
+		} catch (Exception e) {
+			map.put("resmsg", "동료 상세정보 조회 실패");
+		}
+
+		return ResponseEntity.ok(map);
+	}
 
 }

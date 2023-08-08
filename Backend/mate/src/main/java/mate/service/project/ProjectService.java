@@ -44,6 +44,7 @@ public class ProjectService {
 			.maxFront(projectDto.getMaxFront())
 			.back(projectDto.getBack())
 			.maxBack(projectDto.getMaxBack())
+			.session(projectDto.getSession())
 			.type(projectDto.getType()).build());
 
 		projectParticipationRepository.save(ProjectParticipation.builder()
@@ -133,8 +134,10 @@ public class ProjectService {
 	}
 
 	public List<Project> listProject(String keyword) {
-		if (keyword == null) return projectRepository.findAll();
-		else return projectRepository.findProjectsByTitleOrContent(keyword);
+		if (keyword == null)
+			return projectRepository.findAll();
+		else
+			return projectRepository.findProjectsByTitleOrContent(keyword);
 	}
 
 	public String makeRoomCode() {

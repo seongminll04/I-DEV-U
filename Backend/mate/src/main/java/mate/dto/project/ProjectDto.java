@@ -21,6 +21,7 @@ public class ProjectDto {
 	private Integer back;
 	private Integer maxBack;
 	private String type;
+	private String session;
 	private List<ProjectLanguage> languageList;
 	private List<ProjectTech> techList;
 }

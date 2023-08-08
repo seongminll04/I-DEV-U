@@ -4,15 +4,15 @@ import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import mate.domain.user.User;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Getter
-@RequiredArgsConstructor
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class NoticeBoard {
 
 	@Id

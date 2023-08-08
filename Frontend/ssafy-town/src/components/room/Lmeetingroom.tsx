@@ -96,8 +96,6 @@ const LMeetingRoom: React.FC = () => {
       {isSidebarOpen ? <Navbar /> : null}
       <ModalOpen />
       <div id="phaser_game" className={ssafytown_css.phaser_game} >
-        <div id="my-video-container" className={ssafytown_css.my_video_bar}></div>
-        <div id="videoContainer" className={ssafytown_css.op_video_bar}> </div>
         <div className={ssafytown_css.video_bar}><Cam /></div>
       </div>
     </div>

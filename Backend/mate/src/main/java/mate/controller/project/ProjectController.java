@@ -30,7 +30,7 @@ public class ProjectController {
 	private final ProjectService projectService;
 
 	@PostMapping("/register")
-	public ResponseEntity<Map<String, Object>> registerProject(@RequestBody Map<String, Object> input) {
+	public ResponseEntity<Map<String, Object>> registerProject(@RequestBody Map<Object, Object> input) {
 		Map<String, Object> map = new HashMap<>();
 
 		System.out.println(input.get("title"));

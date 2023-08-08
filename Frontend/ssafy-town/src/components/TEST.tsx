@@ -1,50 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { Client, Message, Stomp } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
+import React, { useState } from 'react';
+import { Client } from '@stomp/stompjs';
+import { useSelector } from 'react-redux';
+import { AppState } from '../store/state';
+
+
 
 const MyComponent: React.FC = () => {
   const [messageInput, setMessageInput] = useState('');
-  const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
   const stompClientRef = React.useRef<Client | null>(null);
-  
-  useEffect(() => { 
-    const userToken = localStorage.getItem('userToken')
-    const socket = new SockJS("https://i9b206.p.ssafy.io:9090/chatting");
-    stompClientRef.current = Stomp.over(socket);
-    stompClientRef.current.connectHeaders={
-      Authorization: "Bearer " + userToken
-    }
-    // 연결 시도
-    stompClientRef.current.activate();
-
-    return () => {
-      // 컴포넌트 언마운트 시 연결 해제
-      if (stompClientRef.current) {
-        stompClientRef.current.deactivate();
-      }
-    };
-  }, [stompClientRef]);
-
-  const onMessageReceived = (message: Message) => {
-    const newMessage = message.body;
-    setReceivedMessages((prevMessages) => [...prevMessages, newMessage]);
-  };
-
-  useEffect(() => {
-    // 구독 설정
-    // const userIdx = localStorage.getItem('userIdx')
-    if (stompClientRef.current) {
-      
-      stompClientRef.current.onConnect = (frame) => {
-        console.log(frame)
-        stompClientRef.current!.subscribe(`/topic/1`, onMessageReceived);
-        // 등록을 해둿으니 여기에서 구독한것들은 다 들어온다!!!
-      };
-    }
-  }, []);
+  const receivedMessages = useSelector((state: AppState) => state.receivedMessages);
+  stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
+  const userIdx = localStorage.getItem('userIdx')
 
   const sendMessage = (message: string) => {
-    const userIdx = localStorage.getItem('userIdx')
     if (stompClientRef.current) {
     const data = {
         'sender': userIdx, // Set the sender's userId here

@@ -253,7 +253,7 @@ export class Lsize1Scene extends Phaser.Scene {
                 const wallTile = this.walls?.create(colIndex * tileSize + tileSize / 2, rowIndex * tileSize + tileSize / 2, tileID);
                 wallTile.setSize(tileSize, tileSize);
             } else if (tileID ==='C' || tileID === 'm' || tileID === 'l' || tileID === 'I'|| tileID === 'n' || tileID === 'o' ||
-                       tileID ==='p' || tileID === 'q' || tileID === 'r' || tileID === 's'|| tileID === 't' || tileID === 'u' ) {
+                      tileID ==='p' || tileID === 'q' || tileID === 'r' || tileID === 's'|| tileID === 't' || tileID === 'u' ) {
               this.add.image(colIndex * tileSize, rowIndex * tileSize, tileID).setOrigin(0, 0);
 
               if(tileID ==='p' || tileID ==='q' || tileID ==='r' || tileID ==='s' || tileID ==='t' || tileID ==='l' || tileID ==='m' || tileID ==='I' ){

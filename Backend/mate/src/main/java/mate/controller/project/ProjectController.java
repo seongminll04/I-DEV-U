@@ -57,7 +57,26 @@ public class ProjectController {
 		@RequestBody ProjectParticipationDto projectParticipationDto) {
 		Map<String, Object> map = new HashMap<>();
 
-		projectService.enterProject(projectParticipationDto);
+		try {
+			projectService.enterProject(projectParticipationDto);
+			map.put("resmsg", "프로젝트 입장 성공");
+		} catch (Exception e) {
+			map.put("resmsg", "프로젝트 입장 실패");
+		}
+
+		return ResponseEntity.ok(map);
+	}
+
+	@DeleteMapping("/leave")
+	public ResponseEntity<Map<String, Object>> leaveProject(@RequestBody ProjectParticipationDto projectParticipationDto) {
+		Map<String, Object> map = new HashMap<>();
+
+		try {
+			projectService.leaveProject(projectParticipationDto.getUserIdx(), projectParticipationDto.getProjectIdx());
+			map.put("resmsg", "프로젝트 퇴장 성공");
+		} catch (Exception e) {
+			map.put("resmsg", "프로젝트 퇴장 실패");
+		}
 
 		return ResponseEntity.ok(map);
 	}

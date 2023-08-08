@@ -1,13 +1,18 @@
 package mate.repository.project;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import mate.domain.project.ProjectParticipation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface ProjectParticipationRepository extends JpaRepository<ProjectParticipation, Integer> {
-	// @Modifying
-	// @Query(value = "insert into ProjectParticipation (project_idx, user_idx) values(:projectIdx, :userIdx)")
-	// void enterProject(@Param("userIdx") long userIdx, @Param("projectIdx") long projectIdx);
+	 @Transactional
+	 @Modifying
+	 @Query(value = "delete from ProjectParticipation p where p.project.idx = :projectIdx and p.user.idx = :userIdx ")
+	 void leaveProject(@Param("userIdx") int userIdx, @Param("projectIdx") int projectIdx);
 }

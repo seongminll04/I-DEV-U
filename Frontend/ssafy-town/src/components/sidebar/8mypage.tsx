@@ -78,7 +78,7 @@ const Mypage: React.FC = () => {
 
     axios({
       method: 'get',
-      url: `http://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
+      url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
       headers: {
         Authorization: 'Bearer ' + userToken
       },
@@ -113,7 +113,7 @@ const Mypage: React.FC = () => {
     user1.invite = "true" ? "false" : "true"
     axios({
       method: 'put',
-      url: 'http://i9b206.p.ssafy.io:9090/user/setting',
+      url: 'https://i9b206.p.ssafy.io:9090/user/setting',
       headers: {
         Authorization: 'Bearer ' + userToken
       },

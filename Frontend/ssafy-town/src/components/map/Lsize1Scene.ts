@@ -228,15 +228,7 @@ export class Lsize1Scene extends Phaser.Scene {
       // 사용자 캐릭터 선택
       const userCharacter = localStorage.getItem("character") || '0';
 
-      // 일단 개발용도, 나중에 if else 다빼고 2만 남기자
-      if(userCharacter==='0'){
-        this.character = this.physics.add.sprite(mapCenterX, mapCenterY, `02`).setOrigin(0.5, 0.5);
-      }
-      else{
-        this.character = this.physics.add.sprite(mapCenterX, mapCenterY, `${userCharacter}2`).setOrigin(0.5, 0.5);
-      }
-
-      console.log(userCharacter+"sdfsdf")
+      this.character = this.physics.add.sprite(mapCenterX, mapCenterY, `${userCharacter}2`).setOrigin(0.5, 0.5);
 
       this.physics.add.collider(this.character, this.walls);  // 캐릭터와 벽 사이의 충돌 설정
       
@@ -469,7 +461,11 @@ export class Lsize1Scene extends Phaser.Scene {
     // 위를 바라보는 애니메이션
     this.anims.create({
       key: `${characterKey}-up`,
-      frames: this.anims.generateFrameNames(characterKey, { start: 1, end: 3 }),
+      frames: [
+        { key: `${characterKey}A`},
+        { key: `${characterKey}C`},
+        { key: `${characterKey}B`},
+      ],
       frameRate: 10,
       repeat: -1
     });
@@ -477,7 +473,11 @@ export class Lsize1Scene extends Phaser.Scene {
     // 오른쪽을 바라보는 애니메이션
     this.anims.create({
       key: `${characterKey}-right`,
-      frames: this.anims.generateFrameNames(characterKey, { start: 4, end: 6 }),
+      frames: [
+        { key: `${characterKey}7`},
+        { key: `${characterKey}8`},
+        { key: `${characterKey}9`},
+      ],
       frameRate: 10,
       repeat: -1
     });
@@ -485,7 +485,11 @@ export class Lsize1Scene extends Phaser.Scene {
     // 아래를 바라보는 애니메이션
     this.anims.create({
       key: `${characterKey}-down`,
-      frames: this.anims.generateFrameNames(characterKey, { start: 7, end: 9 }),
+      frames: [
+        { key: `${characterKey}1`},
+        { key: `${characterKey}3`},
+        { key: `${characterKey}2`},
+      ],
       frameRate: 10,
       repeat: -1
     });
@@ -493,7 +497,11 @@ export class Lsize1Scene extends Phaser.Scene {
     // 왼쪽을 바라보는 애니메이션
     this.anims.create({
       key: `${characterKey}-left`,
-      frames: this.anims.generateFrameNames(characterKey, { start: 10, end: 12 }),
+      frames: [
+        { key: `${characterKey}4`},
+        { key: `${characterKey}6`},
+        { key: `${characterKey}5`},
+      ],
       frameRate: 10,
       repeat: -1
     });
@@ -674,33 +682,87 @@ export class Lsize1Scene extends Phaser.Scene {
 
   
   
-    update() {
+  update() {
+    const currentPlayerPosition = { x: this.character!.x, y: this.character!.y };
 
-      const currentPlayerPosition = { x: this.character!.x, y: this.character!.y };
-
-      if (!this.prevPosition || (this.prevPosition.x !== currentPlayerPosition.x || this.prevPosition.y !== currentPlayerPosition.y)) {
+    if (!this.prevPosition || (this.prevPosition.x !== currentPlayerPosition.x || this.prevPosition.y !== currentPlayerPosition.y)) {
         this.sendCharacterData();
-      }
+    }
+    if(store.getState().isAllowMove && this.cursors && this.character && this.sittingOnChair){
+      if (this.character.anims.currentAnim) {
+        this.character.setVelocityX(0);
+        this.character.setVelocityY(0);
+        let previousAnimationKey = this.character.anims.currentAnim.key;
+        let direction = previousAnimationKey.split('-')[1]; // 예: 'left' from '0-left'
 
-      if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnChair) {
-        if (this.cursors.left?.isDown) {
-          this.character.setVelocityX(-640);
-          this.character.play(`${localStorage.getItem("character") || 'character'}-left`, true);
-        } else if (this.cursors.right?.isDown) {
-          this.character.setVelocityX(640);
-          this.character.play(`${localStorage.getItem("character") || 'character'}-right`, true);
-        } else {
-          this.character.setVelocityX(0);
+        // Verify that the direction is one of the expected values
+        if (['left', 'right', 'up', 'down'].includes(direction)) {
+            // Now replace the last character with the corresponding idle frame
+            let idleFrameKey = {
+              'left': '5',
+              'right': '8',
+              'up': 'B',
+              'down': '2'
+            }[direction];
+
+            if (idleFrameKey) {
+              this.character.setTexture(`${localStorage.getItem("character") || '0'}${idleFrameKey}`);
+            }
         }
-  
-        if (this.cursors.up?.isDown) {
-          this.character.setVelocityY(-640);
-          this.character.play(`${localStorage.getItem("character") || 'up'}-left`, true);
-        } else if (this.cursors.down?.isDown) {
-          this.character.setVelocityY(640);
-          this.character.play(`${localStorage.getItem("character") || 'down'}-left`, true);
+    }
+    }
+
+    if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnChair) {
+        let moved = false;
+
+        if (this.cursors.left?.isDown) {
+            this.character.setVelocityX(-640);
+            this.character.play(`${localStorage.getItem("character") || '0'}-left`, true);
+            moved = true;
+        } else if (this.cursors.right?.isDown) {
+            this.character.setVelocityX(640);
+            this.character.play(`${localStorage.getItem("character") || '0'}-right`, true);
+            moved = true;
         } else {
-          this.character.setVelocityY(0);
+            this.character.setVelocityX(0);
+        }
+
+        if (this.cursors.up?.isDown) {
+            this.character.setVelocityY(-640);
+            if (!this.cursors.right?.isDown && !this.cursors.left?.isDown) {
+                this.character.play(`${localStorage.getItem("character") || '0'}-up`, true);
+            }
+            moved = true;
+        } else if (this.cursors.down?.isDown) {
+            this.character.setVelocityY(640);
+            if (!this.cursors.right?.isDown && !this.cursors.left?.isDown) {
+                this.character.play(`${localStorage.getItem("character") || '0'}-down`, true);
+            }
+            moved = true;
+        } else {
+            this.character.setVelocityY(0);
+        }
+
+        if (!moved) {
+          if (this.character.anims.currentAnim) {
+              let previousAnimationKey = this.character.anims.currentAnim.key;
+              let direction = previousAnimationKey.split('-')[1]; // 예: 'left' from '0-left'
+      
+              // Verify that the direction is one of the expected values
+              if (['left', 'right', 'up', 'down'].includes(direction)) {
+                  // Now replace the last character with the corresponding idle frame
+                  let idleFrameKey = {
+                    'left': '5',
+                    'right': '8',
+                    'up': 'B',
+                    'down': '2'
+                  }[direction];
+      
+                  if (idleFrameKey) {
+                    this.character.setTexture(`${localStorage.getItem("character") || '0'}${idleFrameKey}`);
+                  }
+              }
+          }
         }
       }
 
@@ -801,8 +863,8 @@ export class Lsize1Scene extends Phaser.Scene {
                 this.physics.add.existing(part, true);
             }
     
-            if ([1, 2].includes(index)) {
-                part.setDepth(1);
+            if ([0, 1, 2, 3].includes(index)) {
+                part.setDepth(3);
             } else if ([5, 6, 9, 10].includes(index)) {
                 part.setDepth(-1);
             } else {
@@ -890,19 +952,22 @@ export class Lsize1Scene extends Phaser.Scene {
 
     removeDoorCollisions() {
         // 모든 문 부분의 충돌을 비활성화
-        this.doorParts.forEach((part) => {
+        this.doorParts.forEach((part, index) => {
+          if (![0, 3, 4, 7, 8, 11].includes(index)) { // remember arrays are 0-indexed
             (part.body as Phaser.Physics.Arcade.Body).enable = false;
+        }
         });
     }
 
     sitdown(chairPosition: { x: number, y: number }){
       if (this.sittingOnChair) {  
-          this.character!.x += 32;
+          this.character!.x = chairPosition.x;
+          this.character!.y = chairPosition.y;
           this.character!.setAlpha(1);
           this.sittingOnChair = false;
       } else {  
           this.character!.x = chairPosition.x;
-          this.character!.y = chairPosition.y - 16;
+          this.character!.y = chairPosition.y;
           this.character!.setAlpha(0.4);
           this.sittingOnChair = true;
       }

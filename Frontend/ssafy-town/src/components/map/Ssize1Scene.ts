@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import store from '../../store/store'
 import { setModal } from '../../store/actions';
 
-type AssetKeys = 'A1' | 'B1' | 'C1' | 'D1' | 'E1' | 'F1' | 'G1' | 'H1' | 'I1' | 'J1' | 'K1';
+type AssetKeys = 'A1' | 'B1' | 'C1' | 'D1' | 'E1' | 'F1' | 'G1' | 'H1' | 'I1' | 'J1' | 'K1' | 'L1';
 const ASSETS: Record<AssetKeys, string> = {
   'A1': '/assets/L1-B1.png',
   'B1': '/assets/L1-C4.png',
@@ -15,12 +15,13 @@ const ASSETS: Record<AssetKeys, string> = {
   'I1': '/assets/컴퓨터1.png',
   'J1': '/assets/식물1.png',
   'K1': '/assets/에어컨1.png',
+  'L1': '/assets/mirror.png',
 };
 
 const pattern = `
 B1B1B1B1B1B1B1B1B1B1B1B1B1B1B1
-B1K1K1F1F1A1A1A1I1I1A1G1G1G1B1
-B1D1D1F1F1C1C1C1I1I1C1G1G1G1B1
+B1K1K1F1F1L1A1A1I1I1A1G1G1G1B1
+B1D1D1F1F1L1C1C1I1I1C1G1G1G1B1
 B1D1D1C1C1C1C1C1C1C1C1C1C1C1B1
 B1D1D1C1C1C1C1C1C1C1C1C1C1C1B1
 B1D1D1C1C1C1C1C1C1C1C1C1C1C1B1
@@ -54,6 +55,7 @@ export class Ssize1Scene extends Phaser.Scene {
   private computer?: Phaser.Physics.Arcade.Sprite;
   private plant?: Phaser.Physics.Arcade.Sprite;
   private aircondition?: Phaser.Physics.Arcade.Sprite;
+  private mirror?: Phaser.Physics.Arcade.Sprite;
   private addedBed: boolean = false;
   private addedTable: boolean = false;
   private addedWardrobe: boolean = false;
@@ -62,6 +64,7 @@ export class Ssize1Scene extends Phaser.Scene {
   private addedComputer: boolean = false;
   private addedPlant: boolean = false;
   private addedAircondition: boolean = false;
+  private addedMirror: boolean = false;
   
 
   constructor() {
@@ -73,8 +76,8 @@ export class Ssize1Scene extends Phaser.Scene {
         this.load.image(char, (ASSETS as Record<string, string>)[char]);
     }
 
-    this.load.image('character', 'assets/admin_character.png');
     this.load.image('balloon', 'assets/ekey.png');
+    this.load.image('choose', 'assets/choose.png');
     this.load.image('heart', 'assets/heart.png');
     this.load.image('pet-down-1', 'assets/파아1.png')
     this.load.image('pet-down-2', 'assets/파아2.png')
@@ -88,6 +91,30 @@ export class Ssize1Scene extends Phaser.Scene {
     this.load.image('pet-left-1', 'assets/파왼1.png')
     this.load.image('pet-left-2', 'assets/파왼2.png')
     this.load.image('pet-left-3', 'assets/파왼3.png')
+
+    for (let i = 1; i <= 50; i++) {
+      this.load.image('WE' + i, 'assets/WE' + i + '.png');
+    }
+
+    for (let i = 0; i <= 9; i++) {
+      for (let j = 1; j <= 12; j++) {
+          let secondChar;
+          if (j <= 9) {
+              secondChar = j;
+          } else if (j === 10) {
+              secondChar = 'A';
+          } else if (j === 11) {
+              secondChar = 'B';
+          } else {
+              secondChar = 'C';
+          }
+          
+          const imageKey = `${i}${secondChar}`;
+          const imagePath = `assets/${imageKey}.png`;
+          
+          this.load.image(imageKey, imagePath);
+      }
+    }
   }
 
   create() {
@@ -104,7 +131,17 @@ export class Ssize1Scene extends Phaser.Scene {
   const mapCenterX = this.rows[0].length * tileSize / 2;
   const mapCenterY = this.rows.length * tileSize / 2;
   
-  this.character = this.physics.add.sprite(mapCenterX - 240, mapCenterY, 'character');
+  //test
+  localStorage.setItem("character",'1');
+
+
+  // 사용자 캐릭터 선택
+  const userCharacter = localStorage.getItem("character") || '0';
+
+  this.character = this.physics.add.sprite(mapCenterX-240, mapCenterY, `${userCharacter}2`).setOrigin(0.5, 0.5);
+
+  this.createAnimationsForCharacter(userCharacter); // 방향 애니메이션
+
   this.pet = this.physics.add.sprite(mapCenterX - 160, mapCenterY + 90, 'pet-down-2');
   this.character.setCollideWorldBounds(true);
   this.pet.setCollideWorldBounds(true);
@@ -119,9 +156,6 @@ export class Ssize1Scene extends Phaser.Scene {
   // this.physics.world.createDebugGraphic();  // 디버그 그래픽
 
   ///여기부터 펫의 움직임///
-  
-  
-
 
   this.anims.create({
     key: 'pet-walk-up',
@@ -167,7 +201,32 @@ export class Ssize1Scene extends Phaser.Scene {
     repeat: -1
   });
   
-//////
+////// 변신 이펙트
+
+const changeFrames = Array.from({ length: 50 }, (_, i) => ({ key: `WE${i + 1}` }));
+
+this.anims.create({
+  key: 'change',
+  frames: changeFrames,
+  frameRate: 100, // 50 frames in 1 second
+  repeat: 0
+});
+
+// 캐릭터와 동일한 위치에 change 애니메이션을 재생할 스프라이트 생성
+const changeEffectSprite = this.add.sprite(this.character.x, this.character.y+5, 'WE1');  // 'E1'은 첫 프레임입니다.
+
+// 숨겨진 상태로 시작
+changeEffectSprite.visible = false;
+// 깊이
+changeEffectSprite.setDepth(this.character.depth + 1);
+
+// 이펙트 애니메이션 재생이 끝나면 스프라이트 숨기기
+changeEffectSprite.on('animationcomplete', () => {
+    changeEffectSprite.visible = false;
+});
+
+
+/////
 
   this.time.addEvent({
     delay: 1500, // 2초마다 움직임
@@ -256,8 +315,13 @@ export class Ssize1Scene extends Phaser.Scene {
             this.aircondition.setOrigin(0, 0).setDisplaySize(64, 32).setImmovable(true); // 2x1
             this.addedAircondition = true;
             this.physics.add.collider(this.character!, this.aircondition);
+          } else if (tileID === 'L1' && !this.addedMirror) {  // L1 
+            this.mirror = this.physics.add.sprite((colIndex / 2) * tileSize, rowIndex * tileSize, tileID);
+            this.mirror.setOrigin(0, 0).setDisplaySize(32, 64).setImmovable(true); // 1x2 
+            this.addedMirror = true;
+            this.physics.add.collider(this.character!, this.mirror);
           } else if (tileID !== 'D1' && tileID !== 'E1' && tileID !== 'F1' && tileID !== 'G1' && tileID !== 'H1' && tileID !== 'I1'
-          && tileID !== 'J1' && tileID !== 'K1') {
+          && tileID !== 'J1' && tileID !== 'K1' && tileID !== 'L1') {
             this.add.image((colIndex / 2) * tileSize, rowIndex * tileSize, tileID).setOrigin(0, 0);
           }
         }
@@ -279,46 +343,212 @@ export class Ssize1Scene extends Phaser.Scene {
         store.dispatch(setModal('QnA게시판'))
       } else if(nearbyObject === 'pet'){
         this.petheart();
+      } else if(nearbyObject === 'mirror'){
+        this.choosecharacter();
       }
+    });
+
+      ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE'].forEach((key, index) => {
+        this.input.keyboard?.on(`keydown-${key}`, () => {
+            let number = '1';
+            switch(key) {
+                case 'ONE':
+                    number = '1';
+                    break;
+                case 'TWO':
+                    number = '2';
+                    break;
+                case 'THREE':
+                    number = '3';
+                    break;
+                case 'FOUR':
+                    number = '4';
+                    break;
+                case 'FIVE':
+                    number = '5';
+                    break;
+                case 'SIX':
+                    number = '6';
+                    break;
+                case 'SEVEN':
+                    number = '7';
+                    break;
+                case 'EIGHT':
+                    number = '8';
+                    break;
+                case 'NINE':
+                    number = '9';
+                    break;
+            }
+            localStorage.setItem("character", number!);
+
+            changeEffectSprite.x = this.character!.x;
+            changeEffectSprite.y = this.character!.y+5;
+
+            // 스프라이트 표시
+            changeEffectSprite.visible = true;
+
+            // 스프라이트에 change 애니메이션 재생
+            changeEffectSprite.anims.play('change', true);
+
+            this.createAnimationsForCharacter(number)
+        });
+    });
+  }
+
+    /////////////////////////// 캐릭터 이동 애니메이션
+  
+    createAnimationsForCharacter(characterKey : string) {
+      // 위를 바라보는 애니메이션
+      console.log("@@@@@@")
+      this.anims.create({
+        key: `${characterKey}-up`,
+        frames: [
+          { key: `${characterKey}A`},
+          { key: `${characterKey}C`},
+          { key: `${characterKey}B`},
+        ],
+        frameRate: 10,
+        repeat: -1
+      });
+    
+      // 오른쪽을 바라보는 애니메이션
+      this.anims.create({
+        key: `${characterKey}-right`,
+        frames: [
+          { key: `${characterKey}7`},
+          { key: `${characterKey}8`},
+          { key: `${characterKey}9`},
+        ],
+        frameRate: 10,
+        repeat: -1
+      });
+    
+      // 아래를 바라보는 애니메이션
+      this.anims.create({
+        key: `${characterKey}-down`,
+        frames: [
+          { key: `${characterKey}1`},
+          { key: `${characterKey}3`},
+          { key: `${characterKey}2`},
+        ],
+        frameRate: 10,
+        repeat: -1
+      });
+    
+      // 왼쪽을 바라보는 애니메이션
+      this.anims.create({
+        key: `${characterKey}-left`,
+        frames: [
+          { key: `${characterKey}4`},
+          { key: `${characterKey}6`},
+          { key: `${characterKey}5`},
+        ],
+        frameRate: 10,
+        repeat: -1
+      });
     }
-  )}
+
+    //////
 
 
   update() {
     if (store.getState().isAllowMove && this.cursors && this.character) {
-      if (this.cursors.left?.isDown) {
-        this.character.setVelocityX(-320);
-      } else if (this.cursors.right?.isDown) {
-        this.character.setVelocityX(320);
-      } else {
+      if (this.character.anims.currentAnim) {
         this.character.setVelocityX(0);
-      }
-
-      if (this.cursors.up?.isDown) {
-        this.character.setVelocityY(-320);
-      } else if (this.cursors.down?.isDown) {
-        this.character.setVelocityY(320);
-      } else {
         this.character.setVelocityY(0);
+        let previousAnimationKey = this.character.anims.currentAnim.key;
+        let direction = previousAnimationKey.split('-')[1]; // 예: 'left' from '0-left'
+
+        // Verify that the direction is one of the expected values
+        if (['left', 'right', 'up', 'down'].includes(direction)) {
+            // Now replace the last character with the corresponding idle frame
+            let idleFrameKey = {
+              'left': '5',
+              'right': '8',
+              'up': 'B',
+              'down': '2'
+            }[direction];
+
+            if (idleFrameKey) {
+              this.character.setTexture(`${localStorage.getItem("character") || '0'}${idleFrameKey}`);
+            }
+        }
       }
     }
+  if (store.getState().isAllowMove && this.cursors && this.character) {
+    let moved = false;
+
+    if (this.cursors.left?.isDown) {
+        this.character.setVelocityX(-320);
+        this.character.play(`${localStorage.getItem("character") || '0'}-left`, true);
+        moved = true;
+    } else if (this.cursors.right?.isDown) {
+        this.character.setVelocityX(320);
+        this.character.play(`${localStorage.getItem("character") || '0'}-right`, true);
+        moved = true;
+    } else {
+        this.character.setVelocityX(0);
+    }
+
+    if (this.cursors.up?.isDown) {
+        this.character.setVelocityY(-320);
+        if (!this.cursors.right?.isDown && !this.cursors.left?.isDown) {
+            this.character.play(`${localStorage.getItem("character") || '0'}-up`, true);
+        }
+        moved = true;
+    } else if (this.cursors.down?.isDown) {
+        this.character.setVelocityY(320);
+        if (!this.cursors.right?.isDown && !this.cursors.left?.isDown) {
+            this.character.play(`${localStorage.getItem("character") || '0'}-down`, true);
+        }
+        moved = true;
+    } else {
+        this.character.setVelocityY(0);
+    }
+
+    if (!moved) {
+      if (this.character.anims.currentAnim) {
+          let previousAnimationKey = this.character.anims.currentAnim.key;
+          let direction = previousAnimationKey.split('-')[1]; // 예: 'left' from '0-left'
+  
+          // Verify that the direction is one of the expected values
+          if (['left', 'right', 'up', 'down'].includes(direction)) {
+              // Now replace the last character with the corresponding idle frame
+              let idleFrameKey = {
+                'left': '5',
+                'right': '8',
+                'up': 'B',
+                'down': '2'
+              }[direction];
+  
+              if (idleFrameKey) {
+                this.character.setTexture(`${localStorage.getItem("character") || '0'}${idleFrameKey}`);
+              }
+          }
+      }
+    }
+  }
     this.NearbyObjects();
   }
 
-  private NearbyObjects(): 'bed' | 'board' | 'pet'| null {
+  private NearbyObjects(): 'bed' | 'board' | 'pet'| 'mirror' | null {
     const bedPosition = { x: 84, y: 131 }; // 침대
     const boardPosition = { x: 400, y: 100 }; // 게시판
+    const mirrorPosition = { x: 176, y: 100 }; // 게시판
 
     if (this.character) {
       const distanceToBed = Phaser.Math.Distance.Between(this.character.x, this.character.y, bedPosition.x, bedPosition.y);
       const distanceToBoard = Phaser.Math.Distance.Between(this.character.x, this.character.y, boardPosition.x, boardPosition.y);
+      const distanceToMirror = Phaser.Math.Distance.Between(this.character.x, this.character.y, mirrorPosition.x, mirrorPosition.y);
 
-      if (distanceToBed <= 50 || distanceToBoard <= 64) {
+      if (distanceToBed <= 50 || distanceToBoard <= 64 || distanceToMirror<=40) {
           this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
 
 
           if(distanceToBed <= 50) return 'bed';
           if(distanceToBoard <= 64) return 'board';
+          if(distanceToMirror <= 40) return 'mirror';
       } else if(Math.abs(this.pet!.x-this.character!.x)<50 && Math.abs(this.pet!.y-this.character!.y)<50){
         return 'pet';
       } 
@@ -375,6 +605,14 @@ export class Ssize1Scene extends Phaser.Scene {
     setTimeout(() => {
         heart.destroy();
     }, 300);
+  }
+
+  choosecharacter(){
+    const heart = this.add.image(this.character!.x, -120,'choose');
+
+    setTimeout(() => {
+        heart.destroy();
+    }, 10000);
   }
 
 

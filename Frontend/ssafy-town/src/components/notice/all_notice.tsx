@@ -20,12 +20,12 @@ const AllNotice: React.FC = () => {
 
   const [search, setsearch] = useState<string>('');
   const [nowsearch, setnowsearch] = useState<boolean>(false);
-  const [noticeList,setNoticeList] =useState<Notice[]>([{idx:1,content:'strign',title:'asdf',createdAt:'asdf'}]);
+  const [noticeList,setNoticeList] =useState<Notice[]>([]);
   
   useEffect(()=>{
     axios({
       method:'get',
-      url:'https://i9b206.p.ssafy.io:9090/user/login',
+      url:'https://i9b206.p.ssafy.io:9090/notice/list/all',
       headers : {
         Authorization: 'Bearer ' + userToken
       },

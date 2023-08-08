@@ -42,9 +42,9 @@
 
 .mypage_toggle {
   display: flex;
-  flex-direction: row;
-  padding: 8px 16px;
-  justify-content: space-between;
+  justify-content:center;
+  align-items: center;
+  font-size: small;
 }
 
 .OFF, .ON {

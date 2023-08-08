@@ -150,18 +150,18 @@ const Mypage: React.FC = () => {
           </div>
           <button className={mypage_css.button} onClick={() => dispatch(setModal('회원정보수정1'))}>회원정보 수정</button>
           
-          <p style={{display:'flex',justifyContent:'center',alignItems:'center',marginTop:'0', fontSize:'small'}}>내 정보 검색허용 
+          <p className={mypage_css.mypage_toggle}>내 정보 검색 허용
             <ToggleContainer onClick={()=>{toggleHandler()}}>
               <div className={`toggle-container ${user.invite === 'true' ? "toggle--checked" : null}`}/>
-              <div style={{display:'flex',justifyContent:'center',alignItems:'center', fontSize:'small'}} className={`toggle-circle ${ user.invite==='true' ? "toggle--checked" : null}`}>
-                {user.invite === 'true' ? 'On':'Off'}</div>
+              <div className={`${mypage_css.mypage_toggle} toggle-circle ${ user.invite==='true' ? "toggle--checked" : null}`}>
+                 {user.invite === 'true' ? 'On':'Off'}</div>
             </ToggleContainer>
           </p>
 
-          <p style={{display:'flex',justifyContent:'center',alignItems:'center',marginTop:'0', fontSize:'small'}}>소개팅 등록
+          <p className={mypage_css.mypage_toggle}>소개팅 등록
             <ToggleContainer onClick={()=>{toggleHandler()}}>
               <div className={`toggle-container ${user.invite === 'true' ? "toggle--checked" : null}`}/>
-              <div style={{display:'flex',justifyContent:'center',alignItems:'center', fontSize:'small'}} className={`toggle-circle ${ user.invite==='true' ? "toggle--checked" : null}`}>
+              <div className={`${mypage_css.mypage_toggle} toggle-circle ${ user.invite==='true' ? "toggle--checked" : null}`}>
                  {user.invite === 'true' ? 'On':'Off'}</div>
             </ToggleContainer>
           </p>

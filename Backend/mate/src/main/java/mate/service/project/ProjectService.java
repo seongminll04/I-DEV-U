@@ -32,7 +32,7 @@ public class ProjectService {
 	private final ProjectLanguageRepository projectLanguageRepository;
 
 	public Project registerProject(ProjectDto projectDto) {
-		User user = userRepository.findById(projectDto.getManagerIdx()).get();
+		User user = userRepository.findById(projectDto.getUserIdx()).get();
 
 		Project project = projectRepository.save(Project.builder()
 			.manager(user)
@@ -44,6 +44,7 @@ public class ProjectService {
 			.maxFront(projectDto.getMaxFront())
 			.back(projectDto.getBack())
 			.maxBack(projectDto.getMaxBack())
+			.session(projectDto.getSession())
 			.type(projectDto.getType()).build());
 
 		projectParticipationRepository.save(ProjectParticipation.builder()
@@ -130,6 +131,13 @@ public class ProjectService {
 
 	public void deleteProject(int projectIdx) {
 		projectRepository.deleteById(projectIdx);
+	}
+
+	public List<Project> listProject(String keyword) {
+		if (keyword == null)
+			return projectRepository.findAll();
+		else
+			return projectRepository.findProjectsByTitleOrContent(keyword);
 	}
 
 	public String makeRoomCode() {

@@ -45,6 +45,7 @@ public class Project {
 	private Integer maxFront;
 	private Integer back;
 	private Integer maxBack;
+	private String session;
 	private String text;
 	private String type;
 

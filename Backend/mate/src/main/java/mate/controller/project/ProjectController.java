@@ -1,8 +1,10 @@
 package mate.controller.project;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import mate.domain.project.ProjectTech;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -75,6 +77,21 @@ public class ProjectController {
 			map.put("resmsg", "프로젝트 삭제 실패");
 		}
 		
+		return ResponseEntity.ok(map);
+	}
+
+	@GetMapping(value = {"/list/{keyword}", "/list"})
+	public ResponseEntity<Map<String, Object>> listProject(@PathVariable(value = "keyword", required = false) String keyword) {
+		Map<String, Object> map = new HashMap<>();
+
+		try {
+			List<Project> list = projectService.listProject(keyword);
+			map.put("list", list);
+			map.put("resmsg", "프로젝트 리스트 조회 성공");
+		} catch (Exception e) {
+			map.put("resmsg", "프로젝트 리스트 조회 실패");
+		}
+
 		return ResponseEntity.ok(map);
 	}
 }

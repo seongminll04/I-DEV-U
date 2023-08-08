@@ -10,7 +10,7 @@ import mate.domain.project.ProjectTech;
 public class ProjectDto {
 
 	private Integer idx;
-	private Integer managerIdx;
+	private Integer userIdx;
 	private String title;
 	private String content;
 	private Integer totalNum;
@@ -21,6 +21,7 @@ public class ProjectDto {
 	private Integer back;
 	private Integer maxBack;
 	private String type;
+	private String session;
 	private List<ProjectLanguage> languageList;
 	private List<ProjectTech> techList;
 }

@@ -224,9 +224,6 @@ export class Lsize1Scene extends Phaser.Scene {
       const mapWidth = rows[0].length * tileSize;
       const mapHeight = rows.length * tileSize;
 
-      //test
-      localStorage.setItem("character",'2');
-
 
       // 사용자 캐릭터 선택
       const userCharacter = localStorage.getItem("character") || '0';

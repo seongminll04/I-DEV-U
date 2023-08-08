@@ -11,7 +11,6 @@ interface Question {
   idx: number;
   content: string;
   title: string;
-  createdAt: string;
   createAt: string;
 }
 
@@ -85,7 +84,8 @@ const QnA: React.FC = () => {
           <br />
           {questionList.length > 0 ? (
             questionList.map((question: Question, index: number) => {
-              const date = new Date(question.createdAt);
+              const date = new Date(question.createAt);
+              console.log(question);
               return (
                 <div
                   className={QnA_css.notice}

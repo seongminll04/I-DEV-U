@@ -42,7 +42,15 @@ const DetailNotice: React.FC<Props> = ({ backpage }) => {
       <p className={alert_css.backbtn} onClick={backpage}>돌아가기</p>
       <div>
         <p>공지사항 상세정보</p>
-        {notice ? notice.title : 'Loading...'} {/* Conditionally render notice.title */}
+        {notice ? (
+          <>
+            <p>{notice?.title}</p>
+            <p>{notice?.content}</p>
+            <p>{notice?.createdAt}</p>
+          </>
+        ) : (
+          'Loading...'
+        )}
       </div>
     </div>
   );

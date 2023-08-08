@@ -6,63 +6,84 @@ import { setModal } from '../../store/actions';
 import axios from 'axios';
 
 interface Props {
-  qnaid : number;
-  onback : () => void;
+  qnaid: number;
+  onback: () => void;
 }
 
-const DetailQnA: React.FC<Props> = ({qnaid, onback}) => {
-  const dispatch=useDispatch()
+interface Question {
+  idx: number;
+  content: string;
+  title: string;
+  createAt: string;
+}
+
+const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
+  const dispatch = useDispatch()
   const [commentlist, setCommentlist] = useState()
   const [inputvalue, setInputvalue] = useState('')
   const userToken = localStorage.getItem('userToken')
-
+  const [question, setQuestion] = useState<Question>();
   const loadcomment = () => {
     axios({
-      method:'get',
-      url:'',
-      headers : {
+      method: 'get',
+      url: `https://i9b206.p.ssafy.io:9090/qna/comment/${qnaid}`,
+      headers: {
         Authorization: 'Bearer ' + userToken
       },
     })
-    .then(res=>setCommentlist(res.data))
-    .catch(err=>console.log(err))
+      .then(res => {
+        console.log(res.data);
+        setCommentlist(res.data)
+      })
+      .catch(err => console.log(err))
   }
 
   const onInputSubmit = () => {
-    if (inputvalue!=='') {
+    if (inputvalue !== '') {
       axios({
-        method:'post',
-        url:'',
-        headers : {
+        method: 'post',
+        url: '',
+        headers: {
           Authorization: 'Bearer ' + userToken
         },
       })
-      .then(res=>console.log(res))
+        .then(res => console.log(res))
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     axios({
-      method:'get',
-      url:`https://i9b206.p.ssafy.io:9090/qna/detail/${qnaid}`,
-      headers : {
+      method: 'get',
+      url: `https://i9b206.p.ssafy.io:9090/qna/detail/${qnaid}`,
+      headers: {
         Authorization: 'Bearer ' + userToken
       },
     })
-    .then(res =>console.log(res))
-    .catch(err => console.log(err))
-  },[qnaid, userToken])
+      .then(res => {
+        console.log(res)
+        setQuestion(res.data["Q&A"])
+      })
+      .catch(err => console.log(err))
+  })
 
   return (
-      <div className={Create_css.modal}>
-        <p className={Create_css.closebtn} onClick={() => {dispatch(setModal(null))}}>닫기</p>
-        <p className={Create_css.backbtn} onClick={onback}>돌아가기</p>
+    <div className={Create_css.modal}>
+      <p className={Create_css.closebtn} onClick={() => { dispatch(setModal(null)) }}>닫기</p>
+      <p className={Create_css.backbtn} onClick={onback}>돌아가기</p>
+      <div>
         <h1>Q n A 게시글</h1>
-        <h2>내용 : ~~~~~~~~</h2>
-        <hr />
-        <input type="text" value={inputvalue} onChange={(e)=>setInputvalue(e.target.value)} />
-        <button onClick={()=>{}}>작성</button>
+        {question ? (
+          <>
+            <p>{question?.title}</p>
+            <p>{question?.content}</p>
+            <p>{question?.createAt}</p>
+          </>
+        ) : (
+          'Loading...'
+        )}
       </div>
+      <hr />
+    </div>
   );
 };
 

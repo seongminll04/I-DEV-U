@@ -56,11 +56,13 @@ const Alert: React.FC = () => {
                 </div>
                 {noticeList.map((notice: Notice, index: number) => {
                   const date = new Date(notice.createdAt);
+                  console.log(notice);
                   return (
                     <div onClick={() => {setPage(1); localStorage.setItem("noticeIdx", String(notice.idx))}} className={alert_css.notice}>
                       <span>{notice.idx}</span>
                       <span>{notice.title}</span>
-                      <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span>
+                      {/* <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span> */}
+                      <span>{date.getMonth() + 1}/{date.getDate()}</span>
                     </div>
                     );})}
               </div>

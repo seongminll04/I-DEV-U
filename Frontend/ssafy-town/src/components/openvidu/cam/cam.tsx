@@ -166,7 +166,7 @@ class Cam extends Component<{}, AppState> {
                 return;
             }
     
-            const response = await axios.post(`http://localhost:5000/api/sessions/${sessionId}/connections`);
+            const response = await axios.post(`https://i9b206.p.ssafy.io:5000/api/sessions/${sessionId}/connections`);
             const token = response.data;
     
             if (!token) {

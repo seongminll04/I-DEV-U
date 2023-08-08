@@ -56,7 +56,6 @@ function App() {
       }
     };
   }, [dispatch]);
-  console.log('asdfsadf')
   return (
     <Router>
       <div className={app_css.App}>

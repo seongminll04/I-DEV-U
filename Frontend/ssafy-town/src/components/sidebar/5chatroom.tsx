@@ -30,24 +30,26 @@ const Chatroom: React.FC = () => {
   const userIdx = localStorage.getItem('userIdx')
 
   const userToken = localStorage.getItem('userToken')
-  axios({
-    method:'get',
-    url:'https://i9b206.p.ssafy.io:9090/chat/load',
-    data:{
-      chatIdx : isChatIdx,
-      nowFirstIdx : null,
-    },
-    headers : {
-      Authorization: 'Bearer ' + userToken
-    }})
-  .then(res=>{
-    setReceiveMessages([res.data,...receivedMessages])
-    if (chatScrollRef.current && chatScrollRef.current.scrollHeight > chatScrollRef.current.clientHeight) {
-      // Scroll chat_scroll to the bottom initially
-      chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
-    }
+  useEffect(()=>{
+    axios({
+      method:'get',
+      url:'https://i9b206.p.ssafy.io:9090/chat/load',
+      data:{
+        chatIdx : isChatIdx,
+        nowFirstIdx : null,
+      },
+      headers : {
+        Authorization: 'Bearer ' + userToken
+      }})
+    .then(res=>{
+      setReceiveMessages([res.data,...receivedMessages])
+      if (chatScrollRef.current && chatScrollRef.current.scrollHeight > chatScrollRef.current.clientHeight) {
+        // Scroll chat_scroll to the bottom initially
+        chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
+      }
+    })
+    .catch(err=>console.log(err))
   })
-  .catch(err=>console.log(err))
 
   // 구독등록
   useEffect(() => {

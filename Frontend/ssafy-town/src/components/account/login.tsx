@@ -58,8 +58,6 @@ const Login: React.FC = () => {
     const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`
     window.location.href = kakaoURL;
   };
-  
-
   return (
     <div className={login_css.background}>
       <div className={login_css.modal}>

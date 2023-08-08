@@ -31,18 +31,21 @@ import axios from "axios";
     const userIdxStr = localStorage.getItem('userIdx')
     const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
     const userToken = localStorage.getItem('userToken')
-    axios({
-      method:'get',
-      url:'https://i9b206.p.ssafy.io:9090/chat/list',
-      data:{
-        userIdx:userIdx
-      },
-      headers : {
-        Authorization: 'Bearer ' + userToken
-      },
+
+    useEffect(()=>{
+      axios({
+        method:'get',
+        url:'https://i9b206.p.ssafy.io:9090/chat/list',
+        data:{
+          userIdx:userIdx
+        },
+        headers : {
+          Authorization: 'Bearer ' + userToken
+        },
+      })
+      .then(res=>setChatList(res.data))
+      .catch(err=>console.log(err))
     })
-    .then(res=>setChatList(res.data))
-    .catch(err=>console.log(err))
 
     // ChatList로 구독 등록, 현재는 구독 반응시 chatList 다시 가져오기 ->큐형태로 진화하면 좋음
     useEffect(() => {

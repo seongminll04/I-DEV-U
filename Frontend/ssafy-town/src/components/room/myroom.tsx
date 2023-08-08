@@ -21,7 +21,6 @@ const MyRoom: React.FC = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
-
   useEffect(()=>{
 
     const userIdxStr = localStorage.getItem('userIdx')
@@ -30,7 +29,6 @@ const MyRoom: React.FC = () => {
     
     const userToken = localStorage.getItem('userToken');
     if (userToken) {
-      console.log(userIdx, 'Bearer ' + userToken)
       axios({
         method:'get',
         url:`https://i9b206.p.ssafy.io:9090/basicSurvey/${userIdx}`,
@@ -40,7 +38,6 @@ const MyRoom: React.FC = () => {
       })
       .then(res => {
         if (res.data.data.survey==='NO') {
-          console.log(2)
           dispatch(setModal('최초설문'))
         }
       })

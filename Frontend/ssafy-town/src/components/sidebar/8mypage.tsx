@@ -98,8 +98,8 @@ const Mypage: React.FC = () => {
   useEffect(() => {
     const userToken = localStorage.getItem('userToken')
     const userIdxStr = localStorage.getItem('userIdx')
-    var userIdx: number | null;
-    if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
+    const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
+
     axios({
       method: 'get',
       url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,

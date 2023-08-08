@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import chat_css from "./5chat.module.css";
 
 import { Client } from '@stomp/stompjs';
 
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllowMove, setSidebar } from '../../store/actions';
+import { setAllowMove, setReceiveMessages, setSidebar } from '../../store/actions';
 import { AppState } from '../../store/state';
 
 const Chatroom: React.FC = () => {
@@ -15,7 +15,9 @@ const Chatroom: React.FC = () => {
   const stompClientRef = React.useRef<Client | null>(null);
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
   const userIdx = localStorage.getItem('userIdx')
-
+  useEffect(()=>{
+    dispatch(setReceiveMessages([]))
+  },[dispatch])
   const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget
     const currentCursorPosition = inputElement.selectionStart || 0;
@@ -36,7 +38,7 @@ const Chatroom: React.FC = () => {
         'contents': message,
         };
     stompClientRef.current.publish({
-        destination: '/app/chat/send',
+        destination: '/pub/chat/send',
         body: JSON.stringify(data),
         });
       setMessageInput('');

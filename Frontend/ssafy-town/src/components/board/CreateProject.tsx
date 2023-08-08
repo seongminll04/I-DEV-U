@@ -22,7 +22,6 @@ const CreateProject: React.FC = () => {
   const [selfPosition, setSelfPosition] = useState<'FRONT' | 'BACK' >('FRONT');
 
 
-
   const handleLanguageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (e.target.checked) {

@@ -33,7 +33,7 @@ public class ProjectController {
 	public ResponseEntity<Map<String, Object>> registerProject(@RequestBody Map<String, Object> input) {
 		Map<String, Object> map = new HashMap<>();
 
-		System.out.println(input.get("title"));
+		System.out.println("들어왔다");
 
 		// Project project = projectService.registerProject(projectDto);
 

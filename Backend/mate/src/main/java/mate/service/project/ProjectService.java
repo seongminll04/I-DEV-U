@@ -32,7 +32,7 @@ public class ProjectService {
 	private final ProjectLanguageRepository projectLanguageRepository;
 
 	public Project registerProject(ProjectDto projectDto) {
-		User user = userRepository.findById(projectDto.getManagerIdx()).get();
+		User user = userRepository.findById(projectDto.getUserIdx()).get();
 
 		Project project = projectRepository.save(Project.builder()
 			.manager(user)

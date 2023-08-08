@@ -10,7 +10,7 @@ import mate.domain.project.ProjectTech;
 public class ProjectDto {
 
 	private Integer idx;
-	private Integer managerIdx;
+	private Integer userIdx;
 	private String title;
 	private String content;
 	private Integer totalNum;

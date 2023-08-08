@@ -20,12 +20,11 @@ public class QuestionBoard {
     @ManyToOne
     @JoinColumn(name = "user_idx")
     private User user;
-//    private int userIdx;
 
     private String title;
 
     private String content;
 
     @CreatedDate
-    private LocalDateTime createdAt;
+    private LocalDateTime createAt;
 }

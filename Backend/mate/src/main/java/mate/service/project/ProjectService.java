@@ -14,6 +14,7 @@ import mate.domain.project.ProjectParticipation;
 import mate.domain.project.ProjectTech;
 import mate.domain.user.User;
 import mate.dto.project.ProjectDto;
+import mate.dto.project.ProjectParticipationDto;
 import mate.repository.project.ProjectLanguageRepository;
 import mate.repository.project.ProjectParticipationRepository;
 import mate.repository.project.ProjectRepository;
@@ -81,6 +82,20 @@ public class ProjectService {
 		Project project = projectRepository.findById(projectIdx).get();
 
 		return project;
+	}
+
+	public void enterProject(ProjectParticipationDto dto) {
+		User user = userRepository.findByIdx(dto.getUserIdx()).get();
+		Project project = projectRepository.findById(dto.getProjectIdx()).get();
+
+		// ProjectParticipationDto projectParticipationDto = new ProjectParticipationDto();
+		// projectParticipationDto.setProject(project);
+		// projectParticipationDto.setUser(user);
+
+		projectParticipationRepository.save(ProjectParticipation.builder()
+			.project(project)
+			.user(user)
+			.build());
 	}
 
 	public Project modifyProject(ProjectDto projectDto) {

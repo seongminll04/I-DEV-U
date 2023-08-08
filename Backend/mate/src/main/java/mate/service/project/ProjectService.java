@@ -14,6 +14,7 @@ import mate.domain.project.ProjectParticipation;
 import mate.domain.project.ProjectTech;
 import mate.domain.user.User;
 import mate.dto.project.ProjectDto;
+import mate.dto.project.ProjectParticipationDto;
 import mate.repository.project.ProjectLanguageRepository;
 import mate.repository.project.ProjectParticipationRepository;
 import mate.repository.project.ProjectRepository;
@@ -41,9 +42,9 @@ public class ProjectService {
 			.totalNum(projectDto.getTotalNum())
 			.nowNum(projectDto.getNowNum())
 			.front(projectDto.getFront())
-			.maxFront(projectDto.getMaxFront())
+			.max_front(projectDto.getMax_front())
 			.back(projectDto.getBack())
-			.maxBack(projectDto.getMaxBack())
+			.max_back(projectDto.getMax_back())
 			.session(projectDto.getSession())
 			.type(projectDto.getType()).build());
 
@@ -83,6 +84,20 @@ public class ProjectService {
 		return project;
 	}
 
+	public void enterProject(ProjectParticipationDto dto) {
+		User user = userRepository.findByIdx(dto.getUserIdx()).get();
+		Project project = projectRepository.findById(dto.getProjectIdx()).get();
+
+		// ProjectParticipationDto projectParticipationDto = new ProjectParticipationDto();
+		// projectParticipationDto.setProject(project);
+		// projectParticipationDto.setUser(user);
+
+		projectParticipationRepository.save(ProjectParticipation.builder()
+			.project(project)
+			.user(user)
+			.build());
+	}
+
 	public Project modifyProject(ProjectDto projectDto) {
 		User user = userRepository.findById(projectDto.getUserIdx()).get();
 
@@ -94,9 +109,9 @@ public class ProjectService {
 			.totalNum(projectDto.getTotalNum())
 			.nowNum(projectDto.getNowNum())
 			.front(projectDto.getFront())
-			.maxFront(projectDto.getMaxFront())
+			.max_front(projectDto.getMax_front())
 			.back(projectDto.getBack())
-			.maxBack(projectDto.getMaxBack())
+			.max_back(projectDto.getMax_back())
 			.type(projectDto.getType()).build());
 
 		List<ProjectTech> techs = new ArrayList<>();

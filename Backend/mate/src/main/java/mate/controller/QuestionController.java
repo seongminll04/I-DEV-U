@@ -123,6 +123,7 @@ public class QuestionController {
 
     @PostMapping("/comment/write")
     public ResponseEntity<Map<String, Object>> writeComment(@RequestBody QuestionBoardComment comment) {
+        // DTO 만들어야된다...ㅠㅠ
         questionService.writeQuestionBoardComment(comment);
         Map<String, Object> map = new HashMap<>();
         map.put("resmsg", "Q&A 댓글 작성 성공");

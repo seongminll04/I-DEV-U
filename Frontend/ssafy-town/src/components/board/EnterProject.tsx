@@ -23,7 +23,7 @@ const EnterProject: React.FC = () => {
         'projectIdx': wantPJTId
       };
       stompClientRef.current.publish({
-          destination: '/app/alert/send',
+          destination: '/pub/alert/request',
           body: JSON.stringify(data),
           });
       }

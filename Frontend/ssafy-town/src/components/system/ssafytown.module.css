@@ -58,82 +58,6 @@
 }
 
 
-  .map_switch_button2 {
-    position: absolute;
-    top: 50px;
-    right: 20px;
-    background-color: transparent;
-    border: none;
-    color: white;
-    font-size: 14px;
-    padding: 8px;
-    cursor: pointer;
-    z-index: 1;
-  }
-
-  .map_switch_button3 {
-    position: absolute;
-    top: 80px;
-    right: 20px;
-    background-color: transparent;
-    border: none;
-    color: white;
-    font-size: 14px;
-    padding: 8px;
-    cursor: pointer;
-    z-index: 1;
-  }
-
-  .map_switch_button4 {
-    position: absolute;
-    top: 110px;
-    right: 20px;
-    background-color: transparent;
-    border: none;
-    color: white;
-    font-size: 14px;
-    padding: 8px;
-    cursor: pointer;
-    z-index: 1;
-  }
-
-
-
-
-  /* 내화상 우측 하단 */
-.my_video_bar {
-    position: absolute;
-    right: 0px;  
-    bottom: 0px;
-    z-index: 1; 
-}
-
-.my_video_bar video {
-    width: 320px;
-    height: 240px;
-}
-
-  /* 다른사람은 상단 */
-.op_video_bar {
-    position: absolute;
-    top: 20px; 
-    left: 50%; 
-    transform: translateX(-50%); /* 중앙을 기준으로 위치 */
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    z-index: 1; 
-}
-
-.op_video_bar video {
-    width: 400px;
-    height: 300px;
-    margin: 0;
-}
-
-
-
 
 
 
@@ -149,27 +73,27 @@
 }
 
 .video_bar button:nth-of-type(1) {
-    transform: translateX(770%) translateY(1250%);
+    transform: translateX(470%) translateY(1250%);
 }
 
 .video_bar button:nth-of-type(2) {
-    transform: translateX(810%) translateY(1250%);
+    transform: translateX(510%) translateY(1250%);
 }
 
 .video_bar button:nth-of-type(3) {
-    transform: translateX(820%) translateY(1250%);
+    transform: translateX(520%) translateY(1250%);
 }
 
 .video_bar button:nth-of-type(4) {
-    transform: translateX(830%) translateY(1250%);
+    transform: translateX(530%) translateY(1250%);
 }
 
 .video_bar button:nth-of-type(5) {
-    transform: translateX(840%) translateY(1250%);
+    transform: translateX(540%) translateY(1250%);
 }
 
 
 .video_bar video {
-    width: 320px;
-    height: 240px;
+    width: 280px;
+    height: 210px;
 }

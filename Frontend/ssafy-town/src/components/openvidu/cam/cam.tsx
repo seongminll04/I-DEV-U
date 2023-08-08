@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { OpenVidu } from 'openvidu-browser';
 import UserVideoComponent from './UserVideoComponent';
 import cam_set_css from './cam.module.css'
+import axios from 'axios';
 
 import Button from '@mui/material/Button';
 import VideocamIcon from '@mui/icons-material/Videocam';
-import VideocamOffIcon from '@mui/icons-material/Videocam';
+import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import MicIcon from '@mui/icons-material/Mic';
-import MicOffIcon from '@mui/icons-material/Mic';
+import MicOffIcon from '@mui/icons-material/MicOff';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import SwitchVideoIcon from '@mui/icons-material/SwitchVideo';
@@ -25,13 +26,14 @@ interface AppState {
 
 class Cam extends Component<{}, AppState> {
     private OV: any;
+    private eventBindingsSet: boolean = false;
 
     constructor(props: {}) {
         super(props);
         this.state = { 
             subscribers: [],
-            publishVideo: true,
-            publishAudio: true,
+            publishVideo: false,
+            publishAudio: false,
             audioVolume: 100,
             hideAll: false
         };
@@ -48,6 +50,14 @@ class Cam extends Component<{}, AppState> {
 
     componentWillUnmount() {
         window.removeEventListener('beforeunload', this.handleBeforeUnload);
+
+        if (this.state.publisher) {
+            this.state.publisher.destroy();
+        }
+    
+        if (this.state.session) {
+            this.state.session.disconnect();
+        }
     }
 
     handleBeforeUnload(event: BeforeUnloadEvent) {
@@ -72,53 +82,92 @@ class Cam extends Component<{}, AppState> {
     toggleSpeaker = () => {
         if (this.state.audioVolume === 0) {
             this.setState({ audioVolume: 100 });
-            // 볼륨을 최대로 설정
         } else {
             this.setState({ audioVolume: 0 });
-            // 볼륨을 끔
         }
-        // 스피커 볼륨 설정
-        this.state.subscribers.forEach(subscriber => subscriber.setAudioVolume(this.state.audioVolume));
+        this.state.subscribers.forEach(subscriber => {
+            const videoElem = document.getElementById(subscriber.stream.streamId) as HTMLVideoElement;
+            if (videoElem) {
+                videoElem.volume = this.state.audioVolume / 100;
+            }
+        });
     }
 
     toggleVisibility() {
-        this.setState(prevState => ({ hideAll: !prevState.hideAll }));
+        this.setState(prevState => ({ hideAll: !prevState.hideAll }), () => {
+            if (this.state.hideAll) {  // If everything is turned off
+                if (this.state.publisher) {
+                    // 카메라와 마이크 끄기
+                    this.state.publisher.publishVideo(false);
+                    this.state.publisher.publishAudio(false);
+                }
+                // 스피커 끄기
+                this.setState({ audioVolume: 0 });
+                this.state.subscribers.forEach(subscriber => {
+                    const videoElem = document.getElementById(subscriber.stream.streamId) as HTMLVideoElement;
+                    if (videoElem) {
+                        videoElem.volume = 0;
+                    }
+                });
+            } else {
+                // Optionally, if you want to turn everything back on when toggling back to "ON"
+                if (this.state.publisher) {
+                    this.state.publisher.publishVideo(true);
+                    this.state.publisher.publishAudio(true);
+                }
+                this.setState({ audioVolume: 100 });
+                this.state.subscribers.forEach(subscriber => {
+                    const videoElem = document.getElementById(subscriber.stream.streamId) as HTMLVideoElement;
+                    if (videoElem) {
+                        videoElem.volume = 1;
+                    }
+                });
+            }
+        });
     }
 
     async joinSession() {
         this.OV = new OpenVidu();
         const session = this.OV.initSession();
+
+        console.log("씨발")
     
-        session.on('streamCreated', (event: any) => {
-            const subscriber = session.subscribe(event.stream, undefined);
-            const subscribers = [...this.state.subscribers, subscriber];
-            this.setState({ subscribers });
-        });
+        if (!this.eventBindingsSet) {  // Check if event listeners are already set
+            session.on('streamCreated', (event: any) => {
+                // Check if it's the publisher's stream
+                if (this.state.publisher && event.stream.streamId === this.state.publisher.stream.streamId) {
+                    return;
+                }
+                if (event.stream.connection.connectionId === session.connection.connectionId) {
+                    return;
+                }
+                
+                // Check if stream already exists in subscribers before adding it
+                if (!this.state.subscribers.some(sub => sub.stream.streamId === event.stream.streamId)) {
+                    const subscriber = session.subscribe(event.stream, undefined);
+                    const subscribers = [...this.state.subscribers, subscriber];
+                    this.setState({ subscribers });
+                }
+            });
     
-        session.on('streamDestroyed', (event: any) => {
-            this.setState(prevState => ({
-                subscribers: prevState.subscribers.filter(sub => sub !== event.stream.streamManager)
-            }));
-        });
+            session.on('streamDestroyed', (event: any) => {
+                this.setState(prevState => ({
+                    subscribers: prevState.subscribers.filter(subscriber => subscriber.stream.streamId !== event.stream.streamId)
+                }));
+            });
+    
+            this.eventBindingsSet = true;  // Mark that we've set the events for our session
+        }
     
         try {
-            // 세션 ID를 로컬 스토리지에서 가져옴
-            const sessionId = localStorage.getItem('OVSession');
-            console.log("11111111111111111111")
+            const sessionId = localStorage.getItem('OVsession');
             if (!sessionId) {
                 console.error("Session ID is missing");
                 return;
             }
     
-            // 해당 세션 ID에 대한 토큰을 서버에서 가져옴
-            const response = await fetch(`https://i9b206.p.ssafy.io:5000/api/sessions/${sessionId}/connections`, { method: 'POST' });
-            const data = await response.json();
-            const token = data.token;
-
-            console.log("22222222222222222222222")
-            console.log(response+"@@@@@@@@@@@@@@@@@@@@")
-            console.log(data+"@@@@@@@@@@@@@@@@@@@@")
-            console.log(token+"@@@@@@@@@@@@@@@@@@@@")
+            const response = await axios.post(`http://localhost:5000/api/sessions/${sessionId}/connections`);
+            const token = response.data;
     
             if (!token) {
                 console.error("Failed to fetch token from the server");
@@ -128,12 +177,19 @@ class Cam extends Component<{}, AppState> {
             session.connect(token)
                 .then(() => {
                     const publisher = this.OV.initPublisher(undefined, {
-                        audio: this.state.publishAudio,
-                        video: this.state.publishVideo
+                        audio: false,
+                        video: false
                     });
-    
-                    session.publish(publisher).then(() => {
-                        this.setState({ publisher });
+                    
+                    publisher.on('accessAllowed', () => {
+                        // 비디오 및 오디오 발행 중지
+                        publisher.publishVideo(false);
+                        publisher.publishAudio(false);
+                    
+                        // 세션에 발행
+                        session.publish(publisher).then(() => {
+                            this.setState({ publisher });
+                        });
                     });
                 })
                 .catch((error: any) => {
@@ -144,6 +200,7 @@ class Cam extends Component<{}, AppState> {
         }
         this.setState({ session });
     }
+    
 
     async switchCamera() {
         if (this.state.publisher) {
@@ -238,4 +295,4 @@ class Cam extends Component<{}, AppState> {
     }
 }
 
-export default Cam;
+export default React.memo(Cam);

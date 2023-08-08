@@ -1,5 +1,5 @@
 import React from 'react';
-import enter_css from './EnterProject.module.css';
+import styled_css from './AlertResponse.module.css';
 
 import { useDispatch,useSelector } from 'react-redux';
 import { setModal } from '../../store/actions';
@@ -23,7 +23,7 @@ const AlertResponse: React.FC = () => {
         'projectIdx': wantPJTId
       };
       stompClientRef.current.publish({
-          destination: '/app/alert/send',
+          destination: '/pub/alert/send',
           body: JSON.stringify(data),
           });
       }
@@ -31,11 +31,11 @@ const AlertResponse: React.FC = () => {
   }
 
   return (
-    <div className={enter_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
+    <div className={styled_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) {dispatch(setModal(null))}}}>
-        <div className={enter_css.modal}>
-            <h1>OO 프로젝트</h1>
-            <h2>참가요청</h2>
+        <div className={styled_css.modal}>
+            <h1>OO 프로젝트의 가입신청</h1>
+            <h2>XXX 님이 가입을 신청하셨습니다</h2>
             <button onClick={enter}>수락</button><button onClick={()=>dispatch(setModal(null))}>거절</button>
         </div>
   </div>

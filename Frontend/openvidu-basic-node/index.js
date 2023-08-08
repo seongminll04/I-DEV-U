@@ -25,6 +25,7 @@ app.use(
 var server = http.createServer(app);
 // openvidu 클라이언트 객체를 초기화
 var openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+openvidu.activeSessions = [];
 // socket.io 초기화
 var io = socketIo(server);
 
@@ -43,22 +44,42 @@ server.listen(SERVER_PORT, () => {
 
 // openvidu 세션을 생성하는 API 엔드포인트를 정의
 app.post("/api/sessions", async (req, res) => {
-  var session = await openvidu.createSession(req.body);
-  res.send(session.sessionId);
+  try {
+      const session = await openvidu.createSession();
+      res.send(session.sessionId);
+  } catch (error) {
+      res.status(500).send("Error creating session: " + error.message);
+  }
 });
 
 // 지정된 세션 ID에 연결을 생성하는 API 엔드포인트를 정의
 app.post("/api/sessions/:sessionId/connections", async (req, res) => {
-  var session = openvidu.activeSessions.find(
-    (s) => s.sessionId === req.params.sessionId
-  );
-  if (!session) {
-    res.status(404).send();
-  } else {
-    var connection = await session.createConnection(req.body);
-    res.send(connection.token);
+  console.log("0번");
+  console.log("Request params:", req.params);
+  console.log("Request body:", req.body);
+
+  const sessionId = req.params.sessionId;
+  
+  let session;
+  try {
+      session = await openvidu.createSession({ customSessionId: sessionId });
+  } catch (error) {
+      console.error("Error fetching the session:", error);
+      res.status(500).send("Error fetching the session: " + error.message);
+      return;
+  }
+
+  try {
+      const token = await session.generateToken();
+      console.log("Token created:", token);
+      res.send(token);
+  } catch (error) {
+      console.error("Error creating token:", error);
+      res.status(500).send("Error creating token: " + error.message);
   }
 });
+
+
 
 // 미처리된 예외를 처리
 process.on('uncaughtException', err => console.error(err));

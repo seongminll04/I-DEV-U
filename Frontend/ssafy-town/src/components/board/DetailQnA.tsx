@@ -19,10 +19,26 @@ interface Question {
 
 const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
   const dispatch = useDispatch()
-  const [commentlist, setCommentlist] = useState()
+  const [commentlist, setCommentlist] = useState<String[]>([])
   const [inputvalue, setInputvalue] = useState('')
   const userToken = localStorage.getItem('userToken')
   const [question, setQuestion] = useState<Question>();
+  
+  useEffect(()=>{
+    axios({
+      method:'get',
+      url:`https://i9b206.p.ssafy.io:9090/qna/detail/${qnaid}`,
+      headers : {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+    .then(res => {
+      console.log(res)
+      setQuestion(res.data["Q&A"])
+    })
+    .catch(err => console.log(err))
+  },[qnaid, userToken])
+
   const loadcomment = () => {
     axios({
       method: 'get',
@@ -38,33 +54,26 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
       .catch(err => console.log(err))
   }
 
+  loadcomment()
+
   const onInputSubmit = () => {
     if (inputvalue !== '') {
       axios({
-        method: 'post',
-        url: '',
-        headers: {
+        method:'post',
+        url:'',
+        data:{comment:inputvalue},
+        headers : {
           Authorization: 'Bearer ' + userToken
         },
       })
-        .then(res => console.log(res))
+      .then(res=>{
+        console.log(res)
+        setInputvalue('')
+        loadcomment()
+    })
     }
   }
 
-  useEffect(() => {
-    axios({
-      method: 'get',
-      url: `https://i9b206.p.ssafy.io:9090/qna/detail/${qnaid}`,
-      headers: {
-        Authorization: 'Bearer ' + userToken
-      },
-    })
-      .then(res => {
-        console.log(res)
-        setQuestion(res.data["Q&A"])
-      })
-      .catch(err => console.log(err))
-  })
 
   return (
     <div className={Create_css.modal}>
@@ -81,6 +90,15 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
         ) : (
           'Loading...'
         )}
+        <h2>내용 : ~~~~~~~~</h2>
+        <hr />
+        {commentlist.map((comment,index)=>(
+          <div key={index}>
+            {comment}
+          </div>
+        ))}
+        <input type="text" value={inputvalue} onChange={(e)=>setInputvalue(e.target.value)} />
+        <button onClick={onInputSubmit}>작성</button>
       </div>
       <hr />
     </div>

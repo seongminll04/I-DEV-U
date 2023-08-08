@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { OpenVidu } from 'openvidu-browser';
 import UserVideoComponent from './UserVideoComponent';
 import cam_set_css from './cam.module.css'
+import axios from 'axios';
 
 import Button from '@mui/material/Button';
 import VideocamIcon from '@mui/icons-material/Videocam';
@@ -102,24 +103,17 @@ class Cam extends Component<{}, AppState> {
         });
     
         try {
-            // 세션 ID를 로컬 스토리지에서 가져옴
             const sessionId = localStorage.getItem('OVsession');
-            console.log("11111111111111111111")
             if (!sessionId) {
                 console.error("Session ID is missing");
                 return;
             }
     
-            // 해당 세션 ID에 대한 토큰을 서버에서 가져옴
-            const response = await fetch(`/api/sessions/${sessionId}/connections`, { method: 'POST' });
-            const data = await response.json();
-            const token = data.token;
+            const response = await axios.post(`http://localhost:5000/api/sessions/${sessionId}/connections`);
+            const token = response.data;
 
-            console.log("22222222222222222222222")
-            console.log(response+"@@@@@@@@@@@@@@@@@@@@")
-            console.log(data+"@@@@@@@@@@@@@@@@@@@@")
-            console.log(token+"@@@@@@@@@@@@@@@@@@@@")
-    
+            // const url = new URL(response.data);
+            // token = url.searchParams.get('token');
             if (!token) {
                 console.error("Failed to fetch token from the server");
                 return;

@@ -81,6 +81,7 @@ const CreateProject: React.FC = () => {
 
     console.log("1단계")
     // OpenVidu 세션 생성
+    const userToken = localStorage.getItem('userToken')
     axios.post(OPENVIDU_SERVER_URL +'/api/sessions', {}, {
         headers: {
             'Authorization': 'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SECRET)
@@ -97,18 +98,23 @@ const CreateProject: React.FC = () => {
         
         // 백엔드에 프로젝트 정보, 세션 ID 전송
         axios.post(BACKEND_SERVER_URL+'/project/register', {
-          userIdx: userIdx,
-          title: title, //6~30자
-          content: content, // ~1000자
-          totalNum: total_num, // 2~6
-          nowNum: 1,
-          type: projectType, // PROJECT or STUDY로 보내짐,
-          front: frontValue,  // 0아니면 1     // 스터디 누르면 null
-          max_front: frontendNum, // 최대6     // 스터디 누르면 null
-          back: backValue,  // 0아니면 1      // 스터디 누르면 null
-          max_back: backendNum, // 최대 6      // 스터디 누르면 null
-          languageList:languages, // 배열 최대 5개
-          session: sessionId
+          headers: {
+            Authorization: 'Bearer ' + userToken
+          },
+          data:{
+            userIdx: userIdx,
+            title: title, //6~30자
+            content: content, // ~1000자
+            totalNum: total_num, // 2~6
+            nowNum: 1,
+            type: projectType, // PROJECT or STUDY로 보내짐,
+            front: frontValue,  // 0아니면 1     // 스터디 누르면 null
+            max_front: frontendNum, // 최대6     // 스터디 누르면 null
+            back: backValue,  // 0아니면 1      // 스터디 누르면 null
+            max_back: backendNum, // 최대 6      // 스터디 누르면 null
+            languageList:languages, // 배열 최대 5개
+            session: sessionId
+          }
         }) 
         .then((res) => {
           console.log(res);

@@ -87,6 +87,7 @@ const LMeetingRoom: React.FC = () => {
       };
     }
   }, [isModalOpen,isSidebarOpen, game, dispatch]);
+  console.log("부모1111111111111111111111")
   return (
     <div className={ssafytown_css.container}>
       <Sidebar/>

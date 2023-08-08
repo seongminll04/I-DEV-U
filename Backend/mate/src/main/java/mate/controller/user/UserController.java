@@ -63,26 +63,26 @@ public class UserController {
 	@GetMapping("/signUp/emailCheck/{email}")
 	public Result emailCheck(@PathVariable String email) {
 		return userRepository.findByEmail(email)
-			.map(user -> Result.builder().status(badRequest().body("이미 있는 이메일 입니다.")).build())
-			.orElse(Result.builder().status(ok().body("사용가능한 이메일 입니다.")).build());
+				.map(user -> Result.builder().status(badRequest().body("이미 있는 이메일 입니다.")).build())
+				.orElse(Result.builder().status(ok().body("사용가능한 이메일 입니다.")).build());
 	}
 
 	@GetMapping("/signUp/nicknameCheck/{nickname}")
 	public Result nicknameCheck(@PathVariable String nickname) {
 		return userRepository.findByNickname(nickname)
-			.map(user -> Result.builder().status(badRequest().body("이미 있는 닉네임 입니다.")).build())
-			.orElse(Result.builder().status(ok().body("사용가능한 닉네임 입니다.")).build());
+				.map(user -> Result.builder().status(badRequest().body("이미 있는 닉네임 입니다.")).build())
+				.orElse(Result.builder().status(ok().body("사용가능한 닉네임 입니다.")).build());
 	}
 
 	@GetMapping("/check/{userIdx}")
 	public Result statusCheck(@PathVariable Integer userIdx) {
 		return userRepository.findByIdx(userIdx)
-			.map(user -> {
-				UserStatus status = user.getStatus();
-				Map<String, UserStatus> map = Map.of("status", status);
-				return Result.builder().status(ok().body("회원 상태 코드")).data(map).build();
-			})
-			.orElse(Result.builder().status(badRequest().body("존재하지 않는 회원입니다.")).build());
+				.map(user -> {
+					UserStatus status = user.getStatus();
+					Map<String, UserStatus> map = Map.of("status", status);
+					return Result.builder().status(ok().body("회원 상태 코드")).data(map).build();
+				})
+				.orElse(Result.builder().status(badRequest().body("존재하지 않는 회원입니다.")).build());
 	}
 
 	@GetMapping("/detail/{userIdx}")
@@ -114,11 +114,11 @@ public class UserController {
 	@DeleteMapping("/delete/{userIdx}")
 	public Result userDelete(@PathVariable Integer userIdx) {
 		return userRepository.findByIdx(userIdx)
-			.map(user -> {
-				userRepository.deleteByIdx(userIdx);
-				return Result.builder().data(user.getName()).status(ok().body("삭제 성공")).build();
-			})
-			.orElse(Result.builder().status(ok().body("삭제 실패")).build());
+				.map(user -> {
+					userRepository.deleteByIdx(userIdx);
+					return Result.builder().data(user.getName()).status(ok().body("삭제 성공")).build();
+				})
+				.orElse(Result.builder().status(ok().body("삭제 실패")).build());
 	}
 
 	@PostMapping("modify/check")
@@ -130,8 +130,8 @@ public class UserController {
 	@PostMapping("/findPw")
 	public Result userPassword(@RequestBody UserPwDto userPwDto) {
 		return userRepository.findByEmailAndName(userPwDto.getEmail(), userPwDto.getName())
-			.map(user -> Result.builder().status(ok().body("확인 성공")).build())
-			.orElse(Result.builder().status(badRequest().body("확인 실패")).build());
+				.map(user -> Result.builder().status(ok().body("확인 성공")).build())
+				.orElse(Result.builder().status(badRequest().body("확인 실패")).build());
 	}
 
 	@PutMapping("/findPw")
@@ -142,11 +142,12 @@ public class UserController {
 	@PutMapping("/setting")
 	public Result userSetting(@RequestBody UserSettingDto userSettingDto) {
 		return userRepository.findByIdx(userSettingDto.getUserIdx())
-			.map(user -> {
-				user.setSetting(userSettingDto.getInvite());
-				return Result.builder().status(ok().body("설정 성공")).build();
-			})
-			.orElse(Result.builder().status(badRequest().body("설정 실패")).build());
+				.map(user -> {
+					user.setSetting(userSettingDto.getInvite());
+					userRepository.save(user);
+					return Result.builder().status(ok().body("설정 성공")).build();
+				})
+				.orElse(Result.builder().status(badRequest().body("설정 실패")).build());
 	}
 
 	@PostMapping("/follow")
@@ -162,7 +163,7 @@ public class UserController {
 	//
 	@PostMapping("/uploadFile")
 	public Result uploadFile(@RequestPart(name = "file") MultipartFile multipartFile,
-		@RequestParam(name = "userIdx") Integer userIdx) throws IOException {
+							 @RequestParam(name = "userIdx") Integer userIdx) throws IOException {
 		return userService.uploadFile(multipartFile, userIdx);
 	}
 

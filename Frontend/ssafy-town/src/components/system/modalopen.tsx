@@ -20,6 +20,7 @@ import { useSelector,useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
 import { setModal } from '../../store/actions';
 import DetailProject from '../board/DetailProject';
+import AlertResponse from '../board/AlertResponse';
 
 const ModalOpen: React.FC = () => {
   const dispatch = useDispatch()
@@ -40,6 +41,7 @@ const ModalOpen: React.FC = () => {
       : isModalOpen === '동료찾기필터' ? <MateFilter />
       : isModalOpen === '소개팅설문' ? <SecondQAModal onClose={()=>dispatch(setModal(null))} onConfirm={()=>{}} />
       : isModalOpen === '소개팅필터' ? <SogaeFilter />
+      : isModalOpen === '프로젝트가입알림' ? <AlertResponse />
       : null }
     </>
   );

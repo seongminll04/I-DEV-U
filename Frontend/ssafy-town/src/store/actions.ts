@@ -30,6 +30,11 @@ export const setReceiveMessages = (value: string[]) => ({
   payload: value,
 });
 
+export const setReceiveAlert = (value: string[]) => ({
+  type: 'SET_RECEIVEALERT',
+  payload: value,
+});
+
 export const setChatRoomList = (value: string[]) => ({
   type: 'SET_CHATROOMLIST',
   payload: value,

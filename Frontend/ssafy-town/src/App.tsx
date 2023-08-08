@@ -19,7 +19,7 @@ import SockJS from 'sockjs-client';
 import axios from 'axios';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setReceiveMessages, setStomp, setModal, setChatRoomList } from './store/actions';
+import { setReceiveMessages, setStomp, setModal, setChatRoomList, setReceiveAlert } from './store/actions';
 import { AppState } from './store/state';
 
 function App() {
@@ -53,7 +53,7 @@ function App() {
       if (stompClientRef.current) {
         // 소개팅, 화상, 프로젝트 가입 신청 시, 알림이 오는 곳 설정 
         if (window.location.href==='https://i9b206.p.ssafy.io/home') {
-          stompClientRef.current.subscribe(`/alert/${userIdx}`, function(message: Message) {
+          stompClientRef.current.subscribe(`/sub/alert/${userIdx}`, function(message: Message) {
             if (isModalOpen===null){
               const newMessage = message.body;
               // 받아야하는 정보 : 어떤 알림인지? - 프로젝트 가입신청, 소개팅 신청, 화상 or 채팅신청, 동료찾기 요청
@@ -61,8 +61,8 @@ function App() {
               // 소개팅이면 : 어떤 사람인지, 어떤 데이터가 일치하는지
               // 화상or채팅 : 어떤사람인지
               // {typeIdx:1 , }
-              dispatch(setReceiveMessages([...receivedMessages, newMessage]))
-              dispatch(setModal(''))
+              dispatch(setReceiveAlert([newMessage]))
+              dispatch(setModal('프로젝트가입알림'))
             }
           });
         }
@@ -129,7 +129,6 @@ function App() {
       }
     };
   }, [stompClientRef,dispatch, isSidebarOpen, receivedMessages, isModalOpen, chatroomList]);
-  
   return (
     <Router>
       <div className={app_css.App}>

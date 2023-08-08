@@ -15,6 +15,7 @@ export interface AppState {
 
   stompClientRef:Client|null;
   receivedMessages:string[];
+  receivedAlert:string[];
   chatroomList:chatroom[];
   }
   

@@ -42,9 +42,9 @@ public class ProjectService {
 			.totalNum(projectDto.getTotalNum())
 			.nowNum(projectDto.getNowNum())
 			.front(projectDto.getFront())
-			.maxFront(projectDto.getMaxFront())
+			.max_front(projectDto.getMax_front())
 			.back(projectDto.getBack())
-			.maxBack(projectDto.getMaxBack())
+			.max_back(projectDto.getMax_back())
 			.session(projectDto.getSession())
 			.type(projectDto.getType()).build());
 
@@ -109,9 +109,9 @@ public class ProjectService {
 			.totalNum(projectDto.getTotalNum())
 			.nowNum(projectDto.getNowNum())
 			.front(projectDto.getFront())
-			.maxFront(projectDto.getMaxFront())
+			.max_front(projectDto.getMax_front())
 			.back(projectDto.getBack())
-			.maxBack(projectDto.getMaxBack())
+			.max_back(projectDto.getMax_back())
 			.type(projectDto.getType()).build());
 
 		List<ProjectTech> techs = new ArrayList<>();

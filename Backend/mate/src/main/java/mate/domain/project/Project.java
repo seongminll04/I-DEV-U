@@ -42,9 +42,9 @@ public class Project {
 	private Integer nowNum;
 	private String status;
 	private Integer front;
-	private Integer maxFront;
+	private Integer max_front;
 	private Integer back;
-	private Integer maxBack;
+	private Integer max_back;
 	private String session;
 	private String text;
 	private String type;

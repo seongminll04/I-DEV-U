@@ -1,4 +1,4 @@
-package mate.dto;
+package mate.dto.notice;
 
 
 import lombok.Data;

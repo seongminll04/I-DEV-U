@@ -4,6 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
+import mate.domain.notice.NoticeBoardType;
+import mate.domain.user.User;
+import mate.dto.notice.NoticeDto;
+import mate.repository.user.UserRepository;
+import org.hibernate.usertype.UserType;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +20,17 @@ import mate.repository.NoticeRepository;
 public class NoticeService {
 
 	private final NoticeRepository noticeRepository;
+	private final UserRepository userRepository;
 
-	public void writeNotice(NoticeBoard notice) {
-		noticeRepository.save(notice);
+	public void writeNotice(NoticeDto noticeDto) {
+		User user = userRepository.findById(noticeDto.getUserIdx()).get();
+
+		noticeRepository.save(NoticeBoard.builder()
+						.user(user)
+						.title(noticeDto.getTitle())
+						.content(noticeDto.getContent())
+						.type(NoticeBoardType.A)
+				.build());
 	}
 
 	public NoticeBoard detailNotice(int noticeIdx) {

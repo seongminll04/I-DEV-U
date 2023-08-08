@@ -70,7 +70,7 @@ const CheckPass: React.FC = () => {
           </span>
         </div>
         <h1 style={{ marginBottom: '20px' }}>
-          회원탈퇴
+          비밀번호 확인
         </h1>
         <br />
         <p style={{ fontSize: '20px' }}>비밀번호를 다시 한 번 입력해주세요.</p>

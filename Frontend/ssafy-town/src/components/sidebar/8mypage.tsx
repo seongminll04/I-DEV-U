@@ -86,6 +86,7 @@ const Mypage: React.FC = () => {
       console.log(res)
       setUser(res.data.data)
 
+      // 유저 정보 조회 후 invite를 가져와 토글에 반영
       if (userdata.invite === "true") {
         setisOn(true);
       } else {
@@ -115,12 +116,19 @@ const Mypage: React.FC = () => {
       },
       data: {
         'userIdx': userIdx,
-        'invite': "true"
+        'invite': userdata.invite === "true" ? "false" : "true",
       },
     })
       .then((res) => {
         console.log(res);
-        console.log("초대설정 성공")
+        console.log("초대설정 성공");
+        
+        alert("초대설정 성공");
+        if (userdata.invite === "true") {
+          setisOn(false);
+        } else {
+          setisOn(true);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -128,10 +136,26 @@ const Mypage: React.FC = () => {
       });
   };
 
-
   // 소개팅 등록한 경우 등록철회
-  function unregistMeeting(){
+  const unregistMeeting = () => {
     console.log("이제 소개팅 안할래!");
+    const userIdx = localStorage.getItem('userIdx');
+    const userToken = localStorage.getItem('userToken');
+    axios({
+      method: 'delete',
+      url: `https://i9b206.p.ssafy.io:9090/date/release/${userIdx}`,
+      headers : {
+        Authorization: 'Bearer ' + userToken
+      }
+    })
+    .then(res => {
+      console.log(res)
+      alert("소개팅 등록해제 성공");
+    })
+    .catch(err => {
+      console.log(err);
+      alert("소개팅 등록해제 실패");
+    })
   }
 
 

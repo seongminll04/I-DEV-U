@@ -1,9 +1,14 @@
+import { Client } from "@stomp/stompjs";
+
 export interface AppState {
   isModalOpen: string|null;
   isSidebarOpen: string|null;
   isAllowMove:boolean;
-  SelectMap:string;
   wantPJTId:number|null;
+
+  stompClientRef:Client|null;
+  receivedMessages:string[];
+  roomList:string[];
   }
   
 // export enum ActionTypes {

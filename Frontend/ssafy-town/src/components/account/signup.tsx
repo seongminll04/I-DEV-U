@@ -103,7 +103,7 @@ const SignupForm = () => {
     else if (!formik.errors.nickname) {
       axios({
         method:'get',
-        url:`https://i9b206.p.ssafy.io:9090/api/user/signUp/nicknameCheck/${nickname}`
+        url:`https://i9b206.p.ssafy.io:9090/user/signUp/nicknameCheck/${nickname}`
       })
       .then((res)=>{
         if (res.data.status.statusCodeValue===200) {

@@ -1,10 +1,12 @@
 // src/App.tsx
 import React, { useState, useEffect } from "react";
 import chat_css from "./5chat.module.css";
-import { Client, Message, Stomp } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
-import { useDispatch } from 'react-redux';
+import { Client } from '@stomp/stompjs';
+
+import { useDispatch,useSelector } from 'react-redux';
 import { setAllowMove, setSidebar } from '../../store/actions';
+import { AppState } from '../../store/state';
+
 import axios from "axios";
 
   // interface ChatMessage {
@@ -14,8 +16,9 @@ import axios from "axios";
 
   const Chat: React.FC = () => {
     const dispatch = useDispatch()
-    const stompClientRef = React.useRef<Client | null>(null);
     const [roomList, setRoomList] = useState<string[]>(['1','2']);
+    const stompClientRef = React.useRef<Client | null>(null);
+    stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
     
     // input 방향키 살리기
     const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
@@ -44,39 +47,6 @@ import axios from "axios";
       .catch(err=>console.log(err))
     },[])
 
-    // 연결에 관한 것
-    useEffect(() => {
-      const userToken = localStorage.getItem('userToken')
-      const socket = new SockJS("https://i9b206.p.ssafy.io:9090/chatting");
-
-      stompClientRef.current = Stomp.over(socket);
-      stompClientRef.current.connectHeaders={
-        Authorization: "Bearer " + userToken
-      }
-      // 연결 시도
-      stompClientRef.current.activate();
-
-      return () => {
-        // 컴포넌트 언마운트 시 연결 해제
-        if (stompClientRef.current) {
-          stompClientRef.current.deactivate();
-        }
-      };
-    }, [stompClientRef]);
-
-    const onRoomList = (message: Message) => {
-      const reloadRoomList = message.body;
-      setRoomList([reloadRoomList]);
-    };
-  
-    useEffect(() => {
-      // 구독 설정
-      if (stompClientRef.current) {
-        stompClientRef.current.onConnect = (frame) => {
-          stompClientRef.current!.subscribe('/topic/1', onRoomList);
-        };
-      }
-    }, [stompClientRef]);
 
     return (
       <div className="sidebar_modal">

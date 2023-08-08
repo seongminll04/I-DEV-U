@@ -1,5 +1,12 @@
 import { Client } from "@stomp/stompjs";
 
+interface chatroom {
+  chatIdx:number,
+  chatTitle:string,
+  message :string,
+  chatTime :string,
+  
+}
 export interface AppState {
   isModalOpen: string|null;
   isSidebarOpen: string|null;
@@ -8,7 +15,7 @@ export interface AppState {
 
   stompClientRef:Client|null;
   receivedMessages:string[];
-  roomList:string[];
+  chatroomList:chatroom[];
   }
   
 // export enum ActionTypes {

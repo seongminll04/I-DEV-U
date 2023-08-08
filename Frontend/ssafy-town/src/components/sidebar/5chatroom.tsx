@@ -7,6 +7,7 @@ import { Client } from '@stomp/stompjs';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllowMove, setReceiveMessages, setSidebar } from '../../store/actions';
 import { AppState } from '../../store/state';
+import axios from 'axios';
 
 const Chatroom: React.FC = () => {
   const dispatch = useDispatch()
@@ -30,7 +31,13 @@ const Chatroom: React.FC = () => {
       inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
     }
   }
+  useEffect(()=>{
+    axios({
+      method:'get',
+      url:'',
 
+    })
+  })
   const sendMessage = (message: string) => {
     if (stompClientRef.current) {
     const data = {

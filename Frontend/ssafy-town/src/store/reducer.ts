@@ -8,7 +8,7 @@ const initialState: AppState = {
 
     stompClientRef:null,
     receivedMessages:[],
-    roomList:[],
+    chatroomList:[],
 };
 
 const reducer = (state: AppState = initialState, action: { type: string; payload: any }) => {
@@ -29,8 +29,8 @@ const reducer = (state: AppState = initialState, action: { type: string; payload
         return {...state, stompClientRef: action.payload}
     case 'SET_RECEIVEMESSAGES':
       return {...state, receivedMessages: action.payload}
-    case 'SET_ROOMLIST':
-      return {...state, roomList: action.payload}
+    case 'SET_CHATROOMLIST':
+      return {...state,chatroomList: action.payload}
   
       
     default:

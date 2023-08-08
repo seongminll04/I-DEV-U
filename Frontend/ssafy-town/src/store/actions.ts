@@ -30,8 +30,8 @@ export const setReceiveMessages = (value: string[]) => ({
   payload: value,
 });
 
-export const setRoomList = (value: string[]) => ({
-  type: 'SET_ROOMLIST',
+export const setChatRoomList = (value: string[]) => ({
+  type: 'SET_CHATROOMLIST',
   payload: value,
 });
 

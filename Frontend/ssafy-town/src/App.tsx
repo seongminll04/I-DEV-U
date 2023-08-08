@@ -19,7 +19,7 @@ import SockJS from 'sockjs-client';
 import axios from 'axios';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setReceiveMessages, setStomp, setModal } from './store/actions';
+import { setReceiveMessages, setStomp, setModal, setChatRoomList } from './store/actions';
 import { AppState } from './store/state';
 
 function App() {
@@ -28,6 +28,7 @@ function App() {
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
   const receivedMessages = useSelector((state: AppState) => state.receivedMessages);// 모달창 오픈여부 (알림, 로그아웃)
   const stompClientRef = React.useRef<Client | null>(null);
+  const chatroomList = useSelector((state: AppState) => state.chatroomList);// 모달창 오픈여부 (알림, 로그아웃)
   // 나중에 주소 싸그리 바꾸자.
   // var BACKEND_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
   
@@ -71,32 +72,43 @@ function App() {
 
         // 채팅목록 리스트 코드
         if (isSidebarOpen==='채팅목록'){
-          // 내 userIdx가 들어가있는 채팅방 Idx 리스트 가져오기
-          axios({
-            method:'get',
-            url:'',
-          })
-          .then(res=>console.log(res))
-          .catch(err=>console.log(err))
-
-          stompClientRef.current.subscribe(`/topic/1`, function(message: Message) {
-            const newMessage = message.body;
-            dispatch(setReceiveMessages([...receivedMessages, newMessage]))
-          });
+          // 내 userIdx가 들어가있는 채팅방 Idx 리스트 가져오기    
+          for (const room of chatroomList) {
+            stompClientRef.current.subscribe(`/sub/chatRoom/${room.chatIdx}`, function(message: Message) {
+              axios({
+                method:'get',
+                url:'https://i9b206.p.ssafy.io:9090/chat/list',
+                data:{userIdx:userIdx},
+                headers : {Authorization: 'Bearer ' + userToken}})
+              .then(res=>dispatch(setChatRoomList(res.data)))
+              .catch(err=>console.log(err))
+            });
+          }
+          // 그리고 새로운 방 생성에 대한 구독을 추가
+          stompClientRef.current.subscribe(`/sub/addChat/${userIdx}`, function(message: Message) {
+            axios({
+              method:'get',
+              url:'https://i9b206.p.ssafy.io:9090/chat/list',
+              data:{userIdx:userIdx},
+              headers : {Authorization: 'Bearer ' + userToken}})
+            .then(res=>dispatch(setChatRoomList(res.data)))
+            .catch(err=>console.log(err))
+          }); 
         }
         else {
-          stompClientRef.current.unsubscribe(`/topic/1`);
-        }
+          for (const room of chatroomList) {
+            stompClientRef.current.unsubscribe(`/sub/chatRoom/${room.chatIdx}`);}
+          stompClientRef.current.unsubscribe(`/sub/addChat/${userIdx}`);}
 
         // 채팅방 연결시 채팅대화 코드
         if (isSidebarOpen==='채팅방'){
-          stompClientRef.current.subscribe(`/sub/chatroom/1`, function(message: Message) {
+          stompClientRef.current.subscribe(`/sub/chatRoom/1`, function(message: Message) {
             const newMessage = message.body;
             dispatch(setReceiveMessages([...receivedMessages, newMessage]))
           });
         }
         else {
-          stompClientRef.current.unsubscribe(`sub/chatroom/1`);
+          stompClientRef.current.unsubscribe(`/sub/chatRoom/1`);
         }
 
         // 내 화상방 라이브 상태 코드
@@ -116,7 +128,7 @@ function App() {
         stompClientRef.current.deactivate();
       }
     };
-  }, [stompClientRef,dispatch, isSidebarOpen, receivedMessages, isModalOpen]);
+  }, [stompClientRef,dispatch, isSidebarOpen, receivedMessages, isModalOpen, chatroomList]);
   
   return (
     <Router>

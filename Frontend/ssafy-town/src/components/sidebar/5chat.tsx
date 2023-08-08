@@ -1,10 +1,10 @@
 // src/App.tsx
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import chat_css from "./5chat.module.css";
 import { Client } from '@stomp/stompjs';
 
 import { useDispatch,useSelector } from 'react-redux';
-import { setAllowMove, setSidebar } from '../../store/actions';
+import { setAllowMove, setSidebar, setChatRoomList } from '../../store/actions';
 import { AppState } from '../../store/state';
 
 import axios from "axios";
@@ -16,10 +16,28 @@ import axios from "axios";
 
   const Chat: React.FC = () => {
     const dispatch = useDispatch()
-    const [roomList, setRoomList] = useState<string[]>(['1','2']);
     const stompClientRef = React.useRef<Client | null>(null);
     stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
-    
+    const chatroomList = useSelector((state: AppState) => state.chatroomList);
+
+    useEffect(()=>{
+      const userIdxStr = localStorage.getItem('userIdx')
+      const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
+      const userToken = localStorage.getItem('userToken')
+      axios({
+        method:'get',
+        url:'https://i9b206.p.ssafy.io:9090/chat/list',
+        data:{
+          userIdx:userIdx
+        },
+        headers : {
+          Authorization: 'Bearer ' + userToken
+        },
+      })
+      .then(res=>dispatch(setChatRoomList(res.data)))
+      .catch(err=>console.log(err))
+    },[dispatch])
+
     // input 방향키 살리기
     const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
       const inputElement = event.currentTarget
@@ -34,20 +52,6 @@ import axios from "axios";
       }
     }
 
-    useEffect(()=>{
-      const userToken = localStorage.getItem('userToken')
-      axios({
-        method:'get',
-        url:'',
-        headers : {
-          Authorization: 'Bearer ' + userToken
-        },
-      })
-      .then(res => setRoomList(res.data))
-      .catch(err=>console.log(err))
-    },[])
-
-
     return (
       <div className="sidebar_modal">
         <div style={{width:'100%', display:'flex',flexDirection:'column', alignItems:'center'}}>
@@ -60,17 +64,17 @@ import axios from "axios";
           <hr style={{width:'75%', color:'black'}}/>
 
           <div className={chat_css.scrollbox}>
-            {roomList.map((room) => (
+            {chatroomList.map((room) => (
               <div>
-                <div className={chat_css.chat_room} key={room}  onClick={() => {dispatch(setSidebar('채팅방'))}}>
+                <div className={chat_css.chat_room} onClick={() => {dispatch(setSidebar('채팅방'))}}>
                   <img src="assets/default_profile.png" alt=""/>
                   <div className={chat_css.chat_roomdata}>
                     <div className={chat_css.roomdata} style={{marginBottom:'10px'}}>
-                      <b>{room}</b>
-                      <span className={chat_css.chattime}>07/25 12:25 PM</span>
+                      <b>{room.chatTitle}</b>
+                      <span className={chat_css.chattime}>{room.chatTime}</span>
                     </div>
                     <div className={chat_css.roomdata}>
-                      <p className={chat_css.lastchat}>마지막 채팅 메시지 입니다. 입니다. 입니다. 입니다. 입니다. 입니다.</p>
+                      <p className={chat_css.lastchat}>{room.message}</p>
                       <p className={chat_css.chatcount}>99+</p>
                     </div>
                   </div>

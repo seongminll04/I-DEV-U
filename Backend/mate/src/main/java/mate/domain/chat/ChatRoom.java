@@ -11,12 +11,7 @@ import java.time.LocalDateTime;
 public class ChatRoom {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idx;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "manager_idx")
-//    private User user;
-    private int userIdx;
+    private Integer idx;
 
     private String title;
     @Enumerated(EnumType.STRING)
@@ -24,6 +19,8 @@ public class ChatRoom {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    private Integer userCount;
 
 
 

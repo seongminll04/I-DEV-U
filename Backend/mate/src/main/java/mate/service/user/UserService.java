@@ -22,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.IdentityHashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.springframework.http.ResponseEntity.badRequest;
@@ -37,8 +39,11 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final FollowRepository followRepository;
 
-    @Value("${spring.servlet.multipart.location}")
+    @Value("${custom.path.upload-images}")
     private String uploadDir;
+
+    @Value("${custom_path_load-images}")
+    private String loadDir;
 
 
     public void signUp(UserSignUpDto userSignUpDto) throws Exception {
@@ -176,15 +181,20 @@ public class UserService {
                 if(!originalFilePath.delete()) log.error("기존에 설정된 프로필 사진 삭제에 실패했습니다.");
             }
         }
+        String ext = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf("."));
+        String fileName = user.getIdx() + "_" + ext;
+        String loadPath = loadDir  + fileName;
+        String filePath = uploadDir + fileName;
 
-        String fileName = user.getIdx() + "_" + multipartFile.getOriginalFilename();
-        String filePath = uploadDir  + fileName;
+        Map<String, String> map = new IdentityHashMap<>();
+        map.put("fileName", multipartFile.getOriginalFilename());
+        map.put("loadPath", loadPath);
 
         File file = new File(filePath);
         multipartFile.transferTo(file);
 
-        user.uploadFile(fileName, filePath);
-        return Result.builder().status(ok().body("업로드 성공")).build();
+        user.uploadFile(multipartFile.getOriginalFilename(), filePath);
+        return Result.builder().status(ok().body("업로드 성공")).data(map).build();
     }
 
     private void validateContentType(MultipartFile multipartFile) {

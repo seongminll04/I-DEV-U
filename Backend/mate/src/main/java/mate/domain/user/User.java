@@ -49,6 +49,7 @@ public class User {
     }
 
     public void setSetting(String invite){
+        System.out.println("invite = " + invite);
         if (invite.equals("true")) this.invite = "true";
         else this.invite = "false";
     }

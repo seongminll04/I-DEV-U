@@ -1,6 +1,9 @@
 package mate.global.config;
 
+import lombok.RequiredArgsConstructor;
+import mate.global.handler.StompHandler;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -12,7 +15,8 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
  */
 @Configuration
 @EnableWebSocketMessageBroker
-public class StompConfig implements WebSocketMessageBrokerConfigurer {
+@RequiredArgsConstructor
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     /**
      * addEndpoint()
      * -> 웹소켓 엔드포인트를 지정합니다. 추후 클라이언트에서
@@ -23,12 +27,17 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
      * -> SockJS를 사용하여 브라우저에서 websocket을 지원하지 않을 경우 대체 옵션을 지원 합니다.
      * @param registry
      */
+
+    private final StompHandler stompHandler;
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
+//        registry.addEndpoint("/ws-stomp")
         registry.addEndpoint("/chatting")
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
     }
+
 
     /**
      * enableSimpleBroker
@@ -39,7 +48,14 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
      */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic","/queue");
+        registry.enableSimpleBroker("/topic", "/queue");
+//        registry.enableSimpleBroker("/sub");
         registry.setApplicationDestinationPrefixes("/app");
+//        registry.setApplicationDestinationPrefixes("/pub");
+    }
+
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(stompHandler);
     }
 }

@@ -1,5 +1,5 @@
 package mate.domain.chat;
 
 public enum ChatType {
-    OK
+    LACK, FULL
 }

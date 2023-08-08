@@ -15,10 +15,6 @@ spring:
   redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
-  servlet:
-    multipart:
-      enabled: ${spring_servlet_multipart_enabled}
-      location: ${spring_servlet_multipart_location}
 
 logging.level:
   org.hibernate.SQL: debug
@@ -46,4 +42,7 @@ jwt:
 #  PASSWORD: ${OPENVIDU_PASSWORD}
 #  URL: ${OPENVIDU_URL}
 
-
+custom:
+  path:
+    upload-images: ${custom_path_upload-images}
+    load-images : ${custom_path_load-images}

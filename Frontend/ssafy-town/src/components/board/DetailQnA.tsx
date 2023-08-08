@@ -17,9 +17,15 @@ interface Question {
   createAt: string;
 }
 
+interface Comment {
+  qnaIdx : number;
+  userIdx : number;
+  content : string;
+}
+
 const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
   const dispatch = useDispatch()
-  const [commentlist, setCommentlist] = useState<String[]>([])
+  const [commentlist, setCommentlist] = useState<Comment[]>([])
   const [inputvalue, setInputvalue] = useState('')
   const userToken = localStorage.getItem('userToken')
   const [question, setQuestion] = useState<Question>();
@@ -60,8 +66,12 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
     if (inputvalue !== '') {
       axios({
         method:'post',
-        url:'',
-        data:{comment:inputvalue},
+        url: `https://i9b206.p.ssafy.io:9090/qna/comment/write`,
+        data:{
+          'boardIdx': qnaid,
+          'userIdx' : Number(localStorage.getItem("userIdx")),
+          'content': inputvalue,
+        },
         headers : {
           Authorization: 'Bearer ' + userToken
         },
@@ -83,18 +93,19 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
         <h1>Q n A 게시글</h1>
         {question ? (
           <>
-            <p>{question?.title}</p>
-            <p>{question?.content}</p>
-            <p>{question?.createAt}</p>
+            <p>제목 : {question?.title}</p>
+            <p>내용 : {question?.content}</p>
+            <p>날짜 : {question?.createAt}</p>
           </>
         ) : (
           'Loading...'
         )}
-        <h2>내용 : ~~~~~~~~</h2>
+        <h2>댓글</h2>
         <hr />
         {commentlist.map((comment,index)=>(
           <div key={index}>
-            {comment}
+            {comment.userIdx}
+            {comment.content}
           </div>
         ))}
         <input type="text" value={inputvalue} onChange={(e)=>setInputvalue(e.target.value)} />

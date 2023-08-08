@@ -104,26 +104,26 @@ class Cam extends Component<{}, AppState> {
         try {
             // 세션 ID를 로컬 스토리지에서 가져옴
             const sessionId = localStorage.getItem('OVSession');
+            console.log("11111111111111111111")
             if (!sessionId) {
                 console.error("Session ID is missing");
                 return;
             }
-            console.log("왔니?왔니?왔니?왔니?왔니?왔니?왔니?왔니?왔니?왔니?왔니?")
     
             // 해당 세션 ID에 대한 토큰을 서버에서 가져옴
             const response = await fetch(`https://i9b206.p.ssafy.io:5000/api/sessions/${sessionId}/connections`, { method: 'POST' });
             const data = await response.json();
             const token = data.token;
 
-            console.log(response+"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-            console.log(data+"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-            console.log(token+"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            console.log("22222222222222222222222")
+            console.log(response+"@@@@@@@@@@@@@@@@@@@@")
+            console.log(data+"@@@@@@@@@@@@@@@@@@@@")
+            console.log(token+"@@@@@@@@@@@@@@@@@@@@")
     
             if (!token) {
                 console.error("Failed to fetch token from the server");
                 return;
             }
-
     
             session.connect(token)
                 .then(() => {

@@ -350,6 +350,8 @@ changeEffectSprite.on('animationcomplete', () => {
 
       ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE'].forEach((key, index) => {
         this.input.keyboard?.on(`keydown-${key}`, () => {
+          const nearbyObject = this.NearbyObjects();
+          if (nearbyObject === 'mirror') {
             let number = '1';
             switch(key) {
                 case 'ONE':
@@ -392,6 +394,7 @@ changeEffectSprite.on('animationcomplete', () => {
             changeEffectSprite.anims.play('change', true);
 
             this.createAnimationsForCharacter(number)
+          }
         });
     });
   }
@@ -400,7 +403,6 @@ changeEffectSprite.on('animationcomplete', () => {
   
     createAnimationsForCharacter(characterKey : string) {
       // 위를 바라보는 애니메이션
-      console.log("@@@@@@")
       this.anims.create({
         key: `${characterKey}-up`,
         frames: [
@@ -452,85 +454,56 @@ changeEffectSprite.on('animationcomplete', () => {
     //////
 
 
-  update() {
-    if (store.getState().isAllowMove && this.cursors && this.character) {
-      if (this.character.anims.currentAnim) {
-        this.character.setVelocityX(0);
-        this.character.setVelocityY(0);
-        let previousAnimationKey = this.character.anims.currentAnim.key;
-        let direction = previousAnimationKey.split('-')[1]; // 예: 'left' from '0-left'
-
-        // Verify that the direction is one of the expected values
-        if (['left', 'right', 'up', 'down'].includes(direction)) {
-            // Now replace the last character with the corresponding idle frame
-            let idleFrameKey = {
-              'left': '5',
-              'right': '8',
-              'up': 'B',
-              'down': '2'
-            }[direction];
-
-            if (idleFrameKey) {
-              this.character.setTexture(`${localStorage.getItem("character") || '0'}${idleFrameKey}`);
-            }
-        }
-      }
-    }
-  if (store.getState().isAllowMove && this.cursors && this.character) {
-    let moved = false;
-
-    if (this.cursors.left?.isDown) {
-        this.character.setVelocityX(-320);
-        this.character.play(`${localStorage.getItem("character") || '0'}-left`, true);
-        moved = true;
-    } else if (this.cursors.right?.isDown) {
-        this.character.setVelocityX(320);
-        this.character.play(`${localStorage.getItem("character") || '0'}-right`, true);
-        moved = true;
-    } else {
-        this.character.setVelocityX(0);
-    }
-
-    if (this.cursors.up?.isDown) {
-        this.character.setVelocityY(-320);
-        if (!this.cursors.right?.isDown && !this.cursors.left?.isDown) {
-            this.character.play(`${localStorage.getItem("character") || '0'}-up`, true);
-        }
-        moved = true;
-    } else if (this.cursors.down?.isDown) {
-        this.character.setVelocityY(320);
-        if (!this.cursors.right?.isDown && !this.cursors.left?.isDown) {
-            this.character.play(`${localStorage.getItem("character") || '0'}-down`, true);
-        }
-        moved = true;
-    } else {
-        this.character.setVelocityY(0);
-    }
-
-    if (!moved) {
-      if (this.character.anims.currentAnim) {
-          let previousAnimationKey = this.character.anims.currentAnim.key;
-          let direction = previousAnimationKey.split('-')[1]; // 예: 'left' from '0-left'
-  
-          // Verify that the direction is one of the expected values
-          if (['left', 'right', 'up', 'down'].includes(direction)) {
-              // Now replace the last character with the corresponding idle frame
-              let idleFrameKey = {
-                'left': '5',
-                'right': '8',
-                'up': 'B',
-                'down': '2'
-              }[direction];
-  
-              if (idleFrameKey) {
-                this.character.setTexture(`${localStorage.getItem("character") || '0'}${idleFrameKey}`);
-              }
+    update() {
+      if (store.getState().isAllowMove && this.cursors && this.character) {
+        let moved = false;
+        let currentAnimation = this.character.anims.currentAnim;
+        let currentDirection = currentAnimation ? currentAnimation.key.split('-')[1] : null;
+    
+        this.character.setVelocity(0, 0); // 초기 속도를 0으로 설정
+    
+        if (this.cursors.left?.isDown) {
+          this.character.setVelocityX(-320);
+          if (currentDirection !== 'left') {
+            this.character.play(`${localStorage.getItem("character") || '0'}-left`, true);
           }
+          moved = true;
+        } else if (this.cursors.right?.isDown) {
+          this.character.setVelocityX(320);
+          if (currentDirection !== 'right') {
+            this.character.play(`${localStorage.getItem("character") || '0'}-right`, true);
+          }
+          moved = true;
+        }
+    
+        if (this.cursors.up?.isDown) {
+          this.character.setVelocityY(-320);
+          if (!this.cursors.right?.isDown && !this.cursors.left?.isDown && currentDirection !== 'up') {
+            this.character.play(`${localStorage.getItem("character") || '0'}-up`, true);
+          }
+          moved = true;
+        } else if (this.cursors.down?.isDown) {
+          this.character.setVelocityY(320);
+          if (!this.cursors.right?.isDown && !this.cursors.left?.isDown && currentDirection !== 'down') {
+            this.character.play(`${localStorage.getItem("character") || '0'}-down`, true);
+          }
+          moved = true;
+        }
+    
+        if (!moved && currentDirection) {
+          let idleFrameKey = {
+            'left': '5',
+            'right': '8',
+            'up': 'B',
+            'down': '2'
+          }[currentDirection];
+          if (idleFrameKey) {
+            this.character.setTexture(`${localStorage.getItem("character") || '0'}${idleFrameKey}`);
+          }
+        }
       }
+      this.NearbyObjects();
     }
-  }
-    this.NearbyObjects();
-  }
 
   private NearbyObjects(): 'bed' | 'board' | 'pet'| 'mirror' | null {
     const bedPosition = { x: 84, y: 131 }; // 침대

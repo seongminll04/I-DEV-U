@@ -1,10 +1,10 @@
 // src/App.tsx
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import chat_css from "./5chat.module.css";
-import { Client } from '@stomp/stompjs';
+import { Client, Message } from '@stomp/stompjs';
 
 import { useDispatch,useSelector } from 'react-redux';
-import { setAllowMove, setSidebar, setChatRoomList } from '../../store/actions';
+import { setAllowMove, setSidebar, setChatIdx } from '../../store/actions';
 import { AppState } from '../../store/state';
 
 import axios from "axios";
@@ -13,17 +13,26 @@ import axios from "axios";
   //   content: string;
   //   sender: string;
   // }
-
+  interface chatroom {
+    chatIdx:number,
+    chatTitle:string,
+    message :string,
+    chatTime :string,
+  }
   const Chat: React.FC = () => {
     const dispatch = useDispatch()
+
     const stompClientRef = React.useRef<Client | null>(null);
     stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
-    const chatroomList = useSelector((state: AppState) => state.chatroomList);
+
+    const [chatList, setChatList] = useState<chatroom[]>([{chatIdx:1,chatTitle:'asfd',message:'asdf',chatTime:'asdf',}])
+
+    // 최초 ChatList 불러오기
+    const userIdxStr = localStorage.getItem('userIdx')
+    const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
+    const userToken = localStorage.getItem('userToken')
 
     useEffect(()=>{
-      const userIdxStr = localStorage.getItem('userIdx')
-      const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
-      const userToken = localStorage.getItem('userToken')
       axios({
         method:'get',
         url:'https://i9b206.p.ssafy.io:9090/chat/list',
@@ -34,9 +43,46 @@ import axios from "axios";
           Authorization: 'Bearer ' + userToken
         },
       })
-      .then(res=>dispatch(setChatRoomList(res.data)))
+      .then(res=>setChatList(res.data))
       .catch(err=>console.log(err))
-    },[dispatch])
+    })
+
+    // ChatList로 구독 등록, 현재는 구독 반응시 chatList 다시 가져오기 ->큐형태로 진화하면 좋음
+    useEffect(() => {
+      if (stompClientRef.current) {
+        stompClientRef.current.subscribe(`/sub/addChat/${userIdx}`, function(message: Message) {
+          axios({
+            method:'get',
+            url:'https://i9b206.p.ssafy.io:9090/chat/list',
+            data:{userIdx:userIdx},
+            headers : {Authorization: 'Bearer ' + userToken}})
+          .then(res=>setChatList(res.data))
+          .catch(err=>console.log(err))
+        }); 
+        for (const room of chatList) {
+          stompClientRef.current.subscribe(`/sub/chatRoom/${room.chatIdx}`, function(message: Message) {
+            axios({
+              method:'get',
+              url:'https://i9b206.p.ssafy.io:9090/chat/list',
+              data:{
+                userIdx:userIdx
+              },
+              headers : {
+                Authorization: 'Bearer ' + userToken
+              },
+            })
+            .then(res=>setChatList(res.data))
+            .catch(err=>console.log(err))
+        })}
+  
+        return () => {
+          if (stompClientRef.current) {
+            stompClientRef.current.unsubscribe(`/sub/addChat/${userIdx}`)
+            for (const room of chatList) {
+              stompClientRef.current.unsubscribe(`/sub/chatRoom/${room.chatIdx}`)}
+        };
+      }}
+    }, [stompClientRef, chatList, userIdx, userToken]);
 
     // input 방향키 살리기
     const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
@@ -64,9 +110,9 @@ import axios from "axios";
           <hr style={{width:'75%', color:'black'}}/>
 
           <div className={chat_css.scrollbox}>
-            {chatroomList.map((room) => (
+            {chatList.map((room) => (
               <div>
-                <div className={chat_css.chat_room} onClick={() => {dispatch(setSidebar('채팅방'))}}>
+                <div className={chat_css.chat_room} onClick={() => {dispatch(setSidebar('채팅방')); dispatch(setChatIdx(room.chatIdx))}}>
                   <img src="assets/default_profile.png" alt=""/>
                   <div className={chat_css.chat_roomdata}>
                     <div className={chat_css.roomdata} style={{marginBottom:'10px'}}>

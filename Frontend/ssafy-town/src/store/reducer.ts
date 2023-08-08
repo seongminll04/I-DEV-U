@@ -7,9 +7,9 @@ const initialState: AppState = {
     wantPJTId:null,
 
     stompClientRef:null,
-    receivedMessages:[],
+
     receivedAlert:[],
-    chatroomList:[],
+    isChatIdx:null,
 };
 
 const reducer = (state: AppState = initialState, action: { type: string; payload: any }) => {
@@ -28,13 +28,11 @@ const reducer = (state: AppState = initialState, action: { type: string; payload
 
     case 'SET_STOMP':
         return {...state, stompClientRef: action.payload}
-    case 'SET_RECEIVEMESSAGES':
-      return {...state, receivedMessages: action.payload}
     case 'SET_RECEIVEALERT':
       return {...state, receivedAlert: action.payload}
-    case 'SET_CHATROOMLIST':
-      return {...state,chatroomList: action.payload}
-  
+    case 'SET_CHATIDX':
+      return {...state,isChatIdx: action.payload}
+      
       
     default:
       return state;

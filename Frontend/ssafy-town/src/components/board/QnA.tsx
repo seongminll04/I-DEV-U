@@ -33,13 +33,12 @@ const QnA: React.FC = () => {
       },
     })
       .then(res => {
-        console.log(res.data["Q&A"])
         setQuestionList(res.data["Q&A"]);
       })
       .catch(err => {
         console.log(err)
       })
-  }, [setQuestionList]);
+  }, []);
 
   const handlekeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget

@@ -1,12 +1,6 @@
 import { Client } from "@stomp/stompjs";
 
-interface chatroom {
-  chatIdx:number,
-  chatTitle:string,
-  message :string,
-  chatTime :string,
-  
-}
+
 export interface AppState {
   isModalOpen: string|null;
   isSidebarOpen: string|null;
@@ -14,9 +8,9 @@ export interface AppState {
   wantPJTId:number|null;
 
   stompClientRef:Client|null;
-  receivedMessages:string[];
+
   receivedAlert:string[];
-  chatroomList:chatroom[];
+  isChatIdx:number|null; //채팅방 넘어갈때 인덱스 저장해줄곳
   }
   
 // export enum ActionTypes {

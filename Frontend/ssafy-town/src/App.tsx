@@ -35,7 +35,7 @@ function App() {
 
   useEffect(() => { 
     const userToken = localStorage.getItem('userToken')
-    const socket = new SockJS("http://localhost:8080/chatting");
+    const socket = new SockJS("https://i9b206.p.ssafy.io:9090/chatting");
 
     stompClientRef.current = Stomp.over(socket);
     stompClientRef.current.connectHeaders={
@@ -52,8 +52,8 @@ function App() {
       if (stompClientRef.current) {
 
         // 소개팅, 화상, 프로젝트 가입 신청 시, 알림이 오는 곳 설정 
-        if (window.location.href==='http://localhost:3000/home') {
-          stompClientRef.current.subscribe(`/alert/:idx`, function(message: Message) {
+        if (window.location.href==='https://i9b206.p.ssafy.io/home') {
+          stompClientRef.current.subscribe(`/myalert/:idx`, function(message: Message) {
             if (isModalOpen===null){
               const newMessage = message.body;
               dispatch(setReceiveMessages([...receivedMessages, newMessage]))
@@ -99,7 +99,7 @@ function App() {
 
 
         // test 서버 연결 코드
-        if (window.location.href==='http://localhost:3000/test') {
+        if (window.location.href==='https://i9b206.p.ssafy.io/test') {
           stompClientRef.current.subscribe(`/topic/1`, function(message: Message) {
             const newMessage = message.body;
             dispatch(setReceiveMessages([...receivedMessages, newMessage]))

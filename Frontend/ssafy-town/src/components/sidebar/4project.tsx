@@ -87,7 +87,8 @@ const Project: React.FC = () => {
                 {projectList.map((project, idx) => (
                     <div key={idx}>
                         <div className={project_css.project}>
-                            <div className={project_css.project_detail} onClick={() => dispatch(setModal('프로젝트상세정보'))}>
+                            <div className={project_css.project_detail} onClick={() => {dispatch(setModal('프로젝트상세정보')) 
+                              dispatch(setWantPJTId(project.idx))}}>
                                 <img src="assets/default_profile.png" alt="" />
                                 <div className={project_css.project_data}>
                                     <b>{project["title (VARCHAR)"]}</b>
@@ -95,7 +96,7 @@ const Project: React.FC = () => {
                                 </div>
                             </div>
                             <div>
-                                <button className={project_css.btn} onClick={() => { dispatch(setModal('프로젝트참가신청')) 
+                                <button className={project_css.btn} onClick={() => {dispatch(setModal('프로젝트참가신청')) 
                               dispatch(setWantPJTId(project.idx))}}>참가신청</button>
                                 <span>{project["nowNum (INT)"]}/{project["totalNum (INT)"]}</span>
                             </div>

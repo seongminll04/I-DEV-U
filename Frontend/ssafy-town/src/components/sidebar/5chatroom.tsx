@@ -22,7 +22,7 @@ const Chatroom: React.FC = () => {
 
   const stompClientRef = React.useRef<Client | null>(null);
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
-  const [receivedMessages, setReceiveMessages] = useState<messageProps[]>([])
+  const [receiveMessages, setReceiveMessages] = useState<messageProps[]>([])
   
   const chatScrollRef = React.useRef<HTMLDivElement | null>(null); // Ref for chat_scroll div
 
@@ -42,7 +42,7 @@ const Chatroom: React.FC = () => {
         Authorization: 'Bearer ' + userToken
       }})
     .then(res=>{
-      setReceiveMessages([res.data,...receivedMessages])
+      setReceiveMessages([res.data,...receiveMessages])
       if (chatScrollRef.current && chatScrollRef.current.scrollHeight > chatScrollRef.current.clientHeight) {
         // Scroll chat_scroll to the bottom initially
         chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
@@ -57,7 +57,7 @@ const Chatroom: React.FC = () => {
       stompClientRef.current.subscribe(`/sub/chatRoom/1`, function(message: Message) {
         // const newMessage = message.body;
         if (chatScrollRef.current && chatScrollRef.current.scrollHeight > chatScrollRef.current.clientHeight && chatScrollRef.current.scrollTop === chatScrollRef.current.scrollHeight) {
-          setReceiveMessages([...receivedMessages, {
+          setReceiveMessages([...receiveMessages, {
             'userIdx':1,
             'userName':'김싸피',
             'messageIdx':1,
@@ -67,7 +67,7 @@ const Chatroom: React.FC = () => {
           chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight
         }
         else {
-          setReceiveMessages([...receivedMessages, {
+          setReceiveMessages([...receiveMessages, {
             'userIdx':1,
             'userName':'김싸피',
             'messageIdx':1,
@@ -82,7 +82,7 @@ const Chatroom: React.FC = () => {
         if (stompClientRef.current) {
         stompClientRef.current.unsubscribe(`/sub/chatRoom/1`)}
     }
-  }, [stompClientRef,receivedMessages]);
+  }, [stompClientRef,receiveMessages]);
 
 
   // 끝까지 스크롤 시 추가로딩
@@ -93,13 +93,13 @@ const Chatroom: React.FC = () => {
       url:'https://i9b206.p.ssafy.io:9090/chat/load',
       data:{
         chatIdx:isChatIdx,
-        nowFirstIdx : receivedMessages[0].messageIdx
+        nowFirstIdx : receiveMessages[0].messageIdx
       },
       headers : {
         Authorization: 'Bearer ' + userToken
       }})
     .then(res=>{
-      setReceiveMessages([res.data,...receivedMessages])
+      setReceiveMessages([res.data,...receiveMessages])
     })
     .catch(err=>console.log(err))
   }
@@ -151,7 +151,7 @@ const Chatroom: React.FC = () => {
       <hr />
       </div>
       <div className={chat_css.chat_scroll} onScroll={handleScroll} style={{height:'80vh'}} ref={chatScrollRef}>
-        {receivedMessages.map((message, index) => (
+        {receiveMessages.map((message, index) => (
           <div key={index} style={{width:'80%', margin:'auto'}} >
             <strong>{message.userName} : </strong>
             {message.message}    {message.created_at}

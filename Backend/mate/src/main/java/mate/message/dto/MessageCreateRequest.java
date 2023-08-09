@@ -4,17 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageCreateRequest {
 
-    private Integer roomIdx;
-
     private Integer userIdx;
-
-    private String name;
-
+    private Integer roomIdx;
     private String message;
+    private LocalDateTime createdAt;
 
 }

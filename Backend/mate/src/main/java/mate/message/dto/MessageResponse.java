@@ -21,7 +21,7 @@ public class MessageResponse {
 
     private Integer userIdx;
 
-    private String name;
+    private String nickname;
 
     private String message;
 
@@ -34,7 +34,7 @@ public class MessageResponse {
         MessageResponse response = new MessageResponse();
         response.roomIdx = message.getRoomIdx();
         response.userIdx = message.getUserIdx();
-        response.name = message.getName();
+        response.nickname = message.getNickname();
         response.message = message.getMessage();
         response.createdAt = message.getCreatedAt();
         return response;

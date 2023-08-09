@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface MessageRepository extends JpaRepository<ChatMessage, Integer> {
 
-    @Query("SELECT m FROM ChatMessage m " +
-            "WHERE m.roomIdx = :roomIdx " +
-            "ORDER BY m.idx DESC")
+    @Query("select m from ChatMessage m " +
+            "where m.roomIdx = :roomIdx " +
+            "order by m.createdAt desc")
     List<ChatMessage> findByMessage(
             @Param("roomIdx") Integer roomIdx
     );

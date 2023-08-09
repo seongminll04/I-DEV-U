@@ -3,11 +3,7 @@ package mate.message.service;
 import lombok.RequiredArgsConstructor;
 import mate.message.domain.ChatMessage;
 import mate.message.domain.MessageRepository;
-import mate.message.dto.MessageCreateRequest;
 import mate.message.dto.MessageResponse;
-import mate.message.dto.MessageSearchRequest;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +17,7 @@ public class MessageService {
 
 //    private final ChannelTopic channelTopic;
 //    private final RedisTemplate redisTemplate;
-//    private final MessageRepository messageRepository;
-//    private final MessageQueryRepository messageQueryRepository;
+    private final MessageRepository messageRepository;
 
     /**
      * 메세지 생성
@@ -35,10 +30,10 @@ public class MessageService {
 //    }
 
 
-//    public List<MessageResponse> searchMessage(Long roomId, MessageSearchRequest request) {
-//        List<ChatMessage> findMessages = messageQueryRepository.findByCondition(roomId, request);
-//        return findMessages.stream()
-//                .map(message -> MessageResponse.from(message))
-//                .collect(Collectors.toList());
-//    }
+    public List<MessageResponse> searchMessage(Integer roomId) {
+        List<ChatMessage> findMessages = messageRepository.findByMessage(roomId);
+        return findMessages.stream()
+                .map(message -> MessageResponse.from(message))
+                .collect(Collectors.toList());
+    }
 }

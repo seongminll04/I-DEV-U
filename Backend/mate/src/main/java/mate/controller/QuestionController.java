@@ -4,32 +4,38 @@ import lombok.RequiredArgsConstructor;
 import mate.domain.question.QuestionBoard;
 import mate.domain.question.QuestionBoardComment;
 import mate.domain.question.QuestionBoardLike;
+import mate.dto.question.QuestionBoardCommentDto;
+import mate.dto.question.QuestionBoardDto;
+import mate.repository.QuestionRepository;
 import mate.service.QuestionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/qna")
 @RequiredArgsConstructor
 public class QuestionController {
 
+    private final QuestionRepository questionRepository;
     private final QuestionService questionService;
 
     @PostMapping("/write")
-    public ResponseEntity<Map<String, Object>> writeNotice(@RequestBody QuestionBoard question) {
+    public ResponseEntity<Map<String, Object>> writeNotice(@RequestBody QuestionBoardDto questionDto) {
         Map<String, Object> map = new HashMap<>();
-        questionService.writeQuestion(question);
+        questionService.writeQuestion(questionDto);
         map.put("resmsg", "Q&A 글 작성 성공");
 
         return ResponseEntity.ok(map);
     }
 
     @GetMapping("/detail/{questionIdx}")
-    public ResponseEntity<Map<String, Object>> detailQuestion(@PathVariable("questionIdx") int questionIdx) {
+    public ResponseEntity<Map<String, Object>> detailQuestion(@PathVariable("questionIdx") Integer questionIdx) {
         Map<String, Object> map = new HashMap<>();
+//        Optional<QuestionBoard> question = questionRepository.findById(questionIdx);
 
         QuestionBoard question = questionService.detailQuestion(questionIdx);
 
@@ -69,15 +75,15 @@ public class QuestionController {
         return ResponseEntity.ok(map);
     }
 
-    @GetMapping("/list/{page}")
-    public ResponseEntity<Map<String, Object>> getQuestionTop(@PathVariable("page") int page) {
-        System.out.println("questionPage");
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("resmsg", "Q&A 글 리스트 조회 성공");
-        map.put("Q&A", questionService.getQuestionList().subList(10 * (page - 1), 10 * page));
-        return ResponseEntity.ok(map);
-    }
+//    @GetMapping("/list/{page}")
+//    public ResponseEntity<Map<String, Object>> getQuestionTop(@PathVariable("page") int page) {
+//        System.out.println("questionPage");
+//        Map<String, Object> map = new HashMap<>();
+//
+//        map.put("resmsg", "Q&A 글 리스트 조회 성공");
+//        map.put("Q&A", questionService.getQuestionList().subList(10 * (page - 1), 10 * page));
+//        return ResponseEntity.ok(map);
+//    }
 
     @GetMapping("/find/title/{keyWord}")
     public ResponseEntity<Map<String, Object>> findQuestionByTitle(
@@ -122,7 +128,7 @@ public class QuestionController {
     }
 
     @PostMapping("/comment/write")
-    public ResponseEntity<Map<String, Object>> writeComment(@RequestBody QuestionBoardComment comment) {
+    public ResponseEntity<Map<String, Object>> writeComment(@RequestBody QuestionBoardCommentDto comment) {
         // DTO 만들어야된다...ㅠㅠ
         questionService.writeQuestionBoardComment(comment);
         Map<String, Object> map = new HashMap<>();
@@ -132,7 +138,7 @@ public class QuestionController {
     }
 
     @PutMapping("/comment/modify")
-    public ResponseEntity<Map<String, Object>> modifyComment(@RequestBody QuestionBoardComment comment) {
+    public ResponseEntity<Map<String, Object>> modifyComment(@RequestBody QuestionBoardCommentDto comment) {
         questionService.writeQuestionBoardComment(comment);
         Map<String, Object> map = new HashMap<>();
         map.put("resmsg", "Q&A 댓글 수정 성공");
@@ -150,10 +156,20 @@ public class QuestionController {
     }
 
     @GetMapping("/comment/{boardIdx}")
-    public ResponseEntity<Map<String, Object>> findComment(int boardIdx) {
+    public ResponseEntity<Map<String, Object>> findComment(@PathVariable Integer boardIdx) {
         Map<String, Object> map = new HashMap<>();
         map.put("resmsg", "Q&A 댓글 조회 성공");
-        map.put("comments", questionService.findCommentByBoard(boardIdx));
+        map.put("data", questionService.findCommentByBoard(boardIdx).stream().map(comment -> {
+            QuestionBoardCommentDto commentDto = new QuestionBoardCommentDto();
+            commentDto.setIdx(comment.getIdx());
+            commentDto.setUserIdx(comment.getUser().getIdx());
+            commentDto.setUserNickname(comment.getUser().getNickname());
+            commentDto.setBoardIdx(comment.getQuestionBoard().getIdx());
+            commentDto.setContent(comment.getContent());
+            commentDto.setCreatedAt(comment.getCreatedAt());
+            System.out.println("comment = " + comment.toString());
+            return commentDto;
+        }));
         return ResponseEntity.ok(map);
     }
 }

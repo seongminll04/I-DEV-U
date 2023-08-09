@@ -17,9 +17,4 @@ public interface MessageRepository extends JpaRepository<ChatMessage, Integer> {
             @Param("roomIdx") Integer roomIdx
     );
 
-    @Query("select m from ChatMessage m " +
-            "where m.roomIdx = :roomIdx " +
-            "order by m.createdAt desc"
-    )
-    Optional<ChatMessage> findTopByRoomIdx (@Param("roomIdx") Integer roomIdx);
 }

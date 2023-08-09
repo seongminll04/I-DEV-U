@@ -6,6 +6,7 @@ import mate.controller.Result;
 import mate.domain.user.User;
 import mate.global.exception.NotFoundException;
 import mate.message.domain.ChatMessage;
+import mate.message.domain.MessageQueryRepository;
 import mate.message.domain.MessageRepository;
 import mate.message.dto.MessageCreateRequest;
 import mate.message.dto.MessageResponse;
@@ -31,6 +32,8 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
     private final MessageListener messageListener;
+    private final MessageQueryRepository messageQueryRepository;
+
 
     /**
      * 메세지 생성
@@ -55,7 +58,7 @@ public class MessageService {
 
     public Result lastMessage(Integer roomIdx){
 
-        ChatMessage message = messageRepository.findTopByRoomIdx(roomIdx)
+        ChatMessage message = messageQueryRepository.findLastMessage(roomIdx)
                 .orElseThrow(() -> new NotFoundException(CHAT_ROOM_NOT_FOUND));
 
         MessageResponse response = MessageResponse.from(message);

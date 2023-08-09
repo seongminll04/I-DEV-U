@@ -22,8 +22,8 @@ const Chatroom: React.FC = () => {
 
   const stompClientRef = React.useRef<Client | null>(null);
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
-
   const [receivedMessages, setReceiveMessages] = useState<messageProps[]>([])
+  
   const chatScrollRef = React.useRef<HTMLDivElement | null>(null); // Ref for chat_scroll div
 
   const isChatIdx = useSelector((state: AppState) => state.isChatIdx);

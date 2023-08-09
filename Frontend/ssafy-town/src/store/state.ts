@@ -13,16 +13,3 @@ export interface AppState {
   isChatIdx:number|null; //채팅방 넘어갈때 인덱스 저장해줄곳
   }
   
-// export enum ActionTypes {
-//     setModal = 'setModal',
-//     setSidebar = 'setSidebar'
-//   }
-
-// export interface setModal {
-//     type: ActionTypes.setModal;
-//   }
-// export interface setSidebar {
-//   type: ActionTypes.setSidebar;
-// }
-  
-// export type AppAction = setSidebar;

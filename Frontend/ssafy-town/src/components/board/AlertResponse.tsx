@@ -19,11 +19,24 @@ const AlertResponse: React.FC = () => {
 
     if (userIdx && stompClientRef.current) {
       const data = {
-        'userIdx': userIdx,
+        userIdx: userIdx,
+        projectIdx: wantPJTId
+      };
+      stompClientRef.current.publish({
+          destination: '/pub/alert/request',
+          body: JSON.stringify(data),
+          });
+      }
+    dispatch(setModal(null))
+  }
+  const enter2 = () => {
+    if (stompClientRef.current) {
+      const data = {
+        'userIdx': 'userIdx',
         'projectIdx': wantPJTId
       };
       stompClientRef.current.publish({
-          destination: '/pub/alert/send',
+          destination: '/pub/alert/request',
           body: JSON.stringify(data),
           });
       }
@@ -36,7 +49,7 @@ const AlertResponse: React.FC = () => {
         <div className={styled_css.modal}>
             <h1>OO 프로젝트의 가입신청</h1>
             <h2>XXX 님이 가입을 신청하셨습니다</h2>
-            <button onClick={enter}>수락</button><button onClick={()=>dispatch(setModal(null))}>거절</button>
+            <button onClick={enter}>수락</button><button onClick={enter2}>거절</button>
         </div>
   </div>
   );

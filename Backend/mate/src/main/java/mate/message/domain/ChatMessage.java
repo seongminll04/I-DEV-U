@@ -15,7 +15,6 @@ public class ChatMessage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idx")
     private Integer idx;
 
     private Integer roomIdx;

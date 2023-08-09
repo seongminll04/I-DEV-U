@@ -15,10 +15,18 @@ interface Notice {
   createdAt: string;
 }
 
+interface Notification {
+  idx : number;
+  nickname : string;
+  content: string;
+  createdAt : string;
+}
+
 const Alert: React.FC = () => {
   const dispatch = useDispatch()
   const userToken = localStorage.getItem('userToken')
   const [noticeList,setNoticeList] =useState<Notice[]>([]);
+  const [notificationList, setNotificationList] = useState<Notification[]>([]);
   const [page,setPage] = useState<Number>(0)
 
   useEffect(()=>{
@@ -31,8 +39,27 @@ const Alert: React.FC = () => {
       },
     })
     .then(res => {
-      // console.log(res.data)
+      console.log(res.data)
       setNoticeList(res.data.list);
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  })
+
+  useEffect(()=>{
+    // 모달창이 열렸다면 읽지 않은 알림 데이터 불러오기
+    const userIdx = localStorage.getItem('userIdx');
+    axios({
+      method:'get',
+      url:`https://i9b206.p.ssafy.io:9090/noti/list/top/${userIdx}`,
+      headers : {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+    .then(res => {
+      console.log(res.data)
+      setNotificationList(res.data.data);
     })
     .catch(err => {
       console.log(err)
@@ -56,7 +83,7 @@ const Alert: React.FC = () => {
                 </div>
                 {noticeList.map((notice: Notice, index: number) => {
                   const date = new Date(notice.createdAt);
-                  console.log(notice);
+                  // console.log(notice);
                   return (
                     <div onClick={() => {setPage(1); localStorage.setItem("noticeIdx", String(notice.idx))}} className={alert_css.notice}>
                       <span>{index+1}</span>
@@ -72,11 +99,18 @@ const Alert: React.FC = () => {
                   <p>알림 </p>
                   <p className={alert_css.movebtn} onClick={() => {dispatch(setModal('알림전체'))}}>전체보기</p>
                 </div>
-                <div onClick={() =>setPage(2)} className={alert_css.notice}>
-                  <span>1</span>
-                  <span>Title</span>
-                  <span>07/19 00:00</span>
-                </div>
+                {notificationList.map((notice: Notification, index: number) => {
+                  const date = new Date(notice.createdAt);
+                  // console.log(notice);
+                  return (
+                    <div onClick={() => {setPage(2); localStorage.setItem("noticeIdx", String(notice.idx))}} className={alert_css.notice}>
+                      <span>{notice.idx}</span>
+                      <span>{notice.nickname}</span>
+                      <span>{notice.content}</span>
+                      <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span>
+                      {/* <span>{date.getMonth() + 1}/{date.getDate()}</span> */}
+                    </div>
+                    );})}
               </div>
           </div>
         </div>

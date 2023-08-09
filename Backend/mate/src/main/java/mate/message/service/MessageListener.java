@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MessageListener {
 
-    private final ObjectMapper objectMapper;
+//    private final ObjectMapper objectMapper;
     private final SimpMessageSendingOperations messagingTemplate;
 
-    public void sendMessage(String receiveMessage) throws JsonProcessingException {
-        ChatMessage message = objectMapper.readValue(receiveMessage, ChatMessage.class);
-        messagingTemplate.convertAndSend("/sub/rooms/" + message.getRoomIdx(), MessageResponse.from(message));
+    public void sendMessage(ChatMessage receiveMessage) throws JsonProcessingException {
+//        ChatMessage message = objectMapper.readValue(receiveMessage, ChatMessage.class);
+        messagingTemplate.convertAndSend("/sub/rooms/" + receiveMessage.getRoomIdx(), MessageResponse.from(receiveMessage));
     }
 }

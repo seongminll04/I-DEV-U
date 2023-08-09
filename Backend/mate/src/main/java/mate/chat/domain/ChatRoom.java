@@ -1,9 +1,8 @@
 package mate.chat.domain;
 
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import mate.domain.user.User;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -31,9 +30,20 @@ public class ChatRoom {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    private Integer userCount;
+    private int userCount;
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatParticipation> chatRoomUsers = new ArrayList<>();
+
+    public static ChatRoom createChatRoom(String title, User user) {
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.title = title;
+        chatRoom.type = ChatRoomStatus.LACK;
+        chatRoom.createdAt = LocalDateTime.now();
+        chatRoom.updatedAt = LocalDateTime.now();
+        chatRoom.chatRoomUsers.add(ChatParticipation.createChatRoomUser(Role.MASTER, user, chatRoom));
+        chatRoom.userCount++;
+        return chatRoom;
+    }
 
 }

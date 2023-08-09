@@ -21,18 +21,18 @@ public class ChatMessage {
 
     private Integer userIdx;
 
-    private String name;
+    private String nickname;
 
     private String message;
 
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public static ChatMessage createMessage(Integer roomIdx, Integer userIdx, String name, String message) {
+    public static ChatMessage createMessage(Integer roomIdx, Integer userIdx, String nickname, String message) {
         ChatMessage msg = new ChatMessage();
         msg.roomIdx = roomIdx;
         msg.userIdx = userIdx;
-        msg.name = name;
+        msg.nickname = nickname;
         msg.message = message;
         msg.createdAt = LocalDateTime.now();
         return msg;

@@ -39,6 +39,8 @@ public class ChatParticipation {
         chatRoomUser.role = role;
         chatRoomUser.user = user;
         chatRoomUser.chatRoom = chatRoom;
+        chatRoomUser.createdAt = chatRoom.getCreatedAt();
+        chatRoomUser.updatedAt = chatRoom.getUpdatedAt();
         return chatRoomUser;
     }
 

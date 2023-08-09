@@ -1,12 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import mate_css from './3mate.module.css'
 
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 
+import axios from 'axios';
 
 const Mate: React.FC = () => {
   const dispatch = useDispatch();
+  const userToken = localStorage.getItem('userToken')
+
+  useEffect(()=>{
+    axios({
+      method:'get',
+      url:'https://i9b206.p.ssafy.io:9090/partner/list',
+      headers : {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+    .then(res=>console.log(res))
+    .catch(err=>console.log(err))
+  })
+
   return (
     <div>
       <div className='sidebar_modal'>

@@ -40,10 +40,11 @@
     margin-top:10px
 }
 .btn button {
-    width: 100px;
+    width: 220px;
+    height: 20vh;
     font-size: 20px;
     border-radius: 1rem;
-    margin:10px
+    margin:30px 20px
 }
 
 .two_btn {
@@ -76,7 +77,7 @@ color:gray
   align-items: center;
 }
 
-.mypage_withdrawal {
+.withdraw {
   width: 90%;
   text-align: right;
   color: red;

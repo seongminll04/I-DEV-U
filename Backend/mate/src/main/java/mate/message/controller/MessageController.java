@@ -28,6 +28,9 @@ public class MessageController {
         List<MessageResponse> response = messageService.searchMessage(roomIdx);
         return ResponseEntity.ok(response);
     }
+    /**
+     * 마지막 메세지
+     */
 
     @GetMapping("/chat/rooms/{roomIdx}/last")
     public Result findByLast(@PathVariable("roomIdx") Integer roomIdx){

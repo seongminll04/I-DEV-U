@@ -19,7 +19,7 @@ public interface MessageRepository extends JpaRepository<ChatMessage, Integer> {
 
     @Query("select m from ChatMessage m " +
             "where m.roomIdx = :roomIdx " +
-            "order by m.createdAt desc limit 1"
+            "order by m.createdAt desc"
     )
-    Optional<ChatMessage> findByLast (@Param("roomIdx") Integer roomIdx);
+    Optional<ChatMessage> findTopByRoomIdx (@Param("roomIdx") Integer roomIdx);
 }

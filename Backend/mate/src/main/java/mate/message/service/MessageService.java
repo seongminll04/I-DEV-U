@@ -30,7 +30,6 @@ public class MessageService {
 //    private final RedisTemplate redisTemplate;
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
-    private final SimpMessagingTemplate simpMessagingTemplate;
     private final MessageListener messageListener;
 
     /**
@@ -56,7 +55,7 @@ public class MessageService {
 
     public Result lastMessage(Integer roomIdx){
 
-        ChatMessage message = messageRepository.findByLast(roomIdx)
+        ChatMessage message = messageRepository.findTopByRoomIdx(roomIdx)
                 .orElseThrow(() -> new NotFoundException(CHAT_ROOM_NOT_FOUND));
 
         MessageResponse response = MessageResponse.from(message);

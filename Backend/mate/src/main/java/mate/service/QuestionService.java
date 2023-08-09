@@ -30,12 +30,10 @@ public class QuestionService {
     public void writeQuestion(QuestionBoardDto questionBoardDto) {
         User user = userRepository.findById(questionBoardDto.getUserIdx()).get();
 
-        // 작성시간 컬럼 오류로 임시방편처리
         questionRepository.save(QuestionBoard.builder()
                 .user(user)
                 .title(questionBoardDto.getTitle())
                 .content(questionBoardDto.getContent())
-                        .createAt(LocalDateTime.now())
                 .build());
     }
 
@@ -45,16 +43,14 @@ public class QuestionService {
             return null;
         }
         System.out.println("=====================");
-        System.out.println(question.get());
         User user = question.get().getUser();
-        System.out.println(user.toString());
         question.map(q -> {
             QuestionBoardDto dto = new QuestionBoardDto();
             dto.setIdx(questionIdx);
             dto.setUserIdx(user.getIdx());
             dto.setTitle(q.getTitle());
             dto.setContent(q.getContent());
-            dto.setCreatedAt(q.getCreateAt());
+            dto.setCreatedAt(q.getCreatedAt());
 
             return dto;
         });

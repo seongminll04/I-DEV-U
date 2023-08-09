@@ -20,7 +20,7 @@ public class Notification {
     private String content;
 
     @CreatedDate
-    private LocalDateTime createasdAt;
+    private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
     private NotificationType dataType;

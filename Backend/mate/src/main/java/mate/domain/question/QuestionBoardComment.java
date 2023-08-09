@@ -30,8 +30,6 @@ public class QuestionBoardComment {
     private String content;
 
     @CreatedDate
-    private LocalDateTime createAt;
-
     private LocalDateTime createdAt;
 
 }

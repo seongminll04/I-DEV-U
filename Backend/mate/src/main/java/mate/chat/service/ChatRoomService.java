@@ -10,6 +10,8 @@ import mate.chat.dto.ChatRoomResponse;
 import mate.controller.Result;
 import mate.domain.user.User;
 import mate.global.exception.NotFoundException;
+import mate.message.domain.MessageRepository;
+import mate.message.service.MessageService;
 import mate.repository.user.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

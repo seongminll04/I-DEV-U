@@ -25,6 +25,7 @@ public class NoticeController {
 	public ResponseEntity<Map<String, Object>> writeNotice(@RequestBody NoticeDto noticeDto) {
 		Map<String, Object> map = new HashMap<>();
 		noticeService.writeNotice(noticeDto);
+		map.put("resmsg", "공지사항 작성성공");
 		return ResponseEntity.ok(map);
 	}
 
@@ -40,11 +41,11 @@ public class NoticeController {
 	}
 
 	@PutMapping("/modify")
-	public ResponseEntity<Map<String, Object>> modifyNotice(@RequestBody NoticeBoard notice) {
+	public ResponseEntity<Map<String, Object>> modifyNotice(@RequestBody NoticeDto noticeDto) {
 		Map<String, Object> map = new HashMap<>();
 
-		noticeService.modifyNotice(notice);
-
+		noticeService.modifyNotice(noticeDto);
+		map.put("resmsg", "공지사항 수정성공");
 		return ResponseEntity.ok(map);
 	}
 
@@ -53,7 +54,7 @@ public class NoticeController {
 		Map<String, Object> map = new HashMap<>();
 
 		noticeService.deleteNotice(noticeIdx);
-
+		map.put("resmsg", "공지사항 삭제성공");
 		return ResponseEntity.ok(map);
 	}
 

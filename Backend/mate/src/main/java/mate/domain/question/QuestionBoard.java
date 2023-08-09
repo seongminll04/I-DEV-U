@@ -1,7 +1,6 @@
 package mate.domain.question;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import mate.domain.user.User;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -10,7 +9,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@RequiredArgsConstructor
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class QuestionBoard {
 
     @Id
@@ -27,4 +28,11 @@ public class QuestionBoard {
 
     @CreatedDate
     private LocalDateTime createAt;
+
+    @Override
+    public String toString() {
+        return "QuestionBoard{" +
+                ", user=" + user +
+                '}';
+    }
 }

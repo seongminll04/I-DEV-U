@@ -39,6 +39,12 @@ function App() {
     }
     stompClientRef.current.debug= function(str){
       console.log(str)
+      const userToken = localStorage.getItem('userToken')
+      if (userToken && str.includes('연결 거부')) {
+        localStorage.removeItem('userToken')
+        localStorage.removeItem('userIdx')
+        if (window.location.href!=='/login'){window.location.href='/login'}
+      }
     }
     stompClientRef.current.reconnectDelay=5000 //자동재연결
     stompClientRef.current.heartbeatIncoming=4000
@@ -46,6 +52,12 @@ function App() {
 
     // 연결 시도
     stompClientRef.current.activate();
+    
+    stompClientRef.current.onWebSocketError=function(err){
+      console.log(err,',asdfsadf')
+    }
+
+
     if (stompClientRef.current){
       dispatch(setStomp(stompClientRef.current))
     }

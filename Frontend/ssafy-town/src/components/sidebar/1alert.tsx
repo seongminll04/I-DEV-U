@@ -59,10 +59,10 @@ const Alert: React.FC = () => {
                   console.log(notice);
                   return (
                     <div onClick={() => {setPage(1); localStorage.setItem("noticeIdx", String(notice.idx))}} className={alert_css.notice}>
-                      <span>{notice.idx}</span>
+                      <span>{index+1}</span>
                       <span>{notice.title}</span>
-                      {/* <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span> */}
-                      <span>{date.getMonth() + 1}/{date.getDate()}</span>
+                      <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span>
+                      {/* <span>{date.getMonth() + 1}/{date.getDate()}</span> */}
                     </div>
                     );})}
               </div>

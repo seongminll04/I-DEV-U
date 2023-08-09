@@ -28,7 +28,6 @@ const Chatroom: React.FC = () => {
 
   const isChatIdx = useSelector((state: AppState) => state.isChatIdx);
   const userIdx = localStorage.getItem('userIdx')
-
   const userToken = localStorage.getItem('userToken')
   useEffect(()=>{
     axios({

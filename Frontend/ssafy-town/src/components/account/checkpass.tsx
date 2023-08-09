@@ -7,27 +7,11 @@ import { setModal } from '../../store/actions';
 const CheckPass: React.FC = () => {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
-  const handlekeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    const inputElement = event.currentTarget
-    const currentCursorPosition = inputElement.selectionStart || 0;
-    if (event.key === 'ArrowLeft' && currentCursorPosition !== 0) {
-      inputElement.setSelectionRange(currentCursorPosition - 1, currentCursorPosition - 1);
-    } else if (event.key === 'ArrowRight') {
-      inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
-    } else if (event.key === ' ') {
-      inputElement.value = inputElement.value.slice(0, currentCursorPosition) + ' ' + inputElement.value.slice(currentCursorPosition,)
-      inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
-    }
-  }
 
-  function onClose() {
-    dispatch(setModal(null));
-  }
-  
   const checkPass = () => {
     const userToken = localStorage.getItem('userToken')
     const userIdx = localStorage.getItem('userIdx')
-
+  
     axios({
       method: 'post',
       url: 'https://i9b206.p.ssafy.io:9090/user/modify/check',
@@ -48,18 +32,32 @@ const CheckPass: React.FC = () => {
         alert("비밀번호가 일치하지 않습니다.")
         console.log(err);
       });
-
+  
   };
+  const handlekeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const inputElement = event.currentTarget
+    const currentCursorPosition = inputElement.selectionStart || 0;
+    if (event.key === 'ArrowLeft' && currentCursorPosition !== 0) {
+      inputElement.setSelectionRange(currentCursorPosition - 1, currentCursorPosition - 1);
+    } else if (event.key === 'ArrowRight') {
+      inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
+    } else if (event.key === ' ') {
+      inputElement.value = inputElement.value.slice(0, currentCursorPosition) + ' ' + inputElement.value.slice(currentCursorPosition,)
+      inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
+    } else if (event.key === 'Enter') {
+      checkPass()
+    }
+  }
+
+  function onClose() {
+    dispatch(setModal(null));
+  }
+  
   return (
     <div>
       <div className={checkpass_css.withdraw_modal}>
         <div className={checkpass_css.two_btn}>
-          <span
-            onClick={() => {
-              onClose();
-            }}
-          >
-            뒤로가기
+          <span>
           </span>
           <span
             onClick={() => {
@@ -73,7 +71,7 @@ const CheckPass: React.FC = () => {
           비밀번호 확인
         </h1>
         <br />
-        <p style={{ fontSize: '20px' }}>비밀번호를 다시 한 번 입력해주세요.</p>
+        <p style={{ fontSize: '20px' }}>비밀번호를 입력해주세요.</p>
         <br />
 
         <input

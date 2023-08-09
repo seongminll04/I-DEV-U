@@ -3,12 +3,11 @@ import styled from 'styled-components';
 import mypage_css from './8mypage.module.css';
 import axios from 'axios';
 import EditAcount from '../account/edit';
-import CheckPass from '../account/checkpass'
-
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
 import { setModal } from '../../store/actions';
+import ChangePass from '../account/changepass';
 
 const ToggleContainer = styled.div`
   position: relative;
@@ -169,8 +168,8 @@ const Mypage: React.FC = () => {
           <button className={mypage_css.button} onClick={unregistMeeting}>소개팅 등록 취소</button>
           <button className={mypage_css.button} onClick={() => dispatch(setModal('Re최초설문'))}>최초 설문 수정</button>
         </div>
-        {isModalOpen === '회원정보수정1' ? <CheckPass /> : null}
-        {isModalOpen === '회원정보수정2' ? <EditAcount user={user} /> : null}
+        {isModalOpen === '회원정보수정3' ? <EditAcount user={user} /> : 
+        isModalOpen === '비밀번호변경' ? <ChangePass user={user}  /> :null}
       </div>
     </div>
 

@@ -125,3 +125,17 @@
   color: red;
   cursor: pointer;
 }
+.two_btn {
+  width: 95%;
+  margin:0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.two_btn span{
+cursor: pointer;
+}
+
+.two_btn span:hover {
+color:gray
+}

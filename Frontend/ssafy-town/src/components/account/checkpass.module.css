@@ -66,3 +66,10 @@ color:gray
   justify-content: center;
   align-items: center;
 }
+
+.mypage_withdrawal {
+  width: 90%;
+  text-align: right;
+  color: red;
+  cursor: pointer;
+}

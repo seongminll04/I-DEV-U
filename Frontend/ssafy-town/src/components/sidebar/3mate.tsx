@@ -11,10 +11,7 @@ const Mate: React.FC = () => {
     <div>
       <div className='sidebar_modal'>
           <h1>동료찾기</h1>
-          <div style={{display:'flex', width:'85%'}}>
-            <button className={mate_css.button} onClick={()=>dispatch(setModal('동료찾기필터'))}>필터</button>
-            <button className={mate_css.button}>검색</button>
-          </div>
+          <button className={mate_css.button} onClick={()=>dispatch(setModal('동료찾기필터'))}>필터</button>
           <div className={mate_css.userattribute}>
             <div className={mate_css.userInfo} style={{fontSize:'large', fontWeight:'bold'}}>유저정보</div>
             <div className={mate_css.matchRate} style={{fontSize:'large', fontWeight:'bold'}}>일치율</div>

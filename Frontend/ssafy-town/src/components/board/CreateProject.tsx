@@ -21,7 +21,6 @@ const CreateProject: React.FC = () => {
   const [projectType, setProjectType] = useState('PROJECT');
   const [selfPosition, setSelfPosition] = useState<'FRONT' | 'BACK' >('FRONT');
 
-
   const handleLanguageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (e.target.checked) {
@@ -71,9 +70,7 @@ const CreateProject: React.FC = () => {
       alert('프로젝트명은 최소 6자 이상이어야 합니다.');
       return;
     }
-
     const totalPeople = parseInt(frontendNum) + parseInt(backendNum);
-
     if (totalPeople !== parseInt(total_num)) {
       alert('프론트와 백엔드의 인원 합이 총 인원과 일치하지 않습니다.');
       return;
@@ -146,22 +143,25 @@ const CreateProject: React.FC = () => {
           <div className={Create_css.info}>
     
             <div className={Create_css.input}>
-              <label><span>프</span><span>로</span><span>젝</span><span>트</span><span>명</span></label>
+              <label className={Create_css.label}><span>프</span><span>로</span><span>젝</span><span>트</span><span>명</span></label>
               <p> : </p>
               <input
+                className={Create_css.input1}
                 type="text"
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 onKeyDown={handlekeydown}
                 maxLength={30}
-              />*6~30자
+                placeholder='6~30자 이내 작성'
+              />
             </div>
     
             <div className={Create_css.input}>
-              <label><span>인</span><span>원</span><span>제</span><span>한</span></label>
+              <label className={Create_css.label}><span>인</span><span>원</span><span>제</span><span>한</span></label>
               <p> : </p>
               <input
+                className={Create_css.input1}
                 type="number"
                 id="total_num"
                 value={total_num}
@@ -173,11 +173,11 @@ const CreateProject: React.FC = () => {
                 defaultValue={4}
                 style={{ width: '10%' }}
               />
-              <span> * 최대 6명</span>
+              <span>　최대 6명</span>
             </div>
     
             <div className={Create_css.input}>
-              <label><span>소</span><span>개</span></label>
+              <label className={Create_css.label}><span>소</span><span>개</span></label>
               <p> : </p>
               <textarea
                 name=""
@@ -189,9 +189,9 @@ const CreateProject: React.FC = () => {
               ></textarea>
             </div>
             <div className={Create_css.input}>
-              <label><span>타</span><span>입</span></label>
+              <label className={Create_css.label}><span>타</span><span>입</span></label>
               <p> : </p>
-              <label>
+              <span>
                 <input
                   type="radio"
                   value="PROJECT"
@@ -199,8 +199,8 @@ const CreateProject: React.FC = () => {
                   onChange={(e) => setProjectType(e.target.value)}
                 />
                 프로젝트
-              </label>
-              <label>
+              </span>
+              <span>
                 <input
                   type="radio"
                   value="STUDY"
@@ -208,55 +208,61 @@ const CreateProject: React.FC = () => {
                   onChange={(e) => setProjectType(e.target.value)}
                 />
                 스터디
-              </label>
+              </span>
             </div>
     
             <div className={Create_css.input}>
-              <label><span>언</span><span>어</span></label>
+              <label className={Create_css.label}><span>언</span><span>어</span></label>
               <p> : </p>
+              <div style={{width:'60%', whiteSpace:'pre-wrap'}}>
               {languages.map((lang, index) => (
-                <label key={index}>
+                <label key={index} style={{whiteSpace:'pre-wrap'}}>
                   <input
                     type="checkbox"
                     value={lang}
                     onChange={handleLanguageChange}
                     checked={selectedLanguages.includes(lang)}
                   />
-                  {lang}
+                  <span> {lang} </span> 
                 </label>
               ))}
+              </div>
             </div>
-    
+            <h4>포지션</h4>
             <div className={Create_css.input}>
-              <label style={{ color: projectType === 'STUDY' ? 'gray' : 'inherit' }}><span>포</span><span>지</span><span>션</span> Frontend</label>
+              <label className={Create_css.label} style={{ color: projectType === 'STUDY' ? 'gray' : 'inherit' }}><span>프</span><span>론</span><span>트</span><span>엔</span><span>드</span></label>
               <p> : </p>
               <input
+              className={Create_css.input1}
                 type="number"
                 value={frontendNum}
                 onChange={(e) => setFrontendNum(e.target.value)}
                 onKeyDown={(e) => e.preventDefault()}
-                min="0"
-                max="6"
+                min="1"
+                max="5"
                 disabled={projectType === 'STUDY'}
+                style={{ width: '10%' }}
               />
             </div>
 
             <div className={Create_css.input}>
-              <label style={{ color: projectType === 'STUDY' ? 'gray' : 'inherit' }}><span>포</span><span>지</span><span>션</span> Backend</label>
+              <label className={Create_css.label} style={{ color: projectType === 'STUDY' ? 'gray' : 'inherit' }}><span>백</span><span>엔</span><span>드</span></label>
               <p> : </p>
               <input
+              className={Create_css.input1}
                 type="number"
                 value={backendNum}
                 onChange={(e) => setBackendNum(e.target.value)}
                 onKeyDown={(e) => e.preventDefault()}
-                min="0"
-                max="6"
+                min="1"
+                max="5"
                 disabled={projectType === 'STUDY'}
+                style={{ width: '10%' }}
               />
             </div>
 
             <div className={Create_css.input}>
-              <label style={{ color: projectType === 'STUDY' ? 'gray' : 'inherit' }}><span>본</span><span>인</span><span>포</span><span>지</span><span>션</span></label>
+              <label className={Create_css.label} style={{ color: projectType === 'STUDY' ? 'gray' : 'inherit' }}><span>본</span><span>인</span><span>포</span><span>지</span><span>션</span></label>
               <p> : </p>
               <label>
                 <input

@@ -30,7 +30,7 @@ public class NoticeBoard {
 	private String content;
 
 	@CreatedDate
-	private LocalDateTime createAt;
+	private LocalDateTime createdAt;
 
 	@Enumerated(EnumType.STRING)
 	private NoticeBoardType type;

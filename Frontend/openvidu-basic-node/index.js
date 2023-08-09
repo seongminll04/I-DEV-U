@@ -1,11 +1,12 @@
 require("dotenv").config(!!process.env.CONFIG ? {path: process.env.CONFIG} : {});
 var express = require("express");
 var bodyParser = require("body-parser");
-var http = require("http");
+var https = require("https");
 var OpenVidu = require("openvidu-node-client").OpenVidu;
 var socketIo = require('socket.io');
 var cors = require("cors");
 var app = express();
+const fs = require("fs");
 
 // 노드서버
 var SERVER_PORT = process.env.SERVER_PORT;
@@ -14,20 +15,37 @@ var OPENVIDU_URL = process.env.OPENVIDU_URL;
 // opvidu 서버 비번
 var OPENVIDU_SECRET = process.env.OPENVIDU_SECRET;
 
-// Cors 지금은 전체인데 나중에 바꿔줘야함
-app.use(
-  cors({
-    origin: "*",
-  })
-);
+const privateKey = fs.readFileSync("privkey.pem", "utf8");
+const certificate = fs.readFileSync("cert.pem", "utf8")
+const ca = fs.readFileSync("chain.pem", "utf8")
 
-// express 로 HTTP 서버를 생성
-var server = http.createServer(app);
+const credentials = {
+    key: privateKey,
+    cert: certificate,
+    ca: ca
+};
+
+app.use(
+    cors({
+      // origin: "*",
+          origin: "https://i9b206.p.ssafy.io",
+    })
+  );
+
+// express 로 HTTPS 서버를 생성
+var server = https.createServer(credentials, app);
 // openvidu 클라이언트 객체를 초기화
 var openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
 openvidu.activeSessions = [];
 // socket.io 초기화
-var io = socketIo(server);
+// var io = socketIo(server);
+var io = socketIo(server, {
+    cors: {
+      origin: "https://i9b206.p.ssafy.io",
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      credentials: true,
+    },
+  });
 
 // express 앱에 bodyParser 미들웨어를 추가하여 POST 요청의 body를 쉽게 파싱
 app.use(bodyParser.urlencoded({ extended: true }));

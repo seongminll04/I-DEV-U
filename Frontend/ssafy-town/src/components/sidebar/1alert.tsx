@@ -58,6 +58,7 @@ const Alert: React.FC = () => {
   useEffect(()=>{
     // 모달창이 열렸다면 읽지 않은 알림 데이터 불러오기
     const userIdx = localStorage.getItem('userIdx');
+    const userToken = localStorage.getItem('userToken')
     axios({
       method:'get',
       url:`https://i9b206.p.ssafy.io:9090/noti/list/top/${userIdx}`,

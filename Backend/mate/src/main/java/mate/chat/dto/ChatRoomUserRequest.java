@@ -1,9 +1,11 @@
 package mate.chat.dto;
 
+
 import lombok.Data;
 
 @Data
-public class ChatRoomUpdateRequest {
+public class ChatRoomUserRequest {
+
     private Integer userIdx;
-    private String title;
+
 }

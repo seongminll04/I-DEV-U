@@ -28,8 +28,9 @@ const Chatroom: React.FC = () => {
 
   const isChatIdx = useSelector((state: AppState) => state.isChatIdx);
   const userIdx = localStorage.getItem('userIdx')
-  const userToken = localStorage.getItem('userToken')
+
   useEffect(()=>{
+    const userToken = localStorage.getItem('userToken')
     axios({
       method:'get',
       url:'https://i9b206.p.ssafy.io:9090/chat/load',
@@ -48,40 +49,28 @@ const Chatroom: React.FC = () => {
       }
     })
     .catch(err=>console.log(err))
-  })
+  },[isChatIdx,receiveMessages])
 
   // 구독등록
   useEffect(() => {
     if (stompClientRef.current) {
-      stompClientRef.current.subscribe(`/sub/chatRoom/1`, function(message: Message) {
-        // const newMessage = message.body;
-        if (chatScrollRef.current && chatScrollRef.current.scrollHeight > chatScrollRef.current.clientHeight && chatScrollRef.current.scrollTop === chatScrollRef.current.scrollHeight) {
-          setReceiveMessages([...receiveMessages, {
-            'userIdx':1,
-            'userName':'김싸피',
-            'messageIdx':1,
-            'message':'내용',
-            'created_at':'보낸시간',
-          }])
-          chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight
-        }
-        else {
-          setReceiveMessages([...receiveMessages, {
-            'userIdx':1,
-            'userName':'김싸피',
-            'messageIdx':1,
-            'message':'내용',
-            'created_at':'보낸시간',
-          }])
-        }
+      stompClientRef.current.subscribe(`/sub/rooms/${isChatIdx}`, function(message: Message) {
+        const newMessage = message.body;
+        setReceiveMessages([...receiveMessages, {
+          'userIdx':1,
+          'userName':'김싸피',
+          'messageIdx':1,
+          'message':newMessage,
+          'created_at':'보낸시간',
+        }])
       })
       }
 
       return () => {
         if (stompClientRef.current) {
-        stompClientRef.current.unsubscribe(`/sub/chatRoom/1`)}
+        stompClientRef.current.unsubscribe(`/sub/chatRoom/${isChatIdx}`)}
     }
-  }, [stompClientRef,receiveMessages]);
+  }, [stompClientRef,receiveMessages,isChatIdx]);
 
 
   // 끝까지 스크롤 시 추가로딩
@@ -113,17 +102,22 @@ const Chatroom: React.FC = () => {
     } else if (event.key === ' '){
       inputElement.value = inputElement.value.slice(0,currentCursorPosition)+ ' ' +inputElement.value.slice(currentCursorPosition,)
       inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
+    } else if (event.key === 'Enter') {
+      sendMessage(messageInput)
     }
   }
   
   const sendMessage = (message: string) => {
     if (stompClientRef.current) {
+    const now = new Date()
     const data = {
-        'sender': userIdx, // Set the sender's userId here
-        'contents': message,
+        userIdx: userIdx, // Set the sender's userId here
+        roomIdx:isChatIdx,
+        message: message,
+        createdAt: now
         };
     stompClientRef.current.publish({
-        destination: '/pub/chat/send',
+        destination: '/pub/messages',
         body: JSON.stringify(data),
         });
       setMessageInput('');
@@ -151,7 +145,7 @@ const Chatroom: React.FC = () => {
       </div>
       <div className={chat_css.chat_scroll} onScroll={handleScroll} style={{height:'80vh'}} ref={chatScrollRef}>
         {receiveMessages.map((message, index) => (
-          <div key={index} style={{width:'80%', margin:'auto'}} >
+          <div key={index}>
             <strong>{message.userName} : </strong>
             {message.message}    {message.created_at}
           </div>

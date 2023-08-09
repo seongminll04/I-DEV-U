@@ -2,11 +2,13 @@ import React, {useState, useEffect} from 'react';
 import alert_css from './1alert.module.css';
 import axios from 'axios';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../store/actions';
 
 import DetailAlert from '../notice/detail_alert';
 import DetailNotice from '../notice/detail_notice';
+import { Client } from '@stomp/stompjs';
+import { AppState } from '../../store/state';
 
 interface Notice {
   idx: number;
@@ -14,23 +16,29 @@ interface Notice {
   content: string;
   createdAt: string;
 }
-
-interface Notification {
-  idx : number;
-  nickname : string;
-  content: string;
-  createdAt : string;
+interface AlertProps{
+  idx:number;
+  checked:string;
+  content:string;
+  createdAt:string;
+  dataType:string;
+  user:Object;
 }
-
 const Alert: React.FC = () => {
   const dispatch = useDispatch()
-  const userToken = localStorage.getItem('userToken')
   const [noticeList,setNoticeList] =useState<Notice[]>([]);
-  const [notificationList, setNotificationList] = useState<Notification[]>([]);
+  const [alertList,setAlertList] =useState<AlertProps[]>([]);
   const [page,setPage] = useState<Number>(0)
+
+  const stompClientRef = React.useRef<Client | null>(null);
+  stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
+
 
   useEffect(()=>{
     // 모달창이 열렸다면 공지사항 데이터 불러오기
+    const userToken = localStorage.getItem('userToken')
+    const userIdxStr = localStorage.getItem('userIdx')
+    const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
     axios({
       method:'get',
       url:'https://i9b206.p.ssafy.io:9090/notice/list/top',
@@ -58,13 +66,13 @@ const Alert: React.FC = () => {
       },
     })
     .then(res => {
-      console.log(res.data)
-      setNotificationList(res.data.data);
+      console.log(res.data.data)
+      setAlertList(res.data.data);
     })
     .catch(err => {
       console.log(err)
     })
-  })
+  },[])
   const backpage = () => {
     setPage(0)
   }
@@ -83,7 +91,6 @@ const Alert: React.FC = () => {
                 </div>
                 {noticeList.map((notice: Notice, index: number) => {
                   const date = new Date(notice.createdAt);
-                  // console.log(notice);
                   return (
                     <div onClick={() => {setPage(1); localStorage.setItem("noticeIdx", String(notice.idx))}} className={alert_css.notice}>
                       <span>{index+1}</span>
@@ -99,14 +106,12 @@ const Alert: React.FC = () => {
                   <p>알림 </p>
                   <p className={alert_css.movebtn} onClick={() => {dispatch(setModal('알림전체'))}}>전체보기</p>
                 </div>
-                {notificationList.map((notice: Notification, index: number) => {
-                  const date = new Date(notice.createdAt);
-                  // console.log(notice);
+                {alertList.map((alert: AlertProps, index: number) => {
+                  const date = new Date(alert.createdAt);
                   return (
-                    <div onClick={() => {setPage(2); localStorage.setItem("noticeIdx", String(notice.idx))}} className={alert_css.notice}>
-                      <span>{notice.idx}</span>
-                      <span>{notice.nickname}</span>
-                      <span>{notice.content}</span>
+                    <div key={index} onClick={() => {setPage(2); localStorage.setItem("noticeIdx", String(alert.idx))}} className={alert_css.notice}>
+                      <span>{index+1}</span>
+                      <span>{alert.content}</span>
                       <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span>
                       {/* <span>{date.getMonth() + 1}/{date.getDate()}</span> */}
                     </div>

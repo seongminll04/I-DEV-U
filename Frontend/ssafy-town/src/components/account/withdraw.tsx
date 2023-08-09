@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import withdraw_css from './withdraw.module.css';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { setModal } from '../../store/actions';
 
-interface Props {
-  onBack: () => void;
-  onClose: () => void;
-}
-
-const Withdraw: React.FC<Props> = ({ onBack, onClose }) => {
+const Withdraw: React.FC = () => {
+  const dispatch = useDispatch()
   const [Err, setErr] = useState(false);
   const [text, setText] = useState('');
   const [bye, setBye] = useState(false);
@@ -53,7 +51,8 @@ const Withdraw: React.FC<Props> = ({ onBack, onClose }) => {
     }
   };
   return (
-    <div>
+    <div className={withdraw_css.modal_overlay}  onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
+      if (e.target === e.currentTarget) {dispatch(setModal(null));}}}>
       {bye ? (
         <div className={withdraw_css.bye_modal}>
           <h1 style={{ marginBottom: '0' }}>
@@ -68,14 +67,14 @@ const Withdraw: React.FC<Props> = ({ onBack, onClose }) => {
           <div className={withdraw_css.two_btn}>
             <span
               onClick={() => {
-                onBack();
+                dispatch(setModal('회원정보수정2'))
               }}
             >
               뒤로가기
             </span>
             <span
               onClick={() => {
-                onClose();
+                dispatch(setModal(null))
               }}
             >
               닫기
@@ -105,7 +104,7 @@ const Withdraw: React.FC<Props> = ({ onBack, onClose }) => {
           <br />
           <div className={withdraw_css.btn}>
             <button onClick={withdraw}>탈퇴</button>
-            <button onClick={onBack}>취소</button>
+            <button onClick={()=>dispatch(setModal('회원정보수정2'))}>취소</button>
           </div>
           {Err ? (
             <p style={{ color: 'red' }}>양식에 맞게 입력해주세요</p>

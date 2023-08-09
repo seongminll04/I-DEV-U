@@ -51,9 +51,9 @@ const CreateQnA: React.FC<Props> = ({onback}) => {
         Authorization: 'Bearer ' + userToken
       },
     })
-    .then(res => {
-      console.log(res)
-      dispatch(setModal(null))
+    .then(() => {
+      onback()
+      alert('등록완료')
     })
     .catch(err => console.log(err))
   }

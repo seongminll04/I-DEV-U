@@ -4,8 +4,6 @@ import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import Withdraw from '../account/withdraw';
-
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 
@@ -24,38 +22,14 @@ interface Props {
 
 const EditAccount: React.FC<Props> = ({user}) => {
   const dispatch = useDispatch()
-  const [isWithdraw, setWithdraw] = useState(false);
   const [chknickname, setchknickname] = useState('no');
 
   const validationSchema = Yup.object().shape({
-    password: Yup.string()
-      .min(8, '8~14 자리, 특수문자 사용불가')
-      .max(14, '8~14 자리, 특수문자 사용불가')
-      .required('비밀번호를 입력해주세요.'),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password') as any, null], '비밀번호가 일치하지 않습니다.')
-      .required('비밀번호를 입력해주세요.'),
     // nickname: Yup.string()
     //   .min(2, '2~12 자리, 특수문자 사용불가')
     //   .max(12, '2~12 자리, 특수문자 사용불가')
     //   .required('닉네임을 입력해주세요.'),
   });
-  const goWithdrawal = () => {
-    // 회원탈퇴 버튼 누르면 실행
-    console.log("회원탈퇴 버튼 누름");
-    setWithdraw(true)
-    // axios({
-    //   method: 'put',
-    //   url: https://i9b206.p.ssafy.io:9090/notice/?~~~~~',
-    // })
-    // .then(() => {
-    //   console.log("탈퇴처리 되었습니다.")
-    // })
-    // .catch(err => {
-    //   console.log(err)
-    //   console.log("탈퇴처리 중 오류가 발생함")
-    // })
-  }  
 
   const nicknamecheck = (nickname:string) => {
     
@@ -90,8 +64,6 @@ const EditAccount: React.FC<Props> = ({user}) => {
       name: user.name,
       birth: user.birth,
       gender: user.gender,
-      password: user.password,
-      confirmPassword: '',
       intro: user.intro,
     },
     validationSchema: validationSchema,
@@ -135,8 +107,8 @@ const EditAccount: React.FC<Props> = ({user}) => {
   
   return (
     <div className={edit_css.mypage_modal_overlay}  onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
-      if (e.target === e.currentTarget) {dispatch(setModal(null)); setWithdraw(false);}}}>
-        {!isWithdraw ? <div className={edit_css.mypage_alert_modal}>
+      if (e.target === e.currentTarget) {dispatch(setModal(null));}}}>
+       <div className={edit_css.mypage_alert_modal}>
         <div className={edit_css.two_btn}>
           <span
             onClick={() => {
@@ -147,19 +119,19 @@ const EditAccount: React.FC<Props> = ({user}) => {
           </span>
           <span
             onClick={() => {
-              dispatch(setModal(null));setWithdraw(false);
+              dispatch(setModal(null));
             }}
           >
             닫기
           </span>
         </div>
-          <h1>회원정보 수정</h1>
+          <h1>내 정보 수정</h1>
           <hr/>
           <form id={edit_css.mypage_form} onSubmit={formik.handleSubmit}>
             <div className={edit_css.mypage_info}>
               <span>이름</span>
             </div>
-            <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('email')} readOnly/>
+            <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('name')} readOnly/>
             <div className={edit_css.mypage_info}>
               <span>생년월일</span>
             </div>
@@ -184,13 +156,9 @@ const EditAccount: React.FC<Props> = ({user}) => {
               <span>사진</span>
             </div>
             <input type="file" className={edit_css.mypage_input}/>
-            <button className={edit_css.mypage_button} type="submit" disabled={chknickname==='no' ||!formik.isValid || formik.isSubmitting }>수정</button>
+            <button className={edit_css.mypage_button} type="submit">수정</button>
           </form>
-          <p className={edit_css.mypage_withdrawal} onClick={goWithdrawal}>회원탈퇴</p>
-        </div>:
-        <div>
-          <Withdraw onBack={()=>{setWithdraw(false);}} onClose={()=>{setWithdraw(false);dispatch(setModal(null));}}/>
-        </div> }
+        </div>
     </div>
   );
 };

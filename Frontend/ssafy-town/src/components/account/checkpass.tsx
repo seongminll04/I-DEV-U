@@ -10,7 +10,8 @@ const CheckPass: React.FC = () => {
 
   const checkPass = () => {
     const userToken = localStorage.getItem('userToken')
-    const userIdx = localStorage.getItem('userIdx')
+    const userIdxStr = localStorage.getItem('userIdx')
+    const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
   
     axios({
       method: 'post',
@@ -24,12 +25,16 @@ const CheckPass: React.FC = () => {
       },
     })
       .then((res) => {
-        console.log(res);
-        alert("비밀번호 일치, 회원정보 수정 가능");
-        dispatch(setModal('회원정보수정2'));
+        if (res.data.status.statusCodeValue===200) {
+          alert("비밀번호 일치, 회원정보 수정 가능");
+          dispatch(setModal('회원정보수정2'));
+        }
+        else {
+          alert("비밀번호가 일치하지 않습니다.")
+        }
       })
       .catch((err) => {
-        alert("비밀번호가 일치하지 않습니다.")
+        alert("서버오류 : 다시시도해주세요")
         console.log(err);
       });
   
@@ -54,7 +59,7 @@ const CheckPass: React.FC = () => {
   }
   
   return (
-    <div>
+    <div className={checkpass_css.modal_overlay}>
       <div className={checkpass_css.withdraw_modal}>
         <div className={checkpass_css.two_btn}>
           <span>

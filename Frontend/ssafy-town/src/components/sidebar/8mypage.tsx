@@ -145,7 +145,7 @@ const Mypage: React.FC = () => {
         </div>
         <div className={mypage_css.mypage_view}>
           <div className={mypage_css.mypage_welcome}>
-            안녕하세요! {user.name} 님
+            안녕하세요! {user.nickname} 님
           </div>
           <button className={mypage_css.button} onClick={() => dispatch(setModal('회원정보수정1'))}>회원정보 수정</button>
           

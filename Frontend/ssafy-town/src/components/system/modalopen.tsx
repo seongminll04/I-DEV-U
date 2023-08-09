@@ -23,6 +23,7 @@ import DetailProject from '../board/DetailProject';
 import AlertResponse from '../board/AlertResponse';
 import CheckPass from '../account/checkpass';
 import EditSel from '../account/editsel';
+import Withdraw from '../account/withdraw';
 
 const ModalOpen: React.FC = () => {
   const dispatch = useDispatch()
@@ -46,6 +47,7 @@ const ModalOpen: React.FC = () => {
       : isModalOpen === '프로젝트가입알림' ? <AlertResponse />
       : isModalOpen === '회원정보수정1' ? <CheckPass />
       : isModalOpen === '회원정보수정2' ? <EditSel />
+      : isModalOpen === '회원탈퇴' ? <Withdraw />
       // : isModalOpen === '회원정보수정2' ? <EditSel />
       : null }
     </>

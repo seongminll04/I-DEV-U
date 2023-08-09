@@ -25,7 +25,19 @@
   flex-direction: column;
   align-items: center;
 }
-
+.alert_modal {
+  background-color: rgba(109, 206, 245, 1);
+  border-radius: 1rem;
+  width: 600px;
+  height: 380px;
+  padding: 20px;
+  box-sizing: border-box;
+  color : white;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 /* 모달창 스크롤 안보이게만 */
 .mypage_alert_modal::-webkit-scrollbar {
   display: none; /* 크롬, 사파리, 오페라, 엣지 */
@@ -138,4 +150,19 @@ cursor: pointer;
 
 .two_btn span:hover {
 color:gray
+}
+
+.passform {
+  display: flex;
+  align-items: center; /* 수직 중앙 정렬 */
+  justify-content: center; /* 수평 중앙 정렬 */
+  height: 100vh; /* 화면 높이에 맞춤 */
+}
+
+.split {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0.5em 0;
 }

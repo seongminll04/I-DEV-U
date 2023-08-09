@@ -1,20 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import mate_css from './3mate.module.css'
 
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 
+import axios from 'axios';
 
 const Mate: React.FC = () => {
   const dispatch = useDispatch();
+  const userToken = localStorage.getItem('userToken')
+
+  useEffect(()=>{
+    axios({
+      method:'get',
+      url:'https://i9b206.p.ssafy.io:9090/partner/list',
+      headers : {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+    .then(res=>console.log(res))
+    .catch(err=>console.log(err))
+  })
+
   return (
     <div>
       <div className='sidebar_modal'>
           <h1>동료찾기</h1>
-          <div style={{display:'flex', width:'85%'}}>
-            <button className={mate_css.button} onClick={()=>dispatch(setModal('동료찾기필터'))}>필터</button>
-            <button className={mate_css.button}>검색</button>
-          </div>
+          <button className={mate_css.button} onClick={()=>dispatch(setModal('동료찾기필터'))}>필터</button>
           <div className={mate_css.userattribute}>
             <div className={mate_css.userInfo} style={{fontSize:'large', fontWeight:'bold'}}>유저정보</div>
             <div className={mate_css.matchRate} style={{fontSize:'large', fontWeight:'bold'}}>일치율</div>

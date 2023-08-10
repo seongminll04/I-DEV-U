@@ -150,6 +150,11 @@ public class UserController {
 				.orElse(Result.builder().status(badRequest().body("설정 실패")).build());
 	}
 
+	@GetMapping("/getFollowList/{userIdx}")
+	public Result getFollowList(@PathVariable Integer userIdx) {
+		return userService.getFollowList(userIdx);
+	}
+
 	@PostMapping("/follow")
 	public Result userFollow(@RequestBody UserFollowDto userFollowDto) {
 		return userService.follow(userFollowDto);

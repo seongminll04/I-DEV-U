@@ -28,13 +28,13 @@ public class ChatMessage {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public static ChatMessage createMessage(Integer roomIdx, Integer userIdx, String nickname, String message) {
+    public static ChatMessage createMessage(Integer roomIdx, Integer userIdx, String nickname, String message, LocalDateTime createdAt) {
         ChatMessage msg = new ChatMessage();
         msg.roomIdx = roomIdx;
         msg.userIdx = userIdx;
         msg.nickname = nickname;
         msg.message = message;
-        msg.createdAt = LocalDateTime.now();
+        msg.createdAt = createdAt;
         return msg;
     }
 }

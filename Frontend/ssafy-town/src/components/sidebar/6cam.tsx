@@ -16,7 +16,7 @@ type ProjectDataType = {
 const Cam: React.FC = () => {
   const dispatch = useDispatch()
   const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
-  // const BACKEND_SERVER_URL = 'https://i9b206.p.ssafy.io';
+  // const BACKEND_SERVER_URL = 'https://i9b206.p.ssafy.io:9090';
   const [camList, setCamList] = useState<ProjectDataType[]>([]);
 
 

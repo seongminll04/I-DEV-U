@@ -11,7 +11,7 @@ const CreateProject: React.FC = () => {
   const OPENVIDU_SERVER_URL = process.env.REACT_APP_OPENVIDU_SERVER_URL;
   const OPENVIDU_SECRET = process.env.REACT_APP_OPENVIDU_SECRET;
   const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
-
+// const BACKEND_SERVER_URL = 'https://i9b206.p.ssafy.io:9090';
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [total_num, setTotalNum] = useState('2');
@@ -103,13 +103,13 @@ const CreateProject: React.FC = () => {
             content: content, // ~1000자
             totalNum: total_num, // 2~6
             nowNum: 1,
-            type: projectType, // PROJECT or STUDY로 보내짐,
             front: frontValue,  // 0아니면 1     // 스터디 누르면 null
             max_front: frontendNum, // 최대6     // 스터디 누르면 null
             back: backValue,  // 0아니면 1      // 스터디 누르면 null
             max_back: backendNum, // 최대 6      // 스터디 누르면 null
-            languageList:selectedLanguages, // 배열 최대 5개
+            type: projectType, // PROJECT or STUDY로 보내짐,
             session: sessionId,
+            languageList:selectedLanguages, // 배열 최대 5개
             techList: [],
           },
           headers: {
@@ -222,7 +222,7 @@ const CreateProject: React.FC = () => {
                     type="checkbox"
                     value={lang}
                     onChange={handleLanguageChange}
-                    checked={selectedLanguages.includes({language:lang})}
+                    checked={selectedLanguages.some(selLang => selLang.language === lang)}
                   />
                   <span> {lang} </span> 
                 </label>

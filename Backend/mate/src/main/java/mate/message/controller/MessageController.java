@@ -10,10 +10,7 @@ import mate.message.service.MessageService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,7 +24,7 @@ public class MessageController {
      * 해당방의 채팅내역 조회 (페이징)
      */
     @GetMapping("/chat/rooms/{roomIdx}/messages")
-    public Result findByRoomId(@PathVariable("roomIdx") Integer roomIdx, @RequestBody MessagePageDto messagePageDto) {
+    public Result findByRoomId(@PathVariable("roomIdx") Integer roomIdx, @RequestParam MessagePageDto messagePageDto) {
         List<MessageResponse> response = messageService.searchMessage(roomIdx, messagePageDto);
         return Result.builder().data(response).status(ResponseEntity.ok("채팅 내역")).build();
     }

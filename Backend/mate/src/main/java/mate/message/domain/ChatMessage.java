@@ -25,7 +25,6 @@ public class ChatMessage {
 
     private String message;
 
-    @CreatedDate
     private LocalDateTime createdAt;
 
     public static ChatMessage createMessage(Integer roomIdx, Integer userIdx, String nickname, String message, LocalDateTime createdAt) {

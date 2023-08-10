@@ -3,7 +3,6 @@ package mate.service;
 import lombok.RequiredArgsConstructor;
 import mate.domain.user.Notification;
 import mate.repository.NotificationRepository;
-import mate.repository.QuestionRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +12,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
+
     private final NotificationRepository notificationRepository;
 
     public void writeNotification(Notification notification) {
@@ -37,11 +37,19 @@ public class NotificationService {
         return notificationRepository.findAll(Sort.by(Sort.Direction.DESC, "idx"));
     }
 
-    public List<Notification> findNotificationByContent(String keyWord) {
-        return notificationRepository.findByContentContainingOrderByIdxDesc(keyWord);
-    }
+//    public List<Notification> findNotificationByContent(String keyWord) {
+//        return notificationRepository.findByContentContainingOrderByIdxDesc(keyWord);
+//    }
 
     public List<Notification> findUncheckedNotification() {
         return notificationRepository.findByCheckedOrderByIdxDesc("UNREAD");
+    }
+
+    public List<Notification> findTop4UncheckedNotification(int userIdx) {
+        return notificationRepository.findTop4ByUserIdxAndCheckedOrderByIdxDesc(userIdx, "UNREAD");
+    }
+
+    public List<Notification> findByUserIdxAndChecked(int userIdx) {
+        return notificationRepository.findByUserIdxAndCheckedOrderByIdxDesc(userIdx, "UNREAD");
     }
 }

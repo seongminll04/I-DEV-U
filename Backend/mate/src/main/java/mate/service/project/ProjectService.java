@@ -92,7 +92,12 @@ public class ProjectService {
 			.project(project)
 			.user(user)
 			.build());
+		projectRepository.plusnowNum(project.getIdx());
+	}
 
+	public void leaveProject(int userIdx, int projectIdx) {
+		projectParticipationRepository.leaveProject(userIdx, projectIdx);
+		projectRepository.minusnowNum(projectIdx);
 	}
 
 	public Project modifyProject(ProjectDto projectDto) {

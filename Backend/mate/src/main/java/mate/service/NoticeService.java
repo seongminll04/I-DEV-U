@@ -39,8 +39,11 @@ public class NoticeService {
 		return notice.get();
 	}
 
-	public void modifyNotice(NoticeBoard notice) {
-		noticeRepository.save(notice);
+	public void modifyNotice(NoticeDto noticeDto) {
+		noticeRepository.save(NoticeBoard.builder()
+						.title(noticeDto.getTitle())
+						.content(noticeDto.getContent())
+				.build());
 	}
 
 	public void deleteNotice(int noticeIdx) {

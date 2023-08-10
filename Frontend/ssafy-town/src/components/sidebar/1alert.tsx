@@ -39,8 +39,6 @@ const Alert: React.FC = () => {
   useEffect(()=>{
     // 모달창이 열렸다면 공지사항 데이터 불러오기
     const userToken = localStorage.getItem('userToken')
-    const userIdxStr = localStorage.getItem('userIdx')
-    const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
     axios({
       method:'get',
       url:'https://i9b206.p.ssafy.io:9090/notice/list/top',
@@ -59,7 +57,8 @@ const Alert: React.FC = () => {
 
   useEffect(()=>{
     // 모달창이 열렸다면 읽지 않은 알림 데이터 불러오기
-    const userIdx = localStorage.getItem('userIdx');
+    const userIdxStr = localStorage.getItem('userIdx')
+    const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
     const userToken = localStorage.getItem('userToken')
     axios({
       method:'get',

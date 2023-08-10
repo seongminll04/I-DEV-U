@@ -22,19 +22,17 @@ interface messageProps {
 const Chatroom: React.FC = () => {
   const dispatch = useDispatch()
   const [messageInput, setMessageInput] = useState('');
-
+  const [firstscroll, setfirstscroll] = useState(false);
   const stompClientRef = React.useRef<Client | null>(null);
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
   const [receiveMessages, setReceiveMessages] = useState<messageProps[]>([])
   const chatScrollRef = React.useRef<HTMLDivElement | null>(null); // Ref for chat_scroll div
-
-  const [firstscroll, setFirstScroll] = useState(false);
   const isChatIdx = useSelector((state: AppState) => state.isChatIdx);
   const isChatTitle = useSelector((state: AppState) => state.isChatTitle);
   const userIdxStr = localStorage.getItem('userIdx')
   var userIdx: number | null;
   if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
-
+  
   useEffect(()=>{
     const userToken = localStorage.getItem('userToken')
     axios({
@@ -63,7 +61,6 @@ const Chatroom: React.FC = () => {
           chats.push(data)
         }
         setReceiveMessages([...chats])
-
         if (chatScrollRef.current) {
           chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
         }
@@ -74,57 +71,41 @@ const Chatroom: React.FC = () => {
     .catch(err=>console.log(err))
   },[isChatIdx])
 
-  useEffect(()=>{
-    if (firstscroll===false) {
-      setFirstScroll(true)
-      if (chatScrollRef.current) {
-        chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
-      }
-    }
-  },[firstscroll,receiveMessages])
-
   // 구독등록
   useEffect(() => {
     if (stompClientRef.current) {
-      stompClientRef.current.subscribe(`/sub/rooms/${isChatIdx}`, function(message: Message) {
+      const subscription = stompClientRef.current.subscribe(`/sub/rooms/${isChatIdx}`, function(message: Message) {
         const newMessage = JSON.parse(message.body);
         const date = new Date(newMessage.createdAt)
-        setReceiveMessages([...receiveMessages, {
+        const newd=[{
           'userIdx':newMessage.userIdx,
           'nickname':newMessage.nickname,
           'roomIdx':newMessage.roomIdx,
           'idx':newMessage.messageIdx,
           'message':newMessage.message,
           'createdAt':date,
-        }])
-      })
-      }
+        }]
+        var chksc=false;
+        if (chatScrollRef.current && chatScrollRef.current.scrollHeight > chatScrollRef.current.clientHeight &&
+          chatScrollRef.current.scrollTop === chatScrollRef.current.scrollHeight){
+            chksc=true
+            setReceiveMessages(prevMessages => [...prevMessages, ...newd]);
+        }
+        else {
+          setReceiveMessages(prevMessages => [...prevMessages, ...newd]);
+        }
 
+        if (chatScrollRef.current && chksc) {
+          chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
+        }
+      });
       return () => {
         if (stompClientRef.current) {
-        stompClientRef.current.unsubscribe(`/sub/chatRoom/${isChatIdx}`)}
+          subscription.unsubscribe();
+        }
+      };
     }
-  }, [stompClientRef,receiveMessages,isChatIdx]);
-
-
-  // 끝까지 스크롤 시 추가로딩
-  const addload = () => {
-    const userToken = localStorage.getItem('userToken')
-    axios({
-      method:'get',
-      url:`https://i9b206.p.ssafy.io:9090/chat/rooms/${isChatIdx}/messages`,
-      params:{
-        messageIdx : receiveMessages[0].idx,
-        size:30
-      },
-      headers : {
-        Authorization: 'Bearer ' + userToken
-      }})
-    .then(res=>{
-      setReceiveMessages([res.data,...receiveMessages])
-    })
-    .catch(err=>console.log(err))
-  }
+  }, [isChatIdx]);
 
   const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget
@@ -156,11 +137,31 @@ const Chatroom: React.FC = () => {
       setMessageInput('');
     }};
 
+
   const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
     const target = event.currentTarget;
     if (target.scrollHeight > target.clientHeight && target.scrollTop === 0) {
       // Load more messages when scrolling to the top
-      addload();
+      const userToken = localStorage.getItem('userToken')
+      axios({
+        method:'get',
+        url:`https://i9b206.p.ssafy.io:9090/chat/rooms/${isChatIdx}/messages`,
+        params:{
+          messageIdx : receiveMessages[0].idx,
+          size:30
+        },
+        headers : {
+          Authorization: 'Bearer ' + userToken
+        }})
+      .then(res=>{
+        const chats:messageProps[] = [];
+        for (const data of res.data.data) {
+          data.createdAt=new Date(data.createdAt)
+          chats.push(data)
+        }
+        setReceiveMessages([...chats,...receiveMessages])
+      })
+      .catch(err=>console.log(err))
     }
   };
 

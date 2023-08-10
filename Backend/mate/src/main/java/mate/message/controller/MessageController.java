@@ -25,9 +25,8 @@ public class MessageController {
      */
     @GetMapping("/chat/rooms/{roomIdx}/messages")
     public Result findByRoomId(@PathVariable("roomIdx") Integer roomIdx,
-                               @RequestParam("messageIdx") Integer messageIdx,
-                               @RequestParam("size") int size) {
-        List<MessageResponse> response = messageService.searchMessage(roomIdx, messageIdx, size);
+                               @RequestParam MessagePageDto messagePageDto) {
+        List<MessageResponse> response = messageService.searchMessage(roomIdx, messagePageDto);
         return Result.builder().data(response).status(ResponseEntity.ok("채팅 내역")).build();
     }
     /**

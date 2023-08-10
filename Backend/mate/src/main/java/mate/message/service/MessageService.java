@@ -68,12 +68,16 @@ public class MessageService {
                 .collect(Collectors.toList());
     }
 
-    public Result lastMessage(Integer roomIdx){
-
-        ChatMessage message = messageQueryRepository.findLastMessage(roomIdx)
-                .orElseThrow(() -> new NotFoundException(CHAT_ROOM_NOT_FOUND));
-
-        MessageResponse response = MessageResponse.from(message);
-        return Result.builder().data(response).status(ResponseEntity.ok("마지막 메세지")).build();
+    public Result lastMessage(Integer roomIdx) {
+        return messageQueryRepository.findLastMessage(roomIdx)
+                .map(message -> {
+                    MessageResponse response = MessageResponse.from(message);
+                    return Result.builder().data(response).status(ResponseEntity.ok("마지막 메세지")).build();
+                })
+                .orElseGet(() -> {
+                    MessageResponse response = new MessageResponse();  // 빈 응답 생성 또는 원하는 처리
+                    return Result.builder().data(response).status(ResponseEntity.ok("채팅 내용 없음")).build();
+                });
     }
+
 }

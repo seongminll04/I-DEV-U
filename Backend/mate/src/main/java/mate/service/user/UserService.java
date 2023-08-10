@@ -67,6 +67,7 @@ public class UserService {
                 .gender(userSignUpDto.getGender())
                 .status(UserStatus.A)
                 .role(Role.USER)
+                .invite("true")
                 .build();
 
         if (userSignUpDto.getEmail().startsWith("kakao_")) user.setKakao();
@@ -97,6 +98,7 @@ public class UserService {
                     .status(user.getStatus())
                     .originalFileName(user.getOriginalFileName())
                     .storedFileName(user.getStoredFileName())
+                    .invite(user.getInvite())
                     .build();
 
             userRepository.save(user);

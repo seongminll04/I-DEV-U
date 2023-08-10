@@ -5,6 +5,8 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    width: 100%;
+    height: 100%;
 }
 
 #session {
@@ -15,33 +17,63 @@
 }
 
 #session-header {
-    margin-bottom: 20px;
+    position: fixed;
+    left: 50%;                    /* 화면의 수평 중앙에 위치 */
+    transform: translateX(-45%);  /* 위치를 완벽하게 중앙으로 조정 */
+    bottom: 3%;
     display: flex;
-    gap: 10px; /* This will give space between each button */
-}
-
-button:hover {
-    background-color: rgba(0, 0, 0, 0.1); /* A light gray shade on hover */
-}
-
-#video-container {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap; /* Allow the video components to wrap to next row if required */
     gap: 10px;
 }
 
+button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+#video-container {
+    display: flex;
+    justify-content: center;  /* 중앙 정렬 (수평) */
+    align-items: flex-start;  /* 시작 지점에 배치 (수직) */
+    flex-wrap: wrap;  /* 요소가 공간을 초과하면 다음 줄로 이동 */
+}
+
 .stream-container {
-    position: relative; /* For any absolute positioning inside */
+    position: fixed;
+    bottom: 0px;
+    right: 20px;
+    z-index: 0;
 }
 
 .stream-container span {
     position: absolute;
-    top: 0;
-    left: 0;
+    bottom: 10px;    
+    left: 10px;      
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
     padding: 5px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
+}
+
+
+.stream-container2 {
+    margin: 10px;  /* 요소 간의 간격 조절 */
+    /* position, top, left, transform 속성 제거 */
+    z-index: 1;
+}
+
+.stream-container2 span {
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);  /* 요소를 중앙에 배치 */
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.toggleVisibility, .toggleVideo, .toggleAudio, .toggleSpeaker, .switchCamera {
+    cursor: pointer;
+    transition: background-color 0.3s;
 }

@@ -153,10 +153,11 @@ const SignupForm = () => {
           data : values,
         })
         .then(() => {
+          alert('회원가입 성공')
           navigate('/login')
         })
         .catch(() => {
-          alert('회원가입실패')})
+          alert('회원가입 실패')})
       }
     },
   });

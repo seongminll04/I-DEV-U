@@ -16,6 +16,7 @@ interface Notice {
   content: string;
   createdAt: string;
 }
+
 interface AlertProps{
   idx:number;
   checked:string;
@@ -24,6 +25,7 @@ interface AlertProps{
   dataType:string;
   user:Object;
 }
+
 const Alert: React.FC = () => {
   const dispatch = useDispatch()
   const [noticeList,setNoticeList] =useState<Notice[]>([]);

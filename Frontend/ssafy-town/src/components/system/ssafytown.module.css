@@ -67,33 +67,8 @@
     
 }
 
-.video_bar button{ /*이부분 이미지로 */
-    z-index: 1; 
-    cursor: pointer;
-}
-
-.video_bar button:nth-of-type(1) {
-    transform: translateX(470%) translateY(1250%);
-}
-
-.video_bar button:nth-of-type(2) {
-    transform: translateX(510%) translateY(1250%);
-}
-
-.video_bar button:nth-of-type(3) {
-    transform: translateX(520%) translateY(1250%);
-}
-
-.video_bar button:nth-of-type(4) {
-    transform: translateX(530%) translateY(1250%);
-}
-
-.video_bar button:nth-of-type(5) {
-    transform: translateX(540%) translateY(1250%);
-}
-
 
 .video_bar video {
-    width: 280px;
-    height: 210px;
+    width: 240px;
+    height: 180px;
 }

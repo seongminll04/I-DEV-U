@@ -19,4 +19,6 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Integer> {
             "where cru.user = :user " +
             "order by cr.updatedAt desc ")
     List<ChatRoom> findWithUser(@Param("user") User user);
+
+    Optional<ChatRoom> findByIdx(Integer Idx);
 }

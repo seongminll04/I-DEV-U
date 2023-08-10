@@ -32,7 +32,7 @@ public class ProjectService {
 	private final ProjectTechRepository projectTechRepository;
 	private final ProjectLanguageRepository projectLanguageRepository;
 
-	public Project registerProject(ProjectDto projectDto) {
+	public User registerProject(ProjectDto projectDto) {
 		User user = userRepository.findById(projectDto.getUserIdx()).get();
 
 		Project project = projectRepository.save(Project.builder()
@@ -75,7 +75,7 @@ public class ProjectService {
 		projectTechRepository.saveAll(techs);
 		projectLanguageRepository.saveAll(languages);
 
-		return project;
+		return user;
 	}
 
 	public Project detailProject(int projectIdx) {
@@ -92,7 +92,6 @@ public class ProjectService {
 			.project(project)
 			.user(user)
 			.build());
-
 		projectRepository.plusnowNum(project.getIdx());
 	}
 

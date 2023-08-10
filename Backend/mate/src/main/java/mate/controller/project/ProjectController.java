@@ -30,12 +30,17 @@ public class ProjectController {
 	private final ProjectService projectService;
 
 	@PostMapping("/register")
-	public ResponseEntity<Map<String, Object>> registerProject(@RequestBody ProjectDto projectDto) {
+	public ResponseEntity<Map<String, Object>> registerProject(@RequestBody Map<String, ProjectDto> input) {
 		Map<String, Object> map = new HashMap<>();
 
-		Project project = projectService.registerProject(projectDto);
+		ProjectDto projectDto = input.get("data");
 
-		map.put("resmsg", "프로젝트 생성 성공");
+		try {
+			map.put("user", projectService.registerProject(projectDto));
+			map.put("resmsg", "프로젝트 생성 성공");
+		} catch (Exception e) {
+			map.put("resmsg", "프로젝트 생성 실패");
+		}
 
 		return ResponseEntity.ok(map);
 	}

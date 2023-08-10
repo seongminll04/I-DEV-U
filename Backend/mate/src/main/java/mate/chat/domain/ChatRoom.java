@@ -1,11 +1,12 @@
 package mate.chat.domain;
 
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import mate.domain.user.User;
 import mate.global.exception.DuplicateException;
 import mate.global.exception.ExistException;
-import mate.global.exception.NotEnoughException;
 import mate.global.exception.NotFoundException;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -52,6 +53,10 @@ public class ChatRoom {
     }
     public void update(String title){
         this.title = title;
+    }
+
+    public void updateTime(LocalDateTime updatedAt){
+        this.updatedAt = updatedAt;
     }
 
     public boolean isMaster(Integer userIdx) {

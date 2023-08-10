@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class NotificationDto {
+    private Integer idx;
     private Integer userIdx;
     private String nickname;
     private String content;

@@ -18,12 +18,7 @@ import axios from "axios";
     master:boolean,
     userCount :number,
   }
-  // interface chat_data {
-  //   roomIdx:number,
-  //   title:string,
-  //   master :boolean,
-  //   userCount :number,
-  // }
+  
   const Chat: React.FC = () => {
     const dispatch = useDispatch()
 

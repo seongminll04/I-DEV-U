@@ -22,9 +22,11 @@ interface messageProps {
 const Chatroom: React.FC = () => {
   const dispatch = useDispatch()
   const [messageInput, setMessageInput] = useState('');
-  const [firstscroll, setfirstscroll] = useState(false);
   const stompClientRef = React.useRef<Client | null>(null);
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
+  const [firstSc, setFirstSc] = useState(true)
+
+  const [sch, setSch] = useState<number>()
   const [receiveMessages, setReceiveMessages] = useState<messageProps[]>([])
   const chatScrollRef = React.useRef<HTMLDivElement | null>(null); // Ref for chat_scroll div
   const isChatIdx = useSelector((state: AppState) => state.isChatIdx);
@@ -61,15 +63,30 @@ const Chatroom: React.FC = () => {
           chats.push(data)
         }
         setReceiveMessages([...chats])
-        if (chatScrollRef.current) {
-          chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
-        }
+        setFirstSc(false)
       })
       .catch(err=>console.log(err))
 
     })
     .catch(err=>console.log(err))
   },[isChatIdx])
+
+  useEffect(() => {
+    if (chatScrollRef.current) {
+      if (firstSc===false){
+        chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
+        setFirstSc(true)
+      }
+      else if (sch && sch!==-1) {
+        chatScrollRef.current.scrollTop=chatScrollRef.current.scrollHeight-chatScrollRef.current.clientHeight-sch
+        setSch(-1)
+      }
+      else if ((chatScrollRef.current.scrollHeight-(chatScrollRef.current.scrollTop+chatScrollRef.current.clientHeight)) < 100) {
+        chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
+      }
+      
+    }
+  }, [receiveMessages,firstSc,sch]);
 
   // 구독등록
   useEffect(() => {
@@ -85,19 +102,7 @@ const Chatroom: React.FC = () => {
           'message':newMessage.message,
           'createdAt':date,
         }]
-        var chksc=false;
-        if (chatScrollRef.current && chatScrollRef.current.scrollHeight > chatScrollRef.current.clientHeight &&
-          chatScrollRef.current.scrollTop === chatScrollRef.current.scrollHeight){
-            chksc=true
-            setReceiveMessages(prevMessages => [...prevMessages, ...newd]);
-        }
-        else {
-          setReceiveMessages(prevMessages => [...prevMessages, ...newd]);
-        }
-
-        if (chatScrollRef.current && chksc) {
-          chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
-        }
+        setReceiveMessages(prevMessages => [...prevMessages, ...newd]);
       });
       return () => {
         if (stompClientRef.current) {
@@ -139,10 +144,12 @@ const Chatroom: React.FC = () => {
 
 
   const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
+
     const target = event.currentTarget;
     if (target.scrollHeight > target.clientHeight && target.scrollTop === 0) {
       // Load more messages when scrolling to the top
       const userToken = localStorage.getItem('userToken')
+      var aaa=target.scrollHeight-target.clientHeight
       axios({
         method:'get',
         url:`https://i9b206.p.ssafy.io:9090/chat/rooms/${isChatIdx}/messages`,
@@ -159,7 +166,9 @@ const Chatroom: React.FC = () => {
           data.createdAt=new Date(data.createdAt)
           chats.push(data)
         }
-        setReceiveMessages([...chats,...receiveMessages])
+        setReceiveMessages(prevMessages => [...chats,...prevMessages]);
+        console.log('추가 로딩')
+        setSch(aaa);
       })
       .catch(err=>console.log(err))
     }
@@ -191,7 +200,7 @@ const Chatroom: React.FC = () => {
       <hr />
       </div>
       <div className={chat_css.chat_scroll} onScroll={handleScroll} style={{height:'80vh'}} ref={chatScrollRef}>
-        {receiveMessages.map((message, index) => (
+        {receiveMessages.sort((a, b) => a.idx - b.idx).map((message, index) => (
           <div className={chat_css.chat_container} key={index}>
             {message.userIdx === userIdx ? 
             <><div style={{alignSelf:'flex-end', marginTop:'10px'}}>{message.nickname}</div>

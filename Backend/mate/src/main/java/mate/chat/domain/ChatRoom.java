@@ -1,11 +1,14 @@
 package mate.chat.domain;
 
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import mate.chat.dto.ChatRoomCreateRequest;
+import mate.chat.dto.ChatRoomUpdateRequest;
 import mate.domain.user.User;
 import mate.global.exception.DuplicateException;
 import mate.global.exception.ExistException;
-import mate.global.exception.NotEnoughException;
 import mate.global.exception.NotFoundException;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -30,9 +33,8 @@ public class ChatRoom {
     @Enumerated(EnumType.STRING)
     private ChatRoomStatus type;
 
-    @CreatedDate
+
     private LocalDateTime createdAt;
-    @LastModifiedDate
     private LocalDateTime updatedAt;
 
     private int userCount;
@@ -40,18 +42,23 @@ public class ChatRoom {
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatParticipation> chatRoomUsers = new ArrayList<>();
 
-    public static ChatRoom createChatRoom(String title, User user) {
+    public static ChatRoom createChatRoom(ChatRoomCreateRequest chatRoomCreateRequest, User user) {
         ChatRoom chatRoom = new ChatRoom();
-        chatRoom.title = title;
+        chatRoom.title = chatRoomCreateRequest.getTitle();
         chatRoom.type = ChatRoomStatus.LACK;
-        chatRoom.createdAt = LocalDateTime.now();
-        chatRoom.updatedAt = LocalDateTime.now();
+        chatRoom.createdAt = chatRoomCreateRequest.getCreatedAt();
+        chatRoom.updatedAt = chatRoomCreateRequest.getCreatedAt();
         chatRoom.chatRoomUsers.add(ChatParticipation.createChatRoomUser(Role.MASTER, user, chatRoom));
         chatRoom.userCount++;
         return chatRoom;
     }
-    public void update(String title){
-        this.title = title;
+    public void update(ChatRoomUpdateRequest chatRoomUpdateRequest){
+        this.title = chatRoomUpdateRequest.getTitle();
+        this.updatedAt = chatRoomUpdateRequest.getUpdatedAt();
+    }
+
+    public void updateTime(LocalDateTime updatedAt){
+        this.updatedAt = updatedAt;
     }
 
     public boolean isMaster(Integer userIdx) {
@@ -62,7 +69,7 @@ public class ChatRoom {
         return result.size() == 1 && result.get(0).getRole() == Role.MASTER;
     }
 
-    public void addChatRoomUser(User user) {
+    public void addChatRoomUser(User user, LocalDateTime updatedAt) {
 
 //        if (chatRoomUsers.size() == LIMIT) {
 //            throw new NotEnoughException("채팅방 인원이 다차서 입장하실 수 없습니다.");
@@ -75,7 +82,7 @@ public class ChatRoom {
         if (result.size() > 0) {
             throw new DuplicateException("이미 참가한 채팅방입니다.");
         }
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = updatedAt;
         chatRoomUsers.add(ChatParticipation.createChatRoomUser(Role.USER, user, this));
         this.userCount++;
 //        this.type = chatRoomUsers.size() == LIMIT ? ChatRoomStatus.FULL : ChatRoomStatus.LACK;

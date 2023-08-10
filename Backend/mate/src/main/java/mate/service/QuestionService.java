@@ -34,6 +34,7 @@ public class QuestionService {
                 .user(user)
                 .title(questionBoardDto.getTitle())
                 .content(questionBoardDto.getContent())
+                        .createdAt(LocalDateTime.now())
                 .build());
     }
 
@@ -97,6 +98,7 @@ public class QuestionService {
                         .questionBoard(qb)
                         .user(user)
                         .content(commentDto.getContent())
+                        .createdAt(LocalDateTime.now())
                 .build());
     }
 

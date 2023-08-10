@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageResponse {
-
+    private Integer idx;
     private Integer roomIdx;
 
     private Integer userIdx;

@@ -51,8 +51,8 @@ public class ChatRoomController {
 
     @PostMapping("/rooms/{roomIdx}/users")
     public Result createChatRoomUser(@PathVariable("roomIdx") Integer roomIdx,
-                                     @RequestBody ChatRoomUserRequest createChatRoomUserDto){
-        return chatRoomService.createChatRoomUser(roomIdx, createChatRoomUserDto);
+                                     @RequestBody ChatRoomUserRequest chatRoomUserRequest){
+        return chatRoomService.createChatRoomUser(roomIdx, chatRoomUserRequest);
     }
 
     @DeleteMapping("/rooms/{roomIdx}/users")

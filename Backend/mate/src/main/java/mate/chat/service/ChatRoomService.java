@@ -51,7 +51,7 @@ public class ChatRoomService {
 
         User user = userRepository.findByIdx(chatRoomCreateRequest.getUserIdx()).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
-        ChatRoom chatRoom = ChatRoom.createChatRoom(chatRoomCreateRequest.getTitle(), user);
+        ChatRoom chatRoom = ChatRoom.createChatRoom(chatRoomCreateRequest, user);
 
         chatRoomRepository.save(chatRoom);
 
@@ -77,7 +77,7 @@ public class ChatRoomService {
 
         if (!findChatRoom.isMaster(chatRoomUpdateRequest.getUserIdx())) throw new AccessDeniedException("방장이 아닙니디.");
 
-        findChatRoom.update(chatRoomUpdateRequest.getTitle());
+        findChatRoom.update(chatRoomUpdateRequest);
 
         return Result.builder().status(ResponseEntity.ok("채팅방 수정 성공")).build();
 
@@ -91,7 +91,7 @@ public class ChatRoomService {
         User user = userRepository.findByIdx(chatRoomUserRequest.getUserIdx())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
-        findChatRoom.addChatRoomUser(user);
+        findChatRoom.addChatRoomUser(user, chatRoomUserRequest.getUpdatedAt());
         return Result.builder().status(ResponseEntity.ok(roomIdx + " 번 방 " + user.getNickname() + " 입장")).build();
     }
 

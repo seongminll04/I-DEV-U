@@ -121,7 +121,7 @@ public class UserController {
 				.orElse(Result.builder().status(ok().body("삭제 실패")).build());
 	}
 
-	@PostMapping("modify/check")
+	@PostMapping("/modify/check")
 	public Result userModifyCheck(@RequestBody UserCheckDto userCheckDto) {
 
 		return userService.check(userCheckDto);

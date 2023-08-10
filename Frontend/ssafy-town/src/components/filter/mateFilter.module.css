@@ -14,14 +14,29 @@
     border-radius: 1rem;
     width:50%;
     height: 460px;
-    padding: 100px;
+    padding: 80px;
     box-sizing: border-box;
     color : white;
+    overflow: auto;
 }
 
+.logout_modal h1{
+    color: black;
+    font-weight: bold;
+    font-size: 50px;
+    margin-bottom: 30px;
+}
+
+.logout_modal p {
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+
 .button_icon {
-    margin: 0 100px;
-    margin-top:100px;
+    margin: 0 90px;
+    margin-top : 60px;
     display: flex;
     justify-content: space-between;
 }

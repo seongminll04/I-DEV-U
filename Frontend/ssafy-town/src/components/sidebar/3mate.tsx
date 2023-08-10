@@ -10,16 +10,17 @@ interface Matep {
   name: string;
   nickname: string;
   percent: number;
+  languageList: Array<string>;
 }
 
 const Mate: React.FC = () => {
   const dispatch = useDispatch();
   const userToken = localStorage.getItem('userToken');
   const [mateList, setMateList] = useState<Matep[]>([
-    { "name": "김싸피", "nickname": "김김김", "percent": 55 },
-    { "name": "이싸피", "nickname": "이이이", "percent": 46 },
-    { "name": "박싸피", "nickname": "박박박", "percent": 37 },
-    { "name": "최싸피", "nickname": "최최최", "percent": 28 },
+    { "name": "김싸피", "nickname": "김김김", "percent": 55, "languageList": [] },
+    { "name": "이싸피", "nickname": "이이이", "percent": 46, "languageList": [] },
+    { "name": "박싸피", "nickname": "박박박", "percent": 37, "languageList": [] },
+    { "name": "최싸피", "nickname": "최최최", "percent": 28, "languageList": [] },
   ]);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ const Mate: React.FC = () => {
       },
     })
       .then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         setMateList(res.data.userList);
       })
       .catch(err => console.log(err))
@@ -55,6 +56,11 @@ const Mate: React.FC = () => {
                     <img src="assets/default_profile.png" alt="" />
                     <div className={mate_css.profiledata}>
                       <b>{mate.name}</b>
+                      {mate.languageList.map((lang: string) => {
+                        return (<p style={{ color: 'gray', marginTop : 0, marginBottom: 0 }}>
+                          # {lang}
+                        </p>)
+                      })}
                     </div>
                   </div>
                 </div>

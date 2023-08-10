@@ -33,9 +33,8 @@ public class ChatRoom {
     @Enumerated(EnumType.STRING)
     private ChatRoomStatus type;
 
-    @CreatedDate
+
     private LocalDateTime createdAt;
-    @LastModifiedDate
     private LocalDateTime updatedAt;
 
     private int userCount;

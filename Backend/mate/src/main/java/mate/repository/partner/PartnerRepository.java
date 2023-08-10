@@ -12,13 +12,19 @@ import mate.domain.partner.Partner;
 @Repository
 public interface PartnerRepository extends JpaRepository<Partner, Integer> {
 	@Query(
-		"SELECT ba.user.name as name, ba.user.nickname as nickname, ROUND((COUNT(*) / :size) * 100) AS percent "
+		"SELECT ba.user.name as name, ba.user.nickname as nickname, ROUND((COUNT(*) / :size) * 100) AS percent, ba.user.idx as userIdx "
 			+
 			"FROM BasicAnswer ba " +
 			"WHERE ba.tag IN (:tag) " +
 			"GROUP BY ba.user.idx " +
 			"ORDER BY percent DESC")
 	List<Object> listPartner(@Param("tag") List<String> tag, @Param("size") long size);
+
+	@Query("SELECT ba.user.name as name, ba.user.nickname as nickname, ba.user.idx as userIdx "
+		+
+		"FROM BasicAnswer ba " +
+		"GROUP BY ba.user.idx ")
+	List<Object> allPatrner();
 
 	@Query("SELECT ba.user.idx as user, ba.tag "
 		+ "FROM BasicAnswer as ba "

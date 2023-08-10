@@ -3,15 +3,15 @@ package mate.service.partner;
 import java.util.ArrayList;
 import java.util.List;
 
-import mate.domain.user.User;
-import mate.dto.partner.DetailDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import mate.domain.user.User;
+import mate.dto.partner.DetailDto;
 import mate.dto.partner.PartnerDto;
-import mate.dto.partner.TagDto;
 import mate.repository.partner.PartnerRepository;
+import mate.repository.user.BasicRepository;
 import mate.repository.user.UserRepository;
 
 @Service
@@ -21,14 +21,9 @@ public class PartnerService {
 
 	private final PartnerRepository partnerRepository;
 	private final UserRepository userRepository;
+	private final BasicRepository basicRepository;
 
 	public List<PartnerDto> listPartner(List<String> input) {
-
-//		List<String> tagList = new ArrayList<>();
-//
-//		for (TagDto tagDto : input) {
-//			tagList.add(tagDto.getTag());
-//		}
 
 		List<Object> partners = partnerRepository.listPartner(input, input.size());
 
@@ -41,11 +36,41 @@ public class PartnerService {
 			String name = (String)result[0];
 			String nickname = (String)result[1];
 			Long percent = (Long)result[2];
+			Integer userIdx = (Integer)result[3];
+
+			List<String> language = basicRepository.findLanguage(userIdx);
 
 			PartnerDto partnerDto = new PartnerDto();
 			partnerDto.setName(name);
 			partnerDto.setNickname(nickname);
 			partnerDto.setPercent(percent);
+			partnerDto.setLanguageList(language);
+
+			list.add(partnerDto);
+		}
+
+		return list;
+	}
+
+	public List<PartnerDto> allPartner() {
+		List<Object> partners = partnerRepository.allPatrner();
+
+		List<PartnerDto> list = new ArrayList<>();
+
+		for (Object o : partners) {
+			Object[] result = (Object[])o;
+
+			// Assuming the order of elements in the array corresponds to the order of fields in PartnerDto
+			String name = (String)result[0];
+			String nickname = (String)result[1];
+			Integer userIdx = (Integer)result[2];
+
+			List<String> language = basicRepository.findLanguage(userIdx);
+
+			PartnerDto partnerDto = new PartnerDto();
+			partnerDto.setName(name);
+			partnerDto.setNickname(nickname);
+			partnerDto.setLanguageList(language);
 
 			list.add(partnerDto);
 		}

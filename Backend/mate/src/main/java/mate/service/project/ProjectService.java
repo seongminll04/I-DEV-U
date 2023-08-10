@@ -62,6 +62,8 @@ public class ProjectService {
 				.build());
 		}
 
+		projectTechRepository.saveAll(techs);
+
 		List<ProjectLanguage> languages = new ArrayList<>();
 
 		// 일단 비어있는 projectLanguageDto의 project에 방금 생성된 project 삽입
@@ -72,7 +74,6 @@ public class ProjectService {
 				.build());
 		}
 
-		projectTechRepository.saveAll(techs);
 		projectLanguageRepository.saveAll(languages);
 
 		return user;

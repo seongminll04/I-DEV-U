@@ -121,7 +121,7 @@ public class UserController {
 				.orElse(Result.builder().status(ok().body("삭제 실패")).build());
 	}
 
-	@PostMapping("modify/check")
+	@PostMapping("/modify/check")
 	public Result userModifyCheck(@RequestBody UserCheckDto userCheckDto) {
 
 		return userService.check(userCheckDto);
@@ -148,6 +148,11 @@ public class UserController {
 					return Result.builder().status(ok().body("설정 성공")).build();
 				})
 				.orElse(Result.builder().status(badRequest().body("설정 실패")).build());
+	}
+
+	@GetMapping("/getFollowList/{userIdx}")
+	public Result getFollowList(@PathVariable Integer userIdx) {
+		return userService.getFollowList(userIdx);
 	}
 
 	@PostMapping("/follow")

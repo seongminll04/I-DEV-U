@@ -23,8 +23,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
@@ -107,7 +109,7 @@ public class UserService {
     public Result check(UserCheckDto userCheckDto){
 
         User user = userRepository.findByIdx(userCheckDto.getUserIdx())
-                .orElseThrow(() -> new UsernameNotFoundException("해당 화원이 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("해당 회원이 존재하지 않습니다."));
         if (user.getEmail().startsWith("kakao_")) userCheckDto.setPassword("kakao");
         System.out.println(userCheckDto.getPassword());
         System.out.println(user.getPassword());
@@ -127,12 +129,29 @@ public class UserService {
                 }).orElse(Result.builder().status(badRequest().body("비밀번호 변경 실패")).build());
     }
 
+    public Result getFollowList(Integer userIdx) {
+        List<Follow> tmp = followRepository.findByUserIdx(userIdx).get();
+        if (tmp.size() == 0) return Result.builder().status(ok().body("목록 비어있음")).build();
+        List<UserFollowDto> followList = tmp.stream().map(x -> {
+            UserFollowDto ss = new UserFollowDto();
+            ss.setUserIdx(userIdx);
+            ss.setFollowIdx(x.getFollowUser().getIdx());
+            ss.setUserName(x.getFollowUser().getName());
+            ss.setUserIntro(x.getFollowUser().getIntro());
+            return ss;
+        }).collect(Collectors.toList());
+        Map<String, Object> map = new IdentityHashMap<>();
+        map.put("resmsg", new String("팔로우 목록조회 성공"));
+        map.put("data", followList);
+        return Result.builder().status(ok().body("목록 불러오기 성공")).data(map).build();
+    }
+
     public Result follow(UserFollowDto userFollowDto){
 
         User user = userRepository.findByIdx(userFollowDto.getUserIdx())
-                .orElseThrow(() -> new UsernameNotFoundException("해당 화원이 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("해당 회원이 존재하지 않습니다."));
         User followUser = userRepository.findByIdx(userFollowDto.getFollowIdx())
-                .orElseThrow(() -> new UsernameNotFoundException("해당 화원이 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("해당 회원이 존재하지 않습니다."));
 
         // 중복 체크
         if (followRepository.existsByUserAndFollowUser(user, followUser)) {
@@ -173,7 +192,7 @@ public class UserService {
 
 
         User user = userRepository.findByIdx(userIdx)
-                .orElseThrow(() -> new UsernameNotFoundException("해당 화원이 존재하지 않습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("해당 회원이 존재하지 않습니다."));
 
         if (user.getStoredFileName() != null){
             File originalFilePath = new File(user.getStoredFileName());

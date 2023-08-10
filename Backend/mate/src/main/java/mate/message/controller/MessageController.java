@@ -24,9 +24,9 @@ public class MessageController {
      * 해당방의 채팅내역 조회 (페이징)
      */
     @GetMapping("/chat/rooms/{roomIdx}/messages")
-    public ResponseEntity<List<MessageResponse>> findByRoomId(@PathVariable("roomIdx") Integer roomIdx) {
+    public Result findByRoomId(@PathVariable("roomIdx") Integer roomIdx) {
         List<MessageResponse> response = messageService.searchMessage(roomIdx);
-        return ResponseEntity.ok(response);
+        return Result.builder().data(response).status(ResponseEntity.ok("채팅 내역")).build();
     }
     /**
      * 마지막 메세지

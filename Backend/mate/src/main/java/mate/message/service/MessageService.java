@@ -2,6 +2,8 @@ package mate.message.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import mate.chat.domain.ChatRoom;
+import mate.chat.domain.ChatRoomRepository;
 import mate.controller.Result;
 import mate.domain.user.User;
 import mate.global.exception.NotFoundException;
@@ -16,6 +18,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +36,7 @@ public class MessageService {
     private final UserRepository userRepository;
     private final MessageListener messageListener;
     private final MessageQueryRepository messageQueryRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
 
     /**
@@ -41,6 +45,11 @@ public class MessageService {
     @Transactional
     public void createMessage(MessageCreateRequest request) throws JsonProcessingException {
         User user = userRepository.findByIdx(request.getUserIdx()).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+
+        ChatRoom findChatRoom = chatRoomRepository.findByIdx(request.getRoomIdx())
+                .orElseThrow(() -> new NotFoundException(CHAT_ROOM_NOT_FOUND));
+
+        findChatRoom.updateTime(LocalDateTime.now());
 
         ChatMessage message = ChatMessage.createMessage(request.getRoomIdx(), request.getUserIdx(), user.getNickname(),request.getMessage());
         messageRepository.save(message);

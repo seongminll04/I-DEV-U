@@ -8,12 +8,15 @@ import { setAllowMove, setSidebar } from '../../store/actions';
 import { AppState } from '../../store/state';
 import axios from 'axios';
 
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 interface messageProps {
   userIdx:number,
-  userName:string,
-  messageIdx:number,
+  roomIdx:number,
+  nickname:string,
+  idx:number,
   message:string,
-  created_at:string,
+  createdAt:Date,
 }
 
 const Chatroom: React.FC = () => {
@@ -23,45 +26,76 @@ const Chatroom: React.FC = () => {
   const stompClientRef = React.useRef<Client | null>(null);
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
   const [receiveMessages, setReceiveMessages] = useState<messageProps[]>([])
-  
   const chatScrollRef = React.useRef<HTMLDivElement | null>(null); // Ref for chat_scroll div
 
+  const [firstscroll, setFirstScroll] = useState(false);
   const isChatIdx = useSelector((state: AppState) => state.isChatIdx);
-  const userIdx = localStorage.getItem('userIdx')
+  const isChatTitle = useSelector((state: AppState) => state.isChatTitle);
+  const userIdxStr = localStorage.getItem('userIdx')
+  var userIdx: number | null;
+  if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
 
   useEffect(()=>{
     const userToken = localStorage.getItem('userToken')
     axios({
       method:'get',
-      url:'https://i9b206.p.ssafy.io:9090/chat/load',
-      data:{
-        chatIdx : isChatIdx,
-        nowFirstIdx : null,
-      },
+      url:`https://i9b206.p.ssafy.io:9090/chat/rooms/${isChatIdx}/last`,
       headers : {
         Authorization: 'Bearer ' + userToken
-      }})
+      },
+    })
     .then(res=>{
-      setReceiveMessages([res.data,...receiveMessages])
-      if (chatScrollRef.current && chatScrollRef.current.scrollHeight > chatScrollRef.current.clientHeight) {
-        // Scroll chat_scroll to the bottom initially
-        chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
-      }
+      const lastidx = res.data.data.idx+1
+      axios({
+        method:'get',
+        url:`https://i9b206.p.ssafy.io:9090/chat/rooms/${isChatIdx}/messages`,
+        params:{
+          messageIdx : lastidx,
+          size:30,
+        },
+        headers : {
+          Authorization: 'Bearer ' + userToken
+        }})
+      .then(res=>{
+        const chats:messageProps[] = [];
+        for (const data of res.data.data) {
+          data.createdAt=new Date(data.createdAt)
+          chats.push(data)
+        }
+        setReceiveMessages([...chats])
+
+        if (chatScrollRef.current) {
+          chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
+        }
+      })
+      .catch(err=>console.log(err))
+
     })
     .catch(err=>console.log(err))
-  },[isChatIdx,receiveMessages])
+  },[isChatIdx])
+
+  useEffect(()=>{
+    if (firstscroll===false) {
+      setFirstScroll(true)
+      if (chatScrollRef.current) {
+        chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
+      }
+    }
+  },[firstscroll,receiveMessages])
 
   // 구독등록
   useEffect(() => {
     if (stompClientRef.current) {
       stompClientRef.current.subscribe(`/sub/rooms/${isChatIdx}`, function(message: Message) {
-        const newMessage = message.body;
+        const newMessage = JSON.parse(message.body);
+        const date = new Date(newMessage.createdAt)
         setReceiveMessages([...receiveMessages, {
-          'userIdx':1,
-          'userName':'김싸피',
-          'messageIdx':1,
-          'message':newMessage,
-          'created_at':'보낸시간',
+          'userIdx':newMessage.userIdx,
+          'nickname':newMessage.nickname,
+          'roomIdx':newMessage.roomIdx,
+          'idx':newMessage.messageIdx,
+          'message':newMessage.message,
+          'createdAt':date,
         }])
       })
       }
@@ -78,10 +112,10 @@ const Chatroom: React.FC = () => {
     const userToken = localStorage.getItem('userToken')
     axios({
       method:'get',
-      url:'https://i9b206.p.ssafy.io:9090/chat/load',
-      data:{
-        chatIdx:isChatIdx,
-        nowFirstIdx : receiveMessages[0].messageIdx
+      url:`https://i9b206.p.ssafy.io:9090/chat/rooms/${isChatIdx}/messages`,
+      params:{
+        messageIdx : receiveMessages[0].idx,
+        size:30
       },
       headers : {
         Authorization: 'Bearer ' + userToken
@@ -104,25 +138,23 @@ const Chatroom: React.FC = () => {
       inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
     } else if (event.key === 'Enter') {
       sendMessage(messageInput)
-    }
-  }
-  
+    }}
+
   const sendMessage = (message: string) => {
     if (stompClientRef.current) {
     const now = new Date()
     const data = {
-        userIdx: userIdx, // Set the sender's userId here
-        roomIdx:isChatIdx,
-        message: message,
-        createdAt: now
-        };
+      userIdx: userIdx, // Set the sender's userId here
+      roomIdx:isChatIdx,
+      message: message,
+      createdAt: now
+    };
     stompClientRef.current.publish({
         destination: '/pub/messages',
         body: JSON.stringify(data),
         });
       setMessageInput('');
-    }
-  };
+    }};
 
   const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
     const target = event.currentTarget;
@@ -133,32 +165,60 @@ const Chatroom: React.FC = () => {
   };
 
 
+  // 방 나가기 
+  const roomout = () => {
+    const userToken = localStorage.getItem('userToken')
+    axios({
+      method:'DELETE',
+      url:`https://i9b206.p.ssafy.io:9090/rooms/${isChatIdx}/users/?userIdx=${userIdx}`,
+      headers : {
+        Authorization: 'Bearer ' + userToken
+      }
+    })
+    .then(res=>console.log(res))
+    .catch(err=>console.log(err))
+  }
+
   return (
     <div className="sidebar_modal">
     <div style={{width:'80%'}}>
       <div className={chat_css.chatstatus}>
-        <p onClick={() =>dispatch(setSidebar('채팅목록'))}>back</p>
-        <h3>OOO 채팅방</h3>
-        <p onClick={()=>{}}>나가기</p>
+        <ArrowBackIcon className={chat_css.chatback} onClick={() =>dispatch(setSidebar('채팅목록'))} />
+        <h3>{isChatTitle}</h3>
+        <p className={chat_css.chatout} onClick={roomout}>나가기</p>
       </div>
       <hr />
       </div>
       <div className={chat_css.chat_scroll} onScroll={handleScroll} style={{height:'80vh'}} ref={chatScrollRef}>
         {receiveMessages.map((message, index) => (
-          <div key={index}>
-            <strong>{message.userName} : </strong>
-            {message.message}    {message.created_at}
-          </div>
-        ))}
+          <div className={chat_css.chat_container} key={index}>
+            {message.userIdx === userIdx ? 
+            <><div style={{alignSelf:'flex-end', marginTop:'10px'}}>{message.nickname}</div>
+            <div style={{alignSelf:'flex-end', marginTop:'5px', display:'flex', justifyContent:'flex-end'}}>
+              <div style={{display:'flex',alignItems:'flex-end', marginRight:'10px',fontSize:'12px'}}>
+              {message.createdAt.getHours() + ' : '+ message.createdAt.getMinutes()}
+              </div>
+              <div style={{backgroundColor:'rgba(109, 206, 245, 1)', padding:'10px', borderRadius:'1rem', maxWidth:'60%', textAlign:'left'}}>
+                {message.message}
+              </div></div></>
+            : <><div style={{alignSelf:'flex-start', marginTop:'10px'}}>{message.nickname}</div>
+            <div style={{alignSelf:'flex-start', marginTop:'5px', display:'flex'}}>
+              <div style={{backgroundColor:'#EAEAEA', padding:'10px', borderRadius:'1rem', maxWidth:'60%', textAlign:'left'}}>
+                {message.message}
+              </div>
+              <div style={{display:'flex',alignItems:'flex-end', marginLeft:'10px', fontSize:'12px'}}>
+              {message.createdAt.getHours() + ' : '+ message.createdAt.getMinutes()}
+              </div>
+            </div></>}
+          </div>))}
       </div>
-      <div style={{width:'80%'}}>
-      <hr />
-      <div>
-        <input type="text" value={messageInput} onChange={(e)=>setMessageInput(e.target.value)} style={{width:'80%'}} onKeyDown={handlekeydown} 
+
+      <hr style={{width:'80%'}} />
+      <div style={{width:'85%', display:'flex', alignItems:'center',justifyContent:'center'}}>
+        <input className={chat_css.sendmsg} type="text" value={messageInput} onChange={(e)=>setMessageInput(e.target.value)} style={{width:'80%'}} onKeyDown={handlekeydown} 
         onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
-        <button onClick={()=>sendMessage(messageInput)}>전송</button>
+        <img className={chat_css.sendbtn} src="assets/sendmsg.png" alt="" style={{width:'30px', height:'30px'}} onClick={()=>sendMessage(messageInput)} />
       </div>
-    </div>
     </div>
   );
 };

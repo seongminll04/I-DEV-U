@@ -10,6 +10,7 @@ const initialState: AppState = {
 
     receivedAlert:[],
     isChatIdx:null,
+    isChatTitle:null,
 };
 
 const reducer = (state: AppState = initialState, action: { type: string; payload: any }) => {
@@ -32,8 +33,9 @@ const reducer = (state: AppState = initialState, action: { type: string; payload
       return {...state, receivedAlert: action.payload}
     case 'SET_CHATIDX':
       return {...state,isChatIdx: action.payload}
-      
-      
+    case 'SET_CHATTITLE':
+      return {...state,isChatTitle: action.payload}
+          
     default:
       return state;
   }

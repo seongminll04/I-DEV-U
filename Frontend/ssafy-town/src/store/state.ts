@@ -11,5 +11,6 @@ export interface AppState {
 
   receivedAlert:string[];
   isChatIdx:number|null; //채팅방 넘어갈때 인덱스 저장해줄곳
+  isChatTitle:string|null; //채팅방 넘어갈때 인덱스 저장해줄곳
   }
   

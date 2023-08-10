@@ -53,6 +53,9 @@ function App() {
     // 연결 시도
     stompClientRef.current.activate();
     
+    // stompClientRef.current.onConnect = function {
+
+    // }
     stompClientRef.current.onWebSocketError=function(err){
       console.log(err,',asdfsadf')
     }

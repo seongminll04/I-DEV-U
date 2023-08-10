@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import mate.controller.Result;
 import mate.message.dto.MessageCreateRequest;
+import mate.message.dto.MessagePageDto;
 import mate.message.dto.MessageResponse;
 import mate.message.service.MessageService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +26,8 @@ public class MessageController {
      * 해당방의 채팅내역 조회 (페이징)
      */
     @GetMapping("/chat/rooms/{roomIdx}/messages")
-    public Result findByRoomId(@PathVariable("roomIdx") Integer roomIdx) {
-        List<MessageResponse> response = messageService.searchMessage(roomIdx);
+    public Result findByRoomId(@PathVariable("roomIdx") Integer roomIdx, MessagePageDto messagePageDto) {
+        List<MessageResponse> response = messageService.searchMessage(roomIdx, messagePageDto);
         return Result.builder().data(response).status(ResponseEntity.ok("채팅 내역")).build();
     }
     /**

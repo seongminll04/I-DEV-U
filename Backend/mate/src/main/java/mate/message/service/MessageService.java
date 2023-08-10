@@ -11,6 +11,7 @@ import mate.message.domain.ChatMessage;
 import mate.message.domain.MessageQueryRepository;
 import mate.message.domain.MessageRepository;
 import mate.message.dto.MessageCreateRequest;
+import mate.message.dto.MessagePageDto;
 import mate.message.dto.MessageResponse;
 import mate.repository.user.UserRepository;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static mate.global.exception.NotFoundException.CHAT_ROOM_NOT_FOUND;
@@ -59,8 +61,8 @@ public class MessageService {
     }
 
 
-    public List<MessageResponse> searchMessage(Integer roomId) {
-        List<ChatMessage> findMessages = messageRepository.findByMessage(roomId);
+    public List<MessageResponse> searchMessage(Integer roomIdx, MessagePageDto messagePageDto) {
+        List<ChatMessage> findMessages = messageQueryRepository.findTotalMessage(roomIdx, messagePageDto);
         return findMessages.stream()
                 .map(message -> MessageResponse.from(message))
                 .collect(Collectors.toList());

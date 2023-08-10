@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 import axios from 'axios';
 
+
 const CreateProject: React.FC = () => {
 
   const OPENVIDU_SERVER_URL = process.env.REACT_APP_OPENVIDU_SERVER_URL;
@@ -17,7 +18,7 @@ const CreateProject: React.FC = () => {
   const [frontendNum, setFrontendNum] = useState('1');
   const [backendNum, setBackendNum] = useState('1');
   const languages = ["Python", "Java", "C", "C++", "C#", "Object-C", "Kotlin", "Swift", "Ruby", "Go", "Javascript", "typescript", "PyPy", "PHP", "Rust", "Text", "D", "기타"];
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
+  const [selectedLanguages, setSelectedLanguages] = useState<{language:string;}[]>([]);
   const [projectType, setProjectType] = useState('PROJECT');
   const [selfPosition, setSelfPosition] = useState<'FRONT' | 'BACK' >('FRONT');
 
@@ -25,13 +26,13 @@ const CreateProject: React.FC = () => {
     const value = e.target.value;
     if (e.target.checked) {
       if (selectedLanguages.length < 5) {
-        setSelectedLanguages(prev => [...prev, value]);
+        setSelectedLanguages(prev => [...prev, {language:value}]);
       } else {
         e.preventDefault();
         alert('최대 5개의 언어만 선택할 수 있습니다.');
       }
     } else {
-      setSelectedLanguages(prev => prev.filter(lang => lang !== value));
+      setSelectedLanguages(prev => prev.filter(lang => lang.language !== value));
     }
   }
 
@@ -221,7 +222,7 @@ const CreateProject: React.FC = () => {
                     type="checkbox"
                     value={lang}
                     onChange={handleLanguageChange}
-                    checked={selectedLanguages.includes(lang)}
+                    checked={selectedLanguages.includes({language:lang})}
                   />
                   <span> {lang} </span> 
                 </label>

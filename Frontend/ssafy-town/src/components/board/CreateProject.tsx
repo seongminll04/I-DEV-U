@@ -14,9 +14,9 @@ const CreateProject: React.FC = () => {
 // const BACKEND_SERVER_URL = 'https://i9b206.p.ssafy.io:9090';
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [total_num, setTotalNum] = useState('2');
-  const [frontendNum, setFrontendNum] = useState('1');
-  const [backendNum, setBackendNum] = useState('1');
+  const [total_num, setTotalNum] = useState(2);
+  const [frontendNum, setFrontendNum] = useState(1);
+  const [backendNum, setBackendNum] = useState(1);
   const languages = ["Python", "Java", "C", "C++", "C#", "Object-C", "Kotlin", "Swift", "Ruby", "Go", "Javascript", "typescript", "PyPy", "PHP", "Rust", "Text", "D", "기타"];
   const [selectedLanguages, setSelectedLanguages] = useState<{language:string;}[]>([]);
   const [projectType, setProjectType] = useState('PROJECT');
@@ -45,7 +45,6 @@ const CreateProject: React.FC = () => {
       backValue = 1;
   }
 
-
   const dispatch=useDispatch()
 
   const handlekeydown = (event:React.KeyboardEvent<HTMLTextAreaElement>|React.KeyboardEvent<HTMLInputElement>) => {
@@ -71,8 +70,8 @@ const CreateProject: React.FC = () => {
       alert('프로젝트명은 최소 6자 이상이어야 합니다.');
       return;
     }
-    const totalPeople = parseInt(frontendNum) + parseInt(backendNum);
-    if (totalPeople !== parseInt(total_num)) {
+    const totalPeople = frontendNum + backendNum;
+    if (totalPeople !== total_num) {
       alert('프론트와 백엔드의 인원 합이 총 인원과 일치하지 않습니다.');
       return;
     }
@@ -94,9 +93,10 @@ const CreateProject: React.FC = () => {
         var userIdx:number|null;
         if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
 
-    
         // 백엔드에 프로젝트 정보, 세션 ID 전송
-        axios.post(BACKEND_SERVER_URL+'/project/register', {
+        axios({
+          method:'post',
+          url:BACKEND_SERVER_URL+'/project/register',
           data:{
             userIdx: userIdx,
             title: title, //6~30자
@@ -115,7 +115,7 @@ const CreateProject: React.FC = () => {
           headers: {
             Authorization: 'Bearer ' + userToken
           },
-        }) 
+        })
         .then((res) => {
           console.log(res);
           window.alert("프로젝트가 생성되었습니다.")
@@ -166,7 +166,7 @@ const CreateProject: React.FC = () => {
                 type="number"
                 id="total_num"
                 value={total_num}
-                onChange={(e) => setTotalNum(e.target.value)}
+                onChange={(e) => setTotalNum(parseInt(e.target.value,10))}
                 onKeyDown={(e) => e.preventDefault()}
                 min="2"
                 max="6"
@@ -237,7 +237,7 @@ const CreateProject: React.FC = () => {
               className={Create_css.input1}
                 type="number"
                 value={frontendNum}
-                onChange={(e) => setFrontendNum(e.target.value)}
+                onChange={(e) => setFrontendNum(parseInt(e.target.value,10))}
                 onKeyDown={(e) => e.preventDefault()}
                 min="1"
                 max="5"
@@ -253,7 +253,7 @@ const CreateProject: React.FC = () => {
               className={Create_css.input1}
                 type="number"
                 value={backendNum}
-                onChange={(e) => setBackendNum(e.target.value)}
+                onChange={(e) => setBackendNum(parseInt(e.target.value,10))}
                 onKeyDown={(e) => e.preventDefault()}
                 min="1"
                 max="5"

@@ -16,7 +16,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageResponse {
+
     private Integer idx;
+
     private Integer roomIdx;
 
     private Integer userIdx;
@@ -32,6 +34,7 @@ public class MessageResponse {
 
     public static MessageResponse from(ChatMessage message){
         MessageResponse response = new MessageResponse();
+        response.idx = message.getIdx();
         response.roomIdx = message.getRoomIdx();
         response.userIdx = message.getUserIdx();
         response.nickname = message.getNickname();

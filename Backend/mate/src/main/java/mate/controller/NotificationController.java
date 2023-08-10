@@ -1,6 +1,7 @@
 package mate.controller;
 
 import lombok.RequiredArgsConstructor;
+import mate.dto.NotificationDto;
 import mate.service.NotificationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,16 @@ public class NotificationController {
     public ResponseEntity<Map<String, Object>> getNotiTop4(@PathVariable int userIdx) {
         Map<String, Object> map = new HashMap<>();
         map.put("resmsg", "알림 4개조회 성공");
-        map.put("data", notificationService.findTop4UncheckedNotification(userIdx));
+        map.put("data", notificationService.findTop4UncheckedNotification(userIdx).stream().map(noti -> {
+            NotificationDto dto = new NotificationDto();
+            dto.setIdx(noti.getIdx());
+            dto.setNickname(noti.getUser().getNickname());
+            dto.setContent(noti.getContent());
+            dto.setChecked(noti.getChecked());
+            dto.setCreatedAt(noti.getCreatedAt());
+
+            return dto;
+        }));
 
         return ResponseEntity.ok(map);
     }

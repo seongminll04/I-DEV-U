@@ -1,5 +1,6 @@
 package mate.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,7 @@ public class NoticeService {
 						.user(user)
 						.title(noticeDto.getTitle())
 						.content(noticeDto.getContent())
+						.createdAt(LocalDateTime.now())
 						.type(NoticeBoardType.A)
 				.build());
 	}

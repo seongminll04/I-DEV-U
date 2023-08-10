@@ -7,4 +7,6 @@ public class UserFollowDto {
 
     private Integer userIdx;
     private Integer followIdx;
+    private String userName;
+    private String userIntro;
 }

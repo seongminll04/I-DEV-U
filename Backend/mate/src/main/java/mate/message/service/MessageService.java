@@ -61,8 +61,8 @@ public class MessageService {
     }
 
 
-    public List<MessageResponse> searchMessage(Integer roomIdx, MessagePageDto messagePageDto) {
-        List<ChatMessage> findMessages = messageQueryRepository.findTotalMessage(roomIdx, messagePageDto);
+    public List<MessageResponse> searchMessage(Integer roomIdx, Integer messageIdx, int size) {
+        List<ChatMessage> findMessages = messageQueryRepository.findTotalMessage(roomIdx, messageIdx, size);
         return findMessages.stream()
                 .map(message -> MessageResponse.from(message))
                 .collect(Collectors.toList());

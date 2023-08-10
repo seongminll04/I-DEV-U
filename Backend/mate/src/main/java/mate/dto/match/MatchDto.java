@@ -6,6 +6,7 @@ import java.util.List;
 
 @Data
 public class MatchDto {
+    private int userIdx;
     private String name;
     private String nickname;
     private String face;

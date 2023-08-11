@@ -3,7 +3,11 @@ package mate.controller.match;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import mate.domain.match.MatchUser;
+import mate.domain.user.User;
+import mate.repository.user.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,6 +32,7 @@ import mate.service.match.MatchService;
 public class MatchController {
 
     private final MatchService matchService;
+    private final UserRepository userRepository;
     private final MatchRepository matchRepository;
     private final MatchUserRepository matchUserRepository;
 
@@ -55,6 +60,35 @@ public class MatchController {
             map.put("resmsg", "설문 수정 완료");
         } catch (Exception e) {
             map.put("resmsg", "설문 수정 실패");
+        }
+
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/survey/{userIdx}")
+    public ResponseEntity<Map<String, Object>> checkSurvey(@PathVariable("userIdx") int userIdx) {
+        Map<String, Object> map = new HashMap<>();
+
+        List<MatchAnswer> matchAnswer = matchRepository.findAllByUserIdx(userIdx);
+
+        if (!matchAnswer.isEmpty()) {
+            map.put("resmsg", "설문 했음");
+        } else {
+            map.put("resmsg", "설문 안함");
+        }
+
+        return ResponseEntity.ok(map);
+    }
+
+
+    @GetMapping("/detail/{userIdx}")
+    public ResponseEntity<Map<String, Object>> detailMatchUser(@PathVariable("userIdx") int userIdx) {
+        Map<String, Object> map = new HashMap<>();
+
+        try {
+
+        } catch (Exception e) {
+            map.put("resmsg", "소개팅 유저 상세 조회 실패");
         }
 
         return ResponseEntity.ok(map);
@@ -107,16 +141,18 @@ public class MatchController {
         return ResponseEntity.ok(map);
     }
 
-	@GetMapping("/detail/{userIdx}")
-	public ResponseEntity<Map<String, Object>> detailMatchUser(@PathVariable("userIdx") int userIdx) {
-		Map<String, Object> map = new HashMap<>();
+    @GetMapping("/{userIdx}")
+    public ResponseEntity<Map<String, Object>> isRegistered(@PathVariable("userIdx") int userIdx) {
+        Map<String, Object> map = new HashMap<>();
 
-		try {
-
-		} catch (Exception e) {
-			map.put("resmsg", "소개팅 유저 상세 조회 실패");
-		}
-
-		return ResponseEntity.ok(map);
-	}
+        User user = userRepository.findByIdx(userIdx).get();
+        Optional<MatchUser> matchUser = matchUserRepository.findByUser(user);
+        if (matchUser.isPresent()) {
+            map.put("isRegistered", true);
+            return ResponseEntity.ok(map);
+        } else {
+            map.put("isRegistered", false);
+            return ResponseEntity.ok(map);
+        }
+    }
 }

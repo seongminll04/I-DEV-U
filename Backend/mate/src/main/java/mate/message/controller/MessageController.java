@@ -44,6 +44,7 @@ public class MessageController {
      */
     @MessageMapping("/messages")
     public void createMessage(MessageCreateRequest request) throws JsonProcessingException {
+        System.out.println(request);
         messageService.createMessage(request);
     }
 

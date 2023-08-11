@@ -5,12 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 import mate.service.partner.PartnerService;
@@ -23,7 +18,7 @@ public class PartnerController {
 
 	private final PartnerService partnerService;
 
-	@GetMapping("/list")
+	@PostMapping("/list")
 	public ResponseEntity<Map<String, Object>> listPartner(
 		@RequestBody(required = false) Map<String, List<String>> input) {
 		Map<String, Object> map = new HashMap<>();

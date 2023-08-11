@@ -17,7 +17,7 @@ public class SessionController {
     @DeleteMapping("/logout/{userIdx}")
     public Result deleteSession(@PathVariable("userIdx") Integer userIdx){
         sessionRepository.deleteByIdx(userIdx);
-        return Result.builder().status(ResponseEntity.ok(userIdx + "번 유저 삭제 성공")).build();
+        return Result.builder().status(ResponseEntity.ok(userIdx + "번 유저 연결 삭제 성공")).build();
     }
 
 }

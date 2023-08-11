@@ -13,20 +13,25 @@ import mate.domain.match.MatchAnswer;
 
 @Repository
 public interface MatchRepository extends JpaRepository<MatchAnswer, Integer> {
-	@Query("select m from MatchAnswer m where m.user.idx = :userIdx")
+	@Query("select m from MatchAnswer m where m.user.idx = :userIdx "
+		+ "and (m.surveyIdx >= 4 AND m.surveyIdx <= 6) or m.surveyIdx IN (7, 16)")
 	List<MatchAnswer> findByUser(@Param("userIdx") Integer userIdx);
+
+	@Query("select m from MatchAnswer m where m.user.idx = :userIdx")
+	List<MatchAnswer> findAllByUserIdx(@Param("userIdx") Integer userIdx);
 
 	@Modifying
 	@Transactional
 	@Query("delete from MatchAnswer m where m.user.idx = :userIdx")
 	void deleteAllByUserId(@Param("userIdx") Integer userIdx);
 
+	// 내가 원하는 상대방에 관한 설문을 바탕으로 상대방 유저의 설문과 비교함
 	@Query(
-			"SELECT ma.user.idx as idx, ma.user.nickname as nickname, ROUND((COUNT(*) / :size) * 100) AS percent "
-					+
-					"FROM MatchAnswer ma " +
-					"WHERE ma.tag IN (:tag) " +
-					"GROUP BY ma.user.idx " +
-					"ORDER BY percent DESC")
+		"SELECT ma.user.idx as userIdx, ma.user.nickname as nickname, ROUND((COUNT(*) / :size) * 100) AS percent " +
+			"FROM MatchAnswer ma " +
+			"WHERE ma.tag IN (:tag) and ma.surveyIdx IN (1, 3) or ma.surveyIdx IN (7, 16) "
+			+
+			"GROUP BY ma.user.idx " +
+			"ORDER BY percent DESC")
 	List<Object> listMatchUser(@Param("tag") List<String> tag, @Param("size") long size);
 }

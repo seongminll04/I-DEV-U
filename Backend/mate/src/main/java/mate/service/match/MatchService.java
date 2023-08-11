@@ -1,22 +1,23 @@
 package mate.service.match;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
-import mate.domain.match.MatchUser;
-import mate.dto.match.MatchDto;
-import mate.dto.partner.PartnerDto;
-import mate.repository.match.MatchUserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mate.domain.match.MatchAnswer;
+import mate.domain.match.MatchUser;
 import mate.domain.user.User;
+import mate.dto.match.MatchDto;
 import mate.dto.match.MatchSurvey;
 import mate.dto.user.SurveyResult;
 import mate.repository.match.MatchRepository;
+import mate.repository.match.MatchUserRepository;
 import mate.repository.user.UserRepository;
 
 @Service
@@ -50,8 +51,8 @@ public class MatchService {
 		User user = userRepository.findByIdx(userIdx).get();
 
 		matchUserRepository.save(MatchUser.builder()
-				.user(user)
-				.build());
+			.user(user)
+			.build());
 	}
 
 	public void releaseMatchUser(int userIdx) {
@@ -60,8 +61,9 @@ public class MatchService {
 		matchUserRepository.deleteMatchUserByUser(user);
 	}
 
-	public void listMatchUser(int userIdx) {
+	public List<MatchDto> listMatchUser(int userIdx) {
 		List<MatchAnswer> answers = matchRepository.findByUser(userIdx);
+		User user = userRepository.findByIdx(userIdx).get();
 
 		List<String> tag = new ArrayList<>();
 
@@ -70,7 +72,7 @@ public class MatchService {
 		}
 
 		List<Object> list = matchRepository.listMatchUser(tag, tag.size());
-
+		
 		List<MatchDto> output = new ArrayList<>();
 
 		for (Object o : list) {
@@ -79,19 +81,29 @@ public class MatchService {
 			// Assuming the order of elements in the array corresponds to the order of fields in PartnerDto
 			Integer Idx = (Integer)result[0];
 			String nickname = (String)result[1];
-			String face = (String)result[2];
-			Long percent = (Long)result[3];
+			Long percent = (Long)result[2];
 
-//			List<String> language = basicRepository.findLanguage(userIdx);
-//
-//			PartnerDto partnerDto = new PartnerDto();
-//			partnerDto.setName(name);
-//			partnerDto.setNickname(nickname);
-//			partnerDto.setPercent(percent);
-//			partnerDto.setLanguageList(language);
-//
-//			list.add(partnerDto);
+			// 생년월일 데이터베이스로부터 가져오는 부분을 시뮬레이션합니다.
+			LocalDate birthDateFromDatabase = user.getBirth(); // 생년월일 설정
+
+			// 현재 날짜 가져오기
+			LocalDate currentDate = LocalDate.now();
+
+			// 나이 계산
+			Period agePeriod = Period.between(birthDateFromDatabase, currentDate);
+			int age = agePeriod.getYears();
+
+			MatchDto matchDto = new MatchDto();
+			matchDto.setUserIdx(Idx);
+			matchDto.setNickname(nickname);
+			matchDto.setFace("고양이");
+			matchDto.setPercent(percent);
+			matchDto.setAge(age);
+
+			output.add(matchDto);
 		}
+
+		return output;
 	}
 
 }

@@ -49,7 +49,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
                     List<Integer> list = new ArrayList<>();
                     list.add(new Integer(user.getIdx()));
-            sessionRepository.findByUserIdx(list)
+                    sessionRepository.findByUserIdx(list)
                     .ifPresentOrElse(
                             session -> System.out.println("세션 존재"),
                             () -> {

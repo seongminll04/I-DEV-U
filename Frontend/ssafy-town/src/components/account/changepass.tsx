@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import edit_css from './edit.module.css';
 import axios from 'axios';
 import { useFormik } from 'formik';
@@ -22,30 +22,24 @@ interface Props {
 
 const ChangePass: React.FC<Props> = ({user}) => {
   const dispatch = useDispatch()
-  const [isWithdraw, setWithdraw] = useState(false);
-
   const validationSchema = Yup.object().shape({
     password: Yup.string()
-      .min(8, '8~14 자리, 특수문자 사용불가')
-      .max(14, '8~14 자리, 특수문자 사용불가')
-      .required('비밀번호를 입력해주세요.'),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password') as any, null], '비밀번호가 일치하지 않습니다.')
-      .required('비밀번호를 입력해주세요.'),
+    .min(8, '8~14 자리, 특수문자 사용불가')
+    .max(14, '8~14 자리, 특수문자 사용불가')
+    .matches(/^[A-Za-z0-9]+$/, '8~14 자리, 특수문자 사용불가')
+    .required('비밀번호를 입력해주세요'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password') as any, null], '비밀번호가 일치하지 않음')
+    .required('비밀번호를 확인해주세요'),
   });
 
 
   const formik = useFormik({
     initialValues: {
       userIdx : localStorage.getItem("userIdx"),
-      email: user.email,
-      nickname: user.nickname,
-      name: user.name,
-      birth: user.birth,
-      gender: user.gender,
-      password: user.password,
+      password: '',
       confirmPassword: '',
-      intro: user.intro,
+
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -53,7 +47,7 @@ const ChangePass: React.FC<Props> = ({user}) => {
       const userToken = localStorage.getItem('userToken');
       axios({
         method : 'put',
-        url : 'https://i9b206.p.ssafy.io:9090/user/modify',
+        url : 'https://i9b206.p.ssafy.io:9090/user/changePw',
         headers : {
           Authorization: 'Bearer ' + userToken,
         },
@@ -67,7 +61,6 @@ const ChangePass: React.FC<Props> = ({user}) => {
       .catch(err => {
         console.log(err)
         alert("회원정보 변경 실패")
-        dispatch(setModal(null));
       })
     }
   });
@@ -88,8 +81,8 @@ const ChangePass: React.FC<Props> = ({user}) => {
   
   return (
     <div className={edit_css.mypage_modal_overlay}  onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
-      if (e.target === e.currentTarget) {dispatch(setModal(null)); setWithdraw(false);}}}>
-        {!isWithdraw ? <div className={edit_css.mypage_alert_modal}>
+      if (e.target === e.currentTarget) {dispatch(setModal(null));}}}>
+        <div className={edit_css.alert_modal}>
         <div className={edit_css.two_btn}>
           <span
             onClick={() => {
@@ -100,28 +93,32 @@ const ChangePass: React.FC<Props> = ({user}) => {
           </span>
           <span
             onClick={() => {
-              dispatch(setModal(null));setWithdraw(false);
+              dispatch(setModal(null))
             }}
           >
             닫기
           </span>
         </div>
           <h1>비밀번호 변경</h1>
-          <hr/>
-          <form id={edit_css.mypage_form} onSubmit={formik.handleSubmit}>
+          
+          <form id={edit_css.mypage_form} className={edit_css.passform} onSubmit={formik.handleSubmit}>
             <div className={edit_css.mypage_info}>
-              <span>변경할 비밀번호</span>
+ 
+          <label className={edit_css.split}>변경할 비밀번호
+          <span style={{color:'red'}}>{formik.values.password==='' ? '비밀번호를 입력해주세요': formik.errors.password ? formik.errors.password : <span style={{color:'green'}}>완료</span>}</span>
+          </label>
             </div>
             <input type="password" className={edit_css.mypage_input} {...formik.getFieldProps('password')} onKeyDown={handlekeydown} />
             <div className={edit_css.mypage_info}>
-              <span>변경할 비밀번호 확인</span>
+             
+          <label className={edit_css.split}>변경할 비밀번호 확인
+          <span style={{color:'red'}}>{formik.values.confirmPassword==='' ? '비밀번호를 입력해주세요': formik.errors.confirmPassword ? formik.errors.confirmPassword : <span style={{color:'green'}}>완료</span>}</span>
+          </label>
             </div>
             <input type="password" className={edit_css.mypage_input} {...formik.getFieldProps('confirmPassword')} placeholder="비밀번호 확인" onKeyDown={handlekeydown}/>
-            <button className={edit_css.mypage_button} type="submit" disabled={!formik.isValid || formik.isSubmitting }>수정</button>
+            <button className={edit_css.mypage_button} style={{height:'40%', borderRadius:'1rem', width:'40%'}} type="submit" disabled={!formik.isValid || formik.isSubmitting }>수정</button>
           </form>
-        </div>:
-        <div>
-        </div> }
+        </div>
     </div>
   );
 };

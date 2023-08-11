@@ -37,13 +37,23 @@
 }
 
 .btn {
-    margin-top:10px
+    margin-top:0px
 }
-.btn button {
-    width: 100px;
+.btn .button {
+    width: 220px;
+    height: 20vh;
     font-size: 20px;
     border-radius: 1rem;
-    margin:10px
+    margin:30px 20px;
+    cursor: pointer;
+}
+.btn .disabled_button {
+  width: 220px;
+  height: 20vh;
+  font-size: 20px;
+  border-radius: 1rem;
+  margin:30px 20px;
+  pointer-events: none;
 }
 
 .two_btn {
@@ -76,7 +86,7 @@ color:gray
   align-items: center;
 }
 
-.mypage_withdrawal {
+.withdraw {
   width: 90%;
   text-align: right;
   color: red;

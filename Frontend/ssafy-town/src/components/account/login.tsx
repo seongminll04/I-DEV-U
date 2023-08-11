@@ -12,16 +12,22 @@ class ValidationError extends Error {
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const [userId, setUserId] = useState(localStorage.getItem('savedId') || ''); // 로컬스토리지에 아이디 저장
+  const [userId, setUserId] = useState(localStorage.getItem('userId')||''); // 로컬스토리지에 아이디 저장
   const [userPassword, setUserPassword] = useState('');
-  const [saveId, setSaveId] = useState(Boolean(localStorage.getItem('savedId'))); // 아이디 저장되어있으면 버튼 on상태
+  const [saveId, setSaveId] = useState(Boolean(localStorage.getItem('userId'))); // 아이디 저장되어있으면 버튼 on상태
 
   useEffect(()=>{
-    
     const userToken = localStorage.getItem('userToken');
     if (userToken) {navigate('/home')}
   },[navigate])
-  
+
+  useEffect(()=>{
+    if (saveId) {
+      localStorage.setItem('userId',userId)
+    }
+    else {localStorage.removeItem('userId')}
+  },[userId, saveId])
+
   const handleLogin = async () => {
     axios({
       method:'post',
@@ -32,6 +38,8 @@ const Login: React.FC = () => {
       // 로그인 시, 로컬 스토리지에 토큰 저장
       localStorage.setItem('userToken',res.headers.authorization);
       localStorage.setItem('userIdx', res.data.userIdx);
+      localStorage.setItem('userNickname', res.data.userNickname);
+
       // if (res.data.user.status === "D") {
       //   throw new ValidationError("탈퇴처리된 회원입니다!");
       // } 
@@ -62,10 +70,10 @@ const Login: React.FC = () => {
     <div className={login_css.background}>
       <div className={login_css.modal}>
         <h1 className={login_css.logo}>I DEV U</h1>
-        <input className={login_css.input} type="text" placeholder="아이디" value={userId} onChange={(e) => setUserId(e.target.value)} onKeyDown={handleKeyDown} />
+        <input className={login_css.input} type="text" placeholder="아이디" value={userId} onChange={(e) => {setUserId(e.target.value); }} onKeyDown={handleKeyDown} />
         <input className={login_css.input} type="password" placeholder="비밀번호" value={userPassword} onChange={(e) => setUserPassword(e.target.value)} onKeyDown={handleKeyDown} />
         <div className={login_css.checkContainer1}>
-          <input className={login_css.check} id="saveid" type="checkbox" checked={saveId} onChange={(e) => setSaveId(e.target.checked)} />
+          <input className={login_css.check} id="saveid" type="checkbox" checked={saveId} onChange={(e) => {setSaveId(e.target.checked);}} />
           <label htmlFor="saveid">아이디 저장</label>
         </div>
         <button className={login_css.enter_login} onClick={handleLogin}>로그인</button>

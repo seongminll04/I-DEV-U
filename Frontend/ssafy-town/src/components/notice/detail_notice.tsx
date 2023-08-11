@@ -7,6 +7,7 @@ import { setModal } from '../../store/actions';
 
 interface Props {
   backpage: () => void;
+  noticeIdx: number;
 }
 
 interface Notice {
@@ -16,10 +17,9 @@ interface Notice {
   createdAt: string;
 }
 
-const DetailNotice: React.FC<Props> = ({ backpage }) => {
+const DetailNotice: React.FC<Props> = ({ backpage, noticeIdx }) => {
   const dispatch = useDispatch()
   const userToken = localStorage.getItem('userToken');
-  let noticeIdx = Number(localStorage.getItem('noticeIdx'));
   const [notice, setNotice] = useState<Notice>();
 
   useEffect(() => {
@@ -31,22 +31,31 @@ const DetailNotice: React.FC<Props> = ({ backpage }) => {
       },
     })
       .then(res => {
-        console.log(res)
+        // console.log(res)
         setNotice(res.data.notice)
       })
       .catch(err => console.log(err))
-  })
+  }, [noticeIdx, userToken, setNotice])
+
   return (
     <div className={alert_css.alert_modal}>
-      <p className={alert_css.closebtn} onClick={() => { dispatch(setModal(null)) }}>닫기</p>
-      <p className={alert_css.backbtn} onClick={backpage}>돌아가기</p>
-      <div>
-        <p>공지사항 상세정보</p>
+      <div className={alert_css.buttons}>
+        <p className={alert_css.backbtn} onClick={backpage}>돌아가기</p>
+        <p className={alert_css.closebtn} onClick={() => { dispatch(setModal(null)) }}>닫기</p>
+      </div>
+      <br></br>
+      <div className={alert_css.alert_detail}>
         {notice ? (
           <>
-            <p>{notice?.title}</p>
-            <p>{notice?.content}</p>
-            <p>{notice?.createdAt}</p>
+            <h2 className={alert_css.alert_title}>{notice?.title}</h2>
+            <p className={alert_css.alert_date}>
+              {(() => {
+                const date = new Date(notice.createdAt);
+                return `${date.getFullYear().toString().substring(2)}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+              })()}
+            </p>
+            <br></br>
+            <p className={alert_css.alert_content}>{notice?.content}</p>
           </>
         ) : (
           'Loading...'

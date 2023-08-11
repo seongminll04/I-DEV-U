@@ -35,3 +35,8 @@ export const setChatIdx = (value: number|null) => ({
   type: 'SET_CHATIDX',
   payload: value,
 });
+
+export const setChatTitle = (value: string|null) => ({
+  type: 'SET_CHATTITLE',
+  payload: value,
+});

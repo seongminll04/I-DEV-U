@@ -34,19 +34,20 @@ app.use(
 );
 
 
-// express 로 HTTP 서버를 생성
+// express 로 HTTPS 서버를 생성
 var server = https.createServer(credentials, app);
+
 // openvidu 클라이언트 객체를 초기화
 var openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
 openvidu.activeSessions = [];
 // socket.io 초기화
-const io = socketIo(server, {
+var io = socketIo(server, {
     cors: {
-    origin: "https://i9b206.p.ssafy.io",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  },
-});
+      origin: "https://i9b206.p.ssafy.io",
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      credentials: true,
+    },
+  });
 
 // express 앱에 bodyParser 미들웨어를 추가하여 POST 요청의 body를 쉽게 파싱
 app.use(bodyParser.urlencoded({ extended: true }));

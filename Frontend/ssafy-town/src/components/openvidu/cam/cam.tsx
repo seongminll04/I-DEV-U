@@ -22,11 +22,11 @@ interface AppState {
     publishAudio: boolean;
     audioVolume: number;   // 스피커 볼륨 상태
     hideAll: boolean;      // 화면 숨기기 상태
+    eventBindingsSet: boolean;
 }
 
 class Cam extends Component<{}, AppState> {
     private OV: any;
-    private eventBindingsSet: boolean = false;
 
     constructor(props: {}) {
         super(props);
@@ -35,7 +35,8 @@ class Cam extends Component<{}, AppState> {
             publishVideo: false,
             publishAudio: false,
             audioVolume: 100,
-            hideAll: false
+            hideAll: false,
+            eventBindingsSet: false,
         };
 
         this.joinSession = this.joinSession.bind(this);
@@ -127,14 +128,14 @@ class Cam extends Component<{}, AppState> {
     }
 
     async joinSession() {
+        // 1. 세션 초기화
         this.OV = new OpenVidu();
         const session = this.OV.initSession();
-
-        console.log("씨발")
     
-        if (!this.eventBindingsSet) {  // Check if event listeners are already set
+        // 2. 이벤트 리스너
+        if (!this.state.eventBindingsSet) {
             session.on('streamCreated', (event: any) => {
-                // Check if it's the publisher's stream
+                console.log("Created 가 발생 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
                 if (this.state.publisher && event.stream.streamId === this.state.publisher.stream.streamId) {
                     return;
                 }
@@ -156,9 +157,10 @@ class Cam extends Component<{}, AppState> {
                 }));
             });
     
-            this.eventBindingsSet = true;  // Mark that we've set the events for our session
+            this.setState({ eventBindingsSet: true });
         }
     
+        // 3. Obtaining a token for the session.
         try {
             const sessionId = localStorage.getItem('OVsession');
             if (!sessionId) {
@@ -168,25 +170,26 @@ class Cam extends Component<{}, AppState> {
     
             const response = await axios.post(`https://i9b206.p.ssafy.io:5000/api/sessions/${sessionId}/connections`);
             const token = response.data;
+            localStorage.setItem("OVtoken",token);
     
             if (!token) {
                 console.error("Failed to fetch token from the server");
                 return;
             }
     
+            // 4. Connecting to the session.
             session.connect(token)
                 .then(() => {
+                    // 5. Publishing to the session.
                     const publisher = this.OV.initPublisher(undefined, {
                         audio: false,
                         video: false
                     });
                     
                     publisher.on('accessAllowed', () => {
-                        // 비디오 및 오디오 발행 중지
                         publisher.publishVideo(false);
                         publisher.publishAudio(false);
-                    
-                        // 세션에 발행
+                        
                         session.publish(publisher).then(() => {
                             this.setState({ publisher });
                         });
@@ -195,11 +198,13 @@ class Cam extends Component<{}, AppState> {
                 .catch((error: any) => {
                     console.error("Error during session connection:", error);
                 });
+    
         } catch (error) {
             console.error("Error fetching token:", error);
         }
         this.setState({ session });
     }
+    
     
 
     async switchCamera() {
@@ -282,7 +287,7 @@ class Cam extends Component<{}, AppState> {
                                 </div>
                             )}
                             {subscribers.map((sub, i) => (
-                                <div key={sub.id} className={`${cam_set_css["stream-container"]} ${cam_set_css["col-md-6"]} ${cam_set_css["col-xs-6"]}`}>
+                                <div key={sub.id} className={`${cam_set_css["stream-container2"]} ${cam_set_css["col-md-6"]} ${cam_set_css["col-xs-6"]}`}>
                                     <span>{sub.id}</span>
                                     <UserVideoComponent streamManager={sub} />
                                 </div>

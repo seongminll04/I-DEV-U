@@ -145,9 +145,16 @@ const Mypage: React.FC = () => {
         </div>
         <div className={mypage_css.mypage_view}>
           <div className={mypage_css.mypage_welcome}>
-            안녕하세요! {user.name} 님
+            안녕하세요! {user.nickname} 님
           </div>
-          <button className={mypage_css.button} onClick={() => dispatch(setModal('회원정보수정1'))}>회원정보 수정</button>
+          <button className={mypage_css.button} 
+          onClick={() => {
+            if (!user.email.includes('@')) {
+              dispatch(setModal('회원정보수정2'))
+              localStorage.setItem('kakao','1')
+            }
+            else {dispatch(setModal('회원정보수정1'))}
+          }}>회원정보 수정</button>
           
           <p className={mypage_css.mypage_toggle}>내 정보 검색 허용
             <ToggleContainer onClick={()=>{toggleHandler()}}>

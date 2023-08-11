@@ -127,12 +127,17 @@ BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 `;
 
+type ConnectionState = "new" | "offer-sent" | "answer-received" | "completed";
+
 export class Lsize1Scene extends Phaser.Scene {
 
     private peerConnections: { [id: string]: RTCPeerConnection } = {}; 
     private dataChannels: { [id: string]: RTCDataChannel } = {}; 
     private prevPosition: { x: number, y: number } | null = null;
     private remoteCharacters: { [id: string]: Phaser.GameObjects.Sprite } = {};
+    private processedUsers: Set<string> = new Set();
+    private connectionStates: { [id: string]: ConnectionState } = {};
+    private iceCandidateBuffer: { [id: string]: RTCIceCandidate[] } = {};
     public socket!: Socket;
 
     private character?: Phaser.Physics.Arcade.Sprite;
@@ -439,6 +444,11 @@ export class Lsize1Scene extends Phaser.Scene {
     this.input.keyboard?.on('keydown-E', () => {
       const nearbyObject = this.NearbyObjects();
 
+      const userIds = Object.keys(this.dataChannels);
+      console.log(userIds)
+      console.log("피어연결:",this.peerConnections)
+      console.log("소켓연결 :",this.socket.connected)
+
       console.log(this.character!.x + "@@" + this.character!.y)
   
       if (nearbyObject === 'door') {
@@ -510,8 +520,17 @@ export class Lsize1Scene extends Phaser.Scene {
 
   /////////////////////////// WEBRTC
 
+  initializeWebRTC() {
+    console.log("시작@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    this.initializeSocket();
+    this.joinSession();
+  }
+  
   initializeSocket() {
+    console.log("소켓초기화@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     this.socket = io(process.env.REACT_APP_FRONT_SERVER+'');
+    this.socket.on('new-peer', this.handleNewPeer.bind(this));
+    this.socket.on('current-users', this.handleCurrentUsers.bind(this));
     this.socket.on('offer', this.handleOffer.bind(this));
     this.socket.on('answer', this.handleAnswer.bind(this));
     this.socket.on('ice-candidate', this.handleIceCandidate.bind(this));
@@ -519,23 +538,43 @@ export class Lsize1Scene extends Phaser.Scene {
     // 페이지를 벗어나거나 새로고침할 때 disconnect-user 이벤트 전송
     window.addEventListener("beforeunload", () => {
       this.socket.emit('disconnect-user', { userId: localStorage.getItem('OVsession') });
-  });
+    });
   }
 
-  initializeWebRTC() {
-    this.initializeSocket();
-    this.joinSession();
-  }
+
 
   joinSession() {
+    console.log("세션참가@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     const sessionName = localStorage.getItem('OVsession');
     this.socket.emit('join-session', { sessionId: sessionName, userId: localStorage.getItem('userIdx') });
   }
+
+  handleCurrentUsers(data: any) {
+    console.log("11111111111111111111111111111111111111111111");
+    const userIds = data.userIds;
+    const myUserId = localStorage.getItem('userIdx');
+
+    userIds.forEach((userId: string) => {
+        if (userId !== myUserId && 
+            !this.processedUsers.has(userId) && 
+            !this.connectionStates[userId]) { // 연결 상태를 확인하여 이미 연결을 시작한 사용자를 제외합니다.
+            
+            if (Number(myUserId) > Number(userId)) {
+                this.handleNewPeer({ userId });
+                this.processedUsers.add(userId);  // 해당 사용자에 대해 offer를 생성했음을 표시
+            }
+        }
+    });
+  }
+  
   
   handleDataChannelMessage(userId: string, event: any) {
     const receivedData = JSON.parse(event.data);
+    console.log(receivedData,"왔냐????????")
     if (receivedData.id && receivedData.position) {
       let remoteChar = this.remoteCharacters[receivedData.id];
+
+      console.log(remoteChar,"왔냐22222222222222222222222222222222222222?")
 
       if (!remoteChar) {
           remoteChar = this.physics.add.sprite(receivedData.position.x, receivedData.position.y, receivedData.type + '');
@@ -545,21 +584,25 @@ export class Lsize1Scene extends Phaser.Scene {
       if (receivedData.state === 'B') {
           remoteChar.setAlpha(0.4);
       }
-      if (receivedData.chat) {
-          // 메세지 처리하는 출근하고나서 만들어보자 ㅇㅇ...
-      }
     }
   }
 
   async handleNewPeer(data: any) {
+    console.log("offer생성 222222222222222222222222+444444444444444444444444444")
     const otherUserId = data.userId;
+
+        if (this.connectionStates[otherUserId]) {
+        return;
+    }
 
     const pc = this.createPeerConnection(otherUserId);
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
 
-    this.socket.emit('offer', { offer, to: otherUserId });
+    this.socket.emit('offer', { from: localStorage.getItem('userIdx'), offer, target: otherUserId });
+    this.connectionStates[otherUserId] = "offer-sent";
   }
+
 
   createPeerConnection(userId: string): RTCPeerConnection {
     const configuration: RTCConfiguration = {
@@ -570,24 +613,33 @@ export class Lsize1Scene extends Phaser.Scene {
 
     const pc = new RTCPeerConnection(configuration);
     this.peerConnections[userId] = pc;
-      pc.onicecandidate = event => {
+
+    pc.onicecandidate = event => {
+        console.log("ICE Candidate Event:", event);
         if (event.candidate) {
-            this.socket.emit('ice-candidate', { candidate: event.candidate, to: userId });
+          this.socket.emit('ice-candidate', { from: localStorage.getItem('userIdx'), candidate: event.candidate, target: userId });
         }
-      };
+    };
+
+    pc.oniceconnectionstatechange = (event) => {
+        console.log("ICE Connection State Change:", pc.iceConnectionState);
+    };
+
+    pc.onconnectionstatechange = (event) => {
+        console.log("Connection State Change:", pc.connectionState);
+        if (pc.connectionState === "failed" || pc.connectionState === "closed" || pc.connectionState === "disconnected") {
+            this.cleanupPeerConnection(userId);
+        }    
+    };
 
     const dataChannel = pc.createDataChannel('dataChannel');
     this.dataChannels[userId] = dataChannel;
     dataChannel.onopen = this.handleDataChannelOpen.bind(this, userId);
     dataChannel.onmessage = this.handleDataChannelMessage.bind(this, userId);
 
-    pc.onconnectionstatechange = (event) => {
-      if (pc.connectionState === "failed" || pc.connectionState === "closed" || pc.connectionState === "disconnected") {
-          this.cleanupPeerConnection(userId);
-      }
-    };
     return pc;
   }
+
 
   cleanupPeerConnection(userId: string) {
     // Data Channel 제거
@@ -614,35 +666,67 @@ export class Lsize1Scene extends Phaser.Scene {
 
 
   async handleOffer(data: any) {
+    console.log("offer 처리33333333333333333333333333333+55555555555555555555555")
     const otherUserId = data.from;
-    if (!this.peerConnections[otherUserId]) {
-      this.createPeerConnection(otherUserId);
+    let pc = this.peerConnections[otherUserId];
+
+    if (!pc) {
+        pc = this.createPeerConnection(otherUserId);
     }
 
-    const pc = this.peerConnections[otherUserId];
-    await pc.setRemoteDescription(data.offer);
-    const answer = await pc.createAnswer();
-    await pc.setLocalDescription(answer);
+      // Check connection state
+    if (pc.signalingState !== "stable") {
+      console.warn("Received offer in unstable state. Ignoring for now...");
+      return;
+    }
 
-    this.socket.emit('answer', { answer, to: otherUserId });
+    try {
+        await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
+
+        this.socket.emit('answer', { from: localStorage.getItem('userIdx'), answer, target: otherUserId });
+    } catch (error) {
+        console.error('Error handling the offer:', error);
+    }
   }
 
+
   async handleAnswer(data: any) {
+    console.log("answer 처리@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     const otherUserId = data.from;
     const pc = this.peerConnections[otherUserId];
     if (pc) {
-      await pc.setRemoteDescription(data.answer);
+      await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
+      this.connectionStates[otherUserId] = "answer-received";
+      
+      // Process buffered ICE candidates
+      const bufferedCandidates = this.iceCandidateBuffer[otherUserId] || [];
+      for (const candidateData of bufferedCandidates) {
+          const iceCandidate = new RTCIceCandidate(candidateData);
+          pc.addIceCandidate(iceCandidate);
+      }
+      delete this.iceCandidateBuffer[otherUserId];
     }
   }
+
 
   handleIceCandidate(data: any) {
     const otherUserId = data.from;
+
+    if (this.connectionStates[otherUserId] !== "answer-received") {
+        this.iceCandidateBuffer[otherUserId] = this.iceCandidateBuffer[otherUserId] || [];
+        this.iceCandidateBuffer[otherUserId].push(data.candidate);
+        return;
+    }
+
     const iceCandidate = new RTCIceCandidate(data.candidate);
     const pc = this.peerConnections[otherUserId];
     if (pc) {
-      pc.addIceCandidate(iceCandidate);
+        pc.addIceCandidate(iceCandidate);
     }
   }
+
 
   handleDataChannelOpen(userId: string, event: any) {
     console.log(`연결완료 with user: ${userId}`);
@@ -655,13 +739,13 @@ export class Lsize1Scene extends Phaser.Scene {
 
   // 캐릭터의 위치나 상태가 변경될 때 호출
   sendCharacterData(message?: string) {
-    const currentUserId = localStorage.getItem('OVToken');
+    const currentUserId = localStorage.getItem('OVtoken');
 
     const dataToSend = {
       id: currentUserId,
       position: { x: this.character?.x || 0, y: this.character?.y || 0 },
       state: this.sittingOnChair, //의자에 앉아 있으면 true 아니면 false
-      type: localStorage.getItem('SelectCharacter'),
+      type: localStorage.getItem('character'),
       chat: message,
     };
 
@@ -669,7 +753,9 @@ export class Lsize1Scene extends Phaser.Scene {
     for (const userId in this.dataChannels) {
       if (userId !== currentUserId) { // 현재 유저 제외
         const targetDataChannel = this.dataChannels[userId];
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         if (targetDataChannel && targetDataChannel.readyState === 'open') {
+          console.log("###########################################")
           targetDataChannel.send(JSON.stringify(dataToSend));
         }
       }

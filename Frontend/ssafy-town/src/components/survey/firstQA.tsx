@@ -68,27 +68,28 @@ const QAModal: React.FC = () => {
 
     const userToken = localStorage.getItem('userToken')
     const userIdxStr = localStorage.getItem('userIdx')
-    var userIdx:number|null;
-    if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
+    var userIdx: number | null;
+    if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
     axios({
-      method:'post',
-      url:`https://i9b206.p.ssafy.io:9090/basicSurvey/create`,
-      data:{
-        'userIdx':userIdx,
-        'surveyResult':surveyResults
+      method: 'post',
+      url: `https://i9b206.p.ssafy.io:9090/basicSurvey/create`,
+      data: {
+        'userIdx': userIdx,
+        'surveyResult': surveyResults
       },
-      headers : {
+      headers: {
         Authorization: 'Bearer ' + userToken
       },
     })
-    .then(() =>{
-      dispatch(setModal(null))
-      alert('설문에 참여해주셔서 감사합니다.')
-    })
-    .catch(()=> {
-      alert('설문 등록 실패')})
+      .then(() => {
+        dispatch(setModal(null))
+        alert('설문에 참여해주셔서 감사합니다.')
+      })
+      .catch(() => {
+        alert('설문 등록 실패')
+      })
 
-    
+
   }
 
   const surveyForm = (
@@ -117,15 +118,15 @@ const QAModal: React.FC = () => {
         <p>📚 사용하는 언어가 무엇인가요? (최대 5개)</p>
         {languageOptions.map(option => (
           <label key={option}>
-          <input 
-            type="checkbox" 
-            name="languages" 
-            value={option} 
-            onChange={() => toggleLanguage(option)}
-            checked={languages.includes(option)} // checked 속성을 추가하여 렌더링 시 마다 선택 상태를 업데이트함
-          />
-          {option}
-        </label>
+            <input
+              type="checkbox"
+              name="languages"
+              value={option}
+              onChange={() => toggleLanguage(option)}
+              checked={languages.includes(option)} // checked 속성을 추가하여 렌더링 시 마다 선택 상태를 업데이트함
+            />
+            {option}
+          </label>
         ))}
       </div>
 
@@ -157,13 +158,13 @@ const QAModal: React.FC = () => {
 
   return (
     <div className={qa_css.modal_overlay}>
-  <div className={qa_css.qa_modal}>
-    <h1>I DEV U</h1>
-    <h2>📝 신규 유저 설문조사</h2>
-    <h3>* 저희 서비스를 이용하기 위해 첫 로그인시 설문조사가 필요합니다. *</h3>
-    {surveyForm}
-  </div>
-</div>
+      <div className={qa_css.qa_modal}>
+        <h1>I DEV U</h1>
+        <h2>📝 신규 유저 설문조사</h2>
+        <h3>* 저희 서비스를 이용하기 위해 첫 로그인시 설문조사가 필요합니다. *</h3>
+        {surveyForm}
+      </div>
+    </div>
   );
 };
 

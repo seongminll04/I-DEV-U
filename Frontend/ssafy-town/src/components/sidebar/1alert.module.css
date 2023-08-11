@@ -14,7 +14,7 @@
     border-radius: 1rem;
     width:50%;
     height: 460px;
-    padding: 10px;
+    padding: 10px 30px;
     box-sizing: border-box;
     color : white;
 }
@@ -25,16 +25,27 @@
     display: flex;
     justify-content: space-between;
 }
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}
 .closebtn {
-    margin:10px;
-    text-align: right;
+    margin: 10px 0;
     cursor: pointer;
+    text-align: right;
 }
 .backbtn {
-    margin:10px;
-    margin-top: -25px;
-    text-align: left;
+    margin: 10px 0;
     cursor: pointer;
+}
+
+.alert_title, .alert_content {
+    text-align: left;
+}
+
+.alert_date {
+    text-align: right;
 }
 .closebtn:hover,
 .backbtn:hover,
@@ -57,7 +68,6 @@
 }
 .notice:hover {
     color:gray;
-
 }
 .notice span {
     margin:6.5px 0;

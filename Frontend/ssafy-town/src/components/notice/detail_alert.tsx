@@ -6,38 +6,58 @@ import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 
 interface Props {
-    backpage:()=>void;
+  backpage: () => void;
+  alertIdx: number;
 }
 
+interface Alert {
+  idx: number;
+  content: string;
+  createdAt: string;
+}
 
-const DetailAlert: React.FC<Props> = ({backpage}) => {
+const DetailAlert: React.FC<Props> = ({ backpage, alertIdx }) => {
   const dispatch = useDispatch()
   const userToken = localStorage.getItem('userToken')
-  const [alert, setAlert] = useState<any>([]);
-  useEffect(()=>{
+  const [alert, setAlert] = useState<Alert>();
+  useEffect(() => {
     axios({
-      method:'get',
-      url:'https://i9b206.p.ssafy.io:9090/user/login',
-      headers : {
+      method: 'get',
+      url: `https://i9b206.p.ssafy.io:9090/noti/${alertIdx}`,
+      headers: {
         Authorization: 'Bearer ' + userToken
       },
     })
-    .then(res => {
-      console.log(res)
-      setAlert(res.data)
-    })
-    .catch(err => console.log(err))
-  })
+      .then(res => {
+        console.log(res)
+        setAlert(res.data.alert)
+      })
+      .catch(err => console.log(err))
+  }, [alertIdx, userToken, setAlert])
 
   return (
     <div className={alert_css.alert_modal}>
-        <p className={alert_css.closebtn} onClick={() => {dispatch(setModal(null))}}>닫기</p>
+      <div className={alert_css.buttons}>
         <p className={alert_css.backbtn} onClick={backpage}>돌아가기</p>
-    <div>
-      <p>알림 상세정보</p>
-      {alert}
-    </div> 
-  </div>
+        <p className={alert_css.closebtn} onClick={() => { dispatch(setModal(null)) }}>닫기</p>
+      </div>
+      <br></br>
+      <div className={alert_css.alert_detail}>
+        {alert ? (
+          <>
+            <p>{alert?.content}</p>
+            <p className={alert_css.alert_date}>
+              {(() => {
+                const date = new Date(alert.createdAt);
+                return `${date.getFullYear().toString().substring(2)}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+              })()}
+            </p>
+          </>
+        ) : (
+          'Loading...'
+        )}
+      </div>
+    </div>
   );
 };
 

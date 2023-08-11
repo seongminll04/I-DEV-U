@@ -12,15 +12,17 @@ interface Props {
 
 interface Question {
   idx: number;
-  content: string;
   title: string;
+  content: string;
   createAt: string;
 }
 
 interface Comment {
-  qnaIdx : number;
-  userIdx : number;
-  content : string;
+  boardIdx: number;
+  userIdx: number;
+  userNickname: string;
+  content: string;
+  createdAt: string;
 }
 
 const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
@@ -29,21 +31,21 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
   const [inputvalue, setInputvalue] = useState('')
   const userToken = localStorage.getItem('userToken')
   const [question, setQuestion] = useState<Question>();
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     axios({
-      method:'get',
-      url:`https://i9b206.p.ssafy.io:9090/qna/detail/${qnaid}`,
-      headers : {
+      method: 'get',
+      url: `https://i9b206.p.ssafy.io:9090/qna/detail/${qnaid}`,
+      headers: {
         Authorization: 'Bearer ' + userToken
       },
     })
-    .then(res => {
-      console.log(res)
-      setQuestion(res.data["Q&A"])
-    })
-    .catch(err => console.log(err))
-  },[qnaid, userToken])
+      .then(res => {
+        console.log(res)
+        setQuestion(res.data["Q&A"])
+      })
+      .catch(err => console.log(err))
+  }, [qnaid, userToken])
 
   const loadcomment = () => {
     axios({
@@ -55,7 +57,7 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
     })
       .then(res => {
         console.log(res.data);
-        setCommentlist(res.data)
+        setCommentlist(res.data.data)
       })
       .catch(err => console.log(err))
   }
@@ -65,22 +67,22 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
   const onInputSubmit = () => {
     if (inputvalue !== '') {
       axios({
-        method:'post',
+        method: 'post',
         url: `https://i9b206.p.ssafy.io:9090/qna/comment/write`,
-        data:{
+        data: {
           'boardIdx': qnaid,
-          'userIdx' : Number(localStorage.getItem("userIdx")),
+          'userIdx': Number(localStorage.getItem("userIdx")),
           'content': inputvalue,
         },
-        headers : {
+        headers: {
           Authorization: 'Bearer ' + userToken
         },
       })
-      .then(res=>{
-        console.log(res)
-        setInputvalue('')
-        loadcomment()
-    })
+        .then(res => {
+          console.log(res)
+          setInputvalue('')
+          loadcomment()
+        })
     }
   }
 
@@ -102,13 +104,19 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
         )}
         <h2>댓글</h2>
         <hr />
-        {commentlist.map((comment,index)=>(
-          <div key={index}>
-            {comment.userIdx}
-            {comment.content}
-          </div>
-        ))}
-        <input type="text" value={inputvalue} onChange={(e)=>setInputvalue(e.target.value)} />
+        {commentlist.map((comment: Comment, index: number) => {
+          const date = new Date(comment.createdAt);
+          return (
+            <div key={index}>
+              {comment.userNickname}
+              {comment.content}
+              <span>
+                {date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}
+              </span>
+            </div>
+          )
+        })}
+        <input type="text" value={inputvalue} onChange={(e) => setInputvalue(e.target.value)} />
         <button onClick={onInputSubmit}>작성</button>
       </div>
       <hr />

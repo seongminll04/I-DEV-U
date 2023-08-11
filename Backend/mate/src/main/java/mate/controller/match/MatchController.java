@@ -88,12 +88,12 @@ public class MatchController {
     public ResponseEntity<Map<String, Object>> listMatchUser(@PathVariable("userIdx") int userIdx) {
         Map<String, Object> map = new HashMap<>();
 
-//        try {
+        try {
             map.put("user_list", matchService.listMatchUser(userIdx));
             map.put("resmsg", "소개팅 유저 리스트 조회 성공");
-//        } catch (Exception e) {
-//            map.put("resmsg", "소개팅 유저 리스트 조회 실패");
-//        }
+        } catch (Exception e) {
+            map.put("resmsg", "소개팅 유저 리스트 조회 실패");
+        }
 
         return ResponseEntity.ok(map);
     }

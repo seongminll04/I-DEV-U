@@ -1,8 +1,7 @@
 import Phaser from 'phaser';
 import store from '../../store/store'
 import { setModal } from '../../store/actions';
-import io from 'socket.io-client';
-import { Socket } from 'socket.io-client';
+import { Message } from '@stomp/stompjs';
 
 type AssetKeys = 'A' | 'B' | 'C' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' 
               | 'T' | 'U' | 'V' | 'W' | 'X' | '1' | '2' | '3' | '4'
@@ -127,18 +126,11 @@ BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 `;
 
-type ConnectionState = "new" | "offer-sent" | "answer-received" | "completed";
 
 export class Lsize1Scene extends Phaser.Scene {
-
-    private peerConnections: { [id: string]: RTCPeerConnection } = {}; 
     private dataChannels: { [id: string]: RTCDataChannel } = {}; 
     private prevPosition: { x: number, y: number } | null = null;
     private remoteCharacters: { [id: string]: Phaser.GameObjects.Sprite } = {};
-    private processedUsers: Set<string> = new Set();
-    private connectionStates: { [id: string]: ConnectionState } = {};
-    private iceCandidateBuffer: { [id: string]: RTCIceCandidate[] } = {};
-    public socket!: Socket;
 
     private character?: Phaser.Physics.Arcade.Sprite;
     private balloon!: Phaser.GameObjects.Sprite;
@@ -168,7 +160,7 @@ export class Lsize1Scene extends Phaser.Scene {
     private d11?: Phaser.Physics.Arcade.Sprite;
     private water?: Phaser.Physics.Arcade.Sprite;
     private copy?: Phaser.Physics.Arcade.Sprite;
-  
+
     constructor() {
       super({ key: 'Lsize1Scene' });
     }
@@ -233,7 +225,7 @@ export class Lsize1Scene extends Phaser.Scene {
       // 사용자 캐릭터 선택
       const userCharacter = localStorage.getItem("character") || '0';
 
-      this.character = this.physics.add.sprite(mapCenterX, mapCenterY, `${userCharacter}2`).setOrigin(0.5, 0.5);
+      this.character = this.physics.add.sprite(mapCenterX, mapCenterY, `${  userCharacter}2`).setOrigin(0.5, 0.5);
 
       this.physics.add.collider(this.character, this.walls);  // 캐릭터와 벽 사이의 충돌 설정
       
@@ -446,8 +438,7 @@ export class Lsize1Scene extends Phaser.Scene {
 
       const userIds = Object.keys(this.dataChannels);
       console.log(userIds)
-      console.log("피어연결:",this.peerConnections)
-      console.log("소켓연결 :",this.socket.connected)
+
 
       console.log(this.character!.x + "@@" + this.character!.y)
   
@@ -521,216 +512,35 @@ export class Lsize1Scene extends Phaser.Scene {
   /////////////////////////// WEBRTC
 
   initializeWebRTC() {
-    console.log("시작@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    this.initializeSocket();
-    this.joinSession();
-  }
-  
-  initializeSocket() {
-    console.log("소켓초기화@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    this.socket = io(process.env.REACT_APP_FRONT_SERVER+'');
-    this.socket.on('new-peer', this.handleNewPeer.bind(this));
-    this.socket.on('current-users', this.handleCurrentUsers.bind(this));
-    this.socket.on('offer', this.handleOffer.bind(this));
-    this.socket.on('answer', this.handleAnswer.bind(this));
-    this.socket.on('ice-candidate', this.handleIceCandidate.bind(this));
-
-    // 페이지를 벗어나거나 새로고침할 때 disconnect-user 이벤트 전송
-    window.addEventListener("beforeunload", () => {
-      this.socket.emit('disconnect-user', { userId: localStorage.getItem('OVsession') });
-    });
-  }
-
-
-
-  joinSession() {
-    console.log("세션참가@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    const stompClientRef = store.getState().stompClientRef;
     const sessionName = localStorage.getItem('OVsession');
-    this.socket.emit('join-session', { sessionId: sessionName, userId: localStorage.getItem('userIdx') });
-  }
-
-  handleCurrentUsers(data: any) {
-    console.log("11111111111111111111111111111111111111111111");
-    const userIds = data.userIds;
-    const myUserId = localStorage.getItem('userIdx');
-
-    userIds.forEach((userId: string) => {
-        if (userId !== myUserId && 
-            !this.processedUsers.has(userId) && 
-            !this.connectionStates[userId]) { // 연결 상태를 확인하여 이미 연결을 시작한 사용자를 제외합니다.
-            
-            if (Number(myUserId) > Number(userId)) {
-                this.handleNewPeer({ userId });
-                this.processedUsers.add(userId);  // 해당 사용자에 대해 offer를 생성했음을 표시
-            }
+  
+    var location = this;
+  
+    if (stompClientRef) {
+      stompClientRef.subscribe(`/sub/channel/${sessionName}`, function(message:Message) {
+        const newMessage = JSON.parse(message.body);
+        console.log(newMessage);
+  
+        if (newMessage) {
+          // 기존 캐릭터가 존재하는지 확인
+          let remoteChar = location.remoteCharacters[newMessage.id];
+          const userIdx = localStorage.getItem('OVtoken')
+          // 캐릭터가 존재하지 않으면 새로 생성
+          if (!remoteChar && newMessage.id!==userIdx) {
+            remoteChar = location.physics.add.sprite(newMessage.position.x, newMessage.position.y, newMessage.type + `2`);
+            remoteChar.setDepth(3);
+            location.remoteCharacters[newMessage.id] = remoteChar;
+          } else {
+            // 캐릭터가 이미 존재하면 위치만 업데이트
+            remoteChar.setPosition(newMessage.position.x, newMessage.position.y);
+          }
         }
-    });
+      });
+    }
   }
   
   
-  handleDataChannelMessage(userId: string, event: any) {
-    const receivedData = JSON.parse(event.data);
-    console.log(receivedData,"왔냐????????")
-    if (receivedData.id && receivedData.position) {
-      let remoteChar = this.remoteCharacters[receivedData.id];
-
-      console.log(remoteChar,"왔냐22222222222222222222222222222222222222?")
-
-      if (!remoteChar) {
-          remoteChar = this.physics.add.sprite(receivedData.position.x, receivedData.position.y, receivedData.type + '');
-          this.remoteCharacters[receivedData.id] = remoteChar;
-      }
-      remoteChar.setPosition(receivedData.position.x, receivedData.position.y);
-      if (receivedData.state === 'B') {
-          remoteChar.setAlpha(0.4);
-      }
-    }
-  }
-
-  async handleNewPeer(data: any) {
-    console.log("offer생성 222222222222222222222222+444444444444444444444444444")
-    const otherUserId = data.userId;
-
-        if (this.connectionStates[otherUserId]) {
-        return;
-    }
-
-    const pc = this.createPeerConnection(otherUserId);
-    const offer = await pc.createOffer();
-    await pc.setLocalDescription(offer);
-
-    this.socket.emit('offer', { from: localStorage.getItem('userIdx'), offer, target: otherUserId });
-    this.connectionStates[otherUserId] = "offer-sent";
-  }
-
-
-  createPeerConnection(userId: string): RTCPeerConnection {
-    const configuration: RTCConfiguration = {
-        iceServers: [
-            { urls: 'stun:stun.l.google.com:19302' },
-        ],
-    };
-
-    const pc = new RTCPeerConnection(configuration);
-    this.peerConnections[userId] = pc;
-
-    pc.onicecandidate = event => {
-        console.log("ICE Candidate Event:", event);
-        if (event.candidate) {
-          this.socket.emit('ice-candidate', { from: localStorage.getItem('userIdx'), candidate: event.candidate, target: userId });
-        }
-    };
-
-    pc.oniceconnectionstatechange = (event) => {
-        console.log("ICE Connection State Change:", pc.iceConnectionState);
-    };
-
-    pc.onconnectionstatechange = (event) => {
-        console.log("Connection State Change:", pc.connectionState);
-        if (pc.connectionState === "failed" || pc.connectionState === "closed" || pc.connectionState === "disconnected") {
-            this.cleanupPeerConnection(userId);
-        }    
-    };
-
-    const dataChannel = pc.createDataChannel('dataChannel');
-    this.dataChannels[userId] = dataChannel;
-    dataChannel.onopen = this.handleDataChannelOpen.bind(this, userId);
-    dataChannel.onmessage = this.handleDataChannelMessage.bind(this, userId);
-
-    return pc;
-  }
-
-
-  cleanupPeerConnection(userId: string) {
-    // Data Channel 제거
-    const dataChannel = this.dataChannels[userId];
-    if (dataChannel) {
-      dataChannel.close();
-      delete this.dataChannels[userId];
-    }
-
-    // Peer Connection 제거
-    const pc = this.peerConnections[userId];
-    if (pc) {
-      pc.close();
-      delete this.peerConnections[userId];
-    }
-
-    // 유저의 캐릭터 제거
-    const remoteChar = this.remoteCharacters[userId];
-    if (remoteChar) {
-      remoteChar.destroy();
-      delete this.remoteCharacters[userId];
-    }
-  }
-
-
-  async handleOffer(data: any) {
-    console.log("offer 처리33333333333333333333333333333+55555555555555555555555")
-    const otherUserId = data.from;
-    let pc = this.peerConnections[otherUserId];
-
-    if (!pc) {
-        pc = this.createPeerConnection(otherUserId);
-    }
-
-      // Check connection state
-    if (pc.signalingState !== "stable") {
-      console.warn("Received offer in unstable state. Ignoring for now...");
-      return;
-    }
-
-    try {
-        await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
-        const answer = await pc.createAnswer();
-        await pc.setLocalDescription(answer);
-
-        this.socket.emit('answer', { from: localStorage.getItem('userIdx'), answer, target: otherUserId });
-    } catch (error) {
-        console.error('Error handling the offer:', error);
-    }
-  }
-
-
-  async handleAnswer(data: any) {
-    console.log("answer 처리@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    const otherUserId = data.from;
-    const pc = this.peerConnections[otherUserId];
-    if (pc) {
-      await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
-      this.connectionStates[otherUserId] = "answer-received";
-      
-      // Process buffered ICE candidates
-      const bufferedCandidates = this.iceCandidateBuffer[otherUserId] || [];
-      for (const candidateData of bufferedCandidates) {
-          const iceCandidate = new RTCIceCandidate(candidateData);
-          pc.addIceCandidate(iceCandidate);
-      }
-      delete this.iceCandidateBuffer[otherUserId];
-    }
-  }
-
-
-  handleIceCandidate(data: any) {
-    const otherUserId = data.from;
-
-    if (this.connectionStates[otherUserId] !== "answer-received") {
-        this.iceCandidateBuffer[otherUserId] = this.iceCandidateBuffer[otherUserId] || [];
-        this.iceCandidateBuffer[otherUserId].push(data.candidate);
-        return;
-    }
-
-    const iceCandidate = new RTCIceCandidate(data.candidate);
-    const pc = this.peerConnections[otherUserId];
-    if (pc) {
-        pc.addIceCandidate(iceCandidate);
-    }
-  }
-
-
-  handleDataChannelOpen(userId: string, event: any) {
-    console.log(`연결완료 with user: ${userId}`);
-  }
 
   // 메세지 처리과정
   sendChatMessage(message: string) {
@@ -748,18 +558,15 @@ export class Lsize1Scene extends Phaser.Scene {
       type: localStorage.getItem('character'),
       chat: message,
     };
-
-    // 모든 연결된 유저에게 데이터 전송
-    for (const userId in this.dataChannels) {
-      if (userId !== currentUserId) { // 현재 유저 제외
-        const targetDataChannel = this.dataChannels[userId];
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        console.log("targetDataChannel.readyState:",targetDataChannel.readyState)
-        if (targetDataChannel && targetDataChannel.readyState === 'open') {
-          console.log("###########################################")
-          targetDataChannel.send(JSON.stringify(dataToSend));
-        }
-      }
+    // const stompClientRef:Client|null = null;
+    
+    const stompClientRef =store.getState().stompClientRef
+    const sessionName = localStorage.getItem('OVsession');
+    if (stompClientRef) {
+      stompClientRef.publish({
+        destination:`/sub/channel/${sessionName}`,
+        body:JSON.stringify(dataToSend)
+      })
     }
   }
 

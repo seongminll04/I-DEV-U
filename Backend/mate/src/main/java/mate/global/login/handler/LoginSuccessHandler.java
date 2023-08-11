@@ -46,6 +46,17 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         loginUser.ifPresent(user -> {
                     user.updateRefreshToken(refreshToken);
                     userRepository.saveAndFlush(user);
+
+                    List<Integer> list = new ArrayList<>();
+                    list.add(new Integer(user.getIdx()));
+                    sessionRepository.findByUserIdx(list)
+                    .ifPresentOrElse(
+                            session -> System.out.println("세션 존재"),
+                            () -> {
+                                Session session = Session.createSession(user.getIdx(), user.getNickname());
+                                sessionRepository.save(session);
+                            }
+                    );
                 });
 //        redisService.setRedis(refreshToken, email);
         String responseBody = "{\"message\": \"로그인에 성공하였습니다.\", \"userIdx\": \"" + loginUser.get().getIdx() + "\" , \"userNickname\": \"" + loginUser.get().getNickname() + "\"}";

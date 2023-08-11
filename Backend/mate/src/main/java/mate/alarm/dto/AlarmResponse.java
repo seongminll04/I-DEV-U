@@ -1,10 +1,5 @@
 package mate.alarm.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class AlarmResponse {
 
+    private Integer idx;
     private Integer fromIdx;
     private String fromNickname;
 
@@ -31,6 +27,7 @@ public class AlarmResponse {
 
     public static AlarmResponse from(User fromUser, User toUser, Alarm alarm){
         AlarmResponse alarmResponse = new AlarmResponse();
+        alarmResponse.idx = alarm.getIdx();
         alarmResponse.fromIdx = fromUser.getIdx();
         alarmResponse.fromNickname = fromUser.getNickname();
         alarmResponse.toIdx = toUser.getIdx();

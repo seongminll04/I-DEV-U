@@ -21,4 +21,8 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Integer> {
     List<ChatRoom> findWithUser(@Param("user") User user);
 
     Optional<ChatRoom> findByIdx(Integer Idx);
+
+    @Query("select distinct r from ChatRoom r order by r.updatedAt desc ")
+    List<ChatRoom> findAll();
+
 }

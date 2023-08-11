@@ -17,7 +17,7 @@ public class AlarmController {
 
     private final AlarmService alarmService;
 
-    @MessageMapping("/alarms")
+    @MessageMapping("/user")
     public void createAlarm(AlarmRequest request){
         alarmService.createAlarm(request);
     }

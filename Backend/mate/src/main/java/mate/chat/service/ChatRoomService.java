@@ -3,12 +3,11 @@ package mate.chat.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mate.chat.domain.ChatParticipation;
 import mate.chat.domain.ChatRoom;
 import mate.chat.domain.ChatRoomRepository;
-import mate.chat.dto.ChatRoomCreateRequest;
-import mate.chat.dto.ChatRoomResponse;
-import mate.chat.dto.ChatRoomUpdateRequest;
-import mate.chat.dto.ChatRoomUserRequest;
+import mate.chat.domain.Role;
+import mate.chat.dto.*;
 import mate.controller.Result;
 import mate.domain.user.User;
 import mate.global.exception.NotFoundException;
@@ -106,5 +105,30 @@ public class ChatRoomService {
         findChatRoom.deleteChatRoomUser(user);
 
         return Result.builder().status(ResponseEntity.ok(roomIdx + "번 방 " + user.getNickname() + " 퇴장")).build();
+    }
+
+    public Result findAll() {
+        List<ChatRoomListResponse> chatRoomList = chatRoomRepository.findAll().stream()
+                .map(chatRoom -> ChatRoomListResponse.from(chatRoom))
+                .collect(Collectors.toList());
+
+        if (chatRoomList.isEmpty()) return Result.builder().data(chatRoomList).status(ResponseEntity.ok("채팅방 없음")).build();
+        return Result.builder().data(chatRoomList).status(ResponseEntity.ok("채팅방")).build();
+    }
+
+
+    public Result findMaster(Integer roomIdx) {
+
+        ChatRoom findChatRoom = chatRoomRepository.findWithChatRoomUsersByIdx(roomIdx)
+                .orElseThrow(() -> new NotFoundException(CHAT_ROOM_NOT_FOUND));
+
+        Optional<ChatParticipation> masterParticipation = findChatRoom.getChatRoomUsers().stream()
+                .filter(user -> user.getRole() == Role.MASTER).findFirst();
+
+        ChatRoomMasterResponse response = masterParticipation.map(chatRoomUser -> {
+            return ChatRoomMasterResponse.from(roomIdx, chatRoomUser.getUser().getIdx());
+        }).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+
+        return Result.builder().data(response).status("방장 idx").build();
     }
 }

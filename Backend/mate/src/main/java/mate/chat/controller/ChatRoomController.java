@@ -22,6 +22,16 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
 
+    @GetMapping("/list/all")
+    public Result findAll(){
+        return chatRoomService.findAll();
+    }
+
+    @GetMapping("/master/{roomIdx}")
+    public Result findMaster(@PathVariable("roomIdx") Integer roomIdx){
+        return chatRoomService.findMaster(roomIdx);
+    }
+
     @GetMapping("/list/{userIdx}")
     public Result findByUser(@PathVariable("userIdx") Integer userIdx) {
 

@@ -106,4 +106,17 @@ public class MatchController {
 
         return ResponseEntity.ok(map);
     }
+
+	@GetMapping("/detail/{userIdx}")
+	public ResponseEntity<Map<String, Object>> detailMatchUser(@PathVariable("userIdx") int userIdx) {
+		Map<String, Object> map = new HashMap<>();
+
+		try {
+
+		} catch (Exception e) {
+			map.put("resmsg", "소개팅 유저 상세 조회 실패");
+		}
+
+		return ResponseEntity.ok(map);
+	}
 }

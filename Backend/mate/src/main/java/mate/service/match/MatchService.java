@@ -5,6 +5,9 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
+import mate.domain.basic.BasicAnswer;
+import mate.dto.match.MatchDetailDto;
+import mate.repository.user.BasicRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +32,7 @@ public class MatchService {
 	private final MatchRepository matchRepository;
 	private final UserRepository userRepository;
 	private final MatchUserRepository matchUserRepository;
+	private final BasicRepository basicRepository;
 
 	public void registerSurvey(MatchSurvey matchSurvey) {
 		User user = userRepository.findByIdx(matchSurvey.getUserIdx()).get();
@@ -109,6 +113,16 @@ public class MatchService {
 		}
 
 		return output;
+	}
+
+	public void detailMatchUser(int userIdx) {
+		List<MatchAnswer> answer = matchRepository.findByUser(userIdx);
+
+		String work = basicRepository.findWork(userIdx);
+		List<String> language = basicRepository.findLanguage(userIdx);
+		String location = basicRepository.findLocation(userIdx);
+		String job = basicRepository.findJob(userIdx);
+
 	}
 
 }

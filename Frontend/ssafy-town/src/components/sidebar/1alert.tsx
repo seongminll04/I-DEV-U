@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import alert_css from './1alert.module.css';
 import axios from 'axios';
 
@@ -17,112 +17,111 @@ interface Notice {
   createdAt: string;
 }
 
-interface AlertProps{
-  idx:number;
-  checked:string;
-  content:string;
-  createdAt:string;
-  dataType:string;
-  user:Object;
+interface AlertProps {
+  idx: number;
+  checked: string;
+  content: string;
+  createdAt: string;
+  dataType: string;
+  user: Object;
 }
 
 const Alert: React.FC = () => {
   const dispatch = useDispatch()
-  const [noticeList,setNoticeList] =useState<Notice[]>([]);
-  const [alertList,setAlertList] =useState<AlertProps[]>([]);
-  const [page,setPage] = useState<Number>(0)
+  const [noticeList, setNoticeList] = useState<Notice[]>([]);
+  const [alertList, setAlertList] = useState<AlertProps[]>([]);
+  const [page, setPage] = useState<Number>(0)
   const [noticeIdx, setNoticeIdx] = useState<number>(0);
   const [alertIdx, setAlertIdx] = useState<number>(0);
 
   const stompClientRef = React.useRef<Client | null>(null);
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
 
-  useEffect(()=>{
+  useEffect(() => {
     // 모달창이 열렸다면 공지사항 데이터 불러오기
     const userToken = localStorage.getItem('userToken')
     axios({
-      method:'get',
-      url:'https://i9b206.p.ssafy.io:9090/notice/list/top',
-      headers : {
+      method: 'get',
+      url: 'https://i9b206.p.ssafy.io:9090/notice/list/top',
+      headers: {
         Authorization: 'Bearer ' + userToken
       },
     })
-    .then(res => {
-      // console.log(res.data)
-      setNoticeList(res.data.list);
-    })
-    .catch(err => {
-      console.log(err)
-    })
-  })
+      .then(res => {
+        setNoticeList(res.data.list);
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }, [])
 
-  useEffect(()=>{
+  useEffect(() => {
     // 모달창이 열렸다면 읽지 않은 알림 데이터 불러오기
     const userIdxStr = localStorage.getItem('userIdx')
-    const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
+    const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
     const userToken = localStorage.getItem('userToken')
     axios({
-      method:'get',
-      url:`https://i9b206.p.ssafy.io:9090/noti/list/top/${userIdx}`,
-      headers : {
+      method: 'get',
+      url: `https://i9b206.p.ssafy.io:9090/noti/list/top/${userIdx}`,
+      headers: {
         Authorization: 'Bearer ' + userToken
       },
     })
-    .then(res => {
-      console.log(res.data.data)
-      setAlertList(res.data.data);
-    })
-    .catch(err => {
-      console.log(err)
-    })
-  },[])
+      .then(res => {
+        setAlertList(res.data.data);
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }, [])
   const backpage = () => {
     setPage(0)
   }
   return (
-    <div className={alert_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => 
-      {if (e.target === e.currentTarget) {dispatch(setModal(null))}}} >
-        {page===0 ? 
-          <div className={alert_css.alert_modal}>
-          <p className={alert_css.closebtn} onClick={() => {dispatch(setModal(null))}}>닫기</p>
+    <div className={alert_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => { if (e.target === e.currentTarget) { dispatch(setModal(null)) } }} >
+      {page === 0 ?
+        <div className={alert_css.alert_modal}>
+          <p className={alert_css.closebtn} onClick={() => { dispatch(setModal(null)) }}>닫기</p>
           <div>
-            <h1 style={{margin:'-20px 0 20px 0'}}>공지사항 / 알림</h1>
-              <div className={alert_css.container}>
-                <div className={alert_css.noticetype}>
-                  <p>공지사항</p>
-                  <p className={alert_css.movebtn} onClick={() => {dispatch(setModal('공지전체'))}}>전체보기</p>
-                </div>
-                {noticeList.map((notice: Notice, index: number) => {
-                  const date = new Date(notice.createdAt);
-                  return (
-                    <div onClick={() => {setPage(1); setNoticeIdx(notice.idx)}} className={alert_css.notice}>
-                      <span>{notice.idx}</span>
-                      <span>{notice.title}</span>
-                      <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span>
-                      {/* <span>{date.getMonth() + 1}/{date.getDate()}</span> */}
-                    </div>
-                    );})}
+            <h1 style={{ margin: '-20px 0 20px 0' }}>공지사항 / 알림</h1>
+            <div className={alert_css.container}>
+              <div className={alert_css.noticetype}>
+                <p>공지사항</p>
+                <p className={alert_css.movebtn} onClick={() => { dispatch(setModal('공지전체')) }}>전체보기</p>
               </div>
-              <br />
-              <div className={alert_css.container}>
-                <div className={alert_css.noticetype}>
-                  <p>알림 </p>
-                  <p className={alert_css.movebtn} onClick={() => {dispatch(setModal('알림전체'))}}>전체보기</p>
-                </div>
-                {alertList.map((alert: AlertProps, index: number) => {
-                  const date = new Date(alert.createdAt);
-                  return (
-                    <div key={index} onClick={() => {setPage(2); setAlertIdx(alert.idx)}} className={alert_css.notice}>
-                      <span>{alert.idx}</span>
-                      <span>{alert.content}</span>
-                      <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span>
-                      {/* <span>{date.getMonth() + 1}/{date.getDate()}</span> */}
-                    </div>
-                    );})}
+              {noticeList.map((notice: Notice, index: number) => {
+                const date = new Date(notice.createdAt);
+                return (
+                  <div onClick={() => { setPage(1); setNoticeIdx(notice.idx) }} className={alert_css.notice}>
+                    <span>{notice.idx}</span>
+                    <span>{notice.title}</span>
+                    <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span>
+                    {/* <span>{date.getMonth() + 1}/{date.getDate()}</span> */}
+                  </div>
+                );
+              })}
+            </div>
+            <br />
+            <div className={alert_css.container}>
+              <div className={alert_css.noticetype}>
+                <p>알림 </p>
+                <p className={alert_css.movebtn} onClick={() => { dispatch(setModal('알림전체')) }}>전체보기</p>
               </div>
+              {alertList.map((alert: AlertProps, index: number) => {
+                const date = new Date(alert.createdAt);
+                return (
+                  <div key={index} onClick={() => { setPage(2); setAlertIdx(alert.idx) }} className={alert_css.notice}>
+                    <span>{alert.idx}</span>
+                    <span>{alert.content}</span>
+                    <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span>
+                    {/* <span>{date.getMonth() + 1}/{date.getDate()}</span> */}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
-      :page === 1 ? <DetailNotice backpage={backpage} noticeIdx={noticeIdx} /> :<DetailAlert backpage={backpage} alertIdx={alertIdx} />}
+        : page === 1 ? <DetailNotice backpage={backpage} noticeIdx={noticeIdx} /> : <DetailAlert backpage={backpage} alertIdx={alertIdx} />}
     </div>
   );
 };

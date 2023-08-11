@@ -14,7 +14,7 @@
     border-radius: 1rem;
     width:50%;
     height: 460px;
-    padding: 20px 30px;
+    padding: 10px 30px;
     box-sizing: border-box;
     color : white;
 }
@@ -31,11 +31,12 @@
     justify-content: space-between;
 }
 .closebtn {
-    margin:10px 0;
+    margin: 10px 0;
     cursor: pointer;
+    text-align: right;
 }
 .backbtn {
-    margin:10px 0;
+    margin: 10px 0;
     cursor: pointer;
 }
 

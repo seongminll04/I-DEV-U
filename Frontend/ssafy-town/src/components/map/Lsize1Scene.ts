@@ -753,6 +753,7 @@ export class Lsize1Scene extends Phaser.Scene {
     for (const userId in this.dataChannels) {
       if (userId !== currentUserId) { // 현재 유저 제외
         const targetDataChannel = this.dataChannels[userId];
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         if (targetDataChannel && targetDataChannel.readyState === 'open') {
           console.log("###########################################")
           targetDataChannel.send(JSON.stringify(dataToSend));

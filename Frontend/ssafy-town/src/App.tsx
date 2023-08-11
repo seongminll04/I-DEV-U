@@ -14,7 +14,7 @@ import LMeetingRoom from './components/room/Lmeetingroom';
 
 import app_css from './App.module.css';
 
-import { Client, Stomp } from '@stomp/stompjs';
+import { Client, Message, Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
 
@@ -49,13 +49,24 @@ function App() {
     stompClientRef.current.reconnectDelay=5000 //자동재연결
     stompClientRef.current.heartbeatIncoming=4000
     stompClientRef.current.heartbeatOutgoing=4000
-
+    
+    stompClientRef.current.onConnect = (frame) => {
+      const userIdx = localStorage.getItem('userIdx')
+      if (stompClientRef.current) {
+        const subscription = stompClientRef.current.subscribe(`/sub/join/${userIdx}`, function(message: Message) {
+          const newMessage = JSON.parse(message.body);
+          console.log(newMessage)
+        });
+        return () => {
+          if (stompClientRef.current) {
+            subscription.unsubscribe();
+          }
+        };
+      }
+    }
     // 연결 시도
     stompClientRef.current.activate();
     
-    // stompClientRef.current.onConnect = function {
-
-    // }
     stompClientRef.current.onWebSocketError=function(err){
       console.log(err,',asdfsadf')
     }

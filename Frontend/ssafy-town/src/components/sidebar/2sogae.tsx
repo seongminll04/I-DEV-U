@@ -15,7 +15,7 @@ type User = {
 const Sogae: React.FC = () => {
   const dispatch = useDispatch();
   // const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-  const [survey,setServey]=useState<boolean>(true);
+  const [survey,setServey]=useState<boolean>(false);
   const [users, setUsers] = useState<User[]>([
     { name: "홍길동1", matchRate: 95 },
     { name: "홍길동2", matchRate: 90 },
@@ -32,16 +32,20 @@ const Sogae: React.FC = () => {
 
   useEffect(() => {
     const userToken = localStorage.getItem('userToken')
+    const userIdxStr = localStorage.getItem('userIdx')
+    const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
     // 소개팅 설문 여부 체크
     axios({
       method:'get',
-      url:'https://i9b206.p.ssafy.io:9090/~~~~~~~~~/',
+      url:`https://i9b206.p.ssafy.io:9090/date/survey/${userIdx}`,
       headers : {
         Authorization: 'Bearer ' + userToken
       },
     })
     .then(res => {
-      setServey(res.data)
+      if (res.data.resmsg==='설문 했음') {
+        setServey(true)
+      }
     })
     .catch(err => console.log(err))
 
@@ -58,7 +62,6 @@ const Sogae: React.FC = () => {
       setUsers(res.data)
     })
     .catch(err => console.log(err))
-
   }, []);
 
   return (

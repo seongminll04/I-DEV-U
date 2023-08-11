@@ -36,6 +36,8 @@ const Mate: React.FC = () => {
   ]);
   useEffect(() => {
     const userToken = localStorage.getItem('userToken');
+    const userIdxStr = localStorage.getItem('userIdx')
+    const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
     axios({
       method: 'get',
       url: 'https://i9b206.p.ssafy.io:9090/partner/list',
@@ -45,7 +47,7 @@ const Mate: React.FC = () => {
       data : matefilter,
     })
       .then(res => {
-        setMateList(res.data.userList);
+        setMateList(res.data.userList.filter((user : Matep) =>user.userIdx !== userIdx));
       })
       .catch(err => console.log(err))
   },[matefilter])
@@ -80,8 +82,8 @@ const Mate: React.FC = () => {
               </div>
             )
           })}
+          <p>-더 없음-</p> 
         </div>
-        <p>-더 없음-</p>
       </div>
       { isModalOpen === '동료찾기필터' ? <MateFilter filter={matefilter} onfilter={(value:Filter[])=>setMateFilter(value)} />
       : isModalOpen === '동료상세정보' ? <MateDetail userIdx={mateIdx}/> 

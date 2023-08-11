@@ -44,21 +44,35 @@ const Mate: React.FC = () => {
     for (const filter of matefilter) {
       tList = [...tList, ...filter.tagList]
     }
-    console.log(tList);
-    axios({
-      method: 'post',
-      url: 'https://i9b206.p.ssafy.io:9090/partner/list',
-      headers: {
-        Authorization: 'Bearer ' + userToken
-      },
-      data: {
-        tagList: tList
-      },
-    })
-      .then(res => {
-        setMateList(res.data.userList.filter((user : Matep) =>user.userIdx !== userIdx));
+    if (tList[0]){
+      axios({
+        method: 'post',
+        url: 'https://i9b206.p.ssafy.io:9090/partner/list',
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        },
+        data: {
+          tagList: tList
+        },
       })
-      .catch(err => console.log(err))
+        .then(res => {
+          setMateList(res.data.userList.filter((user : Matep) =>user.userIdx !== userIdx));
+        })
+        .catch(err => console.log(err))
+    }
+    else {
+      axios({
+        method: 'post',
+        url: 'https://i9b206.p.ssafy.io:9090/partner/list',
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        },
+      })
+        .then(res => {
+          setMateList(res.data.userList.filter((user : Matep) =>user.userIdx !== userIdx));
+        })
+        .catch(err => console.log(err))
+    }
   }, [matefilter])
 
   return (

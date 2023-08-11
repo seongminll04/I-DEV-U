@@ -15,11 +15,11 @@ interface props {
 }
 const MateFilter: React.FC<props> = ({filter,onfilter}) => {
   const dispatch = useDispatch()
-  const [workingYears, setWorkingYears] = useState<string>("");
-  const [currentJob, setCurrentJob] = useState<string>("");
-  const [languages, setLanguages] = useState<string[]>([]);
-  const [location, setLocation] = useState<string>("");
-  const [projectExperience, setProjectExperience] = useState<string>("");
+  const [workingYears, setWorkingYears] = useState<string>("상관없음");
+  const [currentJob, setCurrentJob] = useState<string>("상관없음");
+  const [languages, setLanguages] = useState<string[]>(["Python", "Java", "C", "C++", "C#", "Object-C", "Kotlin", "Swift", "Ruby", "Go", "Javascript", "typescript", "PyPy", "PHP", "Rust", "Text", "D", "기타"]);
+  const [location, setLocation] = useState<string>("상관없음");
+  const [projectExperience, setProjectExperience] = useState<string>("상관없음");
 
   const workingYearsOptions = ["경력없음", "1년미만", "3년미만", "5년미만", "7년미만", "9년미만", "9년이상"];
   const currentJobOptions = ["서버/백엔드", "프론트엔드", "풀스택", "머신러닝/인공지닝", "데이터엔지니어링", "시스템소프트웨어", "데브옵스", "응용프로그램", "안드로이드", "iOS", "임베디드", "게임클라이언트", "개발PM", "학생", "보기에없음"];
@@ -106,6 +106,10 @@ const MateFilter: React.FC<props> = ({filter,onfilter}) => {
     <form onSubmit={handleSubmit}>
       <div>
         <p>👨‍💻 개발자로 근무한 기간을 선택하세요</p>
+        <label>
+            <input type="radio" name="workingYears" onChange={() => setWorkingYears('상관없음')}  checked={workingYears==='상관없음'} />
+            상관없음
+          </label>
         {workingYearsOptions.map(option => (
           <label key={option}>
             <input type="radio" name="workingYears" value={option} onChange={() => setWorkingYears(option)} checked={workingYears===option} />
@@ -116,6 +120,10 @@ const MateFilter: React.FC<props> = ({filter,onfilter}) => {
 
       <div>
         <p>💻 현재 직무는 무엇인가요?</p>
+        <label>
+            <input type="radio" name="currentJob" onChange={() => setCurrentJob('상관없음')}  checked={currentJob==='상관없음'} />
+            상관없음
+          </label>
         {currentJobOptions.map(option => (
           <label key={option}>
             <input type="radio" name="currentJob" value={option} onChange={() => setCurrentJob(option)}  checked={currentJob===option} />
@@ -126,6 +134,10 @@ const MateFilter: React.FC<props> = ({filter,onfilter}) => {
 
       <div>
         <p>📚 사용하는 언어가 무엇인가요? (최대 5개)</p>
+        <label>
+            <input type="checkbox" name="languages" onChange={() => setLanguages(languageOptions)}  checked={languages===languageOptions} />
+            상관없음
+          </label>
         {languageOptions.map(option => (
           <label key={option}>
             <input
@@ -144,6 +156,9 @@ const MateFilter: React.FC<props> = ({filter,onfilter}) => {
         <p>🗺️ 거주중인 지역은 어디인가요?</p>
         <select name="location" onChange={(e) => setLocation(e.target.value)}>
           <option disabled selected value="" hidden>선택</option>
+          <option key={'상관없음'} value={'상관없음'} selected={location==='상관없음'}>
+              무관
+            </option>
           {locationOptions.map(option => (
             <option key={option} value={option} selected={location===option}>
               {option}
@@ -154,6 +169,10 @@ const MateFilter: React.FC<props> = ({filter,onfilter}) => {
 
       <div>
         <p>🛠️ 프로젝트 경험이 있으신가요?</p>
+        <label key={'상관없음'}>
+            <input type="radio" name="projectExperience" value={'상관없음'} onChange={() => setProjectExperience('상관없음')} checked={projectExperience==='상관없음'} />
+            상관없음
+          </label>
         {projectOptions.map(option => (
           <label key={option}>
             <input type="radio" name="projectExperience" value={option} onChange={() => setProjectExperience(option)} checked={projectExperience===option} />

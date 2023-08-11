@@ -14,7 +14,7 @@ import mate.domain.match.MatchAnswer;
 @Repository
 public interface MatchRepository extends JpaRepository<MatchAnswer, Integer> {
 	@Query("select m from MatchAnswer m where m.user.idx = :userIdx "
-		+ "and (m.surveyIdx >= 4 AND m.surveyIdx <= 6) or m.surveyIdx IN (7, 16)")
+		+ "and (m.surveyIdx >= 4 AND m.surveyIdx <= 16)")
 	List<MatchAnswer> findByUser(@Param("userIdx") Integer userIdx);
 
 	@Query("select m from MatchAnswer m where m.user.idx = :userIdx")
@@ -29,8 +29,7 @@ public interface MatchRepository extends JpaRepository<MatchAnswer, Integer> {
 	@Query(
 		"SELECT ma.user.idx as userIdx, ma.user.nickname as nickname, ROUND((COUNT(*) / :size) * 100) AS percent " +
 			"FROM MatchAnswer ma " +
-			"WHERE ma.tag IN (:tag) and ma.surveyIdx IN (1, 3) or ma.surveyIdx IN (7, 16) "
-			+
+			"WHERE ma.tag IN (:tag) and (ma.surveyIdx != 4 and ma.surveyIdx != 5 and ma.surveyIdx != 6) " +
 			"GROUP BY ma.user.idx " +
 			"ORDER BY percent DESC")
 	List<Object> listMatchUser(@Param("tag") List<String> tag, @Param("size") long size);

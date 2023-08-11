@@ -63,6 +63,11 @@ public class MatchService {
 
 	public List<MatchDto> listMatchUser(int userIdx) {
 		List<MatchAnswer> answers = matchRepository.findByUser(userIdx);
+
+		for (MatchAnswer ma : answers) {
+			System.out.println(ma.getTag());
+		}
+
 		User user = userRepository.findByIdx(userIdx).get();
 
 		List<String> tag = new ArrayList<>();
@@ -72,7 +77,7 @@ public class MatchService {
 		}
 
 		List<Object> list = matchRepository.listMatchUser(tag, tag.size());
-		
+
 		List<MatchDto> output = new ArrayList<>();
 
 		for (Object o : list) {

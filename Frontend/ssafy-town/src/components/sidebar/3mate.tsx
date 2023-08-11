@@ -37,16 +37,14 @@ const Mate: React.FC = () => {
 
   useEffect(() => {
     const userToken = localStorage.getItem('userToken');
-<<<<<<< HEAD
     const userIdxStr = localStorage.getItem('userIdx')
-    const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
-=======
+    var userIdx: number | null;
+    if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
     var tList: string[] = []
     for (const filter of matefilter) {
       tList = [...tList, ...filter.tagList]
     }
     console.log(tList);
->>>>>>> f44196d741f24414f599170dc902a33a09cc005f
     axios({
       method: 'post',
       url: 'https://i9b206.p.ssafy.io:9090/partner/list',
@@ -58,12 +56,7 @@ const Mate: React.FC = () => {
       },
     })
       .then(res => {
-<<<<<<< HEAD
         setMateList(res.data.userList.filter((user : Matep) =>user.userIdx !== userIdx));
-=======
-        console.log(res);
-        setMateList(res.data.userList);
->>>>>>> f44196d741f24414f599170dc902a33a09cc005f
       })
       .catch(err => console.log(err))
   }, [matefilter])

@@ -3,7 +3,11 @@ package mate.controller.match;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import mate.domain.match.MatchUser;
+import mate.domain.user.User;
+import mate.repository.user.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,6 +32,7 @@ import mate.service.match.MatchService;
 public class MatchController {
 
 	private final MatchService matchService;
+	private final UserRepository userRepository;
 	private final MatchRepository matchRepository;
 	private final MatchUserRepository matchUserRepository;
 
@@ -120,5 +125,20 @@ public class MatchController {
 		//        }
 
 		return ResponseEntity.ok(map);
+	}
+
+	@GetMapping("/{userIdx}")
+	public ResponseEntity<Map<String, Object>> isRegistered(@PathVariable("userIdx") int userIdx) {
+		Map<String, Object> map = new HashMap<>();
+
+		User user = userRepository.findByIdx(userIdx).get();
+		Optional<MatchUser> matchUser = matchUserRepository.findByUser(user);
+		if (matchUser.isPresent()) {
+			map.put("isRegistered", true);
+			return ResponseEntity.ok(map);
+		} else {
+			map.put("isRegistered", false);
+			return ResponseEntity.ok(map);
+		}
 	}
 }

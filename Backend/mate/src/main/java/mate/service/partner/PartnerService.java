@@ -31,7 +31,6 @@ public class PartnerService {
 
 		for (Object o : partners) {
 			Object[] result = (Object[])o;
-
 			// Assuming the order of elements in the array corresponds to the order of fields in PartnerDto
 			String name = (String)result[0];
 			String nickname = (String)result[1];

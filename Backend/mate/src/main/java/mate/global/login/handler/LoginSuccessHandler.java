@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import mate.domain.user.User;
 import mate.global.jwt.service.JwtService;
 import mate.repository.user.UserRepository;
+import mate.session.domain.Session;
+import mate.session.domain.SessionRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +15,8 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -22,6 +26,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtService jwtService;
     private final UserRepository userRepository;
 //    private final RedisService redisService;
+    private final SessionRepository sessionRepository;
 
     @Value("${jwt.access.expiration}")
     private String accessTokenExpiration;
@@ -41,6 +46,17 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         loginUser.ifPresent(user -> {
                     user.updateRefreshToken(refreshToken);
                     userRepository.saveAndFlush(user);
+
+                    List<Integer> list = new ArrayList<>();
+                    list.add(new Integer(user.getIdx()));
+            sessionRepository.findByUserIdx(list)
+                    .ifPresentOrElse(
+                            session -> System.out.println("세션 존재"),
+                            () -> {
+                                Session session = Session.createSession(user.getIdx(), user.getNickname());
+                                sessionRepository.save(session);
+                            }
+                    );
                 });
 //        redisService.setRedis(refreshToken, email);
         String responseBody = "{\"message\": \"로그인에 성공하였습니다.\", \"userIdx\": \"" + loginUser.get().getIdx() + "\" , \"userNickname\": \"" + loginUser.get().getNickname() + "\"}";

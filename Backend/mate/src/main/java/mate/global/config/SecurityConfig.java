@@ -9,6 +9,7 @@ import mate.global.login.handler.LoginFailureHandler;
 import mate.global.login.handler.LoginSuccessHandler;
 import mate.global.login.service.LoginService;
 import mate.repository.user.UserRepository;
+import mate.session.domain.SessionRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,6 +37,9 @@ public class SecurityConfig {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
+
+    private final SessionRepository sessionRepository;
+
 //    private final RedisService redisService;
 
 
@@ -104,7 +108,7 @@ public class SecurityConfig {
     @Bean
     public LoginSuccessHandler loginSuccessHandler() {
 //        return new LoginSuccessHandler(jwtService, userRepository, redisService);
-        return new LoginSuccessHandler(jwtService, userRepository);
+        return new LoginSuccessHandler(jwtService, userRepository, sessionRepository);
     }
 
     /**

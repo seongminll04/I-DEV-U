@@ -72,11 +72,7 @@ public class MatchService {
 		}
 
 		List<Object> list = matchRepository.listMatchUser(tag, tag.size());
-
-		Object[] tmp = (Object[])list.get(0);
-
-		System.out.println((String)tmp[1]);
-
+		
 		List<MatchDto> output = new ArrayList<>();
 
 		for (Object o : list) {
@@ -104,7 +100,7 @@ public class MatchService {
 			matchDto.setPercent(percent);
 			matchDto.setAge(age);
 
-			list.add(matchDto);
+			output.add(matchDto);
 		}
 
 		return output;

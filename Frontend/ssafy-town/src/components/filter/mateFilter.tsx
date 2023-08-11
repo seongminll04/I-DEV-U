@@ -45,9 +45,9 @@ const MateFilter: React.FC = () => {
     // const surveyResults = [{ tagList: selectedTagList }];
 
     const userToken = localStorage.getItem('userToken')
-    const userIdxStr = localStorage.getItem('userIdx')
-    var userIdx: number | null;
-    if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
+    // const userIdxStr = localStorage.getItem('userIdx')
+    // var userIdx: number | null;
+    // if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
     
     axios({
       method: 'get',
@@ -59,9 +59,10 @@ const MateFilter: React.FC = () => {
         Authorization: 'Bearer ' + userToken
       },
     })
-      .then(() => {
+      .then((res) => {
         // dispatch(setModal(null))
         // alert('설문에 참여해주셔서 감사합니다.')
+        // setMateList(res.data.userList);
         alert('성공.')
       })
       .catch(() => {

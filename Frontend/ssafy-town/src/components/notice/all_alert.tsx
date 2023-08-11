@@ -20,6 +20,7 @@ const AllAlert: React.FC = () => {
   const [search, setsearch] = useState<string>('');
   const [nowsearch, setnowsearch] = useState<boolean>(false);
   const [alertList,setAlertList] =useState<Alert[]>([{idx:1,content:'test1',title:'asdf',createdAt:'asdf'}]);
+  const [alertIdx, setAlertIdx] = useState<number>(0);
   
   useEffect(()=>{
     axios({
@@ -64,14 +65,14 @@ const AllAlert: React.FC = () => {
                 <br />
                 {alertList.map((alert: Alert, index: number) => {
                   return (
-                    <div onClick={()=>setPage(2)} className={alert_css.notice} key={index}>
-                      <span>{index+1}</span>
+                    <div onClick={()=> {setPage(2); setAlertIdx(alert.idx)}} className={alert_css.notice} key={index}>
+                      <span>{alert.idx}</span>
                       <span>{alert.content}</span>
                       <span>{alert.createdAt}</span>
                     </div>
                   )})}      
             </div>
-            :  <DetailAlert backpage={backpage} /> }
+            :  <DetailAlert backpage={backpage} alertIdx={alertIdx} /> }
         </div>
   );
 };

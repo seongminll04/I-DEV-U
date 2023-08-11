@@ -21,6 +21,7 @@ const AllNotice: React.FC = () => {
   const [search, setsearch] = useState<string>('');
   const [nowsearch, setnowsearch] = useState<boolean>(false);
   const [noticeList,setNoticeList] =useState<Notice[]>([]);
+  const [noticeIdx, setNoticeIdx] = useState<number>(0);
   
   useEffect(()=>{
     axios({
@@ -79,14 +80,14 @@ const AllNotice: React.FC = () => {
                 <br />
                 {noticeList.map((notice: Notice, index: number) => {
                   return (
-                    <div onClick={()=>setPage(1)} className={alert_css.notice} key={index}>
-                      <span>{index+1}</span>
+                    <div onClick={()=> {setPage(1); setNoticeIdx(notice.idx)}} className={alert_css.notice} key={index}>
+                      <span>{notice.idx}</span>
                       <span>{notice.content}</span>
                       <span>{notice.createdAt}</span>
                     </div>
                   )})}
             </div>
-            :  <DetailNotice backpage={backpage} /> }
+            :  <DetailNotice backpage={backpage} noticeIdx={noticeIdx} /> }
         </div>
   );
 };

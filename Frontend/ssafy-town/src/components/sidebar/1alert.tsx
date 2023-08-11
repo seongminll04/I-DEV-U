@@ -31,10 +31,11 @@ const Alert: React.FC = () => {
   const [noticeList,setNoticeList] =useState<Notice[]>([]);
   const [alertList,setAlertList] =useState<AlertProps[]>([]);
   const [page,setPage] = useState<Number>(0)
+  const [noticeIdx, setNoticeIdx] = useState<number>(0);
+  const [alertIdx, setAlertIdx] = useState<number>(0);
 
   const stompClientRef = React.useRef<Client | null>(null);
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
-
 
   useEffect(()=>{
     // 모달창이 열렸다면 공지사항 데이터 불러오기
@@ -47,7 +48,7 @@ const Alert: React.FC = () => {
       },
     })
     .then(res => {
-      console.log(res.data)
+      // console.log(res.data)
       setNoticeList(res.data.list);
     })
     .catch(err => {
@@ -94,8 +95,8 @@ const Alert: React.FC = () => {
                 {noticeList.map((notice: Notice, index: number) => {
                   const date = new Date(notice.createdAt);
                   return (
-                    <div onClick={() => {setPage(1); localStorage.setItem("noticeIdx", String(notice.idx))}} className={alert_css.notice}>
-                      <span>{index+1}</span>
+                    <div onClick={() => {setPage(1); setNoticeIdx(notice.idx)}} className={alert_css.notice}>
+                      <span>{notice.idx}</span>
                       <span>{notice.title}</span>
                       <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span>
                       {/* <span>{date.getMonth() + 1}/{date.getDate()}</span> */}
@@ -111,8 +112,8 @@ const Alert: React.FC = () => {
                 {alertList.map((alert: AlertProps, index: number) => {
                   const date = new Date(alert.createdAt);
                   return (
-                    <div key={index} onClick={() => {setPage(2); localStorage.setItem("noticeIdx", String(alert.idx))}} className={alert_css.notice}>
-                      <span>{index+1}</span>
+                    <div key={index} onClick={() => {setPage(2); setAlertIdx(alert.idx)}} className={alert_css.notice}>
+                      <span>{alert.idx}</span>
                       <span>{alert.content}</span>
                       <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span>
                       {/* <span>{date.getMonth() + 1}/{date.getDate()}</span> */}
@@ -121,7 +122,7 @@ const Alert: React.FC = () => {
               </div>
           </div>
         </div>
-      :page === 1 ? <DetailNotice backpage={backpage} /> :<DetailAlert backpage={backpage} />}
+      :page === 1 ? <DetailNotice backpage={backpage} noticeIdx={noticeIdx} /> :<DetailAlert backpage={backpage} alertIdx={alertIdx} />}
     </div>
   );
 };

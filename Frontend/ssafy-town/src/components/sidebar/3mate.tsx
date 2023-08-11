@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import mate_css from './3mate.module.css'
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppState } from '../../store/state';
 import { setModal } from '../../store/actions';
 
 import axios from 'axios';
+import MateFilter from '../filter/mateFilter';
 
 interface Matep {
   name: string;
@@ -13,30 +15,38 @@ interface Matep {
   languageList: Array<string>;
 }
 
+interface Filter {
+  surveyIdx: number,
+  surveyTitle: string,
+  tagList: string[],
+}
+
 const Mate: React.FC = () => {
   const dispatch = useDispatch();
-  const userToken = localStorage.getItem('userToken');
+  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);//사이드바 오픈여부
+  const [matefilter,setMateFilter] = useState<Filter[]>([])
   const [mateList, setMateList] = useState<Matep[]>([
     { "name": "김싸피", "nickname": "김김김", "percent": 55, "languageList": [] },
     { "name": "이싸피", "nickname": "이이이", "percent": 46, "languageList": [] },
     { "name": "박싸피", "nickname": "박박박", "percent": 37, "languageList": [] },
     { "name": "최싸피", "nickname": "최최최", "percent": 28, "languageList": [] },
   ]);
-
   useEffect(() => {
+    const userToken = localStorage.getItem('userToken');
     axios({
       method: 'get',
       url: 'https://i9b206.p.ssafy.io:9090/partner/list',
       headers: {
         Authorization: 'Bearer ' + userToken
       },
+      data : matefilter,
     })
       .then(res => {
         // console.log(res.data)
         setMateList(res.data.userList);
       })
       .catch(err => console.log(err))
-  })
+  },[matefilter])
 
   return (
     <div>
@@ -69,29 +79,9 @@ const Mate: React.FC = () => {
             )
           })}
         </div>
-
-        {/* 
-        <div className={mate_css.usertable}>
-              <div className={mate_css.userInfo}>
-                <div className={mate_css.profile}>
-                  <img src="assets/default_profile.png" alt=""/>
-                  <div className={mate_css.profiledata}>
-                    <b>김싸피</b>
-                    <p style={{color:'gray'}}>#Python #Java #JavaScript #React</p>
-                  </div>
-                </div>
-              </div>
-              <div className={mate_css.matchRate}>96%</div>
-        </div>
-        */}
         <p>-더 없음-</p>
       </div>
-      {/* {getCurrentPageData().map((user, index) => (
-                <tr key={index}>
-                  <td>{user.name}</td>
-                  <td>{user.matchRate}%</td>
-                </tr>
-              ))} */}
+      { isModalOpen === '동료찾기필터' ? <MateFilter filter={matefilter} onfilter={(value:Filter[])=>setMateFilter(value)} /> : null}
     </div>
   );
 };

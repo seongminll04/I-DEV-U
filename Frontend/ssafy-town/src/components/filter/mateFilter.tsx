@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 
 import filter_css from './mateFilter.module.css'
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
-import axios from 'axios';
 
-const MateFilter: React.FC = () => {
+interface Filter {
+  surveyIdx: number,
+  surveyTitle: string,
+  tagList: string[],
+}
+interface props {
+  filter:Filter[],
+  onfilter:(value:Filter[])=>void,
+}
+const MateFilter: React.FC<props> = ({filter,onfilter}) => {
   const dispatch = useDispatch()
-
   const [workingYears, setWorkingYears] = useState<string>("");
   const [currentJob, setCurrentJob] = useState<string>("");
   const [languages, setLanguages] = useState<string[]>([]);
@@ -19,6 +26,28 @@ const MateFilter: React.FC = () => {
   const languageOptions = ["Python", "Java", "C", "C++", "C#", "Object-C", "Kotlin", "Swift", "Ruby", "Go", "Javascript", "typescript", "PyPy", "PHP", "Rust", "Text", "D", "기타"];
   const locationOptions = ["서울", "경기", "부산", "인천", "세종", "대전", "광주", "대구", "울산", "충남", "충북", "전남", "전북", "경남", "경북", "강원", "제주", "해외", "기타"];
   const projectOptions = ["있다", "없다"];
+
+
+  useEffect(()=> {
+    console.log(filter)
+   for (const f of filter) {
+    if (f.surveyIdx===1 && f.tagList) {
+      setWorkingYears(f.tagList[0])
+    }
+    else if (f.surveyIdx===2 && f.tagList) {
+      setCurrentJob(f.tagList[0])
+    }
+    else if (f.surveyIdx===3 && f.tagList) {
+      setLanguages(f.tagList)
+    }
+    else if (f.surveyIdx===4 && f.tagList) {
+      setLocation(f.tagList[0])
+    }
+    else if (f.surveyIdx===5 && f.tagList) {
+      setProjectExperience(f.tagList[0])
+    }
+   }
+  },[filter])
 
   const toggleLanguage = (option: string) => {
     setLanguages(prevLanguages => {
@@ -41,32 +70,36 @@ const MateFilter: React.FC = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-
-    // const surveyResults = [{ tagList: selectedTagList }];
-
-    const userToken = localStorage.getItem('userToken')
-    const userIdxStr = localStorage.getItem('userIdx')
-    var userIdx: number | null;
-    if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
-    
-    axios({
-      method: 'get',
-      url: `https://i9b206.p.ssafy.io:9090/partner/list`,
-      data: {
-        'tagList': selectedTagList
+    const surveyResults = [
+      {
+        surveyIdx: 1,
+        surveyTitle: '개발자로 근무한 기간을 선택하세요',
+        tagList: [workingYears],
       },
-      headers: {
-        Authorization: 'Bearer ' + userToken
+      {
+        surveyIdx: 2,
+        surveyTitle: '현재 직무는 무엇인가요?',
+        tagList: [currentJob],
       },
-    })
-      .then(() => {
-        // dispatch(setModal(null))
-        // alert('설문에 참여해주셔서 감사합니다.')
-        alert('성공.')
-      })
-      .catch(() => {
-        alert('실패')
-      })
+      {
+        surveyIdx: 3,
+        surveyTitle: '사용하는 언어가 무엇인가요? (최대 5개)',
+        tagList: languages,
+      },
+      {
+        surveyIdx: 4,
+        surveyTitle: '거주중인 지역은 어디인가요?',
+        tagList: [location],
+      },
+      {
+        surveyIdx: 5,
+        surveyTitle: '프로젝트 경험이 있으신가요?',
+        tagList: [projectExperience],
+      },
+    ];
+    console.log(surveyResults)
+    onfilter(surveyResults)
+    dispatch(setModal(null))
   }
 
   const surveyForm = (
@@ -75,7 +108,7 @@ const MateFilter: React.FC = () => {
         <p>👨‍💻 개발자로 근무한 기간을 선택하세요</p>
         {workingYearsOptions.map(option => (
           <label key={option}>
-            <input type="radio" name="workingYears" value={option} onChange={() => setWorkingYears(option)} />
+            <input type="radio" name="workingYears" value={option} onChange={() => setWorkingYears(option)} checked={workingYears===option} />
             {option}
           </label>
         ))}
@@ -85,7 +118,7 @@ const MateFilter: React.FC = () => {
         <p>💻 현재 직무는 무엇인가요?</p>
         {currentJobOptions.map(option => (
           <label key={option}>
-            <input type="radio" name="currentJob" value={option} onChange={() => setCurrentJob(option)} />
+            <input type="radio" name="currentJob" value={option} onChange={() => setCurrentJob(option)}  checked={currentJob===option} />
             {option}
           </label>
         ))}
@@ -112,7 +145,7 @@ const MateFilter: React.FC = () => {
         <select name="location" onChange={(e) => setLocation(e.target.value)}>
           <option disabled selected value="" hidden>선택</option>
           {locationOptions.map(option => (
-            <option key={option} value={option}>
+            <option key={option} value={option} selected={location===option}>
               {option}
             </option>
           ))}
@@ -123,7 +156,7 @@ const MateFilter: React.FC = () => {
         <p>🛠️ 프로젝트 경험이 있으신가요?</p>
         {projectOptions.map(option => (
           <label key={option}>
-            <input type="radio" name="projectExperience" value={option} onChange={() => setProjectExperience(option)} />
+            <input type="radio" name="projectExperience" value={option} onChange={() => setProjectExperience(option)} checked={projectExperience===option} />
             {option}
           </label>
         ))}
@@ -139,7 +172,7 @@ const MateFilter: React.FC = () => {
         <h1>동료찾기 필터</h1>
         {surveyForm}
         <div className={filter_css.button_icon}>
-          <button className={filter_css.button} onClick={() => dispatch(setModal(null))}>적용</button>
+          <button className={filter_css.button} onClick={handleSubmit}>적용</button>
           <button className={filter_css.button} onClick={() => dispatch(setModal(null))}>취소</button>
         </div>
       </div>

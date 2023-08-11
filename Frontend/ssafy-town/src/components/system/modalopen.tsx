@@ -12,7 +12,6 @@ import QnA from '../board/QnA';
 import ProjectFilter from '../filter/projectFilter';
 import CreateProject from '../board/CreateProject';
 import EnterProject from '../board/EnterProject';
-import MateFilter from '../filter/mateFilter';
 import SogaeFilter from '../filter/sogaeFilter';
 import SecondQAModal from '../survey/secondQA';
 
@@ -41,7 +40,6 @@ const ModalOpen: React.FC = () => {
       : isModalOpen === '프로젝트생성' ? <CreateProject />
       : isModalOpen === '프로젝트참가신청' ? <EnterProject />
       : isModalOpen === '프로젝트상세정보' ? <DetailProject />
-      : isModalOpen === '동료찾기필터' ? <MateFilter />
       : isModalOpen === '소개팅설문' ? <SecondQAModal onClose={()=>dispatch(setModal(null))} onConfirm={()=>{}} />
       : isModalOpen === '소개팅필터' ? <SogaeFilter />
       : isModalOpen === '프로젝트가입알림' ? <AlertResponse />

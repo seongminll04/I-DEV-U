@@ -41,6 +41,7 @@ public class PartnerService {
 			List<String> language = basicRepository.findLanguage(userIdx);
 
 			PartnerDto partnerDto = new PartnerDto();
+			partnerDto.setUserIdx(userIdx);
 			partnerDto.setName(name);
 			partnerDto.setNickname(nickname);
 			partnerDto.setPercent(percent);
@@ -68,6 +69,7 @@ public class PartnerService {
 			List<String> language = basicRepository.findLanguage(userIdx);
 
 			PartnerDto partnerDto = new PartnerDto();
+			partnerDto.setUserIdx(userIdx);
 			partnerDto.setName(name);
 			partnerDto.setNickname(nickname);
 			partnerDto.setLanguageList(language);

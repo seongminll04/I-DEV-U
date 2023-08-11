@@ -5,20 +5,19 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
-import mate.domain.match.MatchUser;
-import mate.dto.match.MatchDto;
-import mate.dto.partner.PartnerDto;
-import mate.repository.match.MatchUserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mate.domain.match.MatchAnswer;
+import mate.domain.match.MatchUser;
 import mate.domain.user.User;
+import mate.dto.match.MatchDto;
 import mate.dto.match.MatchSurvey;
 import mate.dto.user.SurveyResult;
 import mate.repository.match.MatchRepository;
+import mate.repository.match.MatchUserRepository;
 import mate.repository.user.UserRepository;
 
 @Service
@@ -52,8 +51,8 @@ public class MatchService {
 		User user = userRepository.findByIdx(userIdx).get();
 
 		matchUserRepository.save(MatchUser.builder()
-				.user(user)
-				.build());
+			.user(user)
+			.build());
 	}
 
 	public void releaseMatchUser(int userIdx) {
@@ -73,6 +72,10 @@ public class MatchService {
 		}
 
 		List<Object> list = matchRepository.listMatchUser(tag, tag.size());
+
+		Object[] tmp = (Object[])list.get(0);
+
+		System.out.println((String)tmp[1]);
 
 		List<MatchDto> output = new ArrayList<>();
 

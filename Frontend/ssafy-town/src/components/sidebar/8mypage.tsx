@@ -61,6 +61,8 @@ const Mypage: React.FC = () => {
   const [sogae, setSogae] = useState(true)
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
 
+  const [changeDate, setChangeData] = useState(true)
+
   const toggleHandler = () => {
     const userToken = localStorage.getItem('userToken')
     const userIdxStr = localStorage.getItem('userIdx')
@@ -95,42 +97,50 @@ const Mypage: React.FC = () => {
       })
   };
 
-  useEffect(() => {
+
+  useEffect(()=>{
     const userToken = localStorage.getItem('userToken')
     const userIdxStr = localStorage.getItem('userIdx')
     const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
-
     axios({
       method: 'get',
-      url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
+      url: `https://i9b206.p.ssafy.io:9090/date/${userIdx}`,
       headers: {
         Authorization: 'Bearer ' + userToken
       },
     })
       .then(res => {
-        setUser(res.data.data)
+        console.log("test")
+        setSogae(res.data.isRegistered)
       })
-      .catch(() => {
-        console.log("유저 정보가 정확하지 않음")
+      .catch((err) => {
+        console.log("소개팅 등록여부 조회 실패")
+        console.log(err)
       })
+  })
+  useEffect(() => {
+    const userToken = localStorage.getItem('userToken')
+    const userIdxStr = localStorage.getItem('userIdx')
+    const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
 
+    if (changeDate){
       axios({
         method: 'get',
-        url: `https://i9b206.p.ssafy.io:9090/date/${userIdx}`,
+        url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
         headers: {
           Authorization: 'Bearer ' + userToken
         },
       })
         .then(res => {
-          console.log("test")
-          setSogae(res.data.isRegistered)
+          setUser(res.data.data)
+          setChangeData(false)
         })
-        .catch((err) => {
-          console.log("소개팅 등록여부 조회 실패")
-          console.log(err)
+        .catch(() => {
+          console.log("유저 정보가 정확하지 않음")
         })
+    }
   
-  }, [])
+  }, [changeDate])
 
   // 소개팅 등록 상태 전환
   const onregistMeeting = () => {
@@ -209,7 +219,7 @@ const Mypage: React.FC = () => {
 
           <button className={mypage_css.button} onClick={() => dispatch(setModal('Re최초설문'))}>최초 설문 수정</button>
         </div>
-        {isModalOpen === '회원정보수정3' ? <EditAcount user={user} /> :
+        {isModalOpen === '회원정보수정3' ? <EditAcount user={user} change={()=>setChangeData(true)} /> :
           isModalOpen === '비밀번호변경' ? <ChangePass user={user} /> : null}
       </div>
     </div>

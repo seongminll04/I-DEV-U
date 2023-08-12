@@ -18,9 +18,10 @@ interface Props {
     status: string; // active or not (회원탈퇴여부)
     grade: number; // 1 : 관리자(운영자), 2 : 일반}  
   };
+  change: ()=>void;
 }
 
-const EditAccount: React.FC<Props> = ({user}) => {
+const EditAccount: React.FC<Props> = ({user, change}) => {
   const dispatch = useDispatch()
   const [chknickname, setchknickname] = useState('no');
 
@@ -81,6 +82,7 @@ const EditAccount: React.FC<Props> = ({user}) => {
       .then(res => {
         console.log(res);
         alert("회원정보 변경 완료");
+        change()
         dispatch(setModal(null));
       })
       .catch(err => {
@@ -144,7 +146,7 @@ const EditAccount: React.FC<Props> = ({user}) => {
               <span>닉네임</span>
             </div>
             <div className={edit_css.mypage_nickname}>
-              <input style={{width:'82%'}} type="text" className={edit_css.mypage_input} {...formik.getFieldProps('nickname')}  onChange={(event) => {formik.handleChange(event); setchknickname('no'); console.log(chknickname)}} 
+              <input style={{width:'82%'}} type="text" className={edit_css.mypage_input} {...formik.getFieldProps('nickname')}  onChange={(event) => {formik.handleChange(event); setchknickname('no');}} 
               onKeyDown={handlekeydown}/>
               <div className={edit_css.mypage_check_nickname_btn} onClick={()=>nicknamecheck(formik.values.nickname)}>중복확인</div>
             </div>

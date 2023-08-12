@@ -45,16 +45,18 @@ const MateDetail: React.FC<Props> = ({ userIdx }) => {
   }, [userIdx])
 
   const sendrequest = () => {
-    // const senduserIdx = localStorage.getItem('userIdx')
-    if (stompClientRef.current) {
+    const senduserIdxStr = localStorage.getItem('userIdx')
+    const senduserIdx = senduserIdxStr ? parseInt(senduserIdxStr,10) : null
+    if (stompClientRef.current && senduserIdx) {
       const now = new Date()
       const data = {
-        userIdx: userIdx,
+        fromIdx: senduserIdx,
+        toIdx: userIdx,
+        type:'MATE',
         createdAt: now
       };
-      console.log(data)
       stompClientRef.current.publish({
-        destination: `/sub/join/${userIdx}`,
+        destination: `/sub/user/${userIdx}`,
         body: JSON.stringify(data),
       });
     }

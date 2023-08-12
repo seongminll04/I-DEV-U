@@ -42,7 +42,6 @@ const ModalOpen: React.FC = () => {
       : isModalOpen === '회원정보수정1' ? <CheckPass />
       : isModalOpen === '회원정보수정2' ? <EditSel />
       : isModalOpen === '회원탈퇴' ? <Withdraw />
-      // : isModalOpen === '회원정보수정2' ? <EditSel />
       : null }
     </>
   );

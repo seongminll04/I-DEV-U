@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React,{useEffect,useState} from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 // 회원정보 관련
 import Login from './components/account/login';
@@ -9,7 +9,6 @@ import KakaoSignUp from './components/account/kakaosignup';
 
 import MyRoom from './components/room/myroom';
 import SogaeRoom from './components/room/sogaeroom';
-// import MeetingRoom from './components/room/meetingroom';
 import LMeetingRoom from './components/room/Lmeetingroom';
 
 import app_css from './App.module.css';
@@ -18,17 +17,20 @@ import { Client, Message, Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
 
-import { useDispatch } from 'react-redux';
-import { setStomp } from './store/actions';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { setModal, setStomp } from './store/actions';
+import { AppState } from './store/state';
+import NowAlert from './components/board/nowalert';
 
 function App() {
   const dispatch=useDispatch()
   const stompClientRef = React.useRef<Client | null>(null);
+  const [newmessage,setNewmessage] = useState<any|null>(null)
+  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);
 
   // 나중에 주소 싸그리 바꾸자.
   // var BACKEND_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
-  
+
   useEffect(() => { 
     const userToken = localStorage.getItem('userToken')
     const socket = new SockJS("https://i9b206.p.ssafy.io:9090/ws-stomp");
@@ -51,11 +53,12 @@ function App() {
     stompClientRef.current.heartbeatOutgoing=4000
     
     stompClientRef.current.onConnect = (frame) => {
-      const userIdx = localStorage.getItem('userIdx')
       if (stompClientRef.current) {
-        const subscription = stompClientRef.current.subscribe(`/sub/join/${userIdx}`, function(message: Message) {
+        const userIdxStr = localStorage.getItem('userIdx')
+        const userIdx = userIdxStr ? parseInt(userIdxStr,10) : null
+        const subscription = stompClientRef.current.subscribe(`/sub/user/${userIdx}`, function(message: Message) {
           const newMessage = JSON.parse(message.body);
-          console.log(newMessage)
+          setNewmessage(newMessage)
         });
         return () => {
           if (stompClientRef.current) {
@@ -82,6 +85,16 @@ function App() {
       }
     };
   }, [dispatch]);
+
+  useEffect(()=>{
+    if (window.location.href!=='http://localhost:3000/home' || isModalOpen!==null) {
+      setNewmessage(null)
+    }
+    else {
+      if (newmessage) {dispatch(setModal('실시간알림'))}
+    }
+  },[dispatch,newmessage,isModalOpen])
+
   return (
     <Router>
       <div className={app_css.App}>
@@ -99,6 +112,7 @@ function App() {
           {/* <Route path="/large_meeting" element={<LMeetingRoom />} /> */}
           <Route path="/love" element={<SogaeRoom />} />
         </Routes>
+        {isModalOpen==='실시간알림' ? <NowAlert message={newmessage} />:null}
       </div>
     </Router>
   );

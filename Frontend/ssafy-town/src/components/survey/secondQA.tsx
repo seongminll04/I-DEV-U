@@ -142,7 +142,7 @@ const QAModal: React.FC<Props> = ({survey,onsurvey}) => {
 
         axios({
             method: 'post',
-            url:`https://i9b206.p.ssafy.io:9090/date` + survey ? '/register':'/modify',
+            url: survey? 'https://i9b206.p.ssafy.io:9090/date/modify':`https://i9b206.p.ssafy.io:9090/date/register`,
             headers : {
                 Authorization: 'Bearer ' + userToken
             },
@@ -155,7 +155,7 @@ const QAModal: React.FC<Props> = ({survey,onsurvey}) => {
             // 설문 시 소개팅 사용자 등록
             axios({
                 method:'post',
-                url:`https://i9b206.p.ssafy.io:9090/date/release/${userIdx}`,
+                url:`https://i9b206.p.ssafy.io:9090/date/register/${userIdx}`,
                 headers : {
                     Authorization: 'Bearer ' + userToken
                 },

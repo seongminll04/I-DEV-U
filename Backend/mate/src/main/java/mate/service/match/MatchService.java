@@ -115,14 +115,43 @@ public class MatchService {
 		return output;
 	}
 
-	public void detailMatchUser(int userIdx) {
-		List<MatchAnswer> answer = matchRepository.findByUser(userIdx);
+	public MatchDetailDto detailMatchUser(int userIdx) {
+		User user = userRepository.findByIdx(userIdx).get();
+		List<MatchAnswer> matchAnswer = matchRepository.findAllByUserIdx(userIdx);
+		List<BasicAnswer> basicAnswer = basicRepository.findByUser(userIdx);
 
-		String work = basicRepository.findWork(userIdx);
+		MatchDetailDto matchDetailDto = new MatchDetailDto();
+
+		String nickname = user.getNickname();
+		String work = basicAnswer.get(1).getTag();
 		List<String> language = basicRepository.findLanguage(userIdx);
-		String location = basicRepository.findLocation(userIdx);
-		String job = basicRepository.findJob(userIdx);
+		String location = basicAnswer.get(3).getTag();
+		String face = matchAnswer.get(0).getTag();
+		String job = basicAnswer.get(0).getTag();
+		// 생년월일 데이터베이스로부터 가져오는 부분을 시뮬레이션합니다.
+		LocalDate birthDateFromDatabase = user.getBirth(); // 생년월일 설정
+		// 현재 날짜 가져오기
+		LocalDate currentDate = LocalDate.now();
+		// 나이 계산
+		Period agePeriod = Period.between(birthDateFromDatabase, currentDate);
+		int age = agePeriod.getYears();
+		String salary = matchAnswer.get(1).getTag();
+		String gender = String.valueOf(user.getGender());
+		String intro = user.getIntro();
 
+		// MatchDetailDto에 값 설정
+		matchDetailDto.setNickname(nickname);
+		matchDetailDto.setWork(work);
+		matchDetailDto.setLanguage(language);
+		matchDetailDto.setLocation(location);
+		matchDetailDto.setFace(face);
+		matchDetailDto.setJob(job);
+		matchDetailDto.setAge(age);
+		matchDetailDto.setSalary(salary);
+		matchDetailDto.setGender(gender);
+		matchDetailDto.setIntro(intro);
+
+
+		return matchDetailDto;
 	}
-
 }

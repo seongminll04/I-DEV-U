@@ -20,13 +20,13 @@ import java.util.List;
 @Data
 public class MatchDetailDto {
     private String nickname;
-    private int work;
+    private String work;
     private List<String> language;
     private String location;
     private String face;
-    private int job;
+    private String job;
     private int age;
-    private int salary;
+    private String salary;
     private String gender;
     private String intro;
 

@@ -23,14 +23,4 @@ public interface BasicRepository extends JpaRepository<BasicAnswer, Integer> {
 
 	@Query("select b.tag from BasicAnswer b where b.user.idx = :userIdx and b.surveyIdx = 3")
 	List<String> findLanguage(@Param("userIdx") Integer userIdx);
-
-	@Query("select b.tag from BasicAnswer b where b.user.idx = :userIdx and b.surveyIdx = 2")
-	String findWork(@Param("userIdx") int userIdx);
-
-	@Query("select b.tag from BasicAnswer b where b.user.idx = :userIdx and b.surveyIdx = 4")
-	String findLocation(@Param("userIdx") int userIdx);
-
-	@Query("select b.tag from BasicAnswer b where b.user.idx = :userIdx and b.surveyIdx = 1")
-	String findJob(@Param("userIdx") int userIdx);
-
 }

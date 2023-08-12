@@ -40,12 +40,12 @@ public class MatchController {
     public ResponseEntity<Map<String, Object>> registerSurvey(@RequestBody MatchSurvey matchSurvey) {
         Map<String, Object> map = new HashMap<>();
 
-        try {
+//        try {
             matchService.registerSurvey(matchSurvey);
             map.put("resmsg", "소개팅 등록 성공");
-        } catch (Exception e) {
-            map.put("resmsg", "소개팅 등록 실패");
-        }
+//        } catch (Exception e) {
+//            map.put("resmsg", "소개팅 등록 실패");
+//        }
 
         return ResponseEntity.ok(map);
     }
@@ -86,7 +86,8 @@ public class MatchController {
         Map<String, Object> map = new HashMap<>();
 
         try {
-
+            map.put("user", matchService.detailMatchUser(userIdx));
+            map.put("resmsg", "소개팅 유저 상세 조회 성공");
         } catch (Exception e) {
             map.put("resmsg", "소개팅 유저 상세 조회 실패");
         }

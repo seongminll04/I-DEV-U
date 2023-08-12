@@ -68,37 +68,37 @@ const Mypage: React.FC = () => {
     if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
 
     axios({
-      method:'put',
-      url:`https://i9b206.p.ssafy.io:9090/user/setting`,
+      method: 'put',
+      url: `https://i9b206.p.ssafy.io:9090/user/setting`,
       data: {
-        userIdx:userIdx,
+        userIdx: userIdx,
         invite: user.invite === 'true' ? 'false' : 'true'
       },
       headers: {
         Authorization: 'Bearer ' + userToken
       },
     })
-    .then(()=>{
-      axios({
-        method: 'get',
-        url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
-        headers: {
-          Authorization: 'Bearer ' + userToken
-        },
+      .then(() => {
+        axios({
+          method: 'get',
+          url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
+          headers: {
+            Authorization: 'Bearer ' + userToken
+          },
+        })
+          .then(res => {
+            setUser(res.data.data)
+          })
+          .catch(() => {
+            console.log("유저 정보가 정확하지 않음")
+          })
       })
-        .then(res => {
-          setUser(res.data.data)
-        })
-        .catch(() => {
-          console.log("유저 정보가 정확하지 않음")
-        })
-    })
   };
 
   useEffect(() => {
     const userToken = localStorage.getItem('userToken')
     const userIdxStr = localStorage.getItem('userIdx')
-    const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
+    const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
 
     axios({
       method: 'get',
@@ -113,6 +113,23 @@ const Mypage: React.FC = () => {
       .catch(() => {
         console.log("유저 정보가 정확하지 않음")
       })
+
+      axios({
+        method: 'get',
+        url: `https://i9b206.p.ssafy.io:9090/date/${userIdx}`,
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        },
+      })
+        .then(res => {
+          console.log("test")
+          setSogae(res.data.isRegistered)
+        })
+        .catch((err) => {
+          console.log("소개팅 등록여부 조회 실패")
+          console.log(err)
+        })
+  
   }, [])
 
   // 소개팅 등록 상태 전환
@@ -165,20 +182,20 @@ const Mypage: React.FC = () => {
           <div className={mypage_css.mypage_welcome}>
             안녕하세요! {user.nickname} 님
           </div>
-          <button className={mypage_css.button} 
-          onClick={() => {
-            if (!user.email.includes('@')) {
-              dispatch(setModal('회원정보수정2'))
-              localStorage.setItem('kakao','1')
-            }
-            else {dispatch(setModal('회원정보수정1'))}
-          }}>회원정보 수정</button>
-          
+          <button className={mypage_css.button}
+            onClick={() => {
+              if (!user.email.includes('@')) {
+                dispatch(setModal('회원정보수정2'))
+                localStorage.setItem('kakao', '1')
+              }
+              else { dispatch(setModal('회원정보수정1')) }
+            }}>회원정보 수정</button>
+
           <p className={mypage_css.mypage_toggle}>내 정보 검색 허용
-            <ToggleContainer onClick={()=>{toggleHandler()}}>
-              <div className={`toggle-container ${user.invite === 'true' ? "toggle--checked" : null}`}/>
-              <div className={`${mypage_css.mypage_toggle} toggle-circle ${ user.invite==='true' ? "toggle--checked" : null}`}>
-                 {user.invite === 'true' ? 'On':'Off'}</div>
+            <ToggleContainer onClick={() => { toggleHandler() }}>
+              <div className={`toggle-container ${user.invite === 'true' ? "toggle--checked" : null}`} />
+              <div className={`${mypage_css.mypage_toggle} toggle-circle ${user.invite === 'true' ? "toggle--checked" : null}`}>
+                {user.invite === 'true' ? 'On' : 'Off'}</div>
             </ToggleContainer>
           </p>
 
@@ -192,8 +209,8 @@ const Mypage: React.FC = () => {
 
           <button className={mypage_css.button} onClick={() => dispatch(setModal('Re최초설문'))}>최초 설문 수정</button>
         </div>
-        {isModalOpen === '회원정보수정3' ? <EditAcount user={user} /> : 
-        isModalOpen === '비밀번호변경' ? <ChangePass user={user}  /> :null}
+        {isModalOpen === '회원정보수정3' ? <EditAcount user={user} /> :
+          isModalOpen === '비밀번호변경' ? <ChangePass user={user} /> : null}
       </div>
     </div>
 

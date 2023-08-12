@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Integer> {
@@ -21,4 +22,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
     @Modifying
     @Query("UPDATE Project p SET p.nowNum = p.nowNum-1 WHERE p.idx = :projectIdx")
     void minusnowNum(@Param("projectIdx") int projectIdx);
+
+    @Query("select p from Project p where p.idx = :projectIdx")
+    Optional<Project> findProject(@Param("projectIdx") Integer projectIdx);
 }

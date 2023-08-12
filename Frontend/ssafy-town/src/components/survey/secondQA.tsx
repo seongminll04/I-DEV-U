@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import qa_css from './secondQA.module.css';
+import { useDispatch } from 'react-redux';
+import { setModal } from '../../store/actions';
+import axios from 'axios';
 
-interface QAModalProps {
-    onClose: () => void;
-    onConfirm: (surveyResults: any) => void;
+interface Props {
+    survey:boolean,
+    onsurvey:(value:boolean)=>void
 }
 
-const QAModal: React.FC<QAModalProps> = ({ onClose, onConfirm }) => {
+const QAModal: React.FC<Props> = ({survey,onsurvey}) => {
+    const dispatch = useDispatch()
+
     const [currentPage, setCurrentPage] = useState(1);
     // 페이지 관리
     const [desiredAgeRange, setDesiredAgeRange] = useState<string>("");
@@ -46,33 +51,122 @@ const QAModal: React.FC<QAModalProps> = ({ onClose, onConfirm }) => {
     const petOptions = ["강아지", "고양이", "그 외", "키우기 싫어요"];
     // 여기까지 2페이지 답변
 
-    const onCloseHandler = () => {
-        setCurrentPage(1);
-        onClose();
-    };
-
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        const surveyResults = {
-            desiredAgeRange,
-            desiredFaceShape,
-            desiredLocation,
-            myPay,
-            myFaceShape,
-            myLocation,
-            desiredWorkType,
-            colorPreference,
-            musicWhileCoding,
-            smartphonePreference,
-            devClothingPreference,
-            workLifeBalance,
-            exerciseHabit,
-            hobby,
-            namePreference,
-            petPreference
+        const userIdxStr = localStorage.getItem('userIdx')
+        const userIdx = userIdxStr ? parseInt(userIdxStr,10) : null
+        const userToken = localStorage.getItem('userToken')
+        const surveyResult = [
+            {
+                surveyIdx: 1,
+                surveyTitle: "나의 얼굴상은?",
+                tagList: [myFaceShape]
+            },
+            {
+                surveyIdx: 2,
+                surveyTitle: "나의 연봉은?",
+                tagList: [myPay]
+            },
+            {
+                surveyIdx: 3,
+                surveyTitle: "나의 지역",
+                tagList: [myLocation]
+            },
+            {
+                surveyIdx: 4,
+                surveyTitle: "원하는 상대의 연령대",
+                tagList: [desiredAgeRange]
+            },
+            {
+                surveyIdx: 5,
+                surveyTitle: "원하는 상대의 지역",
+                tagList: [desiredLocation]
+            },
+            {
+                surveyIdx: 6,
+                surveyTitle: "원하는 상대의 얼굴상",
+                tagList: [desiredFaceShape]
+            },
+            {
+                surveyIdx: 7,
+                surveyTitle: "원하는 근무형태는?",
+                tagList: [desiredWorkType]
+            },
+            {
+                surveyIdx: 8,
+                surveyTitle: "둘 중 하나를 고른다면?",
+                tagList: [colorPreference]
+            },
+            {
+                surveyIdx: 9,
+                surveyTitle: "나는 개발할때 노래를?",
+                tagList: [musicWhileCoding]
+            },
+            {
+                surveyIdx: 10,
+                surveyTitle: "사용중인 스마트폰",
+                tagList: [smartphonePreference]
+            },
+            {
+                surveyIdx: 11,
+                surveyTitle: "개발자의 옷은?",
+                tagList: [devClothingPreference]
+            },
+            {
+                surveyIdx: 12,
+                surveyTitle: "워라밸과 월급 어떤것을 더 선호?",
+                tagList: [workLifeBalance]
+            },
+            {
+                surveyIdx: 13,
+                surveyTitle: "평소 하는 운동이?",
+                tagList: [exerciseHabit]
+            },
+            {
+                surveyIdx: 14,
+                surveyTitle: "즐겨하는 취미가?",
+                tagList: [hobby]
+            },
+            {
+                surveyIdx: 15,
+                surveyTitle: "나의 이름이?",
+                tagList: [namePreference]
+            },
+            {
+                surveyIdx: 16,
+                surveyTitle: "애완동물을 가진다면?",
+                tagList: [petPreference]
+            }
+        ]
 
-        };
-        onConfirm(surveyResults);
+
+        axios({
+            method: 'post',
+            url:`https://i9b206.p.ssafy.io:9090/date` + survey ? '/register':'/modify',
+            headers : {
+                Authorization: 'Bearer ' + userToken
+            },
+            data: {
+                userIdx:userIdx,
+                surveyResult : surveyResult
+            }
+        })
+        .then(() =>{
+            // 설문 시 소개팅 사용자 등록
+            axios({
+                method:'post',
+                url:`https://i9b206.p.ssafy.io:9090/date/release/${userIdx}`,
+                headers : {
+                    Authorization: 'Bearer ' + userToken
+                },
+            })
+            .then(()=>{
+                alert('설문완료')
+                onsurvey(true)
+                dispatch(setModal(null))
+            })
+        })
+        .catch(()=>alert('설문등록실패'))
     };
 
 
@@ -261,7 +355,7 @@ const QAModal: React.FC<QAModalProps> = ({ onClose, onConfirm }) => {
     return (
         <div className={qa_css.modal_overlay}>
             <div className={qa_css.qa_modal}>
-            <button onClick={onCloseHandler}>
+            <button onClick={()=>dispatch(setModal(null))}>
                 나중에 하기 (작성중인 설문이 초기화됩니다)</button>
                 <h1>I DEV U</h1>
                 <h2>📝 소개팅 설문조사</h2>

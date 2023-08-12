@@ -13,11 +13,9 @@ import ProjectFilter from '../filter/projectFilter';
 import CreateProject from '../board/CreateProject';
 import EnterProject from '../board/EnterProject';
 import SogaeFilter from '../filter/sogaeFilter';
-import SecondQAModal from '../survey/secondQA';
 
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { AppState } from '../../store/state';
-import { setModal } from '../../store/actions';
 import DetailProject from '../board/DetailProject';
 import AlertResponse from '../board/AlertResponse';
 import CheckPass from '../account/checkpass';
@@ -25,7 +23,6 @@ import EditSel from '../account/editsel';
 import Withdraw from '../account/withdraw';
 
 const ModalOpen: React.FC = () => {
-  const dispatch = useDispatch()
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);//사이드바 오픈여부
   return (
     <>
@@ -40,7 +37,6 @@ const ModalOpen: React.FC = () => {
       : isModalOpen === '프로젝트생성' ? <CreateProject />
       : isModalOpen === '프로젝트참가신청' ? <EnterProject />
       : isModalOpen === '프로젝트상세정보' ? <DetailProject />
-      : isModalOpen === '소개팅설문' ? <SecondQAModal onClose={()=>dispatch(setModal(null))} onConfirm={()=>{}} />
       : isModalOpen === '소개팅필터' ? <SogaeFilter />
       : isModalOpen === '프로젝트가입알림' ? <AlertResponse />
       : isModalOpen === '회원정보수정1' ? <CheckPass />

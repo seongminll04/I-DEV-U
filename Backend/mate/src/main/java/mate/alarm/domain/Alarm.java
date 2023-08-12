@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import mate.alarm.dto.AlarmProjectRequest;
 import mate.alarm.dto.AlarmRequest;
 
 import javax.persistence.*;
@@ -41,6 +42,14 @@ public class Alarm {
         alarm.type = alarmRequest.getType();
         alarm.createdAt = alarmRequest.getCreatedAt();
 
+        return alarm;
+    }
+    public static Alarm create(Integer fromIdx, Integer toIdx, AlarmType type, LocalDateTime time){
+        Alarm alarm = new Alarm();
+        alarm.fromIdx = fromIdx;
+        alarm.toIdx = toIdx;
+        alarm.type = type;
+        alarm.createdAt = time;
         return alarm;
     }
 

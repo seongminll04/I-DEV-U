@@ -17,6 +17,9 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
     void deleteByIdx(@Param("userIdx") Integer userIdx);
 
     @Query("select distinct s from Session s where s.userIdx in :userIdx")
-    Optional<List<Session>> findByUserIdx(@Param("userIdx") List<Integer> userIdx);
+    List<Session> findByUser(@Param("userIdx") List<Integer> userIdx);
+
+    @Query("select distinct s from Session s")
+    Optional<List<Session>> userList();
 
 }

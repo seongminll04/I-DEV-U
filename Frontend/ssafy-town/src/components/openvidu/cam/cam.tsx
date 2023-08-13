@@ -132,18 +132,9 @@ class Cam extends Component<{}, AppState> {
         this.OV = new OpenVidu();
         const session = this.OV.initSession();
     
-        // 2. 이벤트 리스너
+        // 2. 이벤트 리스너 설정
         if (!this.state.eventBindingsSet) {
             session.on('streamCreated', (event: any) => {
-                console.log("Created 가 발생 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
-                if (this.state.publisher && event.stream.streamId === this.state.publisher.stream.streamId) {
-                    return;
-                }
-                if (event.stream.connection.connectionId === session.connection.connectionId) {
-                    return;
-                }
-                
-                // Check if stream already exists in subscribers before adding it
                 if (!this.state.subscribers.some(sub => sub.stream.streamId === event.stream.streamId)) {
                     const subscriber = session.subscribe(event.stream, undefined);
                     const subscribers = [...this.state.subscribers, subscriber];
@@ -160,65 +151,69 @@ class Cam extends Component<{}, AppState> {
             this.setState({ eventBindingsSet: true });
         }
     
-        // 3. Obtaining a token for the session.
+        // 3. 세션을 위한 토큰 얻기
         try {
             const sessionId = localStorage.getItem('OVsession');
             if (!sessionId) {
-                console.error("Session ID is missing");
+                console.error("세션 ID가 없습니다.");
                 return;
             }
     
             const response = await axios.post(`https://i9b206.p.ssafy.io:5000/api/sessions/${sessionId}/connections`);
             const token = response.data;
-            localStorage.setItem("OVtoken",token);
+            localStorage.setItem("OVtoken", token);
     
             if (!token) {
-                console.error("Failed to fetch token from the server");
+                console.error("서버에서 토큰을 가져오는데 실패했습니다.");
                 return;
             }
     
-            // 4. Connecting to the session.
-            session.connect(token)
-                .then(() => {
-                    // 5. Publishing to the session.
-                    const publisher = this.OV.initPublisher(undefined, {
-                        audio: false,
-                        video: false
-                    });
-                    
-                    publisher.on('accessAllowed', () => {
-                        publisher.publishVideo(false);
-                        publisher.publishAudio(false);
-                        
-                        session.publish(publisher).then(() => {
-                            this.setState({ publisher });
-                        });
-                    });
-                    const existingSubscribers: any[] = [];
-                    session.remoteConnections.forEach((connection:any) => {
-                        if (connection.streams.length > 0) {
-                            connection.streams.forEach((stream:any) => {
-                                if (!this.state.subscribers.some(sub => sub.stream.streamId === stream.streamId)) {
-                                    const subscriber = this.OV.subscribe(stream, undefined);
-                                    existingSubscribers.push(subscriber);
-                                }
-                            });
-                        }
-                    });
-                
-                    this.setState({ subscribers: existingSubscribers });
-                })
-                .catch((error: any) => {
-                    console.error("Error during session connection:", error);
+            // 4. 세션에 연결
+            const userNickname = localStorage.getItem('userNickname');
+            session.connect(token, userNickname).then(() => {
+                // 5. 세션에 게시
+                const publisher = this.OV.initPublisher(undefined, {
+                    audio: false,
+                    video: false
                 });
     
+                publisher.on('accessAllowed', () => {
+                    publisher.publishVideo(false);
+                    publisher.publishAudio(false);
+                    session.publish(publisher).then(() => {
+                        this.setState({ publisher });
+                    });
+                });
+    
+                // 주기적으로 스트림 목록 업데이트
+                const updateStreams = () => {
+                    console.log("...........tq...................................");
+                    const existingSubscribers: any[] = [...this.state.subscribers];
+                    session.getStreams().forEach((stream: any) => {
+                        if (!this.state.subscribers.some(sub => sub.stream.streamId === stream.streamId)) {
+                            const subscriber = this.OV.subscribe(stream, undefined);
+                            existingSubscribers.push(subscriber);
+                        }
+                    });
+                    this.setState({ subscribers: existingSubscribers });
+                };
+    
+                updateStreams();
+                const updateInterval = setInterval(updateStreams, 5000);
+                window.addEventListener('beforeunload', () => {
+                    clearInterval(updateInterval);
+                }); 
+            }).catch((error: any) => {
+                console.error("세션 연결 중 오류:", error);
+            });
         } catch (error) {
-            console.error("Error fetching token:", error);
+            console.error("토큰 가져오기 오류:", error);
         }
         this.setState({ session });
     }
+
     
-    
+
 
     async switchCamera() {
         if (this.state.publisher) {

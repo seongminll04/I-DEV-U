@@ -124,7 +124,6 @@ function App() {
           {/* 맵 이동 관련 */}
           <Route path="/home" element={<MyRoom />} />
           <Route path="/meeting" element={<LMeetingRoom />} />
-          {/* <Route path="/large_meeting" element={<LMeetingRoom />} /> */}
           <Route path="/love" element={<SogaeRoom />} />
         </Routes>
         {isModalOpen==='실시간알림' ? <NowAlert message={newmessage} onMessage={()=>{setNewmessage(null)}}/>:null}

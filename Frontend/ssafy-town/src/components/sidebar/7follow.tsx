@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import follow_css from './7follow.module.css'
 import axios from 'axios';
 
-import { useDispatch } from 'react-redux';
-import { setAllowMove } from '../../store/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAllowMove, setModal } from '../../store/actions';
+import { AppState } from '../../store/state';
+import EnterChatF from '../enter/enterchat';
+import EnterCamF from '../enter/entercam';
 
 interface FollowUser {
   userIdx: number;
@@ -13,8 +16,11 @@ interface FollowUser {
 
 const Follow: React.FC = () => {
   const [myFollowList, setMyFollowList] = useState<FollowUser[]>([]);
-
   const dispatch = useDispatch()
+  const [inputvalue, setinputvalue] = useState<string>('');
+  const [requestidx, setrequestidx] = useState<number>(0);
+  const [requestname, setrequestname] = useState<string>('');
+  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);//사이드바 오픈여부
 
   useEffect(() => {
     const userToken = localStorage.getItem('userToken');
@@ -29,14 +35,15 @@ const Follow: React.FC = () => {
       },
     })
       .then(res => {
-        // console.log(res.data);
-        console.log(res.data.data.data)
-        setMyFollowList(res.data.data.data)
+        if (res.data.data){
+          console.log(res.data.data.data)
+          setMyFollowList(res.data.data.data)
+        }
       })
       .catch(err => {
         console.log(err);
       })
-  })
+  },[])
 
   // input 방향키 살리기
   const handlekeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -54,31 +61,43 @@ const Follow: React.FC = () => {
 
   return (
     <div className='sidebar_modal'>
-      <h1>내 친구목록</h1>
+      <h1>내 팔로우 목록</h1>
       <div className={follow_css.search}>
-        <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown}
+        <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown} value={inputvalue} onChange={(e)=>setinputvalue(e.target.value)}
           onFocus={() => dispatch(setAllowMove(false))} onBlur={() => dispatch(setAllowMove(true))} />
-        <button>검색</button>
       </div>
       <hr style={{ width: '75%', color: 'black' }} />
 
       <div className={follow_css.scrollbox}>
         {myFollowList.map((follow : FollowUser, index: number) => {
-          return (
-            <div className={follow_css.profile}>
-              <img src="assets/default_profile.png" alt="" />
-              <div className={follow_css.profiledata}>
-                <b>{follow.userName}</b>
-                <p>{follow.userIntro}</p>
+          if (follow.userName.includes(inputvalue)) {
+            return (
+              <>
+              <div className={follow_css.profile}>
+                <img src="assets/default_profile.png" alt="" />
+                <div className={follow_css.profiledata}>
+                  <b>{follow.userName}</b>
+                  <p>{follow.userIntro}</p>
+                </div>
+                <div>
+                  <button className={follow_css.profilebtn} onClick={()=>{setrequestname(follow.userName);setrequestidx(follow.userIdx); dispatch(setModal('팔로우채팅'))}}>채팅</button>
+                  <button className={follow_css.profilebtn} onClick={()=>{setrequestname(follow.userName);setrequestidx(follow.userIdx); dispatch(setModal('팔로우화상'))}}>화상</button>
+                </div>
               </div>
-              <div>
-                <button className={follow_css.profilebtn}>채팅</button>
-                <button className={follow_css.profilebtn}>화상</button>
-              </div>
-            </div>
-          )
+              <hr />
+              </>
+            )
+          }
+          else {
+            return (
+              <div></div>
+            )
+          }
         })}
       </div>
+      {isModalOpen==='팔로우채팅' ? <EnterChatF sendusername={requestname} senduserIdx={requestidx} />
+      :isModalOpen==='팔로우화상' ? <EnterCamF sendusername={requestname} senduserIdx={requestidx} />
+      :<></>}
     </div>
   );
 };

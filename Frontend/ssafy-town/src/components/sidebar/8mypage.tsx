@@ -111,17 +111,17 @@ const Mypage: React.FC = () => {
     })
       .then(res => {
         console.log(res.data)
-        if (res.data.remmag === "등록 했음") {
+        if (res.data.resmsg === "등록 했음") {
           setSogae(true)
-        } else if (res.data.remmag === "등록 안함") {
+        } else if (res.data.resmsg === "등록 안함") {
           setSogae(false)
         }
       })
-      .catch((err) => {
+      .catch(() => {
         console.log("소개팅 등록여부 조회 실패")
-        console.log(err)
       })
-  })
+  },[])
+  
   useEffect(() => {
     const userToken = localStorage.getItem('userToken')
     const userIdxStr = localStorage.getItem('userIdx')

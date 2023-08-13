@@ -197,7 +197,13 @@ import axios from "axios";
                 const day = room.createdAt.getDate().toString().padStart(2, '0');
                 const hours = room.createdAt.getHours().toString().padStart(2, '0');
                 const minutes = room.createdAt.getMinutes().toString().padStart(2, '0');
-                today = `${year}/${month}/${day} ${hours}:${minutes}`;
+                if (year===1970) {
+                  today=''
+                }
+                else {
+                  today = `${year}/${month}/${day} ${hours}:${minutes}`;
+                }
+                
                }
               if (!room.title.includes(inputvalue)) {
                 return (<div>
@@ -220,7 +226,7 @@ import axios from "axios";
             
                     </div>
                     <div className={chat_css.roomdata}>
-                      <p className={chat_css.lastchat}>{room.nickname + ' : '+ room.message}</p>
+                      <p className={chat_css.lastchat}>{room.message}</p>
                       {/* <p className={chat_css.chatcount}></p> */}
                     </div>
                   </div>

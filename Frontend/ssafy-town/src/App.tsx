@@ -101,7 +101,8 @@ function App() {
       }
       return
     }
-    if (window.location.href!=='https://i9b206.p.ssafy.io/home' || isModalOpen!==null) {
+
+    if (window.location.href!=='http://localhost:3000/home' || isModalOpen!==null) {
       setNewmessage(null)
     }
     else {

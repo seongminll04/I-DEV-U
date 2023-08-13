@@ -3,7 +3,7 @@ import now_css from './nowalert.module.css';
 
 
 import { useDispatch } from 'react-redux';
-import { setModal } from '../../store/actions';
+import { setChatIdx, setChatTitle, setModal, setSidebar } from '../../store/actions';
 import axios from 'axios';
 
 interface Props {
@@ -34,6 +34,8 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
       const userIdxStr = localStorage.getItem('userIdx')
       const userIdx = userIdxStr ? parseInt(userIdxStr,10) : null
       // 채팅방 참가
+      dispatch(setChatIdx(res.data.data.roomIdx))
+      dispatch(setChatTitle(message.fromUser.nickname + '님의 mate 채팅방'))
       axios({
         method:'post',
         url: `https://i9b206.p.ssafy.io:9090/chat/rooms/${res.data.data.roomIdx}/users`,
@@ -46,7 +48,9 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
         },
       })
       .then(() => {
+        dispatch(setSidebar('채팅방'))
         onMessage()
+
       })
       .catch(err => console.log(err))
     })

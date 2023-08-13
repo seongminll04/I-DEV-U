@@ -33,6 +33,7 @@ public class Alarm {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime createdAt;
+    private AlarmChecked checked;
 
 
     public static Alarm createAlarm(AlarmRequest alarmRequest){

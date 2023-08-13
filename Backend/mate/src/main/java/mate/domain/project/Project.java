@@ -33,7 +33,7 @@ public class Project {
 
 	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(name = "user_idx")
+	@JoinColumn(name = "manager_idx")
 	private User manager;
 
 	private String title;
@@ -50,12 +50,12 @@ public class Project {
 	private String type;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ProjectParticipation> projectParticipation;
 
-	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ProjectLanguage> projectLanguages;
 
-	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ProjectTech> projectTechs;
 }

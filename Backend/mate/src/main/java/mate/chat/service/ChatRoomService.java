@@ -87,6 +87,8 @@ public class ChatRoomService {
         ChatRoom findChatRoom = chatRoomRepository.findWithChatRoomUsersByIdx(roomIdx)
                 .orElseThrow(() -> new NotFoundException(CHAT_ROOM_NOT_FOUND));
 
+        findChatRoom.updateTime(chatRoomUserRequest.getUpdatedAt());
+
         User user = userRepository.findByIdx(chatRoomUserRequest.getUserIdx())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 

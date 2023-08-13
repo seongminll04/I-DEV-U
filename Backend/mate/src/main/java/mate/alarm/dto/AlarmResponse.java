@@ -5,34 +5,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import mate.alarm.domain.Alarm;
 import mate.alarm.domain.AlarmType;
-import mate.domain.user.User;
 
 import java.time.LocalDateTime;
 
+
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class AlarmResponse {
 
     private Integer idx;
-    private Integer fromIdx;
-    private String fromNickname;
-
-    private Integer toIdx;
-    private String toNickName;
-
+    private UserResponse fromUser;
+    private UserResponse toUser;
     private AlarmType type;
-
     private LocalDateTime createdAt;
 
-    public static AlarmResponse from(User fromUser, User toUser, Alarm alarm){
-        AlarmResponse alarmResponse = new AlarmResponse();
-        alarmResponse.idx = alarm.getIdx();
-        alarmResponse.fromIdx = fromUser.getIdx();
-        alarmResponse.fromNickname = fromUser.getNickname();
-        alarmResponse.toIdx = toUser.getIdx();
-        alarmResponse.toNickName = toUser.getNickname();
+    public static AlarmResponse from (Alarm alarm, UserResponse fromUser, UserResponse toUser){
 
+        AlarmResponse alarmResponse = new AlarmResponse();
+        alarmResponse.idx= alarm.getIdx();
+        alarmResponse.fromUser = fromUser;
+        alarmResponse.toUser = toUser;
         alarmResponse.type = alarm.getType();
         alarmResponse.createdAt = alarm.getCreatedAt();
 

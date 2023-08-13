@@ -1,37 +1,21 @@
 package mate.alarm.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import mate.alarm.domain.Alarm;
-import mate.alarm.domain.AlarmType;
-import mate.domain.project.Project;
-import mate.domain.user.User;
-
-import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class AlarmProjectResponse {
 
-    private Integer idx;
-    private Integer fromIdx;
-    private String fromNickname;
-    private AlarmType type;
-    private LocalDateTime createdAt;
-    private Integer projectIdx;
-    private Integer managerIdx;
-    private String managerNickname;
+    private AlarmResponse alarmResponse;
+    private ProjectResponse projectResponse;
 
-    public static AlarmProjectResponse from(User fromUser, Project project, Alarm alarm){
-
+    public static AlarmProjectResponse from(AlarmResponse alarmResponse, ProjectResponse projectResponse){
         AlarmProjectResponse alarmProjectResponse = new AlarmProjectResponse();
-        alarmProjectResponse.idx = alarm.getIdx();
-        alarmProjectResponse.fromIdx = fromUser.getIdx();
-        alarmProjectResponse.fromNickname = fromUser.getNickname();
-        alarmProjectResponse.type = alarm.getType();
-        alarmProjectResponse.createdAt = alarm.getCreatedAt();
-        alarmProjectResponse.projectIdx = project.getIdx();
-        alarmProjectResponse.managerIdx = project.getManager().getIdx();
-        alarmProjectResponse.managerNickname = project.getManager().getNickname();
-
+        alarmProjectResponse.alarmResponse = alarmResponse;
+        alarmProjectResponse.projectResponse = projectResponse;
         return alarmProjectResponse;
     }
 }

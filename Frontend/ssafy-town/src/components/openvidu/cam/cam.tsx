@@ -141,6 +141,11 @@ class Cam extends Component<{}, AppState> {
                 if (event.stream.connection.connectionId === session.connection.connectionId) {
                     return;
                 }
+                if (!this.state.subscribers.some(sub => sub.stream.streamId === event.stream.streamId)) {
+                    const subscriber = session.subscribe(event.stream, undefined);
+                    const subscribers = [...this.state.subscribers, subscriber];
+                    this.setState({ subscribers });
+                }
             });
     
             session.on('streamDestroyed', (event: any) => {

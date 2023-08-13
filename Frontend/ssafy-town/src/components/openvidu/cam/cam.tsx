@@ -135,12 +135,6 @@ class Cam extends Component<{}, AppState> {
         // 2. 이벤트 리스너 설정
         if (!this.state.eventBindingsSet) {
             session.on('streamCreated', (event: any) => {
-                if (this.state.publisher && event.stream.streamId === this.state.publisher.stream.streamId) {
-                    return;
-                }
-                if (event.stream.connection.connectionId === session.connection.connectionId) {
-                    return;
-                }
                 if (!this.state.subscribers.some(sub => sub.stream.streamId === event.stream.streamId)) {
                     const subscriber = session.subscribe(event.stream, undefined);
                     const subscribers = [...this.state.subscribers, subscriber];
@@ -193,7 +187,7 @@ class Cam extends Component<{}, AppState> {
     
                 // 주기적으로 스트림 목록 업데이트
                 const updateStreams = () => {
-                    console.log("씨발...................................");
+                    console.log("...........tq...................................");
                     const existingSubscribers: any[] = [...this.state.subscribers];
                     session.getStreams().forEach((stream: any) => {
                         if (!this.state.subscribers.some(sub => sub.stream.streamId === stream.streamId)) {

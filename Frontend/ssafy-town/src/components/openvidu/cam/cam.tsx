@@ -134,6 +134,14 @@ class Cam extends Component<{}, AppState> {
     
         // 2. 이벤트 리스너 설정
         if (!this.state.eventBindingsSet) {
+            session.on('streamCreated', (event: any) => {
+                if (this.state.publisher && event.stream.streamId === this.state.publisher.stream.streamId) {
+                    return;
+                }
+                if (event.stream.connection.connectionId === session.connection.connectionId) {
+                    return;
+                }
+            });
     
             session.on('streamDestroyed', (event: any) => {
                 this.setState(prevState => ({
@@ -203,7 +211,6 @@ class Cam extends Component<{}, AppState> {
         }
         this.setState({ session });
     }
-    
     
     
     

@@ -193,6 +193,7 @@ class Cam extends Component<{}, AppState> {
     
                 // 주기적으로 스트림 목록 업데이트
                 const updateStreams = () => {
+                    console.log("씨발...................................");
                     const existingSubscribers: any[] = [...this.state.subscribers];
                     session.getStreams().forEach((stream: any) => {
                         if (!this.state.subscribers.some(sub => sub.stream.streamId === stream.streamId)) {
@@ -207,7 +208,7 @@ class Cam extends Component<{}, AppState> {
                 const updateInterval = setInterval(updateStreams, 5000);
                 window.addEventListener('beforeunload', () => {
                     clearInterval(updateInterval);
-                });
+                }); 
             }).catch((error: any) => {
                 console.error("세션 연결 중 오류:", error);
             });

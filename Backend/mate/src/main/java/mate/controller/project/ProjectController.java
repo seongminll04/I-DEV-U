@@ -30,10 +30,10 @@ public class ProjectController {
 	private final ProjectService projectService;
 
 	@PostMapping("/register")
-	public ResponseEntity<Map<String, Object>> registerProject(@RequestBody Map<String, ProjectDto> input) {
+	public ResponseEntity<Map<String, Object>> registerProject(@RequestBody ProjectDto projectDto) {
 		Map<String, Object> map = new HashMap<>();
 
-		ProjectDto projectDto = input.get("data");
+//		ProjectDto projectDto = input.get("data");
 
 		try {
 			map.put("user", projectService.registerProject(projectDto));

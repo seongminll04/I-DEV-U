@@ -127,7 +127,6 @@ class Cam extends Component<{}, AppState> {
         });
     }
 
-
     async joinSession() {
         // 1. 세션 초기화
         this.OV = new OpenVidu();
@@ -178,17 +177,6 @@ class Cam extends Component<{}, AppState> {
             // 4. 세션에 연결
             const userNickname = localStorage.getItem('userNickname');
             session.connect(token, userNickname).then(() => {
-
-                // 세션에 이미 존재하는 스트림들을 확인하고 구독
-                const existingStreams = session.getStreams();
-                existingStreams.forEach((stream: any) => {
-                    if (!this.state.subscribers.some(sub => sub.stream.streamId === stream.streamId)) {
-                        const subscriber = this.OV.subscribe(stream, undefined);
-                        const subscribers = [...this.state.subscribers, subscriber];
-                        this.setState({ subscribers });
-                    }
-                });
-                
                 // 5. 세션에 게시
                 const publisher = this.OV.initPublisher(undefined, {
                     audio: false,

@@ -42,6 +42,7 @@ public class Alarm {
         alarm.toIdx = alarmRequest.getToIdx();
         alarm.type = alarmRequest.getType();
         alarm.createdAt = alarmRequest.getCreatedAt();
+        alarm.checked = AlarmChecked.N;
 
         return alarm;
     }
@@ -51,6 +52,8 @@ public class Alarm {
         alarm.toIdx = toIdx;
         alarm.type = type;
         alarm.createdAt = time;
+        alarm.checked = AlarmChecked.N;
+
         return alarm;
     }
 

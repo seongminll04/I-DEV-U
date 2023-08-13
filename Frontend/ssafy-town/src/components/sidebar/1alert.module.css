@@ -38,6 +38,7 @@
 .backbtn {
     margin: 10px 0;
     cursor: pointer;
+    text-align: left;
 }
 
 .alert_title, .alert_content {

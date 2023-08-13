@@ -37,26 +37,42 @@ const Mate: React.FC = () => {
 
   useEffect(() => {
     const userToken = localStorage.getItem('userToken');
+    const userIdxStr = localStorage.getItem('userIdx')
+    var userIdx: number | null;
+    if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
     var tList: string[] = []
     for (const filter of matefilter) {
       tList = [...tList, ...filter.tagList]
     }
-    console.log(tList);
-    axios({
-      method: 'post',
-      url: 'https://i9b206.p.ssafy.io:9090/partner/list',
-      headers: {
-        Authorization: 'Bearer ' + userToken
-      },
-      data: {
-        tagList: tList
-      },
-    })
-      .then(res => {
-        console.log(res);
-        setMateList(res.data.userList);
+    if (tList[0]){
+      axios({
+        method: 'post',
+        url: 'https://i9b206.p.ssafy.io:9090/partner/list',
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        },
+        data: {
+          tagList: tList
+        },
       })
-      .catch(err => console.log(err))
+        .then(res => {
+          setMateList(res.data.userList.filter((user : Matep) =>user.userIdx !== userIdx));
+        })
+        .catch(err => console.log(err))
+    }
+    else {
+      axios({
+        method: 'post',
+        url: 'https://i9b206.p.ssafy.io:9090/partner/list',
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        },
+      })
+        .then(res => {
+          setMateList(res.data.userList.filter((user : Matep) =>user.userIdx !== userIdx));
+        })
+        .catch(err => console.log(err))
+    }
   }, [matefilter])
 
   return (
@@ -64,6 +80,8 @@ const Mate: React.FC = () => {
       <div className='sidebar_modal'>
         <h1>동료찾기</h1>
         <button className={mate_css.button} onClick={() => dispatch(setModal('동료찾기필터'))}>필터</button>
+        {matefilter[0] ? 
+        <>
         <div className={mate_css.userattribute}>
           <div className={mate_css.userInfo} style={{ fontSize: 'large', fontWeight: 'bold' }}>유저정보</div>
           <div className={mate_css.matchRate} style={{ fontSize: 'large', fontWeight: 'bold' }}>일치율</div>
@@ -89,8 +107,43 @@ const Mate: React.FC = () => {
               </div>
             )
           })}
+          <p>-더 없음-</p> 
         </div>
-        <p>-더 없음-</p>
+        </>
+
+        :
+        <>
+        <p>일치율을 확인하시려면 필터를 선택해주세요</p>
+        <div className={mate_css.userattribute}>
+          <div className={mate_css.userInfo} style={{ fontSize: 'large', fontWeight: 'bold' }}>유저정보</div>
+          <div className={mate_css.matchRate} style={{ fontSize: 'large', fontWeight: 'bold' }}>일치율</div>
+        </div>
+        <div className={mate_css.scrollbar}>
+          {mateList.map((mate: Matep, index: number) => {
+            return (
+              <div className={mate_css.usertable} onClick={() => { setMateIdx(mate.userIdx); dispatch(setModal('동료상세정보')) }}>
+                <div className={mate_css.userInfo}>
+                  <div className={mate_css.profile}>
+                    <img src="assets/default_profile.png" alt="" />
+                    <div className={mate_css.profiledata}>
+                      <b>{mate.nickname}</b>
+                      {mate.languageList.map((lang: string) => {
+                        return (<p style={{ color: 'gray', marginTop: 0, marginBottom: 0 }}>
+                          # {lang}
+                        </p>)
+                      })}
+                    </div>
+                  </div>
+                </div>
+                <div className={mate_css.matchRate}>X</div>
+              </div>
+            )
+          })}
+          <p>-더 없음-</p> 
+        </div>
+        </>
+        
+        }
       </div>
       {isModalOpen === '동료찾기필터' ? <MateFilter filter={matefilter} onfilter={(value: Filter[]) => setMateFilter(value)} />
         : isModalOpen === '동료상세정보' ? <MateDetail userIdx={mateIdx} />

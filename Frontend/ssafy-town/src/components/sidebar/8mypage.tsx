@@ -58,7 +58,10 @@ const Mypage: React.FC = () => {
   const dispatch = useDispatch();
   // const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
   const [user, setUser] = useState(userdata)
+  const [sogae, setSogae] = useState(true)
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
+
+  const [changeDate, setChangeData] = useState(true)
 
   const toggleHandler = () => {
     const userToken = localStorage.getItem('userToken')
@@ -67,17 +70,60 @@ const Mypage: React.FC = () => {
     if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
 
     axios({
-      method:'put',
-      url:`https://i9b206.p.ssafy.io:9090/user/setting`,
+      method: 'put',
+      url: `https://i9b206.p.ssafy.io:9090/user/setting`,
       data: {
-        userIdx:userIdx,
+        userIdx: userIdx,
         invite: user.invite === 'true' ? 'false' : 'true'
       },
       headers: {
         Authorization: 'Bearer ' + userToken
       },
     })
-    .then(()=>{
+      .then(() => {
+        axios({
+          method: 'get',
+          url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
+          headers: {
+            Authorization: 'Bearer ' + userToken
+          },
+        })
+          .then(res => {
+            setUser(res.data.data)
+          })
+          .catch(() => {
+            console.log("유저 정보가 정확하지 않음")
+          })
+      })
+  };
+
+
+  useEffect(()=>{
+    const userToken = localStorage.getItem('userToken')
+    const userIdxStr = localStorage.getItem('userIdx')
+    const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
+    axios({
+      method: 'get',
+      url: `https://i9b206.p.ssafy.io:9090/date/${userIdx}`,
+      headers: {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+      .then(res => {
+        console.log("test")
+        setSogae(res.data.isRegistered)
+      })
+      .catch((err) => {
+        console.log("소개팅 등록여부 조회 실패")
+        console.log(err)
+      })
+  })
+  useEffect(() => {
+    const userToken = localStorage.getItem('userToken')
+    const userIdxStr = localStorage.getItem('userIdx')
+    const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
+
+    if (changeDate){
       axios({
         method: 'get',
         url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
@@ -87,55 +133,54 @@ const Mypage: React.FC = () => {
       })
         .then(res => {
           setUser(res.data.data)
+          setChangeData(false)
         })
         .catch(() => {
           console.log("유저 정보가 정확하지 않음")
         })
-    })
-  };
+    }
+  
+  }, [changeDate])
 
-  useEffect(() => {
-    const userToken = localStorage.getItem('userToken')
-    const userIdxStr = localStorage.getItem('userIdx')
-    const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
-
-    axios({
-      method: 'get',
-      url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
-      headers: {
-        Authorization: 'Bearer ' + userToken
-      },
-    })
-      .then(res => {
-        setUser(res.data.data)
-      })
-      .catch(() => {
-        console.log("유저 정보가 정확하지 않음")
-      })
-  }, [])
-
-  // 소개팅 등록한 경우 등록철회
-  const unregistMeeting = () => {
-    console.log("이제 소개팅 안할래!");
+  // 소개팅 등록 상태 전환
+  const onregistMeeting = () => {
     const userIdx = localStorage.getItem('userIdx');
     const userToken = localStorage.getItem('userToken');
-    axios({
-      method: 'delete',
-      url: `https://i9b206.p.ssafy.io:9090/date/release/${userIdx}`,
-      headers: {
-        Authorization: 'Bearer ' + userToken
-      }
-    })
-      .then(res => {
-        console.log(res)
-        alert("소개팅 등록해제 성공");
+    
+    if (sogae) {
+      axios({
+        method: 'delete',
+        url: `https://i9b206.p.ssafy.io:9090/date/release/${userIdx}`,
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        }
       })
-      .catch(err => {
-        console.log(err);
-        alert("소개팅 등록해제 실패");
+        .then(() => {
+          setSogae(false)
+        })
+        .catch(() => {
+          alert("소개팅 등록해제 실패");
+        })
+    }
+    else {
+      axios({
+        method: 'post',
+        url: `https://i9b206.p.ssafy.io:9090/date/register/${userIdx}`,
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        }
       })
+      .then(() => {
+          setSogae(true)
+        })
+        .catch(() => {
+          alert("소개팅 등록 실패");
+        })
+    }
   }
 
+
+  
   return (
     <div>
       <div className='sidebar_modal' id={mypage_css.modal}>
@@ -147,36 +192,35 @@ const Mypage: React.FC = () => {
           <div className={mypage_css.mypage_welcome}>
             안녕하세요! {user.nickname} 님
           </div>
-          <button className={mypage_css.button} 
-          onClick={() => {
-            if (!user.email.includes('@')) {
-              dispatch(setModal('회원정보수정2'))
-              localStorage.setItem('kakao','1')
-            }
-            else {dispatch(setModal('회원정보수정1'))}
-          }}>회원정보 수정</button>
-          
+          <button className={mypage_css.button}
+            onClick={() => {
+              if (!user.email.includes('@')) {
+                dispatch(setModal('회원정보수정2'))
+                localStorage.setItem('kakao', '1')
+              }
+              else { dispatch(setModal('회원정보수정1')) }
+            }}>회원정보 수정</button>
+
           <p className={mypage_css.mypage_toggle}>내 정보 검색 허용
-            <ToggleContainer onClick={()=>{toggleHandler()}}>
-              <div className={`toggle-container ${user.invite === 'true' ? "toggle--checked" : null}`}/>
-              <div className={`${mypage_css.mypage_toggle} toggle-circle ${ user.invite==='true' ? "toggle--checked" : null}`}>
-                 {user.invite === 'true' ? 'On':'Off'}</div>
+            <ToggleContainer onClick={() => { toggleHandler() }}>
+              <div className={`toggle-container ${user.invite === 'true' ? "toggle--checked" : null}`} />
+              <div className={`${mypage_css.mypage_toggle} toggle-circle ${user.invite === 'true' ? "toggle--checked" : null}`}>
+                {user.invite === 'true' ? 'On' : 'Off'}</div>
             </ToggleContainer>
           </p>
 
           <p className={mypage_css.mypage_toggle}>소개팅 등록
-            <ToggleContainer onClick={()=>{toggleHandler()}}>
-              <div className={`toggle-container ${user.invite === 'true' ? "toggle--checked" : null}`}/>
-              <div className={`${mypage_css.mypage_toggle} toggle-circle ${ user.invite==='true' ? "toggle--checked" : null}`}>
-                 {user.invite === 'true' ? 'On':'Off'}</div>
+            <ToggleContainer onClick={()=>{onregistMeeting()}}>
+              <div className={`toggle-container ${sogae ? "toggle--checked" : null}`}/>
+              <div className={`${mypage_css.mypage_toggle} toggle-circle ${ sogae ? "toggle--checked" : null}`}>
+                 {sogae ? 'On':'Off'}</div>
             </ToggleContainer>
           </p>
 
-          <button className={mypage_css.button} onClick={unregistMeeting}>소개팅 등록 취소</button>
           <button className={mypage_css.button} onClick={() => dispatch(setModal('Re최초설문'))}>최초 설문 수정</button>
         </div>
-        {isModalOpen === '회원정보수정3' ? <EditAcount user={user} /> : 
-        isModalOpen === '비밀번호변경' ? <ChangePass user={user}  /> :null}
+        {isModalOpen === '회원정보수정3' ? <EditAcount user={user} change={()=>setChangeData(true)} /> :
+          isModalOpen === '비밀번호변경' ? <ChangePass user={user} /> : null}
       </div>
     </div>
 

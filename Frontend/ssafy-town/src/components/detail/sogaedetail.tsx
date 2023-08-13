@@ -11,14 +11,20 @@ interface Props {
 }
 
 interface userProps {
-  userIdx: number,
-  name: string,
+  imageUrl: string,
   nickname: string,
+  work: number,
+  language: number[],
+  location: string,
+  face: string,
+  job: string,
+  age: number,
+  salary: number,
+  gender: string,
   intro: string,
-  techList: string[]
 }
 
-const MateDetail: React.FC<Props> = ({ userIdx }) => {
+const SogaeDetail: React.FC<Props> = ({ userIdx }) => {
   const dispatch = useDispatch()
   const [mateUser, setMateUser] = useState<userProps>()
   const stompClientRef = React.useRef<Client | null>(null);
@@ -27,7 +33,7 @@ const MateDetail: React.FC<Props> = ({ userIdx }) => {
     const userToken = localStorage.getItem('userToken')
     axios({
       method: 'get',
-      url: `https://i9b206.p.ssafy.io:9090/partner/detail/${userIdx}`,
+      url: `https://i9b206.p.ssafy.io:9090/date/detail/${userIdx}`,
       headers: {
         Authorization: 'Bearer ' + userToken
       },
@@ -45,36 +51,33 @@ const MateDetail: React.FC<Props> = ({ userIdx }) => {
   }, [userIdx])
 
   const sendrequest = () => {
-    const senduserIdxStr = localStorage.getItem('userIdx')
-    const senduserIdx = senduserIdxStr ? parseInt(senduserIdxStr,10) : null
-    if (stompClientRef.current && senduserIdx) {
+    // const senduserIdx = localStorage.getItem('userIdx')
+    if (stompClientRef.current) {
       const now = new Date()
       const data = {
-        fromIdx: senduserIdx,
-        toIdx: userIdx,
-        type:'MATE',
+        userIdx: userIdx,
         createdAt: now
       };
+      console.log(data)
       stompClientRef.current.publish({
-        destination: `/sub/user/${userIdx}`,
+        destination: `/sub/join/${userIdx}`,
         body: JSON.stringify(data),
       });
     }
   }
 
-
   return (
     <div className={detail_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => { if (e.target === e.currentTarget) { dispatch(setModal(null)) } }} >
       <div className={detail_css.modal}>
-        <h1>동료 상세정보</h1>
+        <h1>소개팅 상세정보</h1>
         {mateUser ?
           <div>
             {mateUser?.nickname}
             <br />
             {mateUser?.intro}
             <br />
-            {mateUser?.techList.map((tech) => (
-              tech + '    '
+            {mateUser?.language.map((lang) => (
+              lang + '    '
             ))}
             <br /><br /><br />
             <button onClick={sendrequest}>채팅 신청</button>
@@ -91,4 +94,4 @@ const MateDetail: React.FC<Props> = ({ userIdx }) => {
   );
 };
 
-export default MateDetail;
+export default SogaeDetail;

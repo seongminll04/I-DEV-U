@@ -111,6 +111,7 @@ const MyRoom: React.FC = () => {
       };
     }
   }, [isModalOpen,isSidebarOpen, game, dispatch]);
+
   return (
     <div className={ssafytown_css.container}>
       <Sidebar/>

@@ -197,19 +197,16 @@ class Cam extends Component<{}, AppState> {
                             this.setState({ publisher });
                         });
                     });
+                    // Subscribing to existing streams
                     const existingSubscribers: any[] = [];
-                    session.remoteConnections.forEach((connection:any) => {
-                        if (connection.streams.length > 0) {
-                            connection.streams.forEach((stream:any) => {
-                                if (!this.state.subscribers.some(sub => sub.stream.streamId === stream.streamId)) {
-                                    const subscriber = this.OV.subscribe(stream, undefined);
-                                    existingSubscribers.push(subscriber);
-                                }
-                            });
+                    session.getStreams().forEach((stream: any) => {
+                        if (!this.state.subscribers.some(sub => sub.stream.streamId === stream.streamId)) {
+                            const subscriber = this.OV.subscribe(stream, undefined);
+                            existingSubscribers.push(subscriber);
                         }
                     });
-                
                     this.setState({ subscribers: existingSubscribers });
+
                 })
                 .catch((error: any) => {
                     console.error("Error during session connection:", error);

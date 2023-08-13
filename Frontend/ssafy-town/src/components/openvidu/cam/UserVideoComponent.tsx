@@ -12,7 +12,8 @@ export default class UserVideoComponent extends Component<Props> {
         if (!connectionData || connectionData === "undefined") {
             return "알수없음"; // 또는 적절한 디폴트 값
         }
-        return JSON.parse(connectionData).clientData;
+        const parsedData = JSON.parse(connectionData);
+        return parsedData.clientData || "알수없음";
     }
 
     render(): JSX.Element {

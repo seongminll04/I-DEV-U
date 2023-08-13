@@ -3,10 +3,7 @@ package mate.chat.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mate.chat.domain.ChatParticipation;
-import mate.chat.domain.ChatRoom;
-import mate.chat.domain.ChatRoomRepository;
-import mate.chat.domain.Role;
+import mate.chat.domain.*;
 import mate.chat.dto.*;
 import mate.controller.Result;
 import mate.domain.user.User;
@@ -53,8 +50,9 @@ public class ChatRoomService {
         ChatRoom chatRoom = ChatRoom.createChatRoom(chatRoomCreateRequest, user);
 
         chatRoomRepository.save(chatRoom);
+        ChatRoomIdxResponse roomIdx = ChatRoomIdxResponse.from(chatRoom.getIdx());
 
-        return Result.builder().status(ok().body("방 생성 완료")).build();
+        return Result.builder().data(roomIdx).status(ok().body("방 생성 완료")).build();
     }
 
     public Result deleteChatRoom(Integer roomIdx, Integer userIdx){

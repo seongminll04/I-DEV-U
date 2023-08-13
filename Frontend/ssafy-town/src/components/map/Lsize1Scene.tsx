@@ -517,6 +517,10 @@ export class Lsize1Scene extends Phaser.Scene {
     const sessionName = localStorage.getItem('OVsession');
   
     var location = this;
+
+    setInterval(() => { // 5초마다 모든 유저의 데이터를 받아서 새로들어온사람도 보이게
+      this.sendCharacterData();
+    }, 5000);
   
     if (stompClientRef) {
       stompClientRef.subscribe(`/sub/channel/${sessionName}`, function(message:Message) {

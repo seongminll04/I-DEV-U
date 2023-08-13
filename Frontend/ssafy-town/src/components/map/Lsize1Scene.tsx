@@ -133,6 +133,7 @@ export class Lsize1Scene extends Phaser.Scene {
     private remoteCharacters: { [id: string]: Phaser.GameObjects.Sprite } = {};
     private lastSentTime: number = 0;
     private remoteCharacterNames: { [id: string]: Phaser.GameObjects.Text } = {};
+    private remoteCharactersLastUpdate: { [id: string]: number } = {}; // 여기에 추가
 
     private character?: Phaser.Physics.Arcade.Sprite;
     private balloon!: Phaser.GameObjects.Sprite;
@@ -517,11 +518,24 @@ export class Lsize1Scene extends Phaser.Scene {
     const stompClientRef = store.getState().stompClientRef;
     const sessionName = localStorage.getItem('OVsession');
     this.remoteCharacterNames = {};
+    this.remoteCharactersLastUpdate = {};
   
     var location = this;
 
-    setInterval(() => { // 5초마다 모든 유저의 데이터를 받아서 새로들어온사람도 보이게
+    setInterval(() => {
+      // 5초마다 모든 유저의 데이터를 보내기
       this.sendCharacterData();
+
+      // 10초마다 캐릭터 정보 확인 및 오래된 캐릭터 제거
+      const now = Date.now();
+      for (let id in this.remoteCharacters) {
+        if (now - this.remoteCharactersLastUpdate[id] > 10000) {
+          this.remoteCharacters[id].destroy(); // Phaser sprite 제거
+          this.remoteCharacterNames[id]?.destroy(); // 이름 라벨도 제거
+          delete this.remoteCharacters[id];
+          delete this.remoteCharactersLastUpdate[id];
+        }
+      }
     }, 5000);
   
     if (stompClientRef) {
@@ -566,6 +580,7 @@ export class Lsize1Scene extends Phaser.Scene {
               location.closeDoor(); // 다른 유저가 문을 닫았다면
             }
           }
+          location.remoteCharactersLastUpdate[newMessage.id] = Date.now();
         }
       });
     }

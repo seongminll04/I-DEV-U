@@ -176,49 +176,54 @@ class Cam extends Component<{}, AppState> {
     
             // 4. 세션에 연결
             const userNickname = localStorage.getItem('userNickname');
-            session.connect(token, userNickname).then(() => {
-                // 5. 세션에 게시
-                const publisher = this.OV.initPublisher(undefined, {
-                    audio: false,
-                    video: false
-                });
+            await session.connect(token, userNickname);
     
-                publisher.on('accessAllowed', () => {
-                    publisher.publishVideo(false);
-                    publisher.publishAudio(false);
-                    session.publish(publisher).then(() => {
-                        this.setState({ publisher });
-                    });
-                });
+            // 세션에 이미 존재하는 스트림들을 확인하고 구독
+            const existingStreams = session.getStreams();
+            existingStreams.forEach((stream: any) => {
+                if (!this.state.subscribers.some(sub => sub.stream.streamId === stream.streamId)) {
+                    const subscriber = this.OV.subscribe(stream, undefined);
+                    const subscribers = [...this.state.subscribers, subscriber];
+                    this.setState({ subscribers });
+                }
+            });
     
-                // 주기적으로 스트림 목록 업데이트
-                const updateStreams = () => {
-                    const existingSubscribers: any[] = [...this.state.subscribers];
-                    session.getStreams().forEach((stream: any) => {
-                        if (!this.state.subscribers.some(sub => sub.stream.streamId === stream.streamId)) {
-                            const subscriber = this.OV.subscribe(stream, undefined);
-                            existingSubscribers.push(subscriber);
-                        }
-                    });
-                    this.setState({ subscribers: existingSubscribers });
-                };
+            // 5. 세션에 게시
+            const publisher = this.OV.initPublisher(undefined, {
+                audio: false,
+                video: false
+            });
     
-                updateStreams();
-                const updateInterval = setInterval(updateStreams, 5000);
-                window.addEventListener('beforeunload', () => {
-                    clearInterval(updateInterval);
+            publisher.on('accessAllowed', () => {
+                publisher.publishVideo(false);
+                publisher.publishAudio(false);
+                session.publish(publisher).then(() => {
+                    this.setState({ publisher });
                 });
-            }).catch((error: any) => {
-                console.error("세션 연결 중 오류:", error);
+            });
+    
+            // 주기적으로 스트림 목록 업데이트
+            const updateStreams = () => {
+                const existingSubscribers: any[] = [...this.state.subscribers];
+                session.getStreams().forEach((stream: any) => {
+                    if (!this.state.subscribers.some(sub => sub.stream.streamId === stream.streamId)) {
+                        const subscriber = this.OV.subscribe(stream, undefined);
+                        existingSubscribers.push(subscriber);
+                    }
+                });
+                this.setState({ subscribers: existingSubscribers });
+            };
+    
+            updateStreams();
+            const updateInterval = setInterval(updateStreams, 5000);
+            window.addEventListener('beforeunload', () => {
+                clearInterval(updateInterval);
             });
         } catch (error) {
             console.error("토큰 가져오기 오류:", error);
         }
         this.setState({ session });
-    }
-    
-    
-    
+    }    
     
 
     async switchCamera() {

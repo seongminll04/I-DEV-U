@@ -11,11 +11,11 @@ import java.util.Optional;
 
 public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
 
-    @Query("select a from Alarm a where a.toIdx = :userIdx")
-    Optional<List<Alarm>> findFrom (@Param("userIdx") Integer userIdx);
+    @Query("select a from Alarm a where a.toIdx = :userIdx and a.checked = :checked")
+    Optional<List<Alarm>> findFrom (@Param("userIdx") Integer userIdx, @Param("checked") String checked);
 
-    @Query("select a from Alarm a where a.fromIdx = :userIdx")
-    Optional<List<Alarm>> findTo (@Param("userIdx") Integer userIdx);
+    @Query("select a from Alarm a where a.fromIdx = :userIdx and a.checked = :checked")
+    Optional<List<Alarm>> findTo (@Param("userIdx") Integer userIdx, @Param("checked") String checked);
 
 
     @Modifying

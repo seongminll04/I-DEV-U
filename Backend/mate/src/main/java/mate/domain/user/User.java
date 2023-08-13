@@ -2,11 +2,14 @@ package mate.domain.user;
 
 import com.sun.istack.NotNull;
 import lombok.*;
+import mate.chat.domain.ChatParticipation;
 import mate.domain.basic.BasicAnswer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,6 +36,9 @@ public class User {
     private String invite;
     private String originalFileName;
     private String storedFileName;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BasicAnswer> basicAnswerList = new ArrayList<>();
 
     // 생성자, 기타 메서드 생략
 

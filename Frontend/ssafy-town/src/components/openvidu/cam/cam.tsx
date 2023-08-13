@@ -179,9 +179,8 @@ class Cam extends Component<{}, AppState> {
     
             // 4. Connecting to the session.
             const userNickname = localStorage.getItem('userNickname');
-            const clientData = JSON.stringify({ clientData: userNickname });
 
-            session.connect(token, { clientData })
+            session.connect(token,userNickname)
                 .then(() => {
                     // 5. Publishing to the session.
                     const publisher = this.OV.initPublisher(undefined, {

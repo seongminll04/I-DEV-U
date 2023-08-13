@@ -95,7 +95,14 @@ function App() {
   }, [dispatch]);
 
   useEffect(()=>{
-    if (window.location.href!=='http://localhost:3000/home' || isModalOpen!==null) {
+    if (isModalOpen==='실시간알림') {
+      if (!newmessage) {
+        dispatch(setModal(null))
+      }
+      return
+    }
+
+    if (window.location.href!=='https://i9b206.p.ssafy.io/home' || isModalOpen!==null) {
       setNewmessage(null)
     }
     else {
@@ -120,7 +127,7 @@ function App() {
           {/* <Route path="/large_meeting" element={<LMeetingRoom />} /> */}
           <Route path="/love" element={<SogaeRoom />} />
         </Routes>
-        {isModalOpen==='실시간알림' ? <NowAlert message={newmessage} />:null}
+        {isModalOpen==='실시간알림' ? <NowAlert message={newmessage} onMessage={()=>{setNewmessage(null)}}/>:null}
       </div>
     </Router>
   );

@@ -121,7 +121,7 @@ import axios from "axios";
         }); 
 
         for (const room of chatList) {
-          stompClientRef.current.subscribe(`/sub/chatRoom/${room.roomIdx}`, function(message: Message) {
+          stompClientRef.current.subscribe(`/sub/rooms/${room.roomIdx}`, function(message: Message) {
             axios({
               method:'get',
               url:`https://i9b206.p.ssafy.io:9090/chat/rooms/${room.roomIdx}/last`,
@@ -181,7 +181,7 @@ import axios from "axios";
           <hr style={{width:'75%', color:'black'}}/>
 
           <div className={chat_css.scrollbox}>
-            {chatList.map((room) => {
+            {chatList.sort((a, b) => b.createdAt.getTime()-a.createdAt.getTime()).map((room) => {
               const now = new Date()
               const date = room.createdAt
               var today;

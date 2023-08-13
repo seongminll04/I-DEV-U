@@ -135,7 +135,6 @@ const Chatroom: React.FC = () => {
       message: message,
       createdAt: now
     };
-    console.log(data)
     stompClientRef.current.publish({
         destination: '/pub/messages',
         body: JSON.stringify(data),
@@ -168,7 +167,6 @@ const Chatroom: React.FC = () => {
           chats.push(data)
         }
         setReceiveMessages(prevMessages => [...chats,...prevMessages]);
-        console.log('추가 로딩')
         setSch(aaa);
       })
       .catch(err=>console.log(err))

@@ -56,10 +56,10 @@ const MateDetail: React.FC<Props> = ({ userIdx }) => {
         createdAt: now
       };
       stompClientRef.current.publish({
-        destination: `/sub/user/${userIdx}`,
+        destination: `/pub/user`,
         body: JSON.stringify(data),
       });
-      alert('채팅신청 완료')
+      alert('채팅 신청 완료')
       dispatch(setModal(null))
     }
   }

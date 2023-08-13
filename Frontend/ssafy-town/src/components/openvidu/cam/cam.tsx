@@ -194,6 +194,12 @@ class Cam extends Component<{}, AppState> {
                             this.setState({ publisher });
                         });
                     });
+                    const existingSubscribers = session.getRemoteStreams().map((stream: any) => {
+                        const subscriber = this.OV.subscribe(stream, undefined);
+                        return subscriber;
+                    });
+                
+                    this.setState({ subscribers: existingSubscribers });
                 })
                 .catch((error: any) => {
                     console.error("Error during session connection:", error);

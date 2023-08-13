@@ -9,7 +9,8 @@ import mate.domain.notice.NoticeBoard;
 
 @Repository
 public interface NoticeRepository extends JpaRepository<NoticeBoard, Integer> {
-	List<NoticeBoard> findNoticeByTitleContainingOrderByIdxDesc(String keyword);
-	List<NoticeBoard> findNoticeByContentContainingOrderByIdxDesc(String keyword);
+	List<NoticeBoard> findByTitleContainingOrderByIdxDesc(String keyword);
+	List<NoticeBoard> findByContentContainingOrderByIdxDesc(String keyword);
 	List<NoticeBoard> findTop4ByOrderByIdxDesc();
+	List<NoticeBoard> findByTitleContainingOrContentContaining(String keyword1, String keyword2);
 }

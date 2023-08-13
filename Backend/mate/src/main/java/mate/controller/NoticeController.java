@@ -58,27 +58,20 @@ public class NoticeController {
 		return ResponseEntity.ok(map);
 	}
 
-//	@GetMapping("/list/{keyWord}")
-//	public ResponseEntity<Map<String, Object>> listNotice(
-//		@RequestParam(value = "keyWord", required = false) String keyWord) {
-//		System.out.println("keyWord = " + keyWord);
-//		Map<String, Object> map = new HashMap<>();
-//
-//		if (keyWord == null) {
-//			map.put("list", noticeService.listNotice());
-//			return ResponseEntity.ok(map);
-//		} else {
-//			map.put("list", noticeService.listNoticeByKeyword(keyWord));
-//			return ResponseEntity.ok(map);
-//		}
-//	}
-
 	@GetMapping("/list")
 	public ResponseEntity<Map<String, Object>> listNotice() {
 		System.out.println("noticeAll");
 		Map<String, Object> map = new HashMap<>();
 
-		map.put("list", noticeService.listNotice());
+		map.put("list", noticeService.listNotice().stream().map(notice -> {
+			NoticeDto dto = new NoticeDto();
+			dto.setUserIdx(notice.getIdx());
+			dto.setTitle(notice.getTitle());
+			dto.setContent(notice.getContent());
+			dto.setCreatedAt(notice.getCreatedAt());
+
+			return dto;
+		}));
 		return ResponseEntity.ok(map);
 	}
 
@@ -91,9 +84,19 @@ public class NoticeController {
 		return ResponseEntity.ok(map);
 	}
 
-	@GetMapping("/find/title/{keyWord}")
+	@GetMapping("/find")
+	public ResponseEntity<Map<String, Object>> listNotice(
+			@RequestParam(value = "keyWord", required = false) String keyWord) {
+		System.out.println("keyWord = " + keyWord);
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("list", noticeService.listNoticeByKeyword(keyWord));
+		return ResponseEntity.ok(map);
+	}
+
+	@GetMapping("/find/title")
 	public ResponseEntity<Map<String, Object>> findNoticeByTitle(
-		@PathVariable(value = "keyWord", required = false) String keyWord) {
+		@RequestParam(value = "keyWord", required = false) String keyWord) {
 		System.out.println("title = " + keyWord);
 		Map<String, Object> map = new HashMap<>();
 
@@ -101,9 +104,9 @@ public class NoticeController {
 		return ResponseEntity.ok(map);
 	}
 
-	@GetMapping("/find/content/{keyWord}")
+	@GetMapping("/find/content")
 	public ResponseEntity<Map<String, Object>> findNoticeByContent(
-			@PathVariable(value = "keyWord", required = false) String keyWord) {
+			@RequestParam(value = "keyWord", required = false) String keyWord) {
 		System.out.println("content = " + keyWord);
 		Map<String, Object> map = new HashMap<>();
 

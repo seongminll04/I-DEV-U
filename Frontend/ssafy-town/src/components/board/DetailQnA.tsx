@@ -14,7 +14,7 @@ interface Question {
   idx: number;
   title: string;
   content: string;
-  createAt: string;
+  createdAt: string;
 }
 
 interface Comment {
@@ -31,6 +31,7 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
   const [inputvalue, setInputvalue] = useState('')
   const userToken = localStorage.getItem('userToken')
   const [question, setQuestion] = useState<Question>();
+  const [qTime, setQTime] = useState<Date>(new Date());
 
   useEffect(() => {
     axios({
@@ -43,11 +44,12 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
       .then(res => {
         console.log(res)
         setQuestion(res.data["Q&A"])
+        setQTime(new Date(res.data["Q&A"].createdAt))
       })
       .catch(err => console.log(err))
   }, [qnaid, userToken])
 
-  const loadcomment = () => {
+  useEffect(() => {
     axios({
       method: 'get',
       url: `https://i9b206.p.ssafy.io:9090/qna/comment/${qnaid}`,
@@ -56,13 +58,11 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
       },
     })
       .then(res => {
-        console.log(res.data);
+        // console.log(res.data);
         setCommentlist(res.data.data)
       })
       .catch(err => console.log(err))
-  }
-
-  loadcomment()
+  }, [qnaid, userToken])
 
   const onInputSubmit = () => {
     if (inputvalue !== '') {
@@ -81,7 +81,6 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
         .then(res => {
           console.log(res)
           setInputvalue('')
-          loadcomment()
         })
     }
   }
@@ -97,7 +96,7 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
           <>
             <p>제목 : {question?.title}</p>
             <p>내용 : {question?.content}</p>
-            <p>날짜 : {question?.createAt}</p>
+            <p>날짜 : {qTime.getMonth() + 1}/{qTime.getDate()} {qTime.getHours()}:{qTime.getMinutes()}</p>
           </>
         ) : (
           'Loading...'
@@ -108,10 +107,10 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
           const date = new Date(comment.createdAt);
           return (
             <div key={index}>
-              {comment.userNickname}
-              {comment.content}
+              <span>[{comment.userNickname}] </span>
+              <span>{comment.content}, </span>
               <span>
-                {date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}
+                작성시간 : {date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}
               </span>
             </div>
           )

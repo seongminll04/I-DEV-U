@@ -11,7 +11,7 @@ interface Question {
   idx: number;
   content: string;
   title: string;
-  createAt: string;
+  createdAt: string;
 }
 
 const QnA: React.FC = () => {
@@ -33,6 +33,7 @@ const QnA: React.FC = () => {
       },
     })
       .then(res => {
+        console.log(res.data)
         setQuestionList(res.data["Q&A"]);
       })
       .catch(err => {
@@ -72,30 +73,29 @@ const QnA: React.FC = () => {
 
   const searchdata = () => {
     setnowsearch(true)
-    if (search===''){
+    if (search === '') {
       setnowsearch(false)
     }
-  
+
     // 여기서 모든데이터 중 검색어랑 일치하는 것만 리스트화 하는 코드작성 
     const userToken = localStorage.getItem('userToken')
 
-    const url = searchlocation==='전체'||search==='' ? 'list/'+ search
-    : searchlocation==='제목' ? 'find/title/'+ search
-    : searchlocation==='내용' ? 'find/content/'+ search
-    : 'find/user/'+ search
+    const url = searchlocation === '제목' ? 'find/title/' + search
+      : searchlocation === '내용' ? 'find/content/' + search
+        : 'list/'
     console.log(url)
     axios({
       method: 'get',
-      url: 'https://i9b206.p.ssafy.io:9090/qna/'+url,
+      url: 'https://i9b206.p.ssafy.io:9090/qna/' + url,
       headers: {
         Authorization: 'Bearer ' + userToken
       },
-
+      params: {
+        keyWord: search
+      }
     })
       .then(res => {
-        console.log('조회')
         setQuestionList(res.data["Q&A"]);
-        
       })
       .catch(err => {
         console.log(err)
@@ -113,11 +113,10 @@ const QnA: React.FC = () => {
           <hr />
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div className={QnA_css.search_frame}>
-              <select name="검색대상" id="" value={searchlocation} onChange={(e)=>{setSearchloaction(e.target.value)}}>
+              <select name="검색대상" id="" value={searchlocation} onChange={(e) => { setSearchloaction(e.target.value) }}>
                 <option value="전체">전체</option>
                 <option value="제목">제목</option>
                 <option value="내용">내용</option>
-                <option value="작성자">작성자</option>
               </select>
               <input type="text" value={search} onChange={(event) => { setsearch(event.target.value) }} onKeyDown={handlekeydown} />
               <button className={QnA_css.createQnA} onClick={searchdata}>검색</button>
@@ -128,7 +127,7 @@ const QnA: React.FC = () => {
           <br />
           {questionList.length > 0 ? (
             questionList.map((question: Question, index: number) => {
-              const date = new Date(question.createAt);
+              const date = new Date(question.createdAt);
               return (
                 <div
                   className={QnA_css.notice}
@@ -139,9 +138,9 @@ const QnA: React.FC = () => {
                 >
                   <p>{question.idx}</p>
                   <p>{question.title}</p>
-                  <span>
+                  <p>
                     {date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}
-                  </span>
+                  </p>
                 </div>
               );
             })
@@ -151,7 +150,7 @@ const QnA: React.FC = () => {
 
 
         </div>
-        : page === 1 ? <CreateQnA onback={() => {setPage(0);reload()}} />
+        : page === 1 ? <CreateQnA onback={() => { setPage(0); reload() }} />
           : <DetailQnA qnaid={qnaid} onback={() => setPage(0)} />}
     </div>
   );

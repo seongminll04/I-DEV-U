@@ -38,7 +38,7 @@ const AllNotice: React.FC = () => {
         setNoticeList(res.data.list)
       })
       .catch(err => console.log(err))
-  }, [noticeList])
+  }, [])
 
   const handlekeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget
@@ -52,14 +52,14 @@ const AllNotice: React.FC = () => {
       inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
     }
   }
-  let url = searchlocation==='제목' ? 'find/title'
-  : searchlocation==='내용' ? 'find/content'
-  : 'find'
+  let url = searchlocation === '제목' ? 'find/title'
+    : searchlocation === '내용' ? 'find/content'
+      : 'find'
 
   const searchdata = () => {
     axios({
-      method : 'get',
-      url: 'https://localhost:9090/notice/'+url,
+      method: 'get',
+      url: 'https://localhost:9090/notice/' + url,
       headers: {
         Authorization: 'Bearer ' + userToken
       },
@@ -67,10 +67,10 @@ const AllNotice: React.FC = () => {
         keyWord: search
       }
     })
-    .then(res => {
-      console.log(res.data.list)
-      setNoticeList(res.data.list)
-    })
+      .then(res => {
+        // console.log(res.data.list)
+        setNoticeList(res.data.list)
+      })
     setnowsearch(true)
     // 여기서 모든데이터 중 검색어랑 일치하는 것만 리스트화 하는 코드작성
   }
@@ -110,8 +110,8 @@ const AllNotice: React.FC = () => {
                 <span>{notice.idx}</span>
                 <span>{notice.content}</span>
                 <span>
-                    {date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}
-                  </span>
+                  {date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}
+                </span>
               </div>
             )
           })}

@@ -98,7 +98,7 @@ const Mypage: React.FC = () => {
   };
 
 
-  useEffect(()=>{
+  useEffect(() => {
     const userToken = localStorage.getItem('userToken')
     const userIdxStr = localStorage.getItem('userIdx')
     const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
@@ -110,8 +110,12 @@ const Mypage: React.FC = () => {
       },
     })
       .then(res => {
-        console.log("test")
-        setSogae(res.data.isRegistered)
+        console.log(res.data)
+        if (res.data.remmag === "등록 했음") {
+          setSogae(true)
+        } else if (res.data.remmag === "등록 안함") {
+          setSogae(false)
+        }
       })
       .catch((err) => {
         console.log("소개팅 등록여부 조회 실패")
@@ -123,7 +127,7 @@ const Mypage: React.FC = () => {
     const userIdxStr = localStorage.getItem('userIdx')
     const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
 
-    if (changeDate){
+    if (changeDate) {
       axios({
         method: 'get',
         url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
@@ -139,14 +143,14 @@ const Mypage: React.FC = () => {
           console.log("유저 정보가 정확하지 않음")
         })
     }
-  
+
   }, [changeDate])
 
   // 소개팅 등록 상태 전환
   const onregistMeeting = () => {
     const userIdx = localStorage.getItem('userIdx');
     const userToken = localStorage.getItem('userToken');
-    
+
     if (sogae) {
       axios({
         method: 'delete',
@@ -170,7 +174,7 @@ const Mypage: React.FC = () => {
           Authorization: 'Bearer ' + userToken
         }
       })
-      .then(() => {
+        .then(() => {
           setSogae(true)
         })
         .catch(() => {
@@ -180,7 +184,7 @@ const Mypage: React.FC = () => {
   }
 
 
-  
+
   return (
     <div>
       <div className='sidebar_modal' id={mypage_css.modal}>
@@ -210,16 +214,16 @@ const Mypage: React.FC = () => {
           </p>
 
           <p className={mypage_css.mypage_toggle}>소개팅 등록
-            <ToggleContainer onClick={()=>{onregistMeeting()}}>
-              <div className={`toggle-container ${sogae ? "toggle--checked" : null}`}/>
-              <div className={`${mypage_css.mypage_toggle} toggle-circle ${ sogae ? "toggle--checked" : null}`}>
-                 {sogae ? 'On':'Off'}</div>
+            <ToggleContainer onClick={() => { onregistMeeting() }}>
+              <div className={`toggle-container ${sogae ? "toggle--checked" : null}`} />
+              <div className={`${mypage_css.mypage_toggle} toggle-circle ${sogae ? "toggle--checked" : null}`}>
+                {sogae ? 'On' : 'Off'}</div>
             </ToggleContainer>
           </p>
 
           <button className={mypage_css.button} onClick={() => dispatch(setModal('Re최초설문'))}>최초 설문 수정</button>
         </div>
-        {isModalOpen === '회원정보수정3' ? <EditAcount user={user} change={()=>setChangeData(true)} /> :
+        {isModalOpen === '회원정보수정3' ? <EditAcount user={user} change={() => setChangeData(true)} /> :
           isModalOpen === '비밀번호변경' ? <ChangePass user={user} /> : null}
       </div>
     </div>

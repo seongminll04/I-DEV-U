@@ -132,6 +132,7 @@ export class Lsize1Scene extends Phaser.Scene {
     private prevPosition: { x: number, y: number } | null = null;
     private remoteCharacters: { [id: string]: Phaser.GameObjects.Sprite } = {};
     private lastSentTime: number = 0;
+    private remoteCharacterNames: { [id: string]: Phaser.GameObjects.Text } = {};
 
     private character?: Phaser.Physics.Arcade.Sprite;
     private balloon!: Phaser.GameObjects.Sprite;
@@ -515,6 +516,7 @@ export class Lsize1Scene extends Phaser.Scene {
   initializeWebRTC() {
     const stompClientRef = store.getState().stompClientRef;
     const sessionName = localStorage.getItem('OVsession');
+    this.remoteCharacterNames = {};
   
     var location = this;
 
@@ -536,9 +538,18 @@ export class Lsize1Scene extends Phaser.Scene {
             remoteChar = location.physics.add.sprite(newMessage.position.x, newMessage.position.y, `${newMessage.type}2`);
             remoteChar.setDepth(3);
             location.remoteCharacters[newMessage.id] = remoteChar;
-          } else if(remoteChar){
+
+            const userName = newMessage.nickname || 'Unknown';
+            const nameText = location.add.text(newMessage.position.x, newMessage.position.y - 30, userName, { color: 'black', align: 'center', fontSize: '14px', fontStyle: 'bold'});
+            nameText.setOrigin(0.5, 0.5);
+            nameText.setDepth(4);  // 캐릭터보다 위에 표시되게 depth를 설정
+            location.remoteCharacterNames[newMessage.id] = nameText;
+          }
+            else if(remoteChar){
             // 캐릭터가 이미 존재하면 위치와 애니메이션 상태 업데이트
             remoteChar.setPosition(newMessage.position.x, newMessage.position.y);
+
+            location.remoteCharacterNames[newMessage.id]?.setPosition(newMessage.position.x, newMessage.position.y - 30);
   
             // 애니메이션 상태 업데이트
             if (newMessage.direction) {
@@ -546,6 +557,13 @@ export class Lsize1Scene extends Phaser.Scene {
                 location.createAnimationsForCharacter(newMessage.type);
               }
               remoteChar.play(`${newMessage.direction}`, true);
+            }
+            remoteChar.setAlpha(newMessage.state ? 0.4 : 1);
+
+            if (newMessage.doorOpened && !location.doorOpened) {
+              location.openDoor();  // 다른 유저가 문을 열었다면
+            } else if (!newMessage.doorOpened && location.doorOpened) {
+              location.closeDoor(); // 다른 유저가 문을 닫았다면
             }
           }
         }
@@ -557,6 +575,7 @@ export class Lsize1Scene extends Phaser.Scene {
   // 캐릭터의 위치나 상태가 변경될 때 호출
   sendCharacterData(message?: string) {
     const currentUserId = localStorage.getItem('OVtoken');
+    const currentUserNickname = localStorage.getItem('userNickname') || 'Unknown';  // 닉네임 가져오기
 
     const now = Date.now();
     if (now - this.lastSentTime < 20) { // 마지막으로 데이터를 보낸 후 100ms가 지나지 않았다면 리턴
@@ -570,6 +589,8 @@ export class Lsize1Scene extends Phaser.Scene {
       type: localStorage.getItem('character'),
       direction: this.character?.anims.currentAnim?.key,  // 현재 애니메이션 상태
       frame: this.character?.anims.currentFrame?.index || 2,       // 현재 프레임 번호
+      nickname: currentUserNickname,
+      doorOpened: this.doorOpened
     };
     // const stompClientRef:Client|null = null;
     
@@ -626,11 +647,11 @@ export class Lsize1Scene extends Phaser.Scene {
         let moved = false;
 
         if (this.cursors.left?.isDown) {
-            this.character.setVelocityX(-640);
+            this.character.setVelocityX(-320);
             this.character.play(`${localStorage.getItem("character") || '0'}-left`, true);
             moved = true;
         } else if (this.cursors.right?.isDown) {
-            this.character.setVelocityX(640);
+            this.character.setVelocityX(320);
             this.character.play(`${localStorage.getItem("character") || '0'}-right`, true);
             moved = true;
         } else {
@@ -638,13 +659,13 @@ export class Lsize1Scene extends Phaser.Scene {
         }
 
         if (this.cursors.up?.isDown) {
-            this.character.setVelocityY(-640);
+            this.character.setVelocityY(-320);
             if (!this.cursors.right?.isDown && !this.cursors.left?.isDown) {
                 this.character.play(`${localStorage.getItem("character") || '0'}-up`, true);
             }
             moved = true;
         } else if (this.cursors.down?.isDown) {
-            this.character.setVelocityY(640);
+            this.character.setVelocityY(320);
             if (!this.cursors.right?.isDown && !this.cursors.left?.isDown) {
                 this.character.play(`${localStorage.getItem("character") || '0'}-down`, true);
             }

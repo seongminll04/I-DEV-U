@@ -10,6 +10,7 @@ import { setAllowMove, setModal, setSidebar } from '../../store/actions';
 
 import { Msize1Scene } from '../map/Msize1Scene';
 import ModalOpen from '../system/modalopen';
+import Cam from '../openvidu/cam/cam'
 
 // import Cam from '../openvidu/cam/cam'
 
@@ -94,9 +95,7 @@ const SogaeRoom: React.FC = () => {
       {isSidebarOpen ? <Navbar /> : null}
       <ModalOpen />
       <div id="phaser_game" className={ssafytown_css.phaser_game} >
-          <div id="my-video-container" className={ssafytown_css.my_video_bar}></div>
-          <div id="videoContainer" className={ssafytown_css.op_video_bar}> </div>
-          {/* <div className={ssafytown_css.video_bar}><Cam /></div> */}
+          <div className={ssafytown_css.video_bar}><Cam /></div>
       </div>
     </div>
   );

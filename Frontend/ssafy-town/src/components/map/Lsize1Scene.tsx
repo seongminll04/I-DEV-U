@@ -131,6 +131,7 @@ export class Lsize1Scene extends Phaser.Scene {
     private dataChannels: { [id: string]: RTCDataChannel } = {}; 
     private prevPosition: { x: number, y: number } | null = null;
     private remoteCharacters: { [id: string]: Phaser.GameObjects.Sprite } = {};
+    private lastSentTime: number = 0;
 
     private character?: Phaser.Physics.Arcade.Sprite;
     private balloon!: Phaser.GameObjects.Sprite;
@@ -520,43 +521,51 @@ export class Lsize1Scene extends Phaser.Scene {
     if (stompClientRef) {
       stompClientRef.subscribe(`/sub/channel/${sessionName}`, function(message:Message) {
         const newMessage = JSON.parse(message.body);
-        console.log(newMessage);
   
         if (newMessage) {
           // 기존 캐릭터가 존재하는지 확인
           let remoteChar = location.remoteCharacters[newMessage.id];
           const userIdx = localStorage.getItem('OVtoken')
+  
           // 캐릭터가 존재하지 않으면 새로 생성
-          if (!remoteChar && newMessage.id!==userIdx) {
-            remoteChar = location.physics.add.sprite(newMessage.position.x, newMessage.position.y, newMessage.type + `2`);
+          if (!remoteChar && newMessage.id !== userIdx) {
+            remoteChar = location.physics.add.sprite(newMessage.position.x, newMessage.position.y, `${newMessage.type}2`);
             remoteChar.setDepth(3);
             location.remoteCharacters[newMessage.id] = remoteChar;
-          } else {
-            // 캐릭터가 이미 존재하면 위치만 업데이트
+          } else if(remoteChar){
+            // 캐릭터가 이미 존재하면 위치와 애니메이션 상태 업데이트
             remoteChar.setPosition(newMessage.position.x, newMessage.position.y);
+  
+            // 애니메이션 상태 업데이트
+            if (newMessage.direction) {
+              if (!location.anims.exists(`${newMessage.type}-up`)) {
+                location.createAnimationsForCharacter(newMessage.type);
+              }
+              remoteChar.play(`${newMessage.direction}`, true);
+            }
           }
         }
       });
     }
   }
   
-  
-
-  // 메세지 처리과정
-  sendChatMessage(message: string) {
-    this.sendCharacterData(message);
-  }
 
   // 캐릭터의 위치나 상태가 변경될 때 호출
   sendCharacterData(message?: string) {
     const currentUserId = localStorage.getItem('OVtoken');
+
+    const now = Date.now();
+    if (now - this.lastSentTime < 20) { // 마지막으로 데이터를 보낸 후 100ms가 지나지 않았다면 리턴
+      return;
+    }
 
     const dataToSend = {
       id: currentUserId,
       position: { x: this.character?.x || 0, y: this.character?.y || 0 },
       state: this.sittingOnChair, //의자에 앉아 있으면 true 아니면 false
       type: localStorage.getItem('character'),
-      chat: message,
+      direction: this.character?.anims.currentAnim?.key,  // 현재 애니메이션 상태
+      frame: this.character?.anims.currentFrame?.index || 2,       // 현재 프레임 번호
     };
     // const stompClientRef:Client|null = null;
     
@@ -567,6 +576,7 @@ export class Lsize1Scene extends Phaser.Scene {
         destination:`/sub/channel/${sessionName}`,
         body:JSON.stringify(dataToSend)
       })
+      this.lastSentTime = now;
     }
   }
 
@@ -578,9 +588,11 @@ export class Lsize1Scene extends Phaser.Scene {
   
   update() {
     const currentPlayerPosition = { x: this.character!.x, y: this.character!.y };
+    
 
     if (!this.prevPosition || (this.prevPosition.x !== currentPlayerPosition.x || this.prevPosition.y !== currentPlayerPosition.y)) {
         this.sendCharacterData();
+        this.prevPosition = currentPlayerPosition;
     }
     if(store.getState().isAllowMove && this.cursors && this.character && this.sittingOnChair){
       if (this.character.anims.currentAnim) {

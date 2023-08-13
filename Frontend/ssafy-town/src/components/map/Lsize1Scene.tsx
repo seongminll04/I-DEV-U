@@ -576,7 +576,6 @@ export class Lsize1Scene extends Phaser.Scene {
         destination:`/sub/channel/${sessionName}`,
         body:JSON.stringify(dataToSend)
       })
-      console.log(`Data sent times`);  // 전송 횟수를 로그에 출력
       this.lastSentTime = now;
     }
   }

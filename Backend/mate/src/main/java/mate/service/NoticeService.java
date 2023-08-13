@@ -9,7 +9,6 @@ import mate.domain.notice.NoticeBoardType;
 import mate.domain.user.User;
 import mate.dto.notice.NoticeDto;
 import mate.repository.user.UserRepository;
-import org.hibernate.usertype.UserType;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -63,11 +62,15 @@ public class NoticeService {
 	}
 
 	// 검색어를 사용한 리스트 조회(제목)
+	public List<NoticeBoard> listNoticeByKeyword(String keyWord) {
+		return noticeRepository.findByTitleContainingOrContentContaining(keyWord, keyWord);
+	}
+
 	public List<NoticeBoard> listNoticeByTitle(String keyWord) {
-		return noticeRepository.findNoticeByTitleContainingOrderByIdxDesc(keyWord);
+		return noticeRepository.findByTitleContainingOrderByIdxDesc(keyWord);
 	}
 
 	public List<NoticeBoard> listNoticeByContent(String keyWord) {
-		return noticeRepository.findNoticeByContentContainingOrderByIdxDesc(keyWord);
+		return noticeRepository.findByContentContainingOrderByIdxDesc(keyWord);
 	}
 }

@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import follow_css from './7follow.module.css'
 import axios from 'axios';
 
-import { useDispatch } from 'react-redux';
-import { setAllowMove } from '../../store/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAllowMove, setModal } from '../../store/actions';
+import { AppState } from '../../store/state';
+import EnterChatF from '../enter/enterchat';
+import EnterCamF from '../enter/entercam';
 
 interface FollowUser {
   userIdx: number;
@@ -15,6 +18,10 @@ const Follow: React.FC = () => {
   const [myFollowList, setMyFollowList] = useState<FollowUser[]>([]);
   const dispatch = useDispatch()
   const [inputvalue, setinputvalue] = useState<string>('');
+  const [requestidx, setrequestidx] = useState<number>(0);
+  const [requestname, setrequestname] = useState<string>('');
+  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);//사이드바 오픈여부
+
   useEffect(() => {
     const userToken = localStorage.getItem('userToken');
     const userIdxStr = localStorage.getItem('userIdx');
@@ -58,7 +65,6 @@ const Follow: React.FC = () => {
       <div className={follow_css.search}>
         <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown} value={inputvalue} onChange={(e)=>setinputvalue(e.target.value)}
           onFocus={() => dispatch(setAllowMove(false))} onBlur={() => dispatch(setAllowMove(true))} />
-        {/* <button>검색</button> */}
       </div>
       <hr style={{ width: '75%', color: 'black' }} />
 
@@ -74,8 +80,8 @@ const Follow: React.FC = () => {
                   <p>{follow.userIntro}</p>
                 </div>
                 <div>
-                  <button className={follow_css.profilebtn} onClick={()=>{}}>채팅</button>
-                  <button className={follow_css.profilebtn}>화상</button>
+                  <button className={follow_css.profilebtn} onClick={()=>{setrequestname(follow.userName);setrequestidx(follow.userIdx); dispatch(setModal('팔로우채팅'))}}>채팅</button>
+                  <button className={follow_css.profilebtn} onClick={()=>{setrequestname(follow.userName);setrequestidx(follow.userIdx); dispatch(setModal('팔로우화상'))}}>화상</button>
                 </div>
               </div>
               <hr />
@@ -89,6 +95,9 @@ const Follow: React.FC = () => {
           }
         })}
       </div>
+      {isModalOpen==='팔로우채팅' ? <EnterChatF sendusername={requestname} senduserIdx={requestidx} />
+      :isModalOpen==='팔로우화상' ? <EnterCamF sendusername={requestname} senduserIdx={requestidx} />
+      :<></>}
     </div>
   );
 };

@@ -18,11 +18,13 @@ interface userProps {
   techList: string[]
 }
 
+
 const MateDetail: React.FC<Props> = ({ userIdx }) => {
   const dispatch = useDispatch()
   const [mateUser, setMateUser] = useState<userProps>()
   const stompClientRef = React.useRef<Client | null>(null);
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
+  const [Follow, setFollow] = useState(false);
   useEffect(() => {
     const userToken = localStorage.getItem('userToken')
     axios({
@@ -42,7 +44,64 @@ const MateDetail: React.FC<Props> = ({ userIdx }) => {
         }
       })
       .catch(err => console.log(err))
+
   }, [userIdx])
+
+  useEffect(()=>{
+    const userToken = localStorage.getItem('userToken')
+    const userIdxStr=localStorage.getItem('userIdx')
+    const userIndex = userIdxStr ? parseInt(userIdxStr,10): null
+    axios({
+      method: 'get',
+      url: `https://i9b206.p.ssafy.io:9090/user/getFollowList/${userIndex}`,
+      headers: {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+      .then(res => {
+        if (res.data.data && res.data.data.data.find((user:any)=> user.followIdx === userIdx)) {
+          setFollow(true)
+        }
+        else {setFollow(false)}
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  },[userIdx])
+
+  const onfollow = () => {
+    const userIdxStr=localStorage.getItem('userIdx')
+    const userIndex = userIdxStr ? parseInt(userIdxStr,10): null
+    const userToken = localStorage.getItem('userToken')
+    if (Follow) {
+      axios({
+        method:'delete',
+        url: `https://i9b206.p.ssafy.io:9090/user/unfollow`,
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        },
+        data :{
+          userIdx:userIndex,
+          followIdx:userIdx
+        }
+      })
+      .then(()=>setFollow(false))
+    }
+    else {
+      axios({
+        method:'post',
+        url: `https://i9b206.p.ssafy.io:9090/user/follow`,
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        },
+        data :{
+          userIdx:userIndex,
+          followIdx:userIdx
+        }
+      })
+      .then(()=>setFollow(true))
+    }
+  }
 
   const sendrequest = () => {
     const senduserIdxStr = localStorage.getItem('userIdx')
@@ -75,7 +134,8 @@ const MateDetail: React.FC<Props> = ({ userIdx }) => {
               <img src="assets/default_profile.png" alt="" style={{ width: '100px', height: '100px' }} />
               <p>나이 : oo</p>
               <p>성별 : oo</p>
-              <button>팔로우</button>
+              { Follow ? <button onClick={onfollow}>언팔로우</button>:<button onClick={onfollow}>팔로우</button>}
+              
             </div>
             <div style={{width:'65%', margin:'0 20px', boxSizing:'border-box'}}>
               <h2>자기소개 : {mateUser.intro}</h2>

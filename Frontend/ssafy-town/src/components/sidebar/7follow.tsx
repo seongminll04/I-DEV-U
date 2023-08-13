@@ -13,9 +13,8 @@ interface FollowUser {
 
 const Follow: React.FC = () => {
   const [myFollowList, setMyFollowList] = useState<FollowUser[]>([]);
-
   const dispatch = useDispatch()
-
+  const [inputvalue, setinputvalue] = useState<string>('');
   useEffect(() => {
     const userToken = localStorage.getItem('userToken');
     const userIdxStr = localStorage.getItem('userIdx');
@@ -29,14 +28,15 @@ const Follow: React.FC = () => {
       },
     })
       .then(res => {
-        // console.log(res.data);
-        console.log(res.data.data.data)
-        setMyFollowList(res.data.data.data)
+        if (res.data.data){
+          console.log(res.data.data.data)
+          setMyFollowList(res.data.data.data)
+        }
       })
       .catch(err => {
         console.log(err);
       })
-  })
+  },[])
 
   // input 방향키 살리기
   const handlekeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -54,29 +54,39 @@ const Follow: React.FC = () => {
 
   return (
     <div className='sidebar_modal'>
-      <h1>내 친구목록</h1>
+      <h1>내 팔로우 목록</h1>
       <div className={follow_css.search}>
-        <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown}
+        <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown} value={inputvalue} onChange={(e)=>setinputvalue(e.target.value)}
           onFocus={() => dispatch(setAllowMove(false))} onBlur={() => dispatch(setAllowMove(true))} />
-        <button>검색</button>
+        {/* <button>검색</button> */}
       </div>
       <hr style={{ width: '75%', color: 'black' }} />
 
       <div className={follow_css.scrollbox}>
         {myFollowList.map((follow : FollowUser, index: number) => {
-          return (
-            <div className={follow_css.profile}>
-              <img src="assets/default_profile.png" alt="" />
-              <div className={follow_css.profiledata}>
-                <b>{follow.userName}</b>
-                <p>{follow.userIntro}</p>
+          if (follow.userName.includes(inputvalue)) {
+            return (
+              <>
+              <div className={follow_css.profile}>
+                <img src="assets/default_profile.png" alt="" />
+                <div className={follow_css.profiledata}>
+                  <b>{follow.userName}</b>
+                  <p>{follow.userIntro}</p>
+                </div>
+                <div>
+                  <button className={follow_css.profilebtn} onClick={()=>{}}>채팅</button>
+                  <button className={follow_css.profilebtn}>화상</button>
+                </div>
               </div>
-              <div>
-                <button className={follow_css.profilebtn}>채팅</button>
-                <button className={follow_css.profilebtn}>화상</button>
-              </div>
-            </div>
-          )
+              <hr />
+              </>
+            )
+          }
+          else {
+            return (
+              <div></div>
+            )
+          }
         })}
       </div>
     </div>

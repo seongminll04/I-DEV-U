@@ -110,14 +110,13 @@ const Mypage: React.FC = () => {
       },
     })
       .then(res => {
-        console.log("test")
         setSogae(res.data.isRegistered)
       })
-      .catch((err) => {
+      .catch(() => {
         console.log("소개팅 등록여부 조회 실패")
-        console.log(err)
       })
-  })
+  },[])
+  
   useEffect(() => {
     const userToken = localStorage.getItem('userToken')
     const userIdxStr = localStorage.getItem('userIdx')

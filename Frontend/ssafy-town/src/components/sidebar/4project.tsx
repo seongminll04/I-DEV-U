@@ -1,8 +1,9 @@
 import React, { useState,useEffect } from "react";
 import project_css from "./4project.module.css";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setAllowMove, setModal, setWantPJTId } from '../../store/actions';
 import axios from "axios";
+import { AppState } from "../../store/state";
 
 // const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
 
@@ -25,7 +26,8 @@ const Project: React.FC = () => {
   const dispatch = useDispatch();
   const [projectList, setProjectList] = useState<ProjectDataType[]>([]);
   const [inputvalue, setInputValue] = useState<string>('');
-  
+  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
+
   useEffect(()=>{
     const userToken = localStorage.getItem('userToken')
     axios({
@@ -38,7 +40,7 @@ const Project: React.FC = () => {
     }).then(res => {
         setProjectList(res.data.list)})
     .catch(err => {console.log(err);});
-  },[])
+  },[isModalOpen])
 
   const loaddata = () => {
     const userToken = localStorage.getItem('userToken')

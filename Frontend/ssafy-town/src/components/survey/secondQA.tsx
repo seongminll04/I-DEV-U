@@ -53,6 +53,11 @@ const QAModal: React.FC<Props> = ({survey,onsurvey}) => {
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
+        if (!desiredWorkType || !colorPreference || !musicWhileCoding || !smartphonePreference || !devClothingPreference || !workLifeBalance || !exerciseHabit || !hobby || !namePreference || !petPreference) {
+            alert('모든 질문에 응답해주세요')
+            return;
+        }
+
         const userIdxStr = localStorage.getItem('userIdx')
         const userIdx = userIdxStr ? parseInt(userIdxStr,10) : null
         const userToken = localStorage.getItem('userToken')
@@ -197,6 +202,7 @@ const QAModal: React.FC<Props> = ({survey,onsurvey}) => {
                 <div>
                     <p>🗺️ 나의 지역</p>
                     <select name="myLocation" onChange={(e) => setMyLocation(e.target.value)}>
+                        <option value="" hidden>선택</option>
                         {locationOptions.map(option => (
                             <option key={option} value={option}>
                             {option}
@@ -224,6 +230,7 @@ const QAModal: React.FC<Props> = ({survey,onsurvey}) => {
                 <div>
                     <p>🗺️ 원하는 상대의 지역</p>
                     <select name="desiredLocation" onChange={(e) => setDesiredLocation(e.target.value)}>
+                        <option value="" hidden>선택</option>
                         {locationOptions.map(option => (
                             <option key={option} value={option}>
                             {option}
@@ -242,7 +249,10 @@ const QAModal: React.FC<Props> = ({survey,onsurvey}) => {
                     ))}
                 </div>
                 <br />
-                <button type="button" onClick={() => setCurrentPage(2)}>다음 페이지</button>
+                <button type="button" onClick={() => {
+                    if (desiredAgeRange && desiredFaceShape && myFaceShape && myLocation && desiredLocation && myPay) {
+                        setCurrentPage(2)}
+                    else {alert('모든 질문에 응답해주세요')}}}>다음 페이지</button>
             </form>
         );
     } else {

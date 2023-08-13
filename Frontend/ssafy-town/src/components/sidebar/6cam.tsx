@@ -15,12 +15,11 @@ type ProjectDataType = {
 
 const Cam: React.FC = () => {
   const dispatch = useDispatch()
-  const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
-  // const BACKEND_SERVER_URL = 'https://i9b206.p.ssafy.io:9090';
+  // const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
+  const BACKEND_SERVER_URL = 'https://i9b206.p.ssafy.io:9090';
   const [camList, setCamList] = useState<ProjectDataType[]>([]);
 
-
-          // input 방향키 살리기
+  // input 방향키 살리기
   const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget
     const currentCursorPosition = inputElement.selectionStart || 0;
@@ -35,19 +34,20 @@ const Cam: React.FC = () => {
   }
   // 유저의 화상방 데이터 가져오기
   useEffect(() => {
+    const userIdxStr = localStorage.getItem('userIdx')
+    const userIdx = userIdxStr ? parseInt(userIdxStr,10): null
     const userToken = localStorage.getItem('userToken')
-    axios.get(BACKEND_SERVER_URL + '/video/list',{
+    axios({
+      method:'get',
+      url:BACKEND_SERVER_URL + `/video/list/${userIdx}`,
       headers : {
         Authorization: 'Bearer ' + userToken
       },
-    })
-      .then(res => {
-        setCamList(res.data.list || []);
-        console.log(res);
+    }).then(res => {
+        setCamList(res.data.list);
       })
       .catch(err => {
         console.log(err);
-        setCamList([]);
       });
   },[BACKEND_SERVER_URL]); //BACKEND_SERVER_URL는 환경변수라서 차피 안바뀌는데 에러나와서 그냥 넣어둠
 
@@ -70,7 +70,7 @@ const Cam: React.FC = () => {
       console.log(res);
       
       // meeting 페이지로 이동
-      window.location.href = "https://i9b206.p.ssafy.io/large_meeting";
+      window.location.href = "https://i9b206.p.ssafy.io/meeting";
     })
     .catch(err => {
       console.log(err);

@@ -56,7 +56,7 @@ const MateDetail: React.FC<Props> = ({ userIdx }) => {
         createdAt: now
       };
       stompClientRef.current.publish({
-        destination: `/sub/user/${userIdx}`,
+        destination: `/pub/user`,
         body: JSON.stringify(data),
       });
     }

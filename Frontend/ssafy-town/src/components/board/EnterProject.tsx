@@ -3,8 +3,7 @@ import enter_css from './EnterProject.module.css';
 
 import { useDispatch,useSelector } from 'react-redux';
 import { setModal } from '../../store/actions';
-import {AppState} from '../../store/state';
-
+import { AppState } from '../../store/state';
 import { Client } from '@stomp/stompjs';
 
 const EnterProject: React.FC = () => {
@@ -18,17 +17,21 @@ const EnterProject: React.FC = () => {
     const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
 
     if (userIdx && stompClientRef.current) {
+      const now = new Date()
       const data = {
-        'userIdx': userIdx,
-        'projectIdx': wantPJTId
+        fromIdx:userIdx,
+        type:'PROJECT',
+        createdAt:now,
+        projectIdx: wantPJTId
       };
       stompClientRef.current.publish({
-          destination: '/pub/alert/request',
+        destination: `/pub/request/project`,
           body: JSON.stringify(data),
           });
       }
     dispatch(setModal(null))
   }
+
 
   return (
     <div className={enter_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {

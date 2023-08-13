@@ -56,13 +56,18 @@ function App() {
       if (stompClientRef.current) {
         const userIdxStr = localStorage.getItem('userIdx')
         const userIdx = userIdxStr ? parseInt(userIdxStr,10) : null
-        const subscription = stompClientRef.current.subscribe(`/sub/user/${userIdx}`, function(message: Message) {
+        stompClientRef.current.subscribe(`/sub/user/${userIdx}`, function(message: Message) {
           const newMessage = JSON.parse(message.body);
           setNewmessage(newMessage)
         });
+        stompClientRef.current.subscribe(`/sub/request/project/${userIdx}`, function(message: Message) {
+          const newMessage = JSON.parse(message.body);
+          console.log(newMessage)
+        });
         return () => {
           if (stompClientRef.current) {
-            subscription.unsubscribe();
+            stompClientRef.current.unsubscribe(`/sub/user/${userIdx}`)
+            stompClientRef.current.unsubscribe(`/sub/request/project/${userIdx}`)
           }
         };
       }

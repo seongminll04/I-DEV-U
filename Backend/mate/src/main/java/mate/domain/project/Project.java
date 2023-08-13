@@ -33,7 +33,7 @@ public class Project {
 
 	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(name = "user_idx")
+	@JoinColumn(name = "manager_idx")
 	private User manager;
 
 	private String title;

@@ -52,17 +52,17 @@ public class ProjectService {
 			.project(project)
 			.user(user).build());
 
-		List<ProjectTech> techs = new ArrayList<>();
+//		List<ProjectTech> techs = new ArrayList<>();
 
 		// 일단 비어있는 projectTechDto의 project에 방금 생성된 project 삽입
-		for (ProjectTech tech : projectDto.getTechList()) {
-			techs.add(ProjectTech.builder()
-				.project(project)
-				.tech(tech.getTech())
-				.build());
-		}
+//		for (ProjectTech tech : projectDto.getTechList()) {
+//			techs.add(ProjectTech.builder()
+//				.project(project)
+//				.tech(tech.getTech())
+//				.build());
+//		}
 
-		projectTechRepository.saveAll(techs);
+//		projectTechRepository.saveAll(techs);
 
 		List<ProjectLanguage> languages = new ArrayList<>();
 

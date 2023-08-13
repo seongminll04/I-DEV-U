@@ -17,6 +17,9 @@ public interface MatchRepository extends JpaRepository<MatchAnswer, Integer> {
 		+ "and (m.surveyIdx >= 4 AND m.surveyIdx <= 16)")
 	List<MatchAnswer> findByUser(@Param("userIdx") Integer userIdx);
 
+	@Query("select m.tag from MatchAnswer m where m.user.idx = :userIdx and m.surveyIdx = 1")
+	Object findFaceByUserIdx(@Param("userIdx") Integer userIdx);
+
 	@Query("select m from MatchAnswer m where m.user.idx = :userIdx")
 	List<MatchAnswer> findAllByUserIdx(@Param("userIdx") Integer userIdx);
 
@@ -27,7 +30,7 @@ public interface MatchRepository extends JpaRepository<MatchAnswer, Integer> {
 
 	// 내가 원하는 상대방에 관한 설문을 바탕으로 상대방 유저의 설문과 비교함
 	@Query(
-		"SELECT ma.user.idx as userIdx, ma.user.nickname as nickname, ROUND((COUNT(*) / :size) * 100) AS percent " +
+		"SELECT ma.user.idx as userIdx, ma.user.nickname as nickname, ROUND((COUNT(*) / :size) * 100) AS percent, ma.user.name as name " +
 			"FROM MatchAnswer ma " +
 			"WHERE ma.tag IN (:tag) and (ma.surveyIdx != 4 and ma.surveyIdx != 5 and ma.surveyIdx != 6) " +
 			"GROUP BY ma.user.idx " +

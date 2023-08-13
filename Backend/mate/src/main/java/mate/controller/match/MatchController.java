@@ -36,16 +36,47 @@ public class MatchController {
     private final MatchRepository matchRepository;
     private final MatchUserRepository matchUserRepository;
 
+    @GetMapping("/survey/{userIdx}")
+    public ResponseEntity<Map<String, Object>> checkSurvey(@PathVariable("userIdx") int userIdx) {
+        Map<String, Object> map = new HashMap<>();
+
+        List<MatchAnswer> matchAnswer = matchRepository.findAllByUserIdx(userIdx);
+
+        if (!matchAnswer.isEmpty()) {
+            map.put("resmsg", "설문 했음");
+        } else {
+            map.put("resmsg", "설문 안함");
+        }
+
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/{userIdx}")
+    public ResponseEntity<Map<String, Object>> isRegistered(@PathVariable("userIdx") int userIdx) {
+        Map<String, Object> map = new HashMap<>();
+
+        User user = userRepository.findByIdx(userIdx).get();
+        Optional<MatchUser> matchUser = matchUserRepository.findByUser(user);
+
+        if (matchUser.isPresent()) {
+            map.put("resmsg", "등록 했음");
+        } else {
+            map.put("resmsg", "등록 안함");
+        }
+        return ResponseEntity.ok(map);
+    }
+
+
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> registerSurvey(@RequestBody MatchSurvey matchSurvey) {
         Map<String, Object> map = new HashMap<>();
 
-//        try {
+        try {
             matchService.registerSurvey(matchSurvey);
             map.put("resmsg", "소개팅 등록 성공");
-//        } catch (Exception e) {
-//            map.put("resmsg", "소개팅 등록 실패");
-//        }
+        } catch (Exception e) {
+            map.put("resmsg", "소개팅 등록 실패");
+        }
 
         return ResponseEntity.ok(map);
     }
@@ -60,21 +91,6 @@ public class MatchController {
             map.put("resmsg", "설문 수정 완료");
         } catch (Exception e) {
             map.put("resmsg", "설문 수정 실패");
-        }
-
-        return ResponseEntity.ok(map);
-    }
-
-    @GetMapping("/survey/{userIdx}")
-    public ResponseEntity<Map<String, Object>> checkSurvey(@PathVariable("userIdx") int userIdx) {
-        Map<String, Object> map = new HashMap<>();
-
-        List<MatchAnswer> matchAnswer = matchRepository.findAllByUserIdx(userIdx);
-
-        if (!matchAnswer.isEmpty()) {
-            map.put("resmsg", "설문 했음");
-        } else {
-            map.put("resmsg", "설문 안함");
         }
 
         return ResponseEntity.ok(map);
@@ -140,20 +156,5 @@ public class MatchController {
         }
 
         return ResponseEntity.ok(map);
-    }
-
-    @GetMapping("/{userIdx}")
-    public ResponseEntity<Map<String, Object>> isRegistered(@PathVariable("userIdx") int userIdx) {
-        Map<String, Object> map = new HashMap<>();
-
-        User user = userRepository.findByIdx(userIdx).get();
-        Optional<MatchUser> matchUser = matchUserRepository.findByUser(user);
-        if (matchUser.isPresent()) {
-            map.put("isRegistered", true);
-            return ResponseEntity.ok(map);
-        } else {
-            map.put("isRegistered", false);
-            return ResponseEntity.ok(map);
-        }
     }
 }

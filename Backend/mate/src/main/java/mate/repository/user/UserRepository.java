@@ -1,5 +1,6 @@
 package mate.repository.user;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,5 +33,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Modifying
 	@Transactional
 	void deleteByIdx(Integer idx);
+
+	@Query("select u.birth from User u where u.idx = :userIdx")
+	LocalDate findBirthByUserId(@Param("userIdx") Integer userIdx);
 
 }

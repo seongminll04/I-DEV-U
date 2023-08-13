@@ -23,6 +23,8 @@ import mate.repository.match.MatchRepository;
 import mate.repository.match.MatchUserRepository;
 import mate.repository.user.UserRepository;
 
+import javax.persistence.Id;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -68,10 +70,6 @@ public class MatchService {
 	public List<MatchDto> listMatchUser(int userIdx) {
 		List<MatchAnswer> answers = matchRepository.findByUser(userIdx);
 
-		for (MatchAnswer ma : answers) {
-			System.out.println(ma.getTag());
-		}
-
 		User user = userRepository.findByIdx(userIdx).get();
 
 		List<String> tag = new ArrayList<>();
@@ -91,9 +89,11 @@ public class MatchService {
 			Integer Idx = (Integer)result[0];
 			String nickname = (String)result[1];
 			Long percent = (Long)result[2];
+			String name = (String)result[3];
+			String face = (String)matchRepository.findFaceByUserIdx(Idx);
 
 			// 생년월일 데이터베이스로부터 가져오는 부분을 시뮬레이션합니다.
-			LocalDate birthDateFromDatabase = user.getBirth(); // 생년월일 설정
+			LocalDate birthDateFromDatabase = userRepository.findBirthByUserId(Idx);
 
 			// 현재 날짜 가져오기
 			LocalDate currentDate = LocalDate.now();
@@ -104,12 +104,15 @@ public class MatchService {
 
 			MatchDto matchDto = new MatchDto();
 			matchDto.setUserIdx(Idx);
+			matchDto.setName(name);
 			matchDto.setNickname(nickname);
-			matchDto.setFace("고양이");
+			matchDto.setFace(face);
 			matchDto.setPercent(percent);
 			matchDto.setAge(age);
 
 			output.add(matchDto);
+
+			System.out.println(matchDto);
 		}
 
 		return output;
@@ -119,6 +122,8 @@ public class MatchService {
 		User user = userRepository.findByIdx(userIdx).get();
 		List<MatchAnswer> matchAnswer = matchRepository.findAllByUserIdx(userIdx);
 		List<BasicAnswer> basicAnswer = basicRepository.findByUser(userIdx);
+
+		System.out.println(basicAnswer.size());
 
 		MatchDetailDto matchDetailDto = new MatchDetailDto();
 

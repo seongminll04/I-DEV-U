@@ -19,90 +19,88 @@ import mate.repository.user.UserRepository;
 @RequiredArgsConstructor
 public class PartnerService {
 
-	private final PartnerRepository partnerRepository;
-	private final UserRepository userRepository;
-	private final BasicRepository basicRepository;
+    private final PartnerRepository partnerRepository;
+    private final UserRepository userRepository;
+    private final BasicRepository basicRepository;
 
-	public List<PartnerDto> listPartner(List<String> input) {
+    public List<PartnerDto> listPartner(List<String> input) {
 
-		List<Object> partners = partnerRepository.listPartner(input, input.size());
+        List<Object> partners = partnerRepository.listPartner(input, input.size());
 
-		List<PartnerDto> list = new ArrayList<>();
+        List<PartnerDto> list = new ArrayList<>();
 
-		for (Object o : partners) {
-			Object[] result = (Object[])o;
-			// Assuming the order of elements in the array corresponds to the order of fields in PartnerDto
-			String name = (String)result[0];
-			String nickname = (String)result[1];
-			Long percent = (Long)result[2];
-			Integer userIdx = (Integer)result[3];
+        for (Object o : partners) {
+            Object[] result = (Object[]) o;
+            // Assuming the order of elements in the array corresponds to the order of fields in PartnerDto
+            String name = (String) result[0];
+            String nickname = (String) result[1];
+            Long percent = (Long) result[2];
+            Integer userIdx = (Integer) result[3];
 
-			List<String> language = basicRepository.findLanguage(userIdx);
+            List<String> language = basicRepository.findLanguage(userIdx);
 
-			PartnerDto partnerDto = new PartnerDto();
-			partnerDto.setUserIdx(userIdx);
-			partnerDto.setName(name);
-			partnerDto.setNickname(nickname);
-			partnerDto.setPercent(percent);
-			partnerDto.setLanguageList(language);
+            PartnerDto partnerDto = new PartnerDto();
+            partnerDto.setUserIdx(userIdx);
+            partnerDto.setName(name);
+            partnerDto.setNickname(nickname);
+            partnerDto.setPercent(percent);
+            partnerDto.setLanguageList(language);
 
-			list.add(partnerDto);
-		}
+            list.add(partnerDto);
+        }
 
-		return list;
-	}
+        return list;
+    }
 
-	public List<PartnerDto> allPartner() {
-		List<Object> partners = partnerRepository.allPatrner();
+    public List<PartnerDto> allPartner() {
+        List<User> partners = userRepository.findAll();
 
-		List<PartnerDto> list = new ArrayList<>();
+        List<PartnerDto> list = new ArrayList<>();
 
-		for (Object o : partners) {
-			Object[] result = (Object[])o;
+        for (User u : partners) {
+            // Assuming the order of elements in the array corresponds to the order of fields in PartnerDto
+            String name = u.getName();
+            String nickname = u.getNickname();
+            Integer userIdx = u.getIdx();
 
-			// Assuming the order of elements in the array corresponds to the order of fields in PartnerDto
-			String name = (String)result[0];
-			String nickname = (String)result[1];
-			Integer userIdx = (Integer)result[2];
+            List<String> language = basicRepository.findLanguage(userIdx);
 
-			List<String> language = basicRepository.findLanguage(userIdx);
+            PartnerDto partnerDto = new PartnerDto();
+            partnerDto.setUserIdx(userIdx);
+            partnerDto.setName(name);
+            partnerDto.setNickname(nickname);
+            partnerDto.setLanguageList(language);
 
-			PartnerDto partnerDto = new PartnerDto();
-			partnerDto.setUserIdx(userIdx);
-			partnerDto.setName(name);
-			partnerDto.setNickname(nickname);
-			partnerDto.setLanguageList(language);
+            list.add(partnerDto);
+        }
 
-			list.add(partnerDto);
-		}
+        return list;
+    }
 
-		return list;
-	}
+    public DetailDto detailPartner(int userIdx) {
+        List<Object> techs = partnerRepository.findTech(userIdx);
 
-	public DetailDto detailPartner(int userIdx) {
-		List<Object> techs = partnerRepository.findTech(userIdx);
+        List<String> techList = new ArrayList<>();
 
-		List<String> techList = new ArrayList<>();
+        for (Object o : techs) {
+            Object[] result = (Object[]) o;
 
-		for (Object o : techs) {
-			Object[] result = (Object[])o;
+            String tech = (String) result[1];
 
-			String tech = (String)result[1];
+            techList.add(tech);
+        }
 
-			techList.add(tech);
-		}
+        User user = userRepository.findById(userIdx).get();
 
-		User user = userRepository.findById(userIdx).get();
+        DetailDto detailPartner = new DetailDto();
 
-		DetailDto detailPartner = new DetailDto();
+        detailPartner.setUserIdx(user.getIdx());
+        detailPartner.setName(user.getName());
+        detailPartner.setNickname(user.getNickname());
+        detailPartner.setIntro(user.getIntro());
+        detailPartner.setTechList(techList);
 
-		detailPartner.setUserIdx(user.getIdx());
-		detailPartner.setName(user.getName());
-		detailPartner.setNickname(user.getNickname());
-		detailPartner.setIntro(user.getIntro());
-		detailPartner.setTechList(techList);
-
-		return detailPartner;
-	}
+        return detailPartner;
+    }
 
 }

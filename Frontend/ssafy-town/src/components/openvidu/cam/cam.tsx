@@ -201,7 +201,8 @@ class Cam extends Component<{}, AppState> {
                     session.getStreams().forEach((stream: any) => {
                         if (!this.state.subscribers.some(sub => sub.stream.streamId === stream.streamId)) {
                             const subscriber = this.OV.subscribe(stream, undefined);
-                            existingSubscribers.push(subscriber);
+                            const existingSubscribers = [...this.state.subscribers, subscriber];
+                            this.setState({ subscribers: existingSubscribers });
                         }
                     });
                     this.setState({ subscribers: existingSubscribers });

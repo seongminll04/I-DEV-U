@@ -286,7 +286,7 @@ public class AlarmService {
 
 
     public Result findByFrom(Integer userIdx) {
-        Optional<List<Alarm>> findAlarm = alarmRepository.findFrom(userIdx, "N");
+        Optional<List<Alarm>> findAlarm = alarmRepository.findFrom(userIdx);
 
         if (findAlarm.isEmpty()){
             AlarmResponse alarmResponse = new AlarmResponse();
@@ -297,7 +297,7 @@ public class AlarmService {
     }
 
     public Result findByTo(Integer userIdx) {
-        Optional<List<Alarm>> findAlarm = alarmRepository.findTo(userIdx, "N");
+        Optional<List<Alarm>> findAlarm = alarmRepository.findTo(userIdx);
 
         if (findAlarm.isEmpty()){
             AlarmResponse alarmResponse = new AlarmResponse();

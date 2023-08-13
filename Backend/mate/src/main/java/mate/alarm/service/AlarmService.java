@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -286,24 +287,53 @@ public class AlarmService {
 
 
     public Result findByFrom(Integer userIdx) {
-        Optional<List<Alarm>> findAlarm = alarmRepository.findFrom(userIdx);
-
-        if (findAlarm.isEmpty()){
+        List<Alarm> alarmList = alarmRepository.findFrom(userIdx)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+        if (alarmList.isEmpty()){
             AlarmResponse alarmResponse = new AlarmResponse();
             return Result.builder().data(alarmResponse).status(ResponseEntity.ok("받은 알림 없음")).build();
         }else{
-            return Result.builder().build();
+            List<AlarmResponse> list = new ArrayList<>();
+            for (Alarm alarm : alarmList) {
+
+                User findFromUser = userRepository.findByIdx(alarm.getFromIdx())
+                        .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+
+                User findToUser = userRepository.findByIdx(alarm.getToIdx())
+                        .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+                UserResponse fromUser = UserResponse.from(findFromUser);
+                UserResponse toUser = UserResponse.from(findToUser);
+
+                AlarmResponse response = AlarmResponse.from(alarm, fromUser, toUser);
+                list.add(response);
+            }
+            return Result.builder().data(list).status(ResponseEntity.ok("알림")).build();
         }
     }
 
     public Result findByTo(Integer userIdx) {
-        Optional<List<Alarm>> findAlarm = alarmRepository.findTo(userIdx);
+        List<Alarm> alarmList = alarmRepository.findTo(userIdx)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
-        if (findAlarm.isEmpty()){
+        if (alarmList.isEmpty()){
             AlarmResponse alarmResponse = new AlarmResponse();
             return Result.builder().data(alarmResponse).status(ResponseEntity.ok("보낸 알림 없음")).build();
         }else{
-            return Result.builder().build();
+            List<AlarmResponse> list = new ArrayList<>();
+            for (Alarm alarm : alarmList) {
+
+                User findFromUser = userRepository.findByIdx(alarm.getFromIdx())
+                        .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+
+                User findToUser = userRepository.findByIdx(alarm.getToIdx())
+                        .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+                UserResponse fromUser = UserResponse.from(findFromUser);
+                UserResponse toUser = UserResponse.from(findToUser);
+
+                AlarmResponse response = AlarmResponse.from(alarm, fromUser, toUser);
+                list.add(response);
+            }
+            return Result.builder().data(list).status(ResponseEntity.ok("알림")).build();
         }
     }
 

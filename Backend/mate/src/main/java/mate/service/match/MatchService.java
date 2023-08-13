@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import mate.domain.basic.BasicAnswer;
 import mate.dto.match.MatchDetailDto;
@@ -87,6 +88,11 @@ public class MatchService {
 
 			// Assuming the order of elements in the array corresponds to the order of fields in PartnerDto
 			Integer Idx = (Integer)result[0];
+			// 자기 자신 제외
+			if (Objects.equals(Idx, userIdx)) {
+				continue;
+			}
+
 			String nickname = (String)result[1];
 			Long percent = (Long)result[2];
 			String name = (String)result[3];

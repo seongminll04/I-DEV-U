@@ -25,6 +25,7 @@ const AllNotice: React.FC = () => {
   const [searchlocation, setSearchloaction] = useState<string>("전체")
 
   useEffect(() => {
+    const userToken = localStorage.getItem('userToken')
     axios({
       method: 'get',
       url: 'https://i9b206.p.ssafy.io:9090/notice/list',

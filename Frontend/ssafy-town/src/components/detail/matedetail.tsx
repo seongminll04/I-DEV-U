@@ -56,30 +56,40 @@ const MateDetail: React.FC<Props> = ({ userIdx }) => {
         createdAt: now
       };
       stompClientRef.current.publish({
-        destination: `/pub/user`,
+        destination: `/sub/user/${userIdx}`,
         body: JSON.stringify(data),
       });
+      alert('채팅신청 완료')
+      dispatch(setModal(null))
     }
   }
-
 
   return (
     <div className={detail_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => { if (e.target === e.currentTarget) { dispatch(setModal(null)) } }} >
       <div className={detail_css.modal}>
         <h1>동료 상세정보</h1>
         {mateUser ?
-          <div>
-            {mateUser?.nickname}
-            <br />
-            {mateUser?.intro}
-            <br />
-            {mateUser?.techList.map((tech) => (
-              tech + '    '
-            ))}
-            <br /><br /><br />
-            <button onClick={sendrequest}>채팅 신청</button>
+          <div style={{display:'flex', width:'90%', margin:'auto'}}>
+            <div style={{width:'35%', borderRight:'2px solid black',}}>
+              <h1>{mateUser.nickname}</h1>  
+              <img src="assets/default_profile.png" alt="" style={{ width: '100px', height: '100px' }} />
+              <p>나이 : oo</p>
+              <p>성별 : oo</p>
+              <button>팔로우</button>
+            </div>
+            <div style={{width:'65%', margin:'0 20px', boxSizing:'border-box'}}>
+              <h2>자기소개 : {mateUser.intro}</h2>
+              <h2>기술스택 : {mateUser.techList.map((tech) => (
+                tech + ' '
+              ))}
+              </h2>
+              <br />
+              <h1>일치율</h1>
+              <h2>ㅁㅁㅁ 님께서 선택하신 조건과 OOO 님의 일치율은 XX% 입니다</h2>
+              <br />
+              <button onClick={sendrequest}>채팅 신청</button>
+            </div>
           </div>
-
           :
           <div>
             <h1>유저 조회 실패</h1>

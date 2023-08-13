@@ -55,10 +55,14 @@ function App() {
       if (stompClientRef.current) {
         const userIdxStr = localStorage.getItem('userIdx')
         const userIdx = userIdxStr ? parseInt(userIdxStr,10) : null
+
+        // 채팅 신청에 대한 반응
         stompClientRef.current.subscribe(`/sub/user/${userIdx}`, function(message: Message) {
           const newMessage = JSON.parse(message.body);
+          console.log(newMessage)
           setNewmessage(newMessage)
         });
+        // 프로젝트 가입요청에 대한 반응
         stompClientRef.current.subscribe(`/sub/request/project/${userIdx}`, function(message: Message) {
           const newMessage = JSON.parse(message.body);
           console.log(newMessage)

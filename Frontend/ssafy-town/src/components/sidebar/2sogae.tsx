@@ -23,19 +23,7 @@ const Sogae: React.FC = () => {
   const [userdetail,setUserDetail]=useState<number>(0);
   // const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [survey,setServey]=useState<boolean>(false);
-  const [users, setUsers] = useState<User[]>([
-    { userIdx:1, nickname: "홍길동1", face:'고양이상', age:25 ,percent: 95 },])
-    // { name: "홍길동2", matchRate: 90 },
-    // { name: "홍길동3", matchRate: 87 },
-    // { name: "홍길동4", matchRate: 89 },
-    // { name: "홍길동5", matchRate: 91 },
-    // { name: "홍길동6", matchRate: 85 },
-    // { name: "홍길동7", matchRate: 88 },
-    // { name: "홍길동8", matchRate: 92 },
-    // { name: "홍길동9", matchRate: 90 },
-    // { name: "홍길동10", matchRate: 94 },
-    // { name: "홍길동11", matchRate: 93 }
-  // ])
+  const [users, setUsers] = useState<User[]>([])
   // .sort((a, b) => b.matchRate - a.matchRate));
 
   useEffect(() => {

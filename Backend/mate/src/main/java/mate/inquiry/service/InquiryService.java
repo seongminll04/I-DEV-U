@@ -55,7 +55,7 @@ public class InquiryService {
 
         User user = userRepository.findByIdx(inquiry.getUserIdx()).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
-        if (!Objects.equals(user.getIdx(), userIdx)) return Result.builder().status("사용자가 등록한 문의만 읽을 수 있습니다.").build();
+        if (!Objects.equals(user.getIdx(), userIdx)) return Result.builder().status(ResponseEntity.ok("사용자가 등록한 문의만 읽을 수 있습니다.")).build();
 
         InquiryResponse response = InquiryResponse.from(inquiry, user);
 
@@ -74,7 +74,7 @@ public class InquiryService {
         Inquiry inquiry = inquiryRepository.findDetail(request.getInquiryIdx())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
-        if(inquiry.getUserIdx() != request.getUserIdx()) return Result.builder().status("본인 문의만 수정할 수 있습니다.").build();
+        if(inquiry.getUserIdx() != request.getUserIdx()) return Result.builder().status(ResponseEntity.ok("본인 문의만 수정할 수 있습니다.")).build();
 
         inquiry.updateInquiry(request);
 
@@ -88,7 +88,7 @@ public class InquiryService {
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         User user = userRepository.findByIdx(request.getUserIdx()).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
-        if (user.getRole() == Role.USER) return Result.builder().status("ADMIN 계정만 등록할 수 있습니다.").build();
+        if (user.getRole() == Role.USER) return Result.builder().status(ResponseEntity.ok("ADMIN 계정만 등록할 수 있습니다.")).build();
 
         inquiry.answer(request);
         return Result.builder().data(inquiry).status(ResponseEntity.ok("답변 성공")).build();

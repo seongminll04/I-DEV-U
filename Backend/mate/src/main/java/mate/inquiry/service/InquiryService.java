@@ -64,6 +64,8 @@ public class InquiryService {
 
     @Transactional
     public Result delete(Integer idx, Integer userIdx) {
+        System.out.println("idx = " + idx);
+        System.out.println("userIdx = " + userIdx);
         Inquiry inquiry = inquiryRepository.findDetail(idx)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         if (!Objects.equals(inquiry.getUserIdx(), userIdx)) Result.builder().status(ResponseEntity.ok("사용자가 등록한 문의만 삭제할 수 있습니다..")).build();

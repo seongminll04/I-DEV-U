@@ -3,6 +3,7 @@ package mate.chat.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mate.alarm.dto.ChatRoomResponse;
 import mate.chat.domain.*;
 import mate.chat.dto.*;
 import mate.controller.Result;
@@ -42,7 +43,7 @@ public class ChatRoomService {
 
         List<ChatRoom> findChatRooms = chatRoomRepository.findWithUser(user);
         return findChatRooms.stream()
-                .map(chatRoom -> ChatRoomResponse.of(chatRoom))
+                .map(chatRoom -> mate.alarm.dto.ChatRoomResponse.from(chatRoom))
                 .collect(Collectors.toList());
     }
 
@@ -111,12 +112,12 @@ public class ChatRoomService {
     }
 
     public Result findAll() {
-        List<ChatRoomListResponse> chatRoomList = chatRoomRepository.findAll().stream()
-                .map(chatRoom -> ChatRoomListResponse.from(chatRoom))
+        List<mate.alarm.dto.ChatRoomResponse> response = chatRoomRepository.findAll().stream()
+                .map(chatRoom -> mate.alarm.dto.ChatRoomResponse.from(chatRoom))
                 .collect(Collectors.toList());
 
-        if (chatRoomList.isEmpty()) return Result.builder().data(chatRoomList).status(ResponseEntity.ok("채팅방 없음")).build();
-        return Result.builder().data(chatRoomList).status(ResponseEntity.ok("채팅방")).build();
+        if (response.isEmpty()) return Result.builder().data(response).status(ResponseEntity.ok("채팅방 없음")).build();
+        return Result.builder().data(response).status(ResponseEntity.ok("채팅방")).build();
     }
 
 

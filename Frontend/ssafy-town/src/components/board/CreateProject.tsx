@@ -100,7 +100,7 @@ const CreateProject: React.FC = () => {
           data:{
             title:title,
             userIdx:userIdx,
-            OVSession:sessionId
+            ovSession:sessionId
           },
           headers: {
             Authorization: 'Bearer ' + userToken

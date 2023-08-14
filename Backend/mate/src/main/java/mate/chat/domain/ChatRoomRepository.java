@@ -26,12 +26,12 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Integer> {
     List<ChatRoom> findAll();
 
 
-    @Query("select distinct r from ChatRoom r " +
-            "join fetch r.chatRoomUsers u1 " +
-            "join fetch r.chatRoomUsers u2 " +
-            "where (u1.idx = :fromIdx and u2.idx = :toIdx) " +
-            "   or (u1.idx = :toIdx and u2.idx = :fromIdx) " +
-            "   and r.userCount = 2")
-    List<ChatRoom> findChatRoomByTwo(@Param("fromIdx") Integer fromIdx, @Param("toIdx") Integer toIdx);
+//    @Query("select distinct r from ChatRoom r " +
+//            "join fetch r.chatRoomUsers u1 " +
+//            "join fetch r.chatRoomUsers u2 " +
+//            "where (u1.idx = :fromIdx and u2.idx = :toIdx) " +
+//            "   or (u1.idx = :toIdx and u2.idx = :fromIdx) " +
+//            "   and r.chatRoomUsers.size = 2")
+//    List<ChatRoom> findChatRoomByTwo(@Param("fromIdx") Integer fromIdx, @Param("toIdx") Integer toIdx);
 
 }

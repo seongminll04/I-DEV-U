@@ -150,18 +150,18 @@ public class ChatRoomService {
         return Result.builder().data(response).status(ResponseEntity.ok("방 만들어야 함")).build();
     }
 
-    public Result checkChatRoom(Integer fromIdx, Integer toIdx) {
-
-        List<ChatRoom> chatRooms = chatRoomRepository.findChatRoomByTwo(fromIdx, toIdx);
-
-        if (chatRooms.size() > 0){
-            List<mate.alarm.dto.ChatRoomResponse> list = new ArrayList<>();
-            for (ChatRoom chatRoom : chatRooms) {
-                mate.alarm.dto.ChatRoomResponse response = mate.alarm.dto.ChatRoomResponse.from(chatRoom);
-                list.add(response);
-            }
-            return Result.builder().data(list).status(ResponseEntity.ok("채팅방 이미 있음")).build();
-        }
-        return Result.builder().status(ResponseEntity.ok("채팅방 없음")).build();
-    }
+//    public Result checkChatRoom(Integer fromIdx, Integer toIdx) {
+//
+//        List<ChatRoom> chatRooms = chatRoomRepository.findChatRoomByTwo(fromIdx, toIdx);
+//
+//        if (chatRooms.size() > 0){
+//            List<mate.alarm.dto.ChatRoomResponse> list = new ArrayList<>();
+//            for (ChatRoom chatRoom : chatRooms) {
+//                mate.alarm.dto.ChatRoomResponse response = mate.alarm.dto.ChatRoomResponse.from(chatRoom);
+//                list.add(response);
+//            }
+//            return Result.builder().data(list).status(ResponseEntity.ok("채팅방 이미 있음")).build();
+//        }
+//        return Result.builder().status(ResponseEntity.ok("채팅방 없음")).build();
+//    }
 }

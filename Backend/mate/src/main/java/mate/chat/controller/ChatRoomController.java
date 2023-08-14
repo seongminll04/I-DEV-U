@@ -80,12 +80,12 @@ public class ChatRoomController {
         return chatRoomService.checkChatRoomUser(roomIdx, userIdx);
     }
 
-    @GetMapping("/rooms/check")
-    public Result checkChatRoom(@RequestParam("fromIdx") Integer fromIdx,
-                                @RequestParam("toIdx") Integer toIdx){
-
-        return chatRoomService.checkChatRoom(fromIdx, toIdx);
-    }
+//    @GetMapping("/rooms/check")
+//    public Result checkChatRoom(@RequestParam("fromIdx") Integer fromIdx,
+//                                @RequestParam("toIdx") Integer toIdx){
+//
+//        return chatRoomService.checkChatRoom(fromIdx, toIdx);
+//    }
 
 
 }

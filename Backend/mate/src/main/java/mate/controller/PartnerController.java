@@ -18,21 +18,21 @@ public class PartnerController {
 
 	private final PartnerService partnerService;
 
-	@PostMapping("/list/{userIdx}")
+	@PostMapping("/list")
 	public ResponseEntity<Map<String, Object>> listPartner(
-		@RequestBody(required = false) Map<String, List<String>> input, @PathVariable("userIdx") int userIdx) {
+		@RequestBody(required = false) Map<String, List<String>> input) {
 		Map<String, Object> map = new HashMap<>();
 
 		try {
 			if (input != null) {
 				List<String> tagList = input.get("tagList");
 				if (tagList != null) {
-					map.put("userList", partnerService.listPartner(tagList, userIdx));
+					map.put("userList", partnerService.listPartner(tagList));
 				} else {
-					map.put("userList", partnerService.allPartner(userIdx));
+					map.put("userList", partnerService.allPartner());
 				}
 			} else {
-				map.put("userList", partnerService.allPartner(userIdx));
+				map.put("userList", partnerService.allPartner());
 			}
 
 			map.put("resmsg", "동료 리스트 조회 성공");

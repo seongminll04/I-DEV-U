@@ -199,16 +199,15 @@ class Cam extends Component<{}, AppState> {
                     try {
                         const response = await axios.get(`https://i9b206.p.ssafy.io:5000/api/sessions/${sessionId}/streams`);
                         const streamIds = response.data;
-                
-                            // session.streamManagers를 사용하여 스트림을 검색합니다.
-                            session.streamManagers.forEach((streamManager: any) => {
-                                if (streamManager.stream && streamIds.includes(streamManager.stream.streamId)) {
-                                    if (!this.state.subscribers.some(sub => sub.stream.streamId === streamManager.stream.streamId)) {
-                                        const subscriber = session.subscribe(streamManager.stream, undefined);
-                                        existingSubscribers.push(subscriber);
-                                    }
-                                }
-                            });
+                        
+                        // session.streamManagers를 사용하여 스트림을 검색합니다.
+                        streamIds.forEach((streamId: string) => {
+                            const foundStream = session.streamManagers.find((sm: any) => sm.stream && sm.stream.streamId === streamId);
+                            if (foundStream && !this.state.subscribers.some(sub => sub.stream.streamId === foundStream.stream.streamId)) {
+                                const subscriber = session.subscribe(foundStream.stream, undefined);
+                                existingSubscribers.push(subscriber);
+                            }
+                        });
                         this.setState({ subscribers: existingSubscribers });
                     } catch (error) {
                         console.error("Error fetching streams:", error);

@@ -6,16 +6,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+import mate.inquiry.dto.AnswerRequest;
+import mate.inquiry.dto.InquiryRequest;
+import mate.inquiry.dto.InquiryUpdateRequest;
 
 @Entity
 @Getter
-@RequiredArgsConstructor
-@Table(name = "inquiry")
 @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Inquiry {
 
@@ -26,4 +25,24 @@ public class Inquiry {
 	private String title;
 	private String content;
 	private String answer;
+	public static Inquiry createInquiry(InquiryRequest request){
+
+		Inquiry inquiry = new Inquiry();
+		inquiry.userIdx = request.getUserIdx();
+		inquiry.title = request.getTitle();
+		inquiry.content = request.getContent();
+
+		return inquiry;
+	}
+
+	public void updateInquiry(InquiryUpdateRequest request){
+		this.title = request.getTitle();
+		this.content = request.getContent();
+	}
+
+	public void answer(AnswerRequest request){
+		this.answer = request.getAnswer();
+	}
+
+
 }

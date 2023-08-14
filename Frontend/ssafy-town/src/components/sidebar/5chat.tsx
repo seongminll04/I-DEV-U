@@ -43,11 +43,12 @@ import axios from "axios";
         },
       })
         .then((res1) => {
+          console.log(res1.data.data)
           const roomPromises = [];
           for (const room of res1.data.data) {
             const roomPromise = axios({
               method: 'get',
-              url: `https://i9b206.p.ssafy.io:9090/chat/rooms/${room.roomIdx}/last`,
+              url: `https://i9b206.p.ssafy.io:9090/chat/rooms/${room.idx}/last`,
               headers: {
                 Authorization: 'Bearer ' + userToken,
               },

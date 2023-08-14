@@ -60,31 +60,9 @@ const Cam: React.FC = () => {
 
   // 접속 반응 추가하기
   const EnterCam = (sessionId: string) => {
-    const userToken = localStorage.getItem('userToken')
-    axios.get(`${BACKEND_SERVER_URL}/video/enter`, {
-        headers : {
-          Authorization: 'Bearer ' + userToken
-        },
-        params: {
-            sessionId: sessionId,
-        }
-    })
-    .then(res => {
-      const OVsession = res.data.ovSession;  // 백엔드에서 전달받은 토큰
-      
-      localStorage.setItem("OVsession", OVsession);  // 토큰을 로컬 스토리지에 저장
-
-      console.log(res);
-      
-      // meeting 페이지로 이동
-      window.location.href = "https://i9b206.p.ssafy.io/meeting";
-    })
-    .catch(err => {
-      console.log(err);
-    });
+    localStorage.setItem("OVsession", sessionId);  // 토큰을 로컬 스토리지에 저장
+    window.location.href = "https://i9b206.p.ssafy.io/meeting";
   }
-
-  
   
   return (
     <div className='sidebar_modal'>

@@ -2,6 +2,7 @@ package mate.inquiry.service;
 
 import lombok.RequiredArgsConstructor;
 import mate.controller.Result;
+import mate.domain.user.Role;
 import mate.domain.user.User;
 import mate.global.exception.NotFoundException;
 import mate.inquiry.domain.Inquiry;
@@ -78,13 +79,16 @@ public class InquiryService {
         return Result.builder().data(inquiry).status(ResponseEntity.ok("삭제 성공")).build();
     }
 
+    @Transactional
     public Result answer(AnswerRequest request) {
 
         Inquiry inquiry = inquiryRepository.findDetail(request.getInquiryIdx())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
-        inquiry.answer(request);
+        User user = userRepository.findByIdx(request.getUserIdx()).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+        if (user.getRole() == Role.USER) return Result.builder().status("ADMIN 계정만 등록할 수 있습니다.").build();
 
+        inquiry.answer(request);
         return Result.builder().data(inquiry).status(ResponseEntity.ok("답변 성공")).build();
     }
 

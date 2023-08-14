@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class AnswerRequest {
 
     private Integer inquiryIdx;
+    private Integer userIdx;
     private String answer;
 
 }

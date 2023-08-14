@@ -37,4 +37,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Query("select u.birth from User u where u.idx = :userIdx")
 	LocalDate findBirthByUserId(@Param("userIdx") Integer userIdx);
 
+	@Query("select u from User u join fetch u.basicAnswerList where u.idx = :userIdx")
+	Optional<User> findAll(@Param("userIdx") Integer userIdx);
+
+
 }

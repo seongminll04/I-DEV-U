@@ -1,10 +1,9 @@
 package mate.alarm.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import mate.alarm.dto.AlarmChatRequest;
-import mate.alarm.dto.AlarmProjectRequest;
-import mate.alarm.dto.AlarmRequest;
+import mate.alarm.dto.*;
 import mate.alarm.service.AlarmService;
 import mate.controller.Result;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -26,19 +25,68 @@ public class AlarmController {
         return alarmService.createAlarmv2(request);
     }
     //
+    /*
+        채팅방 참가 신청 요청
+     */
+    @MessageMapping("request/chat")
+    public void createChatAlarm(AlarmChatRequest request){
+        alarmService.createChatAlarm(request);
+    }
+
+    /*
+        채팅방 참가 신청 요청 테스트
+     */
+    @PostMapping("/test/request/chat")
+    public Result createChatAlarmTest(@RequestBody AlarmChatRequest request){
+        return alarmService.createChatAlarmv2(request);
+    }
+
+    /*
+    프로젝트 참가 신청 요청
+ */
+    @MessageMapping("/request/project")
+    public void createProjectAlarm(AlarmProjectRequest request){
+        alarmService.createProjectAlarm(request);
+    }
 
 
     /*
-        프로젝트 참가 신청 요청
-     */
-    @MessageMapping("/request/project")
-    public void createProjectAlarm(AlarmProjectRequest alarmProjectRequest){
-        alarmService.createProjectAlarm(alarmProjectRequest);
+    프로젝트 참가 신청 요청 테스트
+ */
+    @PostMapping("/test/request/project")
+    public Result createProjectAlarmTest(@RequestBody AlarmProjectRequest request){
+        return alarmService.createProjectAlarmv2(request);
     }
 
-    @MessageMapping("request/chat")
-    public void createChatAlarm(AlarmChatRequest alarmChatRequest){
-        alarmService.createChatAlarm(alarmChatRequest);
+
+    /*
+        채팅방 초대 신청 요청
+     */
+    @MessageMapping("/invite/chat")
+    public void createChatInviteAlarm(AlarmChatInviteRequest request){
+        alarmService.createChatInviteAlarm(request);
+    }
+    /*
+        채팅방 초대 신청 요청 테스트
+     */
+    @PostMapping("/test/invite/chat")
+    public Result createChatInviteAlarmTest(@RequestBody AlarmChatInviteRequest request){
+        return alarmService.createChatInviteAlarmv2(request);
+    }
+    /*
+        프로젝트 초대 신청 요청
+    */
+    @MessageMapping("invite/project")
+    public void createProjectInviteAlarm(AlarmProjectInviteRequest request){
+        alarmService.createProjectInviteAlarm(request);
+    }
+
+    /*
+        프로젝트 초대 신청 요청 테스트
+    */
+    @PostMapping("/test/invite/project")
+    public Result createProjectInviteAlarmTest(@RequestBody AlarmProjectInviteRequest request){
+        return alarmService.createProjectInviteAlarmv2(request);
     }
 
 
@@ -60,5 +108,7 @@ public class AlarmController {
     public Result deleteAlarm(@PathVariable("idx") Integer idx){
         return alarmService.deleteByIdx(idx);
     }
+
+
 
 }

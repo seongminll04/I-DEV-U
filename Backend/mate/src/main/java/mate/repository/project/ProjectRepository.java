@@ -25,4 +25,8 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
     @Query("select p from Project p where p.idx = :projectIdx")
     Optional<Project> findProject(@Param("projectIdx") Integer projectIdx);
+
+
+    @Query("select distinct p from Project p join fetch p.projectParticipation where p.idx = :projectIdx")
+    Optional<Project> findProjectUsers (@Param("projectIdx") Integer projectIdx);
 }

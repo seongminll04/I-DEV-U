@@ -33,6 +33,7 @@ public class Alarm {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime createdAt;
+    private AlarmChecked checked;
 
 
     public static Alarm createAlarm(AlarmRequest alarmRequest){
@@ -41,6 +42,7 @@ public class Alarm {
         alarm.toIdx = alarmRequest.getToIdx();
         alarm.type = alarmRequest.getType();
         alarm.createdAt = alarmRequest.getCreatedAt();
+        alarm.checked = AlarmChecked.N;
 
         return alarm;
     }
@@ -50,6 +52,8 @@ public class Alarm {
         alarm.toIdx = toIdx;
         alarm.type = type;
         alarm.createdAt = time;
+        alarm.checked = AlarmChecked.N;
+
         return alarm;
     }
 

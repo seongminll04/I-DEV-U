@@ -2,6 +2,7 @@ package mate.service.partner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,12 +36,12 @@ public class PartnerService {
             String name = (String) result[0];
             String nickname = (String) result[1];
             Long percent = (Long) result[2];
-            Integer userIdx = (Integer) result[3];
+            Integer Idx = (Integer) result[3];
 
-            List<String> language = basicRepository.findLanguage(userIdx);
+            List<String> language = basicRepository.findLanguage(Idx);
 
             PartnerDto partnerDto = new PartnerDto();
-            partnerDto.setUserIdx(userIdx);
+            partnerDto.setUserIdx(Idx);
             partnerDto.setName(name);
             partnerDto.setNickname(nickname);
             partnerDto.setPercent(percent);
@@ -61,12 +62,12 @@ public class PartnerService {
             // Assuming the order of elements in the array corresponds to the order of fields in PartnerDto
             String name = u.getName();
             String nickname = u.getNickname();
-            Integer userIdx = u.getIdx();
+            Integer Idx = u.getIdx();
 
-            List<String> language = basicRepository.findLanguage(userIdx);
+            List<String> language = basicRepository.findLanguage(Idx);
 
             PartnerDto partnerDto = new PartnerDto();
-            partnerDto.setUserIdx(userIdx);
+            partnerDto.setUserIdx(Idx);
             partnerDto.setName(name);
             partnerDto.setNickname(nickname);
             partnerDto.setLanguageList(language);

@@ -6,9 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import mate.chat.dto.ChatRoomCreateRequest;
 import mate.chat.dto.ChatRoomUpdateRequest;
 import mate.domain.user.User;
@@ -23,10 +21,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class ChatRoom {
 
     @Id
@@ -93,8 +92,8 @@ public class ChatRoom {
         if (result.size() > 0) {
             throw new DuplicateException("이미 참가한 채팅방입니다.");
         }
-        this.updatedAt = updatedAt;
         chatRoomUsers.add(ChatParticipation.createChatRoomUser(Role.USER, user, this));
+        this.updatedAt = updatedAt;
         this.userCount++;
 //        this.type = chatRoomUsers.size() == LIMIT ? ChatRoomStatus.FULL : ChatRoomStatus.LACK;
         this.type = ChatRoomStatus.LACK;

@@ -25,10 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.badRequest;
@@ -237,17 +234,23 @@ public class UserService {
     }
 
     public Result searchByEmail(String email) {
-        User user = userRepository.findLikeEmail(email)
+        List<User> users = userRepository.findLikeEmail(email)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
-
-        UserResponse response = UserResponse.from(user);
-        return Result.builder().data(response).status(ResponseEntity.ok("이메일 검색 결과")).build();
+        List<UserResponse> list = new ArrayList<>();
+        for (User user : users) {
+            UserResponse response = UserResponse.from(user);
+            list.add(response);
+        }
+        return Result.builder().data(list).status(ResponseEntity.ok("이메일 검색 결과")).build();
     }
     public Result searchByNickname(String nickname) {
-        User user = userRepository.findLikeNickname(nickname)
+        List<User> users = userRepository.findLikeNickname(nickname)
                 .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
-
-        UserResponse response = UserResponse.from(user);
-        return Result.builder().data(response).status(ResponseEntity.ok("닉네임 검색 결과")).build();
+        List<UserResponse> list = new ArrayList<>();
+        for (User user : users) {
+            UserResponse response = UserResponse.from(user);
+            list.add(response);
+        }
+        return Result.builder().data(list).status(ResponseEntity.ok("닉네임 검색 결과")).build();
     }
 }

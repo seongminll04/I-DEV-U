@@ -25,6 +25,7 @@ public class UserResponse {
     private Integer idx;
     private String name;
     private String nickname;
+    private String email;
     private UserGender gender; // MALE, FEMALE
     private String intro;
     private List<BasicAnswerResponse> basicAnswerList = new ArrayList<>();
@@ -37,6 +38,7 @@ public class UserResponse {
         userResponse.nickname = user.getNickname();
         userResponse.gender = user.getGender();
         userResponse.intro = user.getIntro();
+        userResponse.email = user.getEmail();
         userResponse.basicAnswerList = BasicAnswerResponse.from(user.getBasicAnswerList());
 
         return userResponse;

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAllowMove, setModal, setWantPJTId } from '../../store/actions';
 import axios from "axios";
 import { AppState } from "../../store/state";
+import ProjectFilter from "../filter/projectFilter";
 
 // const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
 
@@ -22,11 +23,44 @@ type ProjectDataType = {
     "session":string;
 };
 
+interface Filter {
+  tagList: string[],
+}
+
 const Project: React.FC = () => {
   const dispatch = useDispatch();
   const [projectList, setProjectList] = useState<ProjectDataType[]>([]);
   const [inputvalue, setInputValue] = useState<string>('');
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
+  const [projectFilter, setProjectFilter] = useState<Filter[]>([]);
+  
+  // 프로젝트 필터
+  useEffect(() => {
+    const userToken = localStorage.getItem('userToken');
+    // const userIdxStr = localStorage.getItem('userIdx')
+    // var userIdx: number | null;
+    // if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
+    var tList: string[] = []
+    for (const filter of projectFilter) {
+      tList = [...tList, ...filter.tagList]
+    }
+    if (tList[0]) {
+      axios({
+        method: 'post',
+        url: 'https://i9b206.p.ssafy.io:9090/project/filter',
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        },
+        data: {
+          tagList: tList
+        },
+      })
+        .then(res => {
+          setProjectList(res.data);
+        })
+        .catch(err => console.log(err))
+    }
+  }, [projectFilter])
 
   useEffect(()=>{
     const userToken = localStorage.getItem('userToken')
@@ -116,6 +150,7 @@ const Project: React.FC = () => {
             </div>
 
         </div>
+        {isModalOpen === '프로젝트필터' ? <ProjectFilter filter={projectFilter} onfilter={(value: Filter[]) => setProjectFilter(value)} /> : null }
       </div>
     );
 };

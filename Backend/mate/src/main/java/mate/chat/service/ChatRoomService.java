@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -152,13 +153,13 @@ public class ChatRoomService {
 
     public Result checkChatRoom(Integer fromIdx, Integer toIdx) {
 
-
         List<ChatRoom> chatRooms = chatRoomRepository.findTwo();
         if (chatRooms.size() > 0){
+
             for (ChatRoom chatRoom : chatRooms) {
                 List<ChatParticipation> chatRoomUsers = chatRoom.getChatRoomUsers();
-                if ((chatRoomUsers.get(0).getIdx() == fromIdx && chatRoomUsers.get(1).getIdx() == toIdx)
-                    || (chatRoomUsers.get(0).getIdx() == toIdx && chatRoomUsers.get(1).getIdx() == fromIdx)){
+                if ((Objects.equals(chatRoomUsers.get(0).getIdx(), fromIdx) && Objects.equals(chatRoomUsers.get(1).getIdx(), toIdx))
+                    || (Objects.equals(chatRoomUsers.get(0).getIdx(), toIdx) && Objects.equals(chatRoomUsers.get(1).getIdx(), fromIdx))){
                     ChatRoom findChatRoom = chatRoomRepository.findWithChatRoomUsersByIdx(chatRoom.getIdx())
                             .orElseThrow(() -> new NotFoundException(CHAT_ROOM_NOT_FOUND));
                     mate.alarm.dto.ChatRoomResponse response = mate.alarm.dto.ChatRoomResponse.from(findChatRoom);

@@ -22,7 +22,7 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Integer> {
 
     Optional<ChatRoom> findByIdx(Integer Idx);
 
-    @Query("select distinct r from ChatRoom r order by r.updatedAt desc ")
+    @Query("select distinct r from ChatRoom r join fetch r.chatRoomUsers order by r.updatedAt desc ")
     List<ChatRoom> findAll();
 
 

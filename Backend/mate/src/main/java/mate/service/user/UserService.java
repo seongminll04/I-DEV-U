@@ -140,6 +140,7 @@ public class UserService {
             ss.setFollowIdx(x.getFollowUser().getIdx());
             ss.setUserName(x.getFollowUser().getName());
             ss.setUserIntro(x.getFollowUser().getIntro());
+            ss.setUserNickName(x.getFollowUser().getNickname());
             return ss;
         }).collect(Collectors.toList());
         Map<String, Object> map = new IdentityHashMap<>();

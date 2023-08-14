@@ -74,6 +74,8 @@ public class InquiryService {
         Inquiry inquiry = inquiryRepository.findDetail(request.getInquiryIdx())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
+        if(inquiry.getUserIdx() != request.getUserIdx()) return Result.builder().status("본인 문의만 수정할 수 있습니다.").build();
+
         inquiry.updateInquiry(request);
 
         return Result.builder().data(inquiry).status(ResponseEntity.ok("삭제 성공")).build();

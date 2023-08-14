@@ -68,7 +68,7 @@ public class InquiryService {
         System.out.println("userIdx = " + userIdx);
         Inquiry inquiry = inquiryRepository.findDetail(idx)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
-        if (!Objects.equals(inquiry.getUserIdx(), userIdx)) Result.builder().status(ResponseEntity.ok("사용자가 등록한 문의만 삭제할 수 있습니다..")).build();
+        if (!Objects.equals(inquiry.getUserIdx(), userIdx)) return Result.builder().status(ResponseEntity.ok("사용자가 등록한 문의만 삭제할 수 있습니다..")).build();
         inquiryRepository.deleteByIdx(idx);
         return Result.builder().status(ResponseEntity.ok("삭제 성공")).build();
     }

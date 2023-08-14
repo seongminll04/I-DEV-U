@@ -36,6 +36,7 @@ public class BasicController {
             return Result.builder().status(badRequest().body("설문 해야 함")).data(map).build();
         }
         map.put("survey", "YES");
+        map.put("data", basicAnswer);
         return Result.builder().status(ok().body("설문 완료")).data(map).build();
     }
 

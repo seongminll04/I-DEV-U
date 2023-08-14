@@ -12,7 +12,7 @@ import mate.domain.partner.Partner;
 @Repository
 public interface PartnerRepository extends JpaRepository<Partner, Integer> {
 	@Query(
-		"SELECT ba.user.name as name, ba.user.nickname as nickname, ROUND((COUNT(*) / :size) * 100) AS percent, ba.user.idx as userIdx "
+		"SELECT ba.user.name as name, ba.user.nickname as nickname, ROUND((COUNT(*) / :size) * 100) AS percent, ba.user.idx as userIdx, ba.user.invite as invite "
 			+
 			"FROM BasicAnswer ba " +
 			"WHERE ba.tag IN (:tag) " +

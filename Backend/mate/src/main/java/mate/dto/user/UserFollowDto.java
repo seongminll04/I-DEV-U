@@ -9,4 +9,5 @@ public class UserFollowDto {
     private Integer followIdx;
     private String userName;
     private String userIntro;
+    private String userNickName;
 }

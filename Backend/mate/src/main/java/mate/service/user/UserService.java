@@ -2,15 +2,18 @@ package mate.service.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mate.alarm.dto.UserResponse;
 import mate.controller.Result;
 import mate.domain.user.Follow;
 import mate.domain.user.Role;
 import mate.domain.user.User;
 import mate.domain.user.UserStatus;
 import mate.dto.user.*;
+import mate.global.exception.NotFoundException;
 import mate.repository.user.FollowRepository;
 import mate.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,10 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.badRequest;
@@ -99,6 +99,7 @@ public class UserService {
                     .originalFileName(user.getOriginalFileName())
                     .storedFileName(user.getStoredFileName())
                     .invite(user.getInvite())
+                    .basicAnswerList(user.getBasicAnswerList())
                     .build();
 
             userRepository.save(user);
@@ -140,6 +141,7 @@ public class UserService {
             ss.setFollowIdx(x.getFollowUser().getIdx());
             ss.setUserName(x.getFollowUser().getName());
             ss.setUserIntro(x.getFollowUser().getIntro());
+            ss.setUserNickName(x.getFollowUser().getNickname());
             return ss;
         }).collect(Collectors.toList());
         Map<String, Object> map = new IdentityHashMap<>();
@@ -232,5 +234,24 @@ public class UserService {
         }
     }
 
-
+    public Result searchByEmail(String email) {
+        List<User> users = userRepository.findLikeEmail(email)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+        List<UserResponse> list = new ArrayList<>();
+        for (User user : users) {
+            UserResponse response = UserResponse.from(user);
+            list.add(response);
+        }
+        return Result.builder().data(list).status(ResponseEntity.ok("이메일 검색 결과")).build();
+    }
+    public Result searchByNickname(String nickname) {
+        List<User> users = userRepository.findLikeNickname(nickname)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+        List<UserResponse> list = new ArrayList<>();
+        for (User user : users) {
+            UserResponse response = UserResponse.from(user);
+            list.add(response);
+        }
+        return Result.builder().data(list).status(ResponseEntity.ok("닉네임 검색 결과")).build();
+    }
 }

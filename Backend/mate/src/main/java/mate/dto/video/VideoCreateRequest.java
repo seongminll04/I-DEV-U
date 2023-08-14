@@ -7,7 +7,7 @@ import mate.domain.video.VideoType;
 public class VideoCreateRequest {
 	private int userIdx;
 	private String title;
+	private String ovSession;
 	private String content;
 	private VideoType type;
-	private String ovSession;
 }

@@ -1,8 +1,9 @@
 package mate.service.partner;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,15 +21,15 @@ import mate.repository.user.UserRepository;
 @RequiredArgsConstructor
 public class PartnerService {
 
-    private final PartnerRepository partnerRepository;
-    private final UserRepository userRepository;
-    private final BasicRepository basicRepository;
+	private final PartnerRepository partnerRepository;
+	private final UserRepository userRepository;
+	private final BasicRepository basicRepository;
 
-    public List<PartnerDto> listPartner(List<String> input) {
+	public List<PartnerDto> listPartner(List<String> input) {
 
-        List<Object> partners = partnerRepository.listPartner(input, input.size());
+		List<Object> partners = partnerRepository.listPartner(input, input.size());
 
-        List<PartnerDto> list = new ArrayList<>();
+		List<PartnerDto> list = new ArrayList<>();
 
         for (Object o : partners) {
             Object[] result = (Object[]) o;
@@ -51,22 +52,22 @@ public class PartnerService {
             partnerDto.setInvite(invite);
             partnerDto.setLanguageList(language);
 
-            list.add(partnerDto);
-        }
+			list.add(partnerDto);
+		}
 
-        return list;
-    }
+		return list;
+	}
 
-    public List<PartnerDto> allPartner() {
-        List<User> partners = userRepository.findAll();
+	public List<PartnerDto> allPartner() {
+		List<User> partners = userRepository.findAll();
 
-        List<PartnerDto> list = new ArrayList<>();
+		List<PartnerDto> list = new ArrayList<>();
 
-        for (User u : partners) {
-            // Assuming the order of elements in the array corresponds to the order of fields in PartnerDto
-            String name = u.getName();
-            String nickname = u.getNickname();
-            Integer Idx = u.getIdx();
+		for (User u : partners) {
+			// Assuming the order of elements in the array corresponds to the order of fields in PartnerDto
+			String name = u.getName();
+			String nickname = u.getNickname();
+			Integer Idx = u.getIdx();
 
             if (u.getInvite().equals("false")) {
                 continue;
@@ -74,42 +75,53 @@ public class PartnerService {
 
             List<String> language = basicRepository.findLanguage(Idx);
 
-            PartnerDto partnerDto = new PartnerDto();
-            partnerDto.setUserIdx(Idx);
-            partnerDto.setName(name);
-            partnerDto.setNickname(nickname);
-            partnerDto.setLanguageList(language);
+			PartnerDto partnerDto = new PartnerDto();
+			partnerDto.setUserIdx(Idx);
+			partnerDto.setName(name);
+			partnerDto.setNickname(nickname);
+			partnerDto.setLanguageList(language);
 
-            list.add(partnerDto);
-        }
+			list.add(partnerDto);
+		}
 
-        return list;
-    }
+		return list;
+	}
 
-    public DetailDto detailPartner(int userIdx) {
-        List<Object> techs = partnerRepository.findTech(userIdx);
+	public DetailDto detailPartner(int userIdx) {
+		List<Object> techs = partnerRepository.findTech(userIdx);
 
-        List<String> techList = new ArrayList<>();
+		List<String> techList = new ArrayList<>();
 
-        for (Object o : techs) {
-            Object[] result = (Object[]) o;
+		for (Object o : techs) {
+			Object[] result = (Object[])o;
 
-            String tech = (String) result[1];
+			String tech = (String)result[1];
 
-            techList.add(tech);
-        }
+			techList.add(tech);
+		}
 
-        User user = userRepository.findById(userIdx).get();
+		User user = userRepository.findById(userIdx).get();
 
-        DetailDto detailPartner = new DetailDto();
+		DetailDto detailPartner = new DetailDto();
 
-        detailPartner.setUserIdx(user.getIdx());
-        detailPartner.setName(user.getName());
-        detailPartner.setNickname(user.getNickname());
-        detailPartner.setIntro(user.getIntro());
-        detailPartner.setTechList(techList);
+		detailPartner.setUserIdx(user.getIdx());
+		detailPartner.setName(user.getName());
+		detailPartner.setNickname(user.getNickname());
+		detailPartner.setIntro(user.getIntro());
+		detailPartner.setTechList(techList);
 
-        return detailPartner;
-    }
+		// 생년월일 데이터베이스로부터 가져오는 부분을 시뮬레이션합니다.
+		LocalDate birthDateFromDatabase = userRepository.findBirthByUserId(userIdx);
+		// 현재 날짜 가져오기
+		LocalDate currentDate = LocalDate.now();
+		// 나이 계산
+		Period agePeriod = Period.between(birthDateFromDatabase, currentDate);
+		int age = agePeriod.getYears();
+
+		detailPartner.setAge(age);
+		detailPartner.setGender(String.valueOf(user.getGender()));
+        
+		return detailPartner;
+	}
 
 }

@@ -2,9 +2,22 @@ package mate.domain.video;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import mate.domain.user.User;
 
 @Entity
@@ -14,7 +27,8 @@ import mate.domain.user.User;
 @AllArgsConstructor
 public class VideoRoom {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idx;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -28,6 +42,8 @@ public class VideoRoom {
 	private VideoType type;
 
 	private LocalDateTime createdAt;
+	
+	@Column(name = "ov_session")
 	private String ovSession;
 
 	public void updateTotalNumber() {

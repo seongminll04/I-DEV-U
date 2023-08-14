@@ -1,26 +1,26 @@
 package mate.controller.video;
 
-import lombok.RequiredArgsConstructor;
-import mate.controller.Result;
-import mate.domain.video.VideoRoom;
-import mate.dto.video.VideoCreateRequest;
-import mate.dto.video.VideoDto;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import io.openvidu.java.client.OpenVidu;
-import mate.service.user.UserService;
-import mate.service.video.VideoService;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.springframework.http.ResponseEntity.badRequest;
-import static org.springframework.http.ResponseEntity.ok;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
+import mate.domain.video.VideoRoom;
+import mate.dto.video.VideoCreateRequest;
+import mate.dto.video.VideoDto;
+import mate.service.video.VideoService;
 
 @RestController
 @RequestMapping("/video")
@@ -51,9 +51,9 @@ public class VideoController {
 		List<VideoRoom> list = videoService.videoRoomList(userIdx);
 		List<VideoDto> dto = new ArrayList<>();
 
-		for(VideoRoom room : list) {
+		for (VideoRoom room : list) {
 			dto.add(new VideoDto(room.getIdx(), room.getTitle(),
-					room.getTotalNumber(), 1, room.getOvSession(), (room.getUser().getIdx() == userIdx)));
+				room.getTotalNumber(), 1, room.getOvSession(), (room.getUser().getIdx() == userIdx)));
 		}
 
 		map.put("list", dto);
@@ -78,12 +78,12 @@ public class VideoController {
 	public ResponseEntity<Map<String, String>> leaveVideo(@RequestBody Map<String, Integer> input) {
 		Map<String, String> map = new HashMap<>();
 
-//		try {
-			videoService.leaveVideo(input.get("roomIdx"), input.get("userIdx"));
-			map.put("resmsg", "화상채팅방 나가기 성공");
-//		} catch (Exception e) {
-//			map.put("resmsg", "화상채팅방 나가기 실패");
-//		}
+		//		try {
+		videoService.leaveVideo(input.get("roomIdx"), input.get("userIdx"));
+		map.put("resmsg", "화상채팅방 나가기 성공");
+		//		} catch (Exception e) {
+		//			map.put("resmsg", "화상채팅방 나가기 실패");
+		//		}
 
 		return ResponseEntity.ok(map);
 	}

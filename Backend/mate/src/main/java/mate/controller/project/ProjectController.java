@@ -33,8 +33,6 @@ public class ProjectController {
 	public ResponseEntity<Map<String, Object>> registerProject(@RequestBody ProjectDto projectDto) {
 		Map<String, Object> map = new HashMap<>();
 
-//		ProjectDto projectDto = input.get("data");
-
 		try {
 			map.put("user", projectService.registerProject(projectDto));
 			map.put("resmsg", "프로젝트 생성 성공");
@@ -73,7 +71,8 @@ public class ProjectController {
 	}
 
 	@DeleteMapping("/leave")
-	public ResponseEntity<Map<String, Object>> leaveProject(@RequestBody ProjectParticipationDto projectParticipationDto) {
+	public ResponseEntity<Map<String, Object>> leaveProject(
+		@RequestBody ProjectParticipationDto projectParticipationDto) {
 		Map<String, Object> map = new HashMap<>();
 
 		try {

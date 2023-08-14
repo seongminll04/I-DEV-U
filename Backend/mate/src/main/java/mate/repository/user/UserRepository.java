@@ -1,6 +1,7 @@
 package mate.repository.user;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -39,6 +40,12 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 	@Query("select u from User u join fetch u.basicAnswerList where u.idx = :userIdx")
 	Optional<User> findAll(@Param("userIdx") Integer userIdx);
+
+	@Query("select distinct u from User u join fetch u.basicAnswerList where u.nickname like %:nickname%")
+	Optional<List<User>> findLikeNickname(@Param("nickname") String nickname);
+
+	@Query("select distinct u from User u join fetch u.basicAnswerList where u.email like %:email%")
+	Optional<List<User>> findLikeEmail(@Param("email") String email);
 
 
 }

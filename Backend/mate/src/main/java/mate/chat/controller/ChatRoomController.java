@@ -2,8 +2,8 @@ package mate.chat.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mate.alarm.dto.ChatRoomResponse;
 import mate.chat.dto.ChatRoomCreateRequest;
-import mate.chat.dto.ChatRoomResponse;
 import mate.chat.dto.ChatRoomUpdateRequest;
 import mate.chat.dto.ChatRoomUserRequest;
 import mate.chat.service.ChatRoomService;
@@ -71,6 +71,20 @@ public class ChatRoomController {
 
         return chatRoomService.deleteChatRoomUser(roomIdx, userIdx);
 
+    }
+
+    @GetMapping("/rooms/{roomIdx}/check")
+    public Result checkChatRoomUser(@PathVariable("roomIdx") Integer roomIdx,
+                                    @RequestParam("userIdx") Integer userIdx){
+
+        return chatRoomService.checkChatRoomUser(roomIdx, userIdx);
+    }
+
+    @GetMapping("/rooms/check")
+    public Result checkChatRoom(@RequestParam("fromIdx") Integer fromIdx,
+                                @RequestParam("toIdx") Integer toIdx){
+
+        return chatRoomService.checkChatRoom(fromIdx, toIdx);
     }
 
 

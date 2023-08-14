@@ -121,7 +121,7 @@ const MateDetail: React.FC<Props> = ({ userIdx }) => {
     })
     .then(res=>{
       console.log(res)
-      if (res.data.data.idx) {
+      if (res.data.data) {
         alert('이미 존재하는 채팅방이 있습니다')
         dispatch(setChatIdx(res.data.data.idx))
         dispatch(setChatTitle(res.data.data.title))

@@ -1,4 +1,4 @@
-package mate.domain.inquiry;
+package mate.inquiry.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,12 +22,8 @@ public class Inquiry {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idx;
-
-	private Integer user_idx; // Integer로 선언하여 NULL 허용
-
+	private Integer userIdx; // Integer로 선언하여 NULL 허용
 	private String title;
-
 	private String content;
-
 	private String answer;
 }

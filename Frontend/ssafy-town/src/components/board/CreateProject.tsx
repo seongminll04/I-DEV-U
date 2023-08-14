@@ -118,12 +118,29 @@ const CreateProject: React.FC = () => {
         })
         .then((res) => {
           console.log(res);
-          window.alert("프로젝트가 생성되었습니다.")
-          dispatch(setModal(null)); // 모달닫기
+          alert("프로젝트가 생성되었습니다.")
+
+          axios({
+            method:'post',
+            url:BACKEND_SERVER_URL+'/video/create',
+            data:{
+              title:title,
+              userIdx:userIdx,
+              OVSession:sessionId
+            },
+            headers: {
+              Authorization: 'Bearer ' + userToken
+            },
+          })
+          .then(res=>{
+            console.log(res)
+            dispatch(setModal(null)); // 모달닫기
+          })
+          .catch(err=>console.log(err))
         })
         .catch((err) => {
           console.log(err);
-          window.alert("프로젝트가 생성 실패.")
+          alert("프로젝트 생성 실패.")
         });
       })
       .catch((err) => {

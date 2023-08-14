@@ -150,18 +150,22 @@ public class ChatRoomService {
         return Result.builder().data(response).status(ResponseEntity.ok("방 만들어야 함")).build();
     }
 
-//    public Result checkChatRoom(Integer fromIdx, Integer toIdx) {
-//
-//        List<ChatRoom> chatRooms = chatRoomRepository.findChatRoomByTwo(fromIdx, toIdx);
-//
-//        if (chatRooms.size() > 0){
-//            List<mate.alarm.dto.ChatRoomResponse> list = new ArrayList<>();
-//            for (ChatRoom chatRoom : chatRooms) {
-//                mate.alarm.dto.ChatRoomResponse response = mate.alarm.dto.ChatRoomResponse.from(chatRoom);
-//                list.add(response);
-//            }
-//            return Result.builder().data(list).status(ResponseEntity.ok("채팅방 이미 있음")).build();
-//        }
-//        return Result.builder().status(ResponseEntity.ok("채팅방 없음")).build();
-//    }
+    public Result checkChatRoom(Integer fromIdx, Integer toIdx) {
+
+
+        List<ChatRoom> chatRooms = chatRoomRepository.findTwo();
+        if (chatRooms.size() > 0){
+            for (ChatRoom chatRoom : chatRooms) {
+                List<ChatParticipation> chatRoomUsers = chatRoom.getChatRoomUsers();
+                if ((chatRoomUsers.get(0).getIdx() == fromIdx && chatRoomUsers.get(1).getIdx() == toIdx)
+                    || (chatRoomUsers.get(0).getIdx() == toIdx && chatRoomUsers.get(1).getIdx() == fromIdx)){
+                    ChatRoom findChatRoom = chatRoomRepository.findWithChatRoomUsersByIdx(chatRoom.getIdx())
+                            .orElseThrow(() -> new NotFoundException(CHAT_ROOM_NOT_FOUND));
+                    mate.alarm.dto.ChatRoomResponse response = mate.alarm.dto.ChatRoomResponse.from(findChatRoom);
+                    return Result.builder().data(response).status(ResponseEntity.ok("채팅방 이미 있음")).build();
+                }
+            }
+        }
+        return Result.builder().status(ResponseEntity.ok("채팅방 없음")).build();
+    }
 }

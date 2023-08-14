@@ -37,7 +37,7 @@ public class VideoService {
 			.content(videoCreateRequest.getContent())
 			.type(videoCreateRequest.getType())
 			.createdAt(LocalDateTime.now())
-			.ovSession(videoCreateRequest.getSession()).build());
+			.ovSession(videoCreateRequest.getOvSession()).build());
 
 		videoParticipationRepository.save(VideoParticipation.builder()
 			.videoRoom(videoRoom)

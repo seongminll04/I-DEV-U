@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import filter_css from './mateFilter.module.css'
 import { useDispatch } from 'react-redux';
@@ -9,11 +9,13 @@ interface Filter {
   surveyTitle: string,
   tagList: string[],
 }
+
 interface props {
-  filter:Filter[],
-  onfilter:(value:Filter[])=>void,
+  filter: Filter[],
+  onfilter: (value: Filter[]) => void,
 }
-const MateFilter: React.FC<props> = ({filter,onfilter}) => {
+
+const MateFilter: React.FC<props> = ({ filter, onfilter }) => {
   const dispatch = useDispatch()
   const [workingYears, setWorkingYears] = useState<string>("");
   const [currentJob, setCurrentJob] = useState<string>("");
@@ -28,26 +30,26 @@ const MateFilter: React.FC<props> = ({filter,onfilter}) => {
   const projectOptions = ["있다", "없다"];
 
 
-  useEffect(()=> {
+  useEffect(() => {
     console.log(filter)
-   for (const f of filter) {
-    if (f.surveyIdx===1 && f.tagList) {
-      setWorkingYears(f.tagList[0])
+    for (const f of filter) {
+      if (f.surveyIdx === 1 && f.tagList) {
+        setWorkingYears(f.tagList[0])
+      }
+      else if (f.surveyIdx === 2 && f.tagList) {
+        setCurrentJob(f.tagList[0])
+      }
+      else if (f.surveyIdx === 3 && f.tagList) {
+        setLanguages(f.tagList)
+      }
+      else if (f.surveyIdx === 4 && f.tagList) {
+        setLocation(f.tagList[0])
+      }
+      else if (f.surveyIdx === 5 && f.tagList) {
+        setProjectExperience(f.tagList[0])
+      }
     }
-    else if (f.surveyIdx===2 && f.tagList) {
-      setCurrentJob(f.tagList[0])
-    }
-    else if (f.surveyIdx===3 && f.tagList) {
-      setLanguages(f.tagList)
-    }
-    else if (f.surveyIdx===4 && f.tagList) {
-      setLocation(f.tagList[0])
-    }
-    else if (f.surveyIdx===5 && f.tagList) {
-      setProjectExperience(f.tagList[0])
-    }
-   }
-  },[filter])
+  }, [filter])
 
   const toggleLanguage = (option: string) => {
     setLanguages(prevLanguages => {
@@ -112,7 +114,7 @@ const MateFilter: React.FC<props> = ({filter,onfilter}) => {
           </label> */}
         {workingYearsOptions.map(option => (
           <label key={option}>
-            <input type="radio" name="workingYears" value={option} onChange={() => setWorkingYears(option)} checked={workingYears===option} />
+            <input type="radio" name="workingYears" value={option} onChange={() => setWorkingYears(option)} checked={workingYears === option} />
             {option}
           </label>
         ))}
@@ -126,7 +128,7 @@ const MateFilter: React.FC<props> = ({filter,onfilter}) => {
           </label> */}
         {currentJobOptions.map(option => (
           <label key={option}>
-            <input type="radio" name="currentJob" value={option} onChange={() => setCurrentJob(option)}  checked={currentJob===option} />
+            <input type="radio" name="currentJob" value={option} onChange={() => setCurrentJob(option)} checked={currentJob === option} />
             {option}
           </label>
         ))}
@@ -160,7 +162,7 @@ const MateFilter: React.FC<props> = ({filter,onfilter}) => {
               무관
             </option> */}
           {locationOptions.map(option => (
-            <option key={option} value={option} selected={location===option}>
+            <option key={option} value={option} selected={location === option}>
               {option}
             </option>
           ))}
@@ -175,7 +177,7 @@ const MateFilter: React.FC<props> = ({filter,onfilter}) => {
           </label> */}
         {projectOptions.map(option => (
           <label key={option}>
-            <input type="radio" name="projectExperience" value={option} onChange={() => setProjectExperience(option)} checked={projectExperience===option} />
+            <input type="radio" name="projectExperience" value={option} onChange={() => setProjectExperience(option)} checked={projectExperience === option} />
             {option}
           </label>
         ))}

@@ -28,12 +28,7 @@ const Mate: React.FC = () => {
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);//사이드바 오픈여부
   const [matefilter, setMateFilter] = useState<Filter[]>([])
   const [mateIdx, setMateIdx] = useState<number>(0)
-  const [mateList, setMateList] = useState<Matep[]>([
-    { userIdx: 0, "name": "김싸피", "nickname": "김김김", "percent": 55, "languageList": [] },
-    { userIdx: 1, "name": "이싸피", "nickname": "이이이", "percent": 46, "languageList": [] },
-    { userIdx: 2, "name": "박싸피", "nickname": "박박박", "percent": 37, "languageList": [] },
-    { userIdx: 3, "name": "최싸피", "nickname": "최최최", "percent": 28, "languageList": [] },
-  ]);
+  const [mateList, setMateList] = useState<Matep[]>([]);
 
   useEffect(() => {
     const userToken = localStorage.getItem('userToken');

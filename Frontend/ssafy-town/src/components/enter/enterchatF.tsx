@@ -27,6 +27,7 @@ const EnterChatF: React.FC<Props> = ({sendusername,senduserIdx}) => {
 		type : 'CHAT',
 		createdAt : now
       };
+      console.log(userIdx,senduserIdx)
       stompClientRef.current.publish({
         destination: `/pub/user`,
           body: JSON.stringify(data),

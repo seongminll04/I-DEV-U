@@ -172,4 +172,14 @@ public class UserController {
 		return userService.uploadFile(multipartFile, userIdx);
 	}
 
+	@GetMapping("/search/email")
+	public Result searchByEmail(@RequestParam("email") String email){
+		return userService.searchByEmail(email);
+	}
+
+	@GetMapping("/search/nickname")
+	public Result searchByNickname(@RequestParam("nickname") String nickname){
+		return userService.searchByNickname(nickname);
+	}
+
 }

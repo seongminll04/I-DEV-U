@@ -29,7 +29,6 @@ public class InquiryController {
         return inquiryService.updateInquiry(request);
     }
 
-
     @GetMapping("/list")
     public Result listInquiry(){
         return inquiryService.list();
@@ -42,8 +41,9 @@ public class InquiryController {
     }
 
     @DeleteMapping("/delete/{idx}")
-    public Result deleteInquiry(@PathVariable("idx") Integer idx){
-        return inquiryService.delete(idx);
+    public Result deleteInquiry(@PathVariable("idx") Integer idx,
+                                @RequestParam("userIdx") Integer userIdx){
+        return inquiryService.delete(idx, userIdx);
     }
 
     @PutMapping("/answer")

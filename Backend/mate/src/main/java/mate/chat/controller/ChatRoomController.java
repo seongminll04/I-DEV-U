@@ -2,8 +2,8 @@ package mate.chat.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mate.alarm.dto.ChatRoomResponse;
 import mate.chat.dto.ChatRoomCreateRequest;
-import mate.chat.dto.ChatRoomResponse;
 import mate.chat.dto.ChatRoomUpdateRequest;
 import mate.chat.dto.ChatRoomUserRequest;
 import mate.chat.service.ChatRoomService;

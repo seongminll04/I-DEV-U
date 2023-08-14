@@ -165,7 +165,7 @@ class Cam extends Component<{}, AppState> {
                 return;
             }
     
-            const response = await axios.post(`https://i9b206.p.ssafy.io:5000/api/sessions/${sessionId}/connections`);
+            const response = await axios.post(`http://localhost:5000/api/sessions/${sessionId}/connections`);
             const token = response.data;
             localStorage.setItem("OVtoken", token);
     
@@ -177,6 +177,7 @@ class Cam extends Component<{}, AppState> {
             // 4. 세션에 연결
             const userNickname = localStorage.getItem('userNickname');
             session.connect(token, userNickname).then(() => {
+                console.log(session,"세션@@@@@@@@@@@@@@@@");
                 // 5. 세션에 게시
                 const publisher = this.OV.initPublisher(undefined, {
                     audio: false,
@@ -196,15 +197,18 @@ class Cam extends Component<{}, AppState> {
                     console.log("..............................................");
                     const existingSubscribers: any[] = [...this.state.subscribers];
                     try {
-                        const response = await axios.get(`https://i9b206.p.ssafy.io:5000/api/sessions/${sessionId}/streams`);
+                        const response = await axios.get(`http://localhost:5000/api/sessions/${sessionId}/streams`);
                         const streamIds = response.data;
-                        streamIds.forEach((streamId: string) => {
-                            const stream = session.getStreamById(streamId);
-                            if (stream && !this.state.subscribers.some(sub => sub.stream.streamId === stream.streamId)) {
-                                const subscriber = session.subscribe(stream, undefined);
-                                existingSubscribers.push(subscriber);
-                            }
-                        });
+                
+                            // session.streamManagers를 사용하여 스트림을 검색합니다.
+                            session.streamManagers.forEach((streamManager: any) => {
+                                if (streamManager.stream && streamIds.includes(streamManager.stream.streamId)) {
+                                    if (!this.state.subscribers.some(sub => sub.stream.streamId === streamManager.stream.streamId)) {
+                                        const subscriber = session.subscribe(streamManager.stream, undefined);
+                                        existingSubscribers.push(subscriber);
+                                    }
+                                }
+                            });
                         this.setState({ subscribers: existingSubscribers });
                     } catch (error) {
                         console.error("Error fetching streams:", error);

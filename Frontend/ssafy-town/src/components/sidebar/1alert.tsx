@@ -20,10 +20,12 @@ interface Notice {
 interface AlertProps {
   idx: number;
   checked: string;
-  content: string;
   createdAt: string;
-  dataType: string;
-  user: Object;
+  type: string;
+  fromUser:{
+    idx:number,
+    nickname:string,
+  }
 }
 
 const Alert: React.FC = () => {
@@ -62,12 +64,13 @@ const Alert: React.FC = () => {
     const userToken = localStorage.getItem('userToken')
     axios({
       method: 'get',
-      url: `https://i9b206.p.ssafy.io:9090/noti/list/top/${userIdx}`,
+      url: `https://i9b206.p.ssafy.io:9090/alarm/from/${userIdx}`,
       headers: {
         Authorization: 'Bearer ' + userToken
       },
     })
       .then(res => {
+        console.log(res)
         setAlertList(res.data.data);
       })
       .catch(err => {
@@ -111,8 +114,12 @@ const Alert: React.FC = () => {
                 const date = new Date(alert.createdAt);
                 return (
                   <div key={index} onClick={() => { setPage(2); setAlertIdx(alert.idx) }} className={alert_css.notice}>
-                    <span>{alert.idx}</span>
-                    <span>{alert.content}</span>
+                    <span>{index+1}</span>
+                    <span>
+                      { alert.type==='PROJECT' ? `${alert.fromUser.nickname}님의 프로젝트 가입신청입니다`
+                       : alert.type==='CHAT' ? `${alert.fromUser.nickname}님의 채팅신청입니다`
+                       : alert.type==='MATE' ? `${alert.fromUser.nickname}님의 동료신청입니다` :null }
+                    </span>
                     <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span>
                     {/* <span>{date.getMonth() + 1}/{date.getDate()}</span> */}
                   </div>

@@ -5,10 +5,11 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllowMove, setModal } from '../../store/actions';
 import { AppState } from '../../store/state';
-import EnterChatF from '../enter/enterchat';
-import EnterCamF from '../enter/entercam';
+import EnterChatF from '../enter/enterchatF';
+import EnterCamF from '../enter/entercamF';
 
 interface FollowUser {
+  followIdx: number;
   userIdx: number;
   userName: string;
   userIntro: string;
@@ -80,8 +81,8 @@ const Follow: React.FC = () => {
                   <p>{follow.userIntro}</p>
                 </div>
                 <div>
-                  <button className={follow_css.profilebtn} onClick={()=>{setrequestname(follow.userName);setrequestidx(follow.userIdx); dispatch(setModal('팔로우채팅'))}}>채팅</button>
-                  <button className={follow_css.profilebtn} onClick={()=>{setrequestname(follow.userName);setrequestidx(follow.userIdx); dispatch(setModal('팔로우화상'))}}>화상</button>
+                  <button className={follow_css.profilebtn} onClick={()=>{setrequestname(follow.userName);setrequestidx(follow.followIdx); dispatch(setModal('팔로우채팅'))}}>채팅</button>
+                  <button className={follow_css.profilebtn} onClick={()=>{setrequestname(follow.userName);setrequestidx(follow.followIdx); dispatch(setModal('팔로우화상'))}}>화상</button>
                 </div>
               </div>
               <hr />

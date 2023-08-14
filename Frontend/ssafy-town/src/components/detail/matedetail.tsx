@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import detail_css from './matedetail.module.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { setModal } from '../../store/actions';
+import { setChatIdx, setChatTitle, setModal, setSidebar } from '../../store/actions';
 import axios from 'axios';
 import { Client } from '@stomp/stompjs';
 import { AppState } from '../../store/state';
@@ -107,23 +107,49 @@ const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
   }
 
   const sendrequest = () => {
+    const userToken = localStorage.getItem('userToken')
     const senduserIdxStr = localStorage.getItem('userIdx')
     const senduserIdx = senduserIdxStr ? parseInt(senduserIdxStr,10) : null
-    if (stompClientRef.current && senduserIdx) {
-      const now = new Date()
-      const data = {
+
+    axios({
+      method:'get',
+      url: `https://i9b206.p.ssafy.io:9090/chat/rooms/check`,
+      headers: {
+        Authorization: 'Bearer ' + userToken
+      },
+      params :{
         fromIdx: senduserIdx,
         toIdx: userIdx,
-        type:'MATE',
-        createdAt: now
-      };
-      stompClientRef.current.publish({
-        destination: `/pub/user`,
-        body: JSON.stringify(data),
-      });
-      alert('채팅 신청 완료')
-      dispatch(setModal(null))
-    }
+      }
+    })
+    .then(res=>{
+      console.log(res)
+      if (res.data.data) {
+        alert('이미 존재하는 채팅방이 있습니다')
+        dispatch(setChatIdx(res.data.data.idx))
+        dispatch(setChatTitle(res.data.data.title))
+        dispatch(setSidebar('채팅방'))
+      }
+      else {
+        if (stompClientRef.current && senduserIdx) {
+          const now = new Date()
+          const data = {
+            fromIdx: senduserIdx,
+            toIdx: userIdx,
+            type:'MATE',
+            createdAt: now
+          };
+          stompClientRef.current.publish({
+            destination: `/pub/user`,
+            body: JSON.stringify(data),
+          });
+          alert('채팅 신청 완료')
+          dispatch(setModal(null))
+        }
+      }
+    })
+    .catch(err => console.log(err))
+
   }
 
   return (

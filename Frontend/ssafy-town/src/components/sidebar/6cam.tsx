@@ -8,9 +8,15 @@ import { setAllowMove } from '../../store/actions';
 
 
 type ProjectDataType = {
-  name: string; // 프로젝트 이름
-  participants: string[]; // 참가자 이름 리스트
-  sessionId: string; // 각 화상방의 세션 ID
+  idx:number;
+  title:string;
+  nowNum:number;
+  ovSession:string;
+  modify:boolean;
+  totalNumber:number;
+  // name: string; // 프로젝트 이름
+  // participants: string[]; // 참가자 이름 리스트
+  // sessionId: string; // 각 화상방의 세션 ID
 };
 
 const Cam: React.FC = () => {
@@ -44,6 +50,7 @@ const Cam: React.FC = () => {
         Authorization: 'Bearer ' + userToken
       },
     }).then(res => {
+      console.log(res)
         setCamList(res.data.list);
       })
       .catch(err => {
@@ -53,31 +60,9 @@ const Cam: React.FC = () => {
 
   // 접속 반응 추가하기
   const EnterCam = (sessionId: string) => {
-    const userToken = localStorage.getItem('userToken')
-    axios.get(`${BACKEND_SERVER_URL}/video/enter`, {
-        headers : {
-          Authorization: 'Bearer ' + userToken
-        },
-        params: {
-            sessionId: sessionId,
-        }
-    })
-    .then(res => {
-      const OVsession = res.data.ovSession;  // 백엔드에서 전달받은 토큰
-      
-      localStorage.setItem("OVsession", OVsession);  // 토큰을 로컬 스토리지에 저장
-
-      console.log(res);
-      
-      // meeting 페이지로 이동
-      window.location.href = "https://i9b206.p.ssafy.io/meeting";
-    })
-    .catch(err => {
-      console.log(err);
-    });
+    localStorage.setItem("OVsession", sessionId);  // 토큰을 로컬 스토리지에 저장
+    window.location.href = "https://i9b206.p.ssafy.io/meeting";
   }
-
-  
   
   return (
     <div className='sidebar_modal'>
@@ -95,14 +80,15 @@ const Cam: React.FC = () => {
             <div className={cam_css.profile}>
               <img src="assets/default_profile.png" alt="" />
               <div className={cam_css.profiledata}>
-                <b>{cam.name}</b>
+                <b>{cam.title}</b>
                 <p style={{ color: 'gray' }}>
-                  {cam.participants.slice(0, 3).join(', ')}
-                  {cam.participants.length > 3 && '...'}
+                  {/* { cam.name } */}
+                  {/* {cam.participants.slice(0, 3).join(', ')}
+                  {cam.participants.length > 3 && '...'} */}
                 </p>
               </div>
               <div>
-                <button className={cam_css.profilebtn} onClick={() => EnterCam(cam.sessionId)}>접속</button>
+                <button className={cam_css.profilebtn} onClick={() => EnterCam(cam.ovSession)}>접속</button>
                 <button className={cam_css.profilebtn}>나가기</button>
               </div>
             </div>

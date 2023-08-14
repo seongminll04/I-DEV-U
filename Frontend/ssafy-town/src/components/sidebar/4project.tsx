@@ -120,8 +120,8 @@ const Project: React.FC = () => {
             <button className={project_css.button} onClick={()=>dispatch(setModal('프로젝트필터'))}>필터</button>
             <button className={project_css.button} onClick={()=>dispatch(setModal('프로젝트생성'))}>방 생성</button>
           </div>
-          <hr style={{width:'75%', color:'black'}}/>
           <div className={project_css.scrollbox}>
+          <hr style={{width:'75%', color:'black'}}/>
             {projectList.length===0 ? '조회 결과가 없습니다':null}
             {projectList.map((project, idx) => (
                 <div key={idx}>

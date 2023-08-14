@@ -93,6 +93,25 @@ const CreateProject: React.FC = () => {
         var userIdx:number|null;
         if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
 
+        // 화상방 생성
+        axios({
+          method:'post',
+          url:BACKEND_SERVER_URL+'/video/create',
+          data:{
+            title:title,
+            userIdx:userIdx,
+            ovSession:sessionId
+          },
+          headers: {
+            Authorization: 'Bearer ' + userToken
+          },
+        })
+        .then(res=>{
+          console.log(res)
+          dispatch(setModal(null)); // 모달닫기
+        })
+        .catch(err=>console.log(err))
+
         // 백엔드에 프로젝트 정보, 세션 ID 전송
         axios({
           method:'post',
@@ -118,12 +137,11 @@ const CreateProject: React.FC = () => {
         })
         .then((res) => {
           console.log(res);
-          window.alert("프로젝트가 생성되었습니다.")
-          dispatch(setModal(null)); // 모달닫기
+          alert("프로젝트가 생성되었습니다.")
         })
         .catch((err) => {
           console.log(err);
-          window.alert("프로젝트가 생성 실패.")
+          alert("프로젝트 생성 실패.")
         });
       })
       .catch((err) => {

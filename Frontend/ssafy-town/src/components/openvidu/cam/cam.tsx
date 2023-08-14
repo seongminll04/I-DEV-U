@@ -135,6 +135,12 @@ class Cam extends Component<{}, AppState> {
         // 2. 이벤트 리스너 설정
         if (!this.state.eventBindingsSet) {
             session.on('streamCreated', (event: any) => {
+                if (this.state.publisher && event.stream.streamId === this.state.publisher.stream.streamId) {
+                    return;
+                }
+                if (event.stream.connection.connectionId === session.connection.connectionId) {
+                    return;
+                }
                 if (!this.state.subscribers.some(sub => sub.stream.streamId === event.stream.streamId)) {
                     const subscriber = session.subscribe(event.stream, undefined);
                     const subscribers = [...this.state.subscribers, subscriber];
@@ -186,23 +192,30 @@ class Cam extends Component<{}, AppState> {
                 });
     
                 // 주기적으로 스트림 목록 업데이트
-                const updateStreams = () => {
-                    console.log("...........tq...................................");
+                const updateStreams = async () => {
+                    console.log("..............................................");
                     const existingSubscribers: any[] = [...this.state.subscribers];
-                    session.getStreams().forEach((stream: any) => {
-                        if (!this.state.subscribers.some(sub => sub.stream.streamId === stream.streamId)) {
-                            const subscriber = this.OV.subscribe(stream, undefined);
-                            existingSubscribers.push(subscriber);
-                        }
-                    });
-                    this.setState({ subscribers: existingSubscribers });
+                    try {
+                        const response = await axios.get(`https://i9b206.p.ssafy.io:5000/api/sessions/${sessionId}/streams`);
+                        const streamIds = response.data;
+                        streamIds.forEach((streamId: string) => {
+                            const stream = session.getStreamById(streamId);
+                            if (stream && !this.state.subscribers.some(sub => sub.stream.streamId === stream.streamId)) {
+                                const subscriber = session.subscribe(stream, undefined);
+                                existingSubscribers.push(subscriber);
+                            }
+                        });
+                        this.setState({ subscribers: existingSubscribers });
+                    } catch (error) {
+                        console.error("Error fetching streams:", error);
+                    }
                 };
-    
+                
                 updateStreams();
                 const updateInterval = setInterval(updateStreams, 5000);
                 window.addEventListener('beforeunload', () => {
                     clearInterval(updateInterval);
-                }); 
+                });
             }).catch((error: any) => {
                 console.error("세션 연결 중 오류:", error);
             });

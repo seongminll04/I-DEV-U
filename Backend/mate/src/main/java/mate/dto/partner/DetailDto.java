@@ -1,8 +1,8 @@
 package mate.dto.partner;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class DetailDto {
@@ -10,5 +10,7 @@ public class DetailDto {
 	private String name;
 	private String nickname;
 	private String intro;
+	private int age;
+	private String gender;
 	private List<String> techList;
 }

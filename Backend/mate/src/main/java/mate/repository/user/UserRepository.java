@@ -40,5 +40,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Query("select u from User u join fetch u.basicAnswerList where u.idx = :userIdx")
 	Optional<User> findAll(@Param("userIdx") Integer userIdx);
 
+	@Query("select u from User u join fetch u.basicAnswerList where u.nickname like :nickname")
+	Optional<User> findLikeNickname(@Param("nickname") String nickname);
+
+	@Query("select u from User u join fetch u.basicAnswerList where u.email like :email")
+	Optional<User> findLikeEmail(@Param("email") String email);
+
 
 }

@@ -2,15 +2,18 @@ package mate.service.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mate.alarm.dto.UserResponse;
 import mate.controller.Result;
 import mate.domain.user.Follow;
 import mate.domain.user.Role;
 import mate.domain.user.User;
 import mate.domain.user.UserStatus;
 import mate.dto.user.*;
+import mate.global.exception.NotFoundException;
 import mate.repository.user.FollowRepository;
 import mate.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -233,5 +236,18 @@ public class UserService {
         }
     }
 
+    public Result searchByEmail(String email) {
+        User user = userRepository.findLikeEmail(email)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
 
+        UserResponse response = UserResponse.from(user);
+        return Result.builder().data(response).status(ResponseEntity.ok("이메일 검색 결과")).build();
+    }
+    public Result searchByNickname(String nickname) {
+        User user = userRepository.findLikeNickname(nickname)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+
+        UserResponse response = UserResponse.from(user);
+        return Result.builder().data(response).status(ResponseEntity.ok("닉네임 검색 결과")).build();
+    }
 }

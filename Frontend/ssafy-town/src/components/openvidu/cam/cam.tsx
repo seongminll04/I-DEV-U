@@ -165,7 +165,7 @@ class Cam extends Component<{}, AppState> {
                 return;
             }
     
-            const response = await axios.post(`http://localhost:5000/api/sessions/${sessionId}/connections`);
+            const response = await axios.post(`https://i9b206.p.ssafy.io:5000/api/sessions/${sessionId}/connections`);
             const token = response.data;
             localStorage.setItem("OVtoken", token);
     
@@ -197,7 +197,7 @@ class Cam extends Component<{}, AppState> {
                     console.log("..............................................");
                     const existingSubscribers: any[] = [...this.state.subscribers];
                     try {
-                        const response = await axios.get(`http://localhost:5000/api/sessions/${sessionId}/streams`);
+                        const response = await axios.get(`https://i9b206.p.ssafy.io:5000/api/sessions/${sessionId}/streams`);
                         const streamIds = response.data;
                 
                             // session.streamManagers를 사용하여 스트림을 검색합니다.

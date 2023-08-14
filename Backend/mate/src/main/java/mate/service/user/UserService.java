@@ -96,8 +96,8 @@ public class UserService {
                     .intro(Optional.ofNullable(userUpdateDto.getIntro()).orElse(user.getIntro()))
                     .role(user.getRole())
                     .status(user.getStatus())
-                    .originalFileName(userUpdateDto.getOriginalFileName())
-                    .storedFileName(userUpdateDto.getStoredFileName())
+                    .originalFileName(user.getOriginalFileName())
+                    .storedFileName(user.getStoredFileName())
                     .invite(user.getInvite())
                     .basicAnswerList(user.getBasicAnswerList())
                     .build();

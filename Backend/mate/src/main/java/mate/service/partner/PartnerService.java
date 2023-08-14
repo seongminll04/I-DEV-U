@@ -24,7 +24,7 @@ public class PartnerService {
     private final UserRepository userRepository;
     private final BasicRepository basicRepository;
 
-    public List<PartnerDto> listPartner(List<String> input, int userIdx) {
+    public List<PartnerDto> listPartner(List<String> input) {
 
         List<Object> partners = partnerRepository.listPartner(input, input.size());
 
@@ -37,9 +37,6 @@ public class PartnerService {
             String nickname = (String) result[1];
             Long percent = (Long) result[2];
             Integer Idx = (Integer) result[3];
-            if (Objects.equals(Idx, userIdx)) {
-                continue;
-            }
 
             List<String> language = basicRepository.findLanguage(Idx);
 
@@ -56,7 +53,7 @@ public class PartnerService {
         return list;
     }
 
-    public List<PartnerDto> allPartner(int userIdx) {
+    public List<PartnerDto> allPartner() {
         List<User> partners = userRepository.findAll();
 
         List<PartnerDto> list = new ArrayList<>();
@@ -66,9 +63,6 @@ public class PartnerService {
             String name = u.getName();
             String nickname = u.getNickname();
             Integer Idx = u.getIdx();
-            if (Objects.equals(Idx, userIdx)) {
-                continue;
-            }
 
             List<String> language = basicRepository.findLanguage(Idx);
 

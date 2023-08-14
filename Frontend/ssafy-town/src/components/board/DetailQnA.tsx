@@ -33,6 +33,22 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
   const [question, setQuestion] = useState<Question>();
   const [qTime, setQTime] = useState<Date>(new Date());
 
+     // input 방향키 살리기
+     const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
+      const inputElement = event.currentTarget
+      const currentCursorPosition = inputElement.selectionStart || 0;
+      if (event.key === 'ArrowLeft' && currentCursorPosition!==0) {
+        inputElement.setSelectionRange(currentCursorPosition - 1, currentCursorPosition - 1);
+      } else if (event.key === 'ArrowRight') {
+        inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
+      } else if (event.key === ' '){
+        inputElement.value = inputElement.value.slice(0,currentCursorPosition)+ ' ' +inputElement.value.slice(currentCursorPosition,)
+        inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
+      } else if (event.key === 'Enter') {
+        onInputSubmit()
+      }
+    }
+
   useEffect(() => {
     axios({
       method: 'get',
@@ -81,6 +97,18 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
         .then(res => {
           console.log(res)
           setInputvalue('')
+          axios({
+            method: 'get',
+            url: `https://i9b206.p.ssafy.io:9090/qna/comment/${qnaid}`,
+            headers: {
+              Authorization: 'Bearer ' + userToken
+            },
+          })
+            .then(res => {
+              // console.log(res.data);
+              setCommentlist(res.data.data)
+            })
+            .catch(err => console.log(err))
         })
     }
   }
@@ -94,8 +122,8 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
         <h1>Q n A 게시글</h1>
         {question ? (
           <>
-            <p>제목 : {question?.title}</p>
-            <p>내용 : {question?.content}</p>
+            <p>제목 : {question.title}</p>
+            <p>내용 : {question.content}</p>
             <p>날짜 : {qTime.getMonth() + 1}/{qTime.getDate()} {qTime.getHours()}:{qTime.getMinutes()}</p>
           </>
         ) : (
@@ -115,7 +143,7 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
             </div>
           )
         })}
-        <input type="text" value={inputvalue} onChange={(e) => setInputvalue(e.target.value)} />
+        <input type="text" value={inputvalue} onChange={(e) => setInputvalue(e.target.value)} onKeyDown={handlekeydown} />
         <button onClick={onInputSubmit}>작성</button>
       </div>
       <hr />

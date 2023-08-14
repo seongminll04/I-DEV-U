@@ -73,5 +73,19 @@ public class ChatRoomController {
 
     }
 
+    @GetMapping("/rooms/{roomIdx}/check")
+    public Result checkChatRoomUser(@PathVariable("roomIdx") Integer roomIdx,
+                                    @RequestParam("userIdx") Integer userIdx){
+
+        return chatRoomService.checkChatRoomUser(roomIdx, userIdx);
+    }
+
+    @GetMapping("/rooms/check")
+    public Result checkChatRoom(@RequestParam("fromIdx") Integer fromIdx,
+                                @RequestParam("toIdx") Integer toIdx){
+
+        return chatRoomService.checkChatRoom(fromIdx, toIdx);
+    }
+
 
 }

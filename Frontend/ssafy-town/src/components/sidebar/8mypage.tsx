@@ -222,6 +222,8 @@ const Mypage: React.FC = () => {
           </p>
 
           <button className={mypage_css.button} onClick={() => dispatch(setModal('Re최초설문'))}>최초 설문 수정</button>
+          <button className={mypage_css.button} onClick={() => dispatch(setModal('Re소개팅설문'))}>소개팅 설문 수정</button>
+
         </div>
         {isModalOpen === '회원정보수정3' ? <EditAcount user={user} change={() => setChangeData(true)} /> :
           isModalOpen === '비밀번호변경' ? <ChangePass user={user} /> : null}

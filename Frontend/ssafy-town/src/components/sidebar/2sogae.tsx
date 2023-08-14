@@ -83,10 +83,11 @@ const Sogae: React.FC = () => {
         </>
         :
         <>
-          <div style={{ display: 'flex', width: '85%' }}>
-            <button className={sogae_css.button} onClick={() => dispatch(setModal('소개팅설문'))}>설문 수정하기</button>
+            <button className={sogae_css.button} onClick={() => dispatch(setModal('소개팅설문'))}>소개팅 설문 수정</button>
+            <p className={sogae_css.redText}>* 설문 응답으로 일치율이 계산됩니다 *</p>
+          {/* <div style={{ display: 'flex', width: '85%' }}>
             <button className={sogae_css.button} onClick={() => dispatch(setModal('소개팅필터'))}>필터</button>
-          </div>
+          </div> */}
 
           <div className={sogae_css.userattribute}>
             <div className={sogae_css.userInfo} style={{ fontSize: 'large', fontWeight: 'bold' }}>유저정보</div>

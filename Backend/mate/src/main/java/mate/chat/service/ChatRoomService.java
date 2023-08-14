@@ -155,9 +155,10 @@ public class ChatRoomService {
 
         List<ChatRoom> chatRooms = chatRoomRepository.findTwo();
         if (chatRooms.size() > 0){
-
             for (ChatRoom chatRoom : chatRooms) {
                 List<ChatParticipation> chatRoomUsers = chatRoom.getChatRoomUsers();
+                System.out.println(chatRoomUsers.get(0));
+                System.out.println(chatRoomUsers.get(1));
                 if ((Objects.equals(chatRoomUsers.get(0).getIdx(), fromIdx) && Objects.equals(chatRoomUsers.get(1).getIdx(), toIdx))
                     || (Objects.equals(chatRoomUsers.get(0).getIdx(), toIdx) && Objects.equals(chatRoomUsers.get(1).getIdx(), fromIdx))){
                     ChatRoom findChatRoom = chatRoomRepository.findWithChatRoomUsersByIdx(chatRoom.getIdx())

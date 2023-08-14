@@ -196,21 +196,35 @@ class Cam extends Component<{}, AppState> {
                 const updateStreams = async () => {
                     console.log("..............................................");
                     const existingSubscribers: any[] = [...this.state.subscribers];
+                    const notFoundStreams: string[] = [];
+                
                     try {
                         const response = await axios.get(`https://i9b206.p.ssafy.io:5000/api/sessions/${sessionId}/streams`);
-                        const streamIds = response.data;
-
+                        const streamIds = response.data.concat(notFoundStreams); // 이전에 찾지 못한 스트림들도 함께 검색
+                
                         console.log("1111111111111111111111111111111111:", streamIds);
                         
-                        // session.streamManagers를 사용하여 스트림을 검색합니다.
                         streamIds.forEach((streamId: string) => {
                             const foundStream = session.streamManagers.find((sm: any) => sm.stream && sm.stream.streamId === streamId);
                             console.log("22222222222222222222222222222222222:", session.streamManagers.map((sm:any) => sm.stream && sm.stream.streamId));
-                            if (foundStream && !this.state.subscribers.some(sub => sub.stream.streamId === foundStream.stream.streamId)) {
-                                const subscriber = session.subscribe(foundStream.stream, undefined);
-                                existingSubscribers.push(subscriber);
+                
+                            if (foundStream) {
+                                if (!this.state.subscribers.some(sub => sub.stream.streamId === foundStream.stream.streamId)) {
+                                    const subscriber = session.subscribe(foundStream.stream, undefined);
+                                    existingSubscribers.push(subscriber);
+                                }
+                                const index = notFoundStreams.indexOf(streamId);
+                                if (index > -1) {
+                                    notFoundStreams.splice(index, 1); // 스트림을 찾았으므로 notFoundStreams에서 제거
+                                }
+                            } else {
+                                // 스트림을 찾지 못했으면 notFoundStreams에 추가
+                                if (!notFoundStreams.includes(streamId)) {
+                                    notFoundStreams.push(streamId);
+                                }
                             }
                         });
+                
                         this.setState({ subscribers: existingSubscribers });
                     } catch (error) {
                         console.error("Error fetching streams:", error);

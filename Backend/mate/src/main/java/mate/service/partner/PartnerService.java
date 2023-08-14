@@ -37,7 +37,10 @@ public class PartnerService {
             String nickname = (String) result[1];
             Long percent = (Long) result[2];
             Integer Idx = (Integer) result[3];
-
+            String invite = (String) result[4];
+            if (invite.equals("false")) {
+                continue;
+            }
             List<String> language = basicRepository.findLanguage(Idx);
 
             PartnerDto partnerDto = new PartnerDto();
@@ -45,6 +48,7 @@ public class PartnerService {
             partnerDto.setName(name);
             partnerDto.setNickname(nickname);
             partnerDto.setPercent(percent);
+            partnerDto.setInvite(invite);
             partnerDto.setLanguageList(language);
 
             list.add(partnerDto);
@@ -63,6 +67,10 @@ public class PartnerService {
             String name = u.getName();
             String nickname = u.getNickname();
             Integer Idx = u.getIdx();
+
+            if (u.getInvite().equals("false")) {
+                continue;
+            }
 
             List<String> language = basicRepository.findLanguage(Idx);
 

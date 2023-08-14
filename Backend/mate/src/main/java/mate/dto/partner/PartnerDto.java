@@ -10,5 +10,6 @@ public class PartnerDto {
 	private String name;
 	private String nickname;
 	private long percent;
+	private String invite;
 	private List<String> languageList;
 }

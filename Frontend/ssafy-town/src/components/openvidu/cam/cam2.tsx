@@ -126,7 +126,7 @@ toggleVisibility = () => {
 
     
 
-    // async switchCamera() {
+    // switchMainCamera = async () => {
     //     if (this.state.publisher) {
     //         const devices = await navigator.mediaDevices.enumerateDevices();
     //         const videoInputDevices = devices.filter(device => device.kind === "videoinput");
@@ -134,10 +134,12 @@ toggleVisibility = () => {
     //         if (this.state.currentVideoDevice) {
     //             let index = videoInputDevices.findIndex(device => device.deviceId === this.state.currentVideoDevice?.deviceId);
     //             index = index < videoInputDevices.length - 1 ? index + 1 : 0;
-    //             this.state.publisher.switchCamera(videoInputDevices[index].deviceId);
+                
+    //             // mainStreamManager를 이용하여 카메라를 전환
+    //             this.state.mainStreamManager.switchCamera(videoInputDevices[index].deviceId);
     //             this.setState({ currentVideoDevice: videoInputDevices[index] });
     //         } else if (videoInputDevices[1]) {
-    //             this.state.publisher.switchCamera(videoInputDevices[1].deviceId);
+    //             this.state.mainStreamManager.switchCamera(videoInputDevices[1].deviceId);
     //             this.setState({ currentVideoDevice: videoInputDevices[1] });
     //         }
     //     }
@@ -290,7 +292,7 @@ toggleVisibility = () => {
                             </Button>
                             <Button 
                                 className={cam_set_css.switchCamera} 
-                                // onClick={this.switchCamera}
+                                // onClick={this.switchMainCamera}
                                 startIcon={<SwitchVideoIcon style={{ fontSize: '3em', color: 'black' }} />} >
                             </Button>
                         </div>

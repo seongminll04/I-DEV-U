@@ -70,7 +70,7 @@ const Alert: React.FC = () => {
       },
     })
       .then(res => {
-        console.log(res)
+        console.log(res.data.data)
         setAlertList(res.data.data.slice(0,4));
       })
       .catch(err => {

@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import store from '../../store/store'
+import { Message } from '@stomp/stompjs';
 // import { setModal } from '../../store/actions';
 
 type AssetKeys = 'A2' | 'B2' | 'C2' | 'D2' | 'E2' | 'F2' | 'G2' | 'H2' | 'I2' | 'J2' |
@@ -55,6 +56,12 @@ B2L2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2
 `;
 
 export class Msize1Scene extends Phaser.Scene {
+    private dataChannels: { [id: string]: RTCDataChannel } = {}; 
+    private prevPosition: { x: number, y: number } | null = null;
+    private remoteCharacters: { [id: string]: Phaser.GameObjects.Sprite } = {};
+    private lastSentTime: number = 0;
+    private remoteCharacterNames: { [id: string]: Phaser.GameObjects.Text } = {};
+    private remoteCharactersLastUpdate: { [id: string]: number } = {}; // 여기에 추가
 
     private character?: Phaser.Physics.Arcade.Sprite;
     private character2?: Phaser.Physics.Arcade.Sprite;
@@ -75,6 +82,25 @@ export class Msize1Scene extends Phaser.Scene {
       for (let char in ASSETS) {
         this.load.image(char, (ASSETS as Record<string, string>)[char]);
       }
+      for (let i = 0; i <= 9; i++) {
+        for (let j = 1; j <= 12; j++) {
+            let secondChar;
+            if (j <= 9) {
+                secondChar = j;
+            } else if (j === 10) {
+                secondChar = 'A';
+            } else if (j === 11) {
+                secondChar = 'B';
+            } else {
+                secondChar = 'C';
+            }
+            
+            const imageKey = `${i}${secondChar}`;
+            const imagePath = `assets/${imageKey}.png`;
+            
+            this.load.image(imageKey, imagePath);
+        }
+    }
 
       // 타일 이미지 로드
       this.load.image('character', 'assets/admin_character.png');
@@ -94,14 +120,17 @@ export class Msize1Scene extends Phaser.Scene {
       // const mapCenterX = rows[0].length * tileSize / 2;
       const mapCenterY = rows.length * tileSize / 2;
 
-      this.character = this.physics.add.sprite(52, mapCenterY + 72, 'character').setOrigin(0.5, 0.5);
+      const userCharacter = localStorage.getItem("character") || '0';
+
+      this.character = this.physics.add.sprite(52, mapCenterY + 72, `${  userCharacter}2`).setOrigin(0.5, 0.5);
       this.physics.add.collider(this.character, this.walls);  // 캐릭터와 벽 사이의 충돌 설정
       this.character?.setDepth(2); // 캐릭터부터 생성했으니 depth를 줘야 캐릭터가 화면에 보임
 
-      this.character2 = this.physics.add.sprite(3210, mapCenterY + 72, 'character2').setOrigin(0.5, 0.5);
+      this.character2 = this.physics.add.sprite(3210, mapCenterY + 72, `${  userCharacter}2`).setOrigin(0.5, 0.5);
       this.physics.add.collider(this.character2, this.walls);
       this.character2.setDepth(2);
 
+      this.createAnimationsForCharacter(userCharacter); // 방향 애니메이션
 
       this.cursors = this.input.keyboard?.createCursorKeys();
       this.cameras.main.startFollow(this.character);
@@ -147,7 +176,7 @@ export class Msize1Scene extends Phaser.Scene {
             } else if (tileID === 'e2') {
               this.thing = this.physics.add.sprite((colIndex / 2) * tileSize, rowIndex * tileSize, tileID);
               this.thing.setOrigin(0, 0).setDisplaySize(96, 64).setImmovable(true);
-              this.physics.add.collider(this.character!, this.thing);
+              // this.physics.add.collider(this.character!, this.thing);
               this.thing.setDepth(1);
             }
           }
@@ -159,36 +188,222 @@ export class Msize1Scene extends Phaser.Scene {
       });
 
     }
+     /////////////////////////// 캐릭터 이동 애니메이션
   
-    update() {
+  createAnimationsForCharacter(characterKey : string) {
+    // 위를 바라보는 애니메이션
+    this.anims.create({
+      key: `${characterKey}-up`,
+      frames: [
+        { key: `${characterKey}A`},
+        { key: `${characterKey}C`},
+        { key: `${characterKey}B`},
+      ],
+      frameRate: 10,
+      repeat: -1
+    });
+  
+    // 오른쪽을 바라보는 애니메이션
+    this.anims.create({
+      key: `${characterKey}-right`,
+      frames: [
+        { key: `${characterKey}7`},
+        { key: `${characterKey}8`},
+        { key: `${characterKey}9`},
+      ],
+      frameRate: 10,
+      repeat: -1
+    });
+  
+    // 아래를 바라보는 애니메이션
+    this.anims.create({
+      key: `${characterKey}-down`,
+      frames: [
+        { key: `${characterKey}1`},
+        { key: `${characterKey}3`},
+        { key: `${characterKey}2`},
+      ],
+      frameRate: 10,
+      repeat: -1
+    });
+  
+    // 왼쪽을 바라보는 애니메이션
+    this.anims.create({
+      key: `${characterKey}-left`,
+      frames: [
+        { key: `${characterKey}4`},
+        { key: `${characterKey}6`},
+        { key: `${characterKey}5`},
+      ],
+      frameRate: 10,
+      repeat: -1
+    });
+  }
+  /////////////////////////// WEBRTC
 
-      if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnBench) {
-        let moved = false;
-        if (this.cursors.left?.isDown) {
-          this.character.setVelocityX(-320);
-          moved = true;
-        } else if (this.cursors.right?.isDown) {
-          this.character.setVelocityX(320);
-          moved = true;
-        } else {
-          this.character.setVelocityX(0);
-        }
-    
-        if (this.cursors.up?.isDown) {
-          this.character.setVelocityY(-320);
-          moved = true;
-        } else if (this.cursors.down?.isDown) {
-          this.character.setVelocityY(320);
-          moved = true;
-        } else {
-          this.character.setVelocityY(0);
-        }
-    
-        if (moved) {
+  initializeWebRTC() {
+    const stompClientRef = store.getState().stompClientRef;
+    const sessionName = localStorage.getItem('OVsession');
+    this.remoteCharacterNames = {};
+    this.remoteCharactersLastUpdate = {};
+  
+    var location = this;
+
+    setInterval(() => {
+      // 5초마다 모든 유저의 데이터를 보내기
+      this.sendCharacterData();
+
+      // 10초마다 캐릭터 정보 확인 및 오래된 캐릭터 제거
+      const now = Date.now();
+      for (let id in this.remoteCharacters) {
+        if (now - this.remoteCharactersLastUpdate[id] > 10000) {
+          this.remoteCharacters[id].destroy(); // Phaser sprite 제거
+          this.remoteCharacterNames[id]?.destroy(); // 이름 라벨도 제거
+          delete this.remoteCharacters[id];
+          delete this.remoteCharactersLastUpdate[id];
         }
       }
-      this.isNear()
+    }, 5000);
+  
+    if (stompClientRef) {
+      stompClientRef.subscribe(`/sub/channel/${sessionName}`, function(message:Message) {
+        const newMessage = JSON.parse(message.body);
+  
+        if (newMessage) {
+          // 기존 캐릭터가 존재하는지 확인
+          let remoteChar = location.remoteCharacters[newMessage.id];
+          const userIdx = localStorage.getItem('OVtoken')
+  
+          // 캐릭터가 존재하지 않으면 새로 생성
+          if (!remoteChar && newMessage.id !== userIdx) {
+            remoteChar = location.physics.add.sprite(newMessage.position.x, newMessage.position.y, `${newMessage.type}2`);
+            remoteChar.setDepth(3);
+            location.remoteCharacters[newMessage.id] = remoteChar;
+
+            const userName = newMessage.nickname || 'Unknown';
+            const nameText = location.add.text(newMessage.position.x, newMessage.position.y - 30, userName, { color: 'black', align: 'center', fontSize: '14px', fontStyle: 'bold'});
+            nameText.setOrigin(0.5, 0.5);
+            nameText.setDepth(4);  // 캐릭터보다 위에 표시되게 depth를 설정
+            location.remoteCharacterNames[newMessage.id] = nameText;
+          }
+            else if(remoteChar){
+            // 캐릭터가 이미 존재하면 위치와 애니메이션 상태 업데이트
+            remoteChar.setPosition(newMessage.position.x, newMessage.position.y);
+
+            location.remoteCharacterNames[newMessage.id]?.setPosition(newMessage.position.x, newMessage.position.y - 30);
+  
+            // 애니메이션 상태 업데이트
+            if (newMessage.direction) {
+              if (!location.anims.exists(`${newMessage.type}-up`)) {
+                location.createAnimationsForCharacter(newMessage.type);
+              }
+              remoteChar.play(`${newMessage.direction}`, true);
+            }
+            remoteChar.setAlpha(newMessage.state ? 0.4 : 1);
+          }
+          location.remoteCharactersLastUpdate[newMessage.id] = Date.now();
+        }
+      });
     }
+  }
+
+    // 캐릭터의 위치나 상태가 변경될 때 호출
+    sendCharacterData(message?: string) {
+      const currentUserId = localStorage.getItem('OVtoken');
+      const currentUserNickname = localStorage.getItem('userNickname') || 'Unknown';  // 닉네임 가져오기
+  
+      const now = Date.now();
+      if (now - this.lastSentTime < 20) { // 마지막으로 데이터를 보낸 후 100ms가 지나지 않았다면 리턴
+        return;
+      }
+  
+      const dataToSend = {
+        id: currentUserId,
+        position: { x: this.character?.x || 0, y: this.character?.y || 0 },
+        state: this.sittingOnBench, //의자에 앉아 있으면 true 아니면 false
+        type: localStorage.getItem('character'),
+        direction: this.character?.anims.currentAnim?.key,  // 현재 애니메이션 상태
+        frame: this.character?.anims.currentFrame?.index || 2,       // 현재 프레임 번호
+        nickname: currentUserNickname,
+      };
+      // const stompClientRef:Client|null = null;
+      
+      const stompClientRef =store.getState().stompClientRef
+      const sessionName = localStorage.getItem('OVsession');
+      if (stompClientRef) {
+        stompClientRef.publish({
+          destination:`/sub/channel/${sessionName}`,
+          body:JSON.stringify(dataToSend)
+        })
+        this.lastSentTime = now;
+      }
+    }
+  
+  
+  /////////////////////////////
+  
+  update() {
+    const currentPlayerPosition = { x: this.character!.x, y: this.character!.y };
+
+    if (!this.prevPosition || (this.prevPosition.x !== currentPlayerPosition.x || this.prevPosition.y !== currentPlayerPosition.y)) {
+        this.sendCharacterData();
+        this.prevPosition = currentPlayerPosition;
+    }
+
+    if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnBench) {
+        let moved = false;
+        
+        if (this.cursors.left?.isDown) {
+            this.character.setVelocityX(-320);
+            this.character.play(`${localStorage.getItem("character") || '0'}-left`, true);
+            moved = true;
+        } else if (this.cursors.right?.isDown) {
+            this.character.setVelocityX(320);
+            this.character.play(`${localStorage.getItem("character") || '0'}-right`, true);
+            moved = true;
+        } else {
+            this.character.setVelocityX(0);
+        }
+
+        if (this.cursors.up?.isDown) {
+            this.character.setVelocityY(-320);
+            if (!this.cursors.right?.isDown && !this.cursors.left?.isDown) {
+                this.character.play(`${localStorage.getItem("character") || '0'}-up`, true);
+            }
+            moved = true;
+        } else if (this.cursors.down?.isDown) {
+            this.character.setVelocityY(320);
+            if (!this.cursors.right?.isDown && !this.cursors.left?.isDown) {
+                this.character.play(`${localStorage.getItem("character") || '0'}-down`, true);
+            }
+            moved = true;
+        } else {
+            this.character.setVelocityY(0);
+        }
+
+        // Set to idle frame if not moving
+        if (!moved && this.character.anims.currentAnim) {
+            let previousAnimationKey = this.character.anims.currentAnim.key;
+            let direction = previousAnimationKey.split('-')[1]; 
+
+            if (['left', 'right', 'up', 'down'].includes(direction)) {
+                let idleFrameKey = {
+                    'left': '5',
+                    'right': '8',
+                    'up': 'B',
+                    'down': '2'
+                }[direction];
+
+                if (idleFrameKey) {
+                    this.character.setTexture(`${localStorage.getItem("character") || '0'}${idleFrameKey}`);
+                }
+            }
+        }
+    }
+
+    this.isNear();
+  }
+
 
     private isNear(): boolean {     //캐릭터가 벤치 주변에 있는가?
       if (this.character) {            
@@ -198,7 +413,7 @@ export class Msize1Scene extends Phaser.Scene {
           const minX = benchCenterX - 32;
           const maxX = benchCenterX + 32;
           const minY = benchCenterY;
-          const maxY = benchCenterY + 96; //캐릭터 다시 만들고 조정해줘야함
+          const maxY = benchCenterY + 32;
           
           const charX = this.character.x;
           const charY = this.character.y;
@@ -217,13 +432,12 @@ export class Msize1Scene extends Phaser.Scene {
         return;  // 밴치주변에 없으면 놉
       }
       else if(this.sittingOnBench){ //이미 앉아있으면
-        this.character!.y += 64;
         this.character!.setAlpha(1);
         this.sittingOnBench = false;
       }
       else{ //앉아있지않으면
-      this.character!.y -= 64;
       this.character!.setAlpha(0.4);
+      this.character!.anims.stop();
       this.sittingOnBench = true;
       }
     }

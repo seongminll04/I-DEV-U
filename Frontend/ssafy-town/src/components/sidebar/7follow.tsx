@@ -7,6 +7,7 @@ import { setAllowMove, setModal } from '../../store/actions';
 import { AppState } from '../../store/state';
 import EnterChatF from '../enter/enterchatF';
 import EnterCamF from '../enter/entercamF';
+import FollowDetail from '../detail/followDetail';
 
 interface FollowUser {
   followIdx: number;
@@ -37,15 +38,36 @@ const Follow: React.FC = () => {
       },
     })
       .then(res => {
-        if (res.data.data){
-          console.log(res.data.data.data)
+        if (res.data.data) {
           setMyFollowList(res.data.data.data)
         }
       })
       .catch(err => {
         console.log(err);
       })
-  },[])
+  }, [])
+
+  const refresh = () => {
+    const userToken = localStorage.getItem('userToken');
+    const userIdxStr = localStorage.getItem('userIdx');
+    const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
+
+    axios({
+      method: 'get',
+      url: `https://i9b206.p.ssafy.io:9090/user/getFollowList/${userIdx}`,
+      headers: {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+      .then(res => {
+        if (res.data.data) {
+          setMyFollowList(res.data.data.data)
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
 
   // input 방향키 살리기
   const handlekeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -65,9 +87,10 @@ const Follow: React.FC = () => {
     <div className='sidebar_modal'>
       <h1>내 팔로우 목록</h1>
       <div className={follow_css.search}>
-        <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown} value={inputvalue} onChange={(e)=>setinputvalue(e.target.value)}
+        <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown} value={inputvalue} onChange={(e) => setinputvalue(e.target.value)}
           onFocus={() => dispatch(setAllowMove(false))} onBlur={() => dispatch(setAllowMove(true))} />
       </div>
+      <button className={follow_css.button} onClick={() => dispatch(setModal('팔로우찾기'))}>직접 추가</button>
       <hr style={{ width: '75%', color: 'black' }} />
 
       <div className={follow_css.scrollbox}>
@@ -92,14 +115,15 @@ const Follow: React.FC = () => {
           }
           else {
             return (
-              <div></div>
+              <div key={index}></div>
             )
           }
         })}
       </div>
-      {isModalOpen==='팔로우채팅' ? <EnterChatF sendusername={requestname} senduserIdx={requestidx} />
-      :isModalOpen==='팔로우화상' ? <EnterCamF sendusername={requestname} senduserIdx={requestidx} />
-      :<></>}
+      {isModalOpen === '팔로우채팅' ? <EnterChatF sendusername={requestname} senduserIdx={requestidx} />
+        : isModalOpen === '팔로우화상' ? <EnterCamF sendusername={requestname} senduserIdx={requestidx} />
+          : isModalOpen === '팔로우찾기' ? <FollowDetail refresh={refresh} />
+            : <></>}
     </div>
   );
 };

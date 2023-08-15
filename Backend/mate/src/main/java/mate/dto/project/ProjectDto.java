@@ -11,6 +11,7 @@ public class ProjectDto {
 
 	private Integer idx;
 	private Integer userIdx;
+	private String nickname;
 	private String title;
 	private String content;
 	private Integer totalNum;

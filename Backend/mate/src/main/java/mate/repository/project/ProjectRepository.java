@@ -26,7 +26,14 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
     @Query("select p from Project p where p.idx = :projectIdx")
     Optional<Project> findProject(@Param("projectIdx") Integer projectIdx);
 
-
     @Query("select distinct p from Project p join fetch p.projectParticipation where p.idx = :projectIdx")
-    Optional<Project> findProjectUsers (@Param("projectIdx") Integer projectIdx);
+    Optional<Project> findProjectUsers(@Param("projectIdx") Integer projectIdx);
+
+    @Query("select DISTINCT p from Project p " +
+            "JOIN p.projectLanguages pl " +
+            "where p.type = :type " +
+            "AND pl.language IN (:language) " +
+            "AND ((:position = 'back' AND p.back < p.max_back) OR (:position = 'front' AND p.front < p.max_front))")
+    List<Project> findProjectsByFilter(@Param("language") List<String> language, @Param("type") String type,
+                                           @Param("position") String position);
 }

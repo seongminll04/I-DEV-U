@@ -158,17 +158,29 @@ public class ProjectService {
 			return projectRepository.findProjectsByTitleOrContent(keyword);
 	}
 
-	public String makeRoomCode() {
-		int leftLimit = 48; // numeral '0'
-		int rightLimit = 122; // letter 'z'
-		int targetStringLength = 10;
-		Random random = new Random();
+	public List<ProjectDto> filterProject(String type, String position, List<String> languageList) {
+		List<ProjectDto> list = new ArrayList<>();
 
-		String generatedString = random.ints(leftLimit, rightLimit + 1)
-			.filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-			.limit(targetStringLength)
-			.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-			.toString();
-		return generatedString;
+		List<Project> result = projectRepository.findProjectsByFilter(languageList, type, position);
+
+		for (Project p : result) {
+			ProjectDto dto = new ProjectDto();
+
+			dto.setTitle(p.getTitle());
+			dto.setUserIdx(p.getManager().getIdx());
+			dto.setNickname(p.getManager().getNickname());
+			dto.setTotalNum(p.getTotalNum());
+			dto.setNowNum(p.getNowNum());
+			dto.setFront(p.getFront());
+			dto.setMax_front(p.getMax_front());
+			dto.setBack(p.getBack());
+			dto.setMax_back(p.getMax_back());
+			dto.setType(p.getType());
+			dto.setLanguageList(p.getProjectLanguages());
+
+			list.add(dto);
+		}
+
+		return list;
 	}
 }

@@ -11,7 +11,8 @@ import { setAllowMove, setModal, setSidebar } from '../../store/actions';
 
 import { Tsize1Scene } from '../map/Tsize1Scene';
 import ModalOpen from '../system/modalopen';
-import Cam from '../openvidu/cam/cam'
+// import Cam from '../openvidu/cam/cam'
+import Cam2 from '../openvidu/cam/cam2'
 
 const MeetingRoom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
@@ -97,7 +98,7 @@ const MeetingRoom: React.FC = () => {
       <div id="phaser_game" className={ssafytown_css.phaser_game} >
         <div id="my-video-container" className={ssafytown_css.my_video_bar}></div>
         <div id="videoContainer" className={ssafytown_css.op_video_bar}> </div>
-        <div className={ssafytown_css.video_bar}><Cam /></div>
+        <div className={ssafytown_css.video_bar}><Cam2 /></div>
       </div>
     </div>
   );

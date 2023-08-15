@@ -9,10 +9,16 @@ export default class UserVideoComponent extends Component<Props> {
 
     getNicknameTag(): string {
         const connectionData = this.props.streamManager?.stream?.connection?.data;
-        if (!connectionData || connectionData === "undefined") {
-            return "알수없음"; // 또는 적절한 디폴트 값
+        let nickname = "알수없음";
+    
+        try {
+            const parsedData = JSON.parse(connectionData);
+            nickname = parsedData.clientData || nickname;
+        } catch (e) {
+            console.error("Failed to parse connection data:", e);
         }
-        return connectionData || "알수없음";
+    
+        return nickname;
     }
 
     render(): JSX.Element {

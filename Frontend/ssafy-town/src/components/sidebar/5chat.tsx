@@ -201,6 +201,9 @@ import axios from "axios";
                 if (year===1970) {
                   today=''
                 }
+                else if (year===now.getFullYear()) {
+                  today = `${month}/${day} ${hours}:${minutes}`;
+                }
                 else {
                   today = `${year}/${month}/${day} ${hours}:${minutes}`;
                 }

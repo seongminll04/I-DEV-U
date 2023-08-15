@@ -72,6 +72,7 @@ const Project: React.FC = () => {
       },
       data:{keyword:""}
     }).then(res => {
+      console.log(res)
         setProjectList(res.data.list)})
     .catch(err => {console.log(err);});
   },[isModalOpen])
@@ -132,6 +133,7 @@ const Project: React.FC = () => {
                             <div className={project_css.project_data}>
                                 <b>{project["title"]}</b>
                                 <p style={{ color: 'gray' }}>
+                                  <span>#{project.type} </span>
                                   {project.projectLanguages.map((language,index)=>(
                                     <span>#{language.language} </span>
                                   ))}

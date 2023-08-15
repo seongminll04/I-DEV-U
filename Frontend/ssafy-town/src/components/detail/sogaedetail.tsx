@@ -54,6 +54,7 @@ const SogaeDetail: React.FC<Props> = ({ userIdx }) => {
     const userToken = localStorage.getItem('userToken')
     const senduserIdxStr = localStorage.getItem('userIdx')
     const senduserIdx = senduserIdxStr ? parseInt(senduserIdxStr,10) : null
+
     axios({
       method:'get',
       url: `https://i9b206.p.ssafy.io:9090/chat/rooms/check`,

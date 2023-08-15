@@ -28,7 +28,8 @@ interface AlertProps {
   toUser:{
     idx:number,
     nickname:string,
-  }
+  },
+  targetIdx:number|null
 }
 
 const Alert: React.FC = () => {

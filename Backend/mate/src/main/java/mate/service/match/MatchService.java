@@ -5,6 +5,7 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import mate.domain.basic.BasicAnswer;
 import mate.domain.user.UserGender;
@@ -105,6 +106,8 @@ public class MatchService {
 			// 현재 날짜 가져오기
 			LocalDate currentDate = LocalDate.now();
 
+			Optional<String> path = userRepository.findPath(Idx);
+
 			// 나이 계산
 			Period agePeriod = Period.between(birthDateFromDatabase, currentDate);
 			int age = agePeriod.getYears();
@@ -116,6 +119,7 @@ public class MatchService {
 			matchDto.setFace(face);
 			matchDto.setPercent(percent);
 			matchDto.setAge(age);
+			path.ifPresent(matchDto::setStoredFileName);
 
 			output.add(matchDto);
 
@@ -162,7 +166,7 @@ public class MatchService {
 		matchDetailDto.setSalary(salary);
 		matchDetailDto.setGender(gender);
 		matchDetailDto.setIntro(intro);
-
+		matchDetailDto.setStoredFileName(user.getStoredFileName());
 
 		return matchDetailDto;
 	}

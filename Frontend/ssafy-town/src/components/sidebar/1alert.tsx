@@ -19,10 +19,13 @@ interface Notice {
 
 interface AlertProps {
   idx: number;
-  checked: string;
   createdAt: string;
   type: string;
   fromUser:{
+    idx:number,
+    nickname:string,
+  },
+  toUser:{
     idx:number,
     nickname:string,
   }
@@ -34,7 +37,7 @@ const Alert: React.FC = () => {
   const [alertList, setAlertList] = useState<AlertProps[]>([]);
   const [page, setPage] = useState<Number>(0)
   const [noticeIdx, setNoticeIdx] = useState<number>(0);
-  const [alertIdx, setAlertIdx] = useState<number>(0);
+  const [Selalert, setSelAlert] = useState<AlertProps>();
 
   const stompClientRef = React.useRef<Client | null>(null);
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
@@ -55,7 +58,7 @@ const Alert: React.FC = () => {
       .catch(err => {
         console.log(err)
       })
-  }, [])
+  }, [page])
 
   useEffect(() => {
     // 모달창이 열렸다면 읽지 않은 알림 데이터 불러오기
@@ -71,12 +74,17 @@ const Alert: React.FC = () => {
     })
       .then(res => {
         console.log(res.data.data)
-        setAlertList(res.data.data.slice(0,4));
+        if (res.data.data && res.data.data.length > 4) {
+          setAlertList(res.data.data.slice(0,4));
+        }
+        else {
+          setAlertList(res.data.data);
+        }
       })
       .catch(err => {
         console.log(err)
       })
-  }, [])
+  }, [page])
   const backpage = () => {
     setPage(0)
   }
@@ -110,7 +118,9 @@ const Alert: React.FC = () => {
                 <p>알림 </p>
                 <p className={alert_css.movebtn} onClick={() => { dispatch(setModal('알림전체')) }}>전체보기</p>
               </div>
-              {alertList.map((alert: AlertProps, index: number) => {
+              { alertList.length >0 ? 
+              <div>
+                {alertList.map((alert: AlertProps, index: number) => {
                 const date = new Date(alert.createdAt);
                 const month = (date.getMonth() + 1).toString().padStart(2, '0');
                 const day = date.getDate().toString().padStart(2, '0');
@@ -118,11 +128,12 @@ const Alert: React.FC = () => {
                 const minutes = date.getMinutes().toString().padStart(2, '0');
                 
                 return (
-                  <div key={index} onClick={() => { setPage(2); setAlertIdx(alert.idx) }} className={alert_css.notice}>
+                  <div key={index} onClick={() => { setPage(2); setSelAlert(alert) }} className={alert_css.notice}>
                     <span>{index+1}</span>
                     <span>
                       { alert.type==='PROJECT' ? `${alert.fromUser.nickname}님의 프로젝트 가입신청입니다`
                        : alert.type==='CHAT' ? `${alert.fromUser.nickname}님의 채팅신청입니다`
+                       : alert.type==='SOGAE' ? `${alert.fromUser.nickname}님의 소개팅신청입니다`
                        : alert.type==='MATE' ? `${alert.fromUser.nickname}님의 동료신청입니다` :null }
                     </span>
                     <span>{month}/{day} {hours}:{minutes}</span>
@@ -130,10 +141,14 @@ const Alert: React.FC = () => {
                   </div>
                 );
               })}
+              </div>
+              :
+              null
+              }
             </div>
           </div>
         </div>
-        : page === 1 ? <DetailNotice backpage={backpage} noticeIdx={noticeIdx} /> : <DetailAlert backpage={backpage} alertIdx={alertIdx} />}
+        : page === 1 ? <DetailNotice backpage={backpage} noticeIdx={noticeIdx} /> : <DetailAlert backpage={backpage} Selalert={Selalert!} />}
     </div>
   );
 };

@@ -44,7 +44,6 @@ const Sogae: React.FC = () => {
         }
       })
       .catch(err => console.log(err))
-
   }, []);
 
   useEffect(() => {
@@ -61,7 +60,7 @@ const Sogae: React.FC = () => {
         },
       })
         .then(res => {
-          console.log(res)
+          console.log(res.data)
           setUsers(res.data.user_list)
         })
         .catch(err => console.log(err))

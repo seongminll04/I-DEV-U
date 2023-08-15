@@ -8,7 +8,8 @@ import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 
 interface Props {
-  user: {email: string;
+  user: {
+    email: string;
     password: string;
     name: string;
     nickname: string;
@@ -17,11 +18,12 @@ interface Props {
     intro: string; // 자기소개
     status: string; // active or not (회원탈퇴여부)
     grade: number; // 1 : 관리자(운영자), 2 : 일반}  
+    storedFileName : string;
   };
-  change: ()=>void;
+  change: () => void;
 }
 
-const EditAccount: React.FC<Props> = ({user, change}) => {
+const EditAccount: React.FC<Props> = ({ user, change }) => {
   const dispatch = useDispatch()
   const [chknickname, setchknickname] = useState('no');
 
@@ -32,25 +34,25 @@ const EditAccount: React.FC<Props> = ({user, change}) => {
     //   .required('닉네임을 입력해주세요.'),
   });
 
-  const nicknamecheck = (nickname:string) => {
-    
-    if (nickname==='') {
+  const nicknamecheck = (nickname: string) => {
+
+    if (nickname === '') {
       alert('닉네임을 입력해주세요.')
     }
 
     else if (!formik.errors.nickname) {
       axios({
-        method:'get',
-        url:`https://i9b206.p.ssafy.io:9090/user/signUp/nicknameCheck/${nickname}`
+        method: 'get',
+        url: `https://i9b206.p.ssafy.io:9090/user/signUp/nicknameCheck/${nickname}`
       })
-      .then(()=>{
-        setchknickname('yes')
-        alert('사용할 수 있는 닉네임입니다.')
-        console.log(chknickname)
-      })
-      .catch(() => {
-        alert('중복된 닉네임입니다.')
-      })
+        .then(() => {
+          setchknickname('yes')
+          alert('사용할 수 있는 닉네임입니다.')
+          console.log(chknickname)
+        })
+        .catch(() => {
+          alert('중복된 닉네임입니다.')
+        })
     }
     else {
       alert('유효하지 않은 닉네임입니다.')
@@ -59,7 +61,7 @@ const EditAccount: React.FC<Props> = ({user, change}) => {
 
   const formik = useFormik({
     initialValues: {
-      userIdx : localStorage.getItem("userIdx"),
+      userIdx: localStorage.getItem("userIdx"),
       email: user.email,
       nickname: user.nickname,
       name: user.name,
@@ -72,45 +74,83 @@ const EditAccount: React.FC<Props> = ({user, change}) => {
       console.log(values);
       const userToken = localStorage.getItem('userToken');
       axios({
-        method : 'put',
-        url : 'https://i9b206.p.ssafy.io:9090/user/modify',
-        headers : {
+        method: 'put',
+        url: 'https://i9b206.p.ssafy.io:9090/user/modify',
+        headers: {
           Authorization: 'Bearer ' + userToken,
         },
-        data : values,
+        data: values,
       })
-      .then(res => {
-        console.log(res);
-        alert("회원정보 변경 완료");
-        change()
-        dispatch(setModal(null));
-      })
-      .catch(err => {
-        console.log(err)
-        alert("회원정보 변경 실패")
-        dispatch(setModal(null));
-      })
+        .then(res => {
+          console.log(res);
+          alert("회원정보 변경 완료");
+          change()
+          dispatch(setModal(null));
+        })
+        .catch(err => {
+          console.log(err)
+          alert("회원정보 변경 실패")
+          dispatch(setModal(null));
+        })
     }
   });
 
   // input 방향키 살리기
-  const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
+  const handlekeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget
     const currentCursorPosition = inputElement.selectionStart || 0;
-    if (event.key === 'ArrowLeft' && currentCursorPosition!==0) {
+    if (event.key === 'ArrowLeft' && currentCursorPosition !== 0) {
       inputElement.setSelectionRange(currentCursorPosition - 1, currentCursorPosition - 1);
     } else if (event.key === 'ArrowRight') {
       inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
-    } else if (event.key === ' '){
-      inputElement.value = inputElement.value.slice(0,currentCursorPosition)+ ' ' +inputElement.value.slice(currentCursorPosition,)
-      inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
+    } else if (event.key === ' ') {
+      inputElement.value = inputElement.value.slice(0, currentCursorPosition) + ' ' + inputElement.value.slice(currentCursorPosition,)
+      inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
     }
   }
-  
+
+  const onChangeImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const userToken = localStorage.getItem('userToken');
+    const userIdxStr = localStorage.getItem('userIdx')
+    let userIdx: number | null = null; // 타입을 number | null로 변경
+
+    if (userIdxStr) {
+      userIdx = parseInt(userIdxStr, 10);
+    }
+    e.preventDefault();
+
+    if (e.target.files) {
+      const uploadFile = e.target.files[0]
+      const formData = new FormData()
+      formData.append('file', uploadFile);
+      if (userIdx !== null) {
+        formData.append('userIdx', userIdx.toString()); // number 타입을 문자열로 변환하여 추가
+      }
+
+      await axios({
+        method: 'post',
+        url: 'https://i9b206.p.ssafy.io:9090/user/uploadFile',
+        data: formData,
+        headers: {
+          'Authorization': 'Bearer ' + userToken,
+          'Content-Type': 'multipart/form-data',
+        }
+      }).then((res) => {
+        console.log(res);
+        alert("성공")
+      })
+        .catch((err) => {
+          alert("실패")
+          console.log(err);
+        });
+    }
+  }
+
   return (
-    <div className={edit_css.mypage_modal_overlay}  onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
-      if (e.target === e.currentTarget) {dispatch(setModal(null));}}}>
-       <div className={edit_css.mypage_alert_modal}>
+    <div className={edit_css.mypage_modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
+      if (e.target === e.currentTarget) { dispatch(setModal(null)); }
+    }}>
+      <div className={edit_css.mypage_alert_modal}>
         <div className={edit_css.two_btn}>
           <span
             onClick={() => {
@@ -127,40 +167,40 @@ const EditAccount: React.FC<Props> = ({user, change}) => {
             닫기
           </span>
         </div>
-          <h1>내 정보 수정</h1>
-          <hr/>
-          <form id={edit_css.mypage_form} onSubmit={formik.handleSubmit}>
-            <div className={edit_css.mypage_info}>
-              <span>이름</span>
-            </div>
-            <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('name')} readOnly/>
-            <div className={edit_css.mypage_info}>
-              <span>생년월일</span>
-            </div>
-            <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('birth')} readOnly/>
-            <div className={edit_css.mypage_info}>
-              <span>성별</span>
-            </div>
-            <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('gender')} readOnly/>
-            <div className={edit_css.mypage_info}>
-              <span>닉네임</span>
-            </div>
-            <div className={edit_css.mypage_nickname}>
-              <input style={{width:'82%'}} type="text" className={edit_css.mypage_input} {...formik.getFieldProps('nickname')}  onChange={(event) => {formik.handleChange(event); setchknickname('no');}} 
-              onKeyDown={handlekeydown}/>
-              <div className={edit_css.mypage_check_nickname_btn} onClick={()=>nicknamecheck(formik.values.nickname)}>중복확인</div>
-            </div>
-            <div className={edit_css.mypage_info}>
-              <span>자기소개</span>
-            </div>
-            <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('intro')} onKeyDown={handlekeydown}/>
-            <div className={edit_css.mypage_info}>
-              <span>사진</span>
-            </div>
-            <input type="file" className={edit_css.mypage_input}/>
-            <button className={edit_css.mypage_button} type="submit">수정</button>
-          </form>
-        </div>
+        <h1>내 정보 수정</h1>
+        <hr />
+        <form id={edit_css.mypage_form} onSubmit={formik.handleSubmit}>
+          <div className={edit_css.mypage_info}>
+            <span>이름</span>
+          </div>
+          <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('name')} readOnly />
+          <div className={edit_css.mypage_info}>
+            <span>생년월일</span>
+          </div>
+          <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('birth')} readOnly />
+          <div className={edit_css.mypage_info}>
+            <span>성별</span>
+          </div>
+          <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('gender')} readOnly />
+          <div className={edit_css.mypage_info}>
+            <span>닉네임</span>
+          </div>
+          <div className={edit_css.mypage_nickname}>
+            <input style={{ width: '82%' }} type="text" className={edit_css.mypage_input} {...formik.getFieldProps('nickname')} onChange={(event) => { formik.handleChange(event); setchknickname('no'); }}
+              onKeyDown={handlekeydown} />
+            <div className={edit_css.mypage_check_nickname_btn} onClick={() => nicknamecheck(formik.values.nickname)}>중복확인</div>
+          </div>
+          <div className={edit_css.mypage_info}>
+            <span>자기소개</span>
+          </div>
+          <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('intro')} onKeyDown={handlekeydown} />
+          <div className={edit_css.mypage_info}>
+            <span>사진</span>
+          </div>
+          <input type="file" className={edit_css.mypage_input} onChange={onChangeImg} />
+          <button className={edit_css.mypage_button} type="submit">수정</button>
+        </form>
+      </div>
     </div>
   );
 };

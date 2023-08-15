@@ -51,7 +51,8 @@ let userdata = {
   intro: '', // 자기소개
   status: '', // active or not (회원탈퇴여부)
   grade: 0, // 1 : 관리자(운영자), 2 : 일반
-  invite: ''
+  invite: '',
+  storedFileName: ''
 };
 
 const Mypage: React.FC = () => {
@@ -120,9 +121,10 @@ const Mypage: React.FC = () => {
       .catch(() => {
         console.log("소개팅 등록여부 조회 실패")
       })
-  },[])
-  
+  }, [])
+
   useEffect(() => {
+    // 유저 정보 가져오기
     const userToken = localStorage.getItem('userToken')
     const userIdxStr = localStorage.getItem('userIdx')
     const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
@@ -136,6 +138,7 @@ const Mypage: React.FC = () => {
         },
       })
         .then(res => {
+          console.log(res.data.data)
           setUser(res.data.data)
           setChangeData(false)
         })
@@ -190,7 +193,11 @@ const Mypage: React.FC = () => {
       <div className='sidebar_modal' id={mypage_css.modal}>
         <h1>내 프로필</h1>
         <div className={mypage_css.mypage_photo}>
-          <img src="assets/default_profile.png" alt="" style={{ width: '100px', height: '100px' }} />
+          <img
+            src={user.storedFileName ? `https://i9b206.p.ssafy.io:9090/img/${localStorage.getItem("userIdx")}_.png` : "assets/default_profile.png"}
+            alt=""
+            style={{ width: '100px', height: '100px' }}
+          />
         </div>
         <div className={mypage_css.mypage_view}>
           <div className={mypage_css.mypage_welcome}>

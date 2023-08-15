@@ -13,8 +13,8 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import SwitchVideoIcon from '@mui/icons-material/SwitchVideo';
 
-const APPLICATION_SERVER_URL = process.env.REACT_APP_FRONT_SERVER; // .env에서 서버 주소 가져오기
-// const APPLICATION_SERVER_URL = "http://localhost:5000";
+// const APPLICATION_SERVER_URL = process.env.REACT_APP_FRONT_SERVER; // .env에서 서버 주소 가져오기
+const APPLICATION_SERVER_URL = "http://localhost:5000";
 
 interface IState {
     mySessionId: string;
@@ -36,6 +36,7 @@ class Cam2 extends Component<{}, IState> {
 
     constructor(props: any) {
         super(props);
+        
         
         // 초기 상태
         this.state = {
@@ -88,59 +89,59 @@ class Cam2 extends Component<{}, IState> {
     }
     
 
-    toggleVisibility = () => {
-        this.setState(prevState => ({ hideAll: !prevState.hideAll }), () => {
-            if (this.state.hideAll) {
-                if (this.state.publisher) {
-                    this.state.publisher.publishVideo(false);
-                    this.state.publisher.publishAudio(false);
-                }
-                this.setState({ audioVolume: 0 });
-                this.state.subscribers.forEach(subscriber => {
-                    const videoElem = document.getElementById(subscriber.stream.streamId) as HTMLVideoElement;
-                    if (videoElem) {
-                        videoElem.volume = 0;
-                    }
-                });
-            } else {
-                if (this.state.publisher) {
-                    // On 버튼을 누를 때 카메라와 마이크를 꺼진 상태로 시작
-                    this.state.publisher.publishVideo(false);
-                    this.state.publisher.publishAudio(false);
-                }
-                this.setState({ 
-                    publishVideo: false, // 카메라를 꺼진 상태로 업데이트
-                    publishAudio: false, // 마이크를 꺼진 상태로 업데이트
-                    audioVolume: 100 
-                });
-                this.state.subscribers.forEach(subscriber => {
-                    const videoElem = document.getElementById(subscriber.stream.streamId) as HTMLVideoElement;
-                    if (videoElem) {
-                        videoElem.volume = 1;
-                    }
-                });
+toggleVisibility = () => {
+    this.setState(prevState => ({ hideAll: !prevState.hideAll }), () => {
+        if (this.state.hideAll) {
+            if (this.state.publisher) {
+                this.state.publisher.publishVideo(false);
+                this.state.publisher.publishAudio(false);
             }
-        });
-    }
-    
+            this.setState({ audioVolume: 0 });
+            this.state.subscribers.forEach(subscriber => {
+                const videoElem = document.getElementById(subscriber.stream.streamId) as HTMLVideoElement;
+                if (videoElem) {
+                    videoElem.volume = 0;
+                }
+            });
+        } else {
+            if (this.state.publisher) {
+                // On 버튼을 누를 때 카메라와 마이크를 꺼진 상태로 시작
+                this.state.publisher.publishVideo(false);
+                this.state.publisher.publishAudio(false);
+            }
+            this.setState({ 
+                publishVideo: false, // 카메라를 꺼진 상태로 업데이트
+                publishAudio: false, // 마이크를 꺼진 상태로 업데이트
+                audioVolume: 100 
+            });
+            this.state.subscribers.forEach(subscriber => {
+                const videoElem = document.getElementById(subscriber.stream.streamId) as HTMLVideoElement;
+                if (videoElem) {
+                    videoElem.volume = 1;
+                }
+            });
+        }
+    });
+}
+
     
 
-    async switchCamera() {
-        if (this.state.publisher) {
-            const devices = await navigator.mediaDevices.enumerateDevices();
-            const videoInputDevices = devices.filter(device => device.kind === "videoinput");
+    // async switchCamera() {
+    //     if (this.state.publisher) {
+    //         const devices = await navigator.mediaDevices.enumerateDevices();
+    //         const videoInputDevices = devices.filter(device => device.kind === "videoinput");
             
-            if (this.state.currentVideoDevice) {
-                let index = videoInputDevices.findIndex(device => device.deviceId === this.state.currentVideoDevice?.deviceId);
-                index = index < videoInputDevices.length - 1 ? index + 1 : 0;
-                this.state.publisher.switchCamera(videoInputDevices[index].deviceId);
-                this.setState({ currentVideoDevice: videoInputDevices[index] });
-            } else if (videoInputDevices[1]) {
-                this.state.publisher.switchCamera(videoInputDevices[1].deviceId);
-                this.setState({ currentVideoDevice: videoInputDevices[1] });
-            }
-        }
-    }
+    //         if (this.state.currentVideoDevice) {
+    //             let index = videoInputDevices.findIndex(device => device.deviceId === this.state.currentVideoDevice?.deviceId);
+    //             index = index < videoInputDevices.length - 1 ? index + 1 : 0;
+    //             this.state.publisher.switchCamera(videoInputDevices[index].deviceId);
+    //             this.setState({ currentVideoDevice: videoInputDevices[index] });
+    //         } else if (videoInputDevices[1]) {
+    //             this.state.publisher.switchCamera(videoInputDevices[1].deviceId);
+    //             this.setState({ currentVideoDevice: videoInputDevices[1] });
+    //         }
+    //     }
+    // }
 
     joinSession = () => {
         // OpenVidu가 아직 초기화되지 않았다면 이제 초기화
@@ -289,18 +290,12 @@ class Cam2 extends Component<{}, IState> {
                             </Button>
                             <Button 
                                 className={cam_set_css.switchCamera} 
-                                onClick={this.switchCamera}
+                                // onClick={this.switchCamera}
                                 startIcon={<SwitchVideoIcon style={{ fontSize: '3em', color: 'black' }} />} >
                             </Button>
-                        {/* </div>
+                        </div>
     
                         <div id={cam_set_css["video-container"]} className={cam_set_css["col-md-6"]}>
-                            {mainStreamManager && (
-                                <div className={`${cam_set_css["stream-container"]} ${cam_set_css["col-md-6"]} ${cam_set_css["col-xs-6"]}`}>
-                                    <span>{mainStreamManager.id}</span>
-                                    <UserVideoComponent streamManager={mainStreamManager} />
-                                </div>
-                            )} */}
                             {publisher && (
                                 <div className={`${cam_set_css["stream-container"]} ${cam_set_css["col-md-6"]} ${cam_set_css["col-xs-6"]}`}>
                                     <span>{publisher.id}</span>

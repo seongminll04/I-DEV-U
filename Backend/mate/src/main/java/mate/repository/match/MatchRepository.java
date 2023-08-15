@@ -32,7 +32,7 @@ public interface MatchRepository extends JpaRepository<MatchAnswer, Integer> {
 	// 내가 원하는 상대방에 관한 설문을 바탕으로 상대방 유저의 설문과 비교함
 	@Query(
 		"SELECT ma.user.idx as userIdx, ma.user.nickname as nickname, ROUND((COUNT(*) / :size) * 100) AS percent, ma.user.name as name " +
-			"FROM MatchAnswer ma " +
+			"FROM MatchAnswer ma join MatchUser mu ON mu.user.idx = ma.user.idx " +
 			"WHERE ma.tag IN (:tag) and (ma.surveyIdx != 4 and ma.surveyIdx != 5 and ma.surveyIdx != 6) and (ma.user.gender != :gender) " +
 			"GROUP BY ma.user.idx " +
 			"ORDER BY percent DESC")

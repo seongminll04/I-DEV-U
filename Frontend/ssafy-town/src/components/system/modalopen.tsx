@@ -20,6 +20,7 @@ import AlertResponse from '../board/AlertResponse';
 import CheckPass from '../account/checkpass';
 import EditSel from '../account/editsel';
 import Withdraw from '../account/withdraw';
+import Inquiry from '../board/inquiry'
 
 const ModalOpen: React.FC = () => {
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);//사이드바 오픈여부
@@ -40,6 +41,7 @@ const ModalOpen: React.FC = () => {
       : isModalOpen === '회원정보수정1' ? <CheckPass />
       : isModalOpen === '회원정보수정2' ? <EditSel />
       : isModalOpen === '회원탈퇴' ? <Withdraw />
+      : isModalOpen === '문의' ? <Inquiry />
       : null }
     </>
   );

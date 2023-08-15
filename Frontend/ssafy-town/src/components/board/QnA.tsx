@@ -47,23 +47,54 @@ const QnA: React.FC = () => {
   }, []);
 
   const reload = () => {
-    const userToken = localStorage.getItem('userToken')
+    if (search && nowsearch) {
+      const userToken = localStorage.getItem('userToken')
+      const url = searchlocation === '제목' ? 'find/title/' + search
+        : searchlocation === '내용' ? 'find/content/' + search
+        : 'list/'
     axios({
       method: 'get',
-      url: 'https://i9b206.p.ssafy.io:9090/qna/list',
+      url: 'https://i9b206.p.ssafy.io:9090/qna/' + url,
       headers: {
         Authorization: 'Bearer ' + userToken
       },
     })
       .then(res => {
-        setQuestionList(res.data["Q&A"]);
-        setPagination(0)
-        setMaxpage(Math.ceil(res.data['Q&A'].length/10))
+        if (searchlocation==='전체') {
+          setQuestionList(res.data["Q&A"].filter((qna:Question) => qna.title.includes(search) || qna.content.includes(search)))
+          setMaxpage(Math.ceil(res.data["Q&A"].filter((qna:Question) => qna.title.includes(search) || qna.content.includes(search)).length/10))
+        }
+        else {
+          setQuestionList(res.data["Q&A"]);
+          setMaxpage(Math.ceil(res.data["Q&A"].length/10))
+        }
       })
       .catch(err => {
         console.log(err)
       })
+    }
+
+    else {
+
+      const userToken = localStorage.getItem('userToken')
+      axios({
+        method: 'get',
+        url: 'https://i9b206.p.ssafy.io:9090/qna/list',
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        },
+      })
+        .then(res => {
+          setQuestionList(res.data["Q&A"]);
+          setPagination(0)
+          setMaxpage(Math.ceil(res.data['Q&A'].length/10))
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
   }
+  
 
   const handlekeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget
@@ -99,21 +130,23 @@ const QnA: React.FC = () => {
     const url = searchlocation === '제목' ? 'find/title/' + search
       : searchlocation === '내용' ? 'find/content/' + search
       : 'list/'
-    console.log(url)
     axios({
       method: 'get',
       url: 'https://i9b206.p.ssafy.io:9090/qna/' + url,
       headers: {
         Authorization: 'Bearer ' + userToken
       },
-      params: {
-        keyWord: search
-      }
     })
       .then(res => {
-        setQuestionList(res.data["Q&A"]);
+        if (searchlocation==='전체') {
+          setQuestionList(res.data["Q&A"].filter((qna:Question) => qna.title.includes(search) || qna.content.includes(search)))
+          setMaxpage(Math.ceil(res.data["Q&A"].filter((qna:Question) => qna.title.includes(search) || qna.content.includes(search)).length/10))
+        }
+        else {
+          setQuestionList(res.data["Q&A"]);
+          setMaxpage(Math.ceil(res.data["Q&A"].length/10))
+        }
         setPagination(0)
-        setMaxpage(Math.ceil(res.data['Q&A'].length/10))
       })
       .catch(err => {
         console.log(err)
@@ -185,7 +218,7 @@ const QnA: React.FC = () => {
           null }
 
         </div>
-        : page === 1 ? <CreateQnA onback={() => { setPage(0); reload() }} />
+        : page === 1 ? <CreateQnA onback={() => { setPage(0); reload()}} />
           : <DetailQnA qnaid={qnaid} onback={() => setPage(0)} />}
     </div>
   );

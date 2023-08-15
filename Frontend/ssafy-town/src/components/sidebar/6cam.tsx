@@ -72,7 +72,6 @@ const Cam: React.FC = () => {
       <div className={cam_css.search}>
         <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown} value={inputvalue} onChange={(e)=>setinputvalue(e.target.value)}
             onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
-        {/* <button>검색</button> */}
       </div>
       <hr style={{width:'75%', color:'black'}}/>
 

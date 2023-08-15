@@ -94,23 +94,22 @@ const Follow: React.FC = () => {
       <hr style={{ width: '75%', color: 'black' }} />
 
       <div className={follow_css.scrollbox}>
-        {myFollowList.map((follow: FollowUser, index: number) => {
-          if (follow.userName.includes(inputvalue)) {
-            // console.log(follow);
+        {myFollowList.map((follow : FollowUser, index: number) => {
+          if (follow.userNickName.includes(inputvalue)) {
             return (
               <>
-                <div className={follow_css.profile} key={follow.followIdx}>
-                  <img src="assets/default_profile.png" alt="" />
-                  <div className={follow_css.profiledata}>
-                    <b>{follow.userNickName}</b>
-                    <p>{follow.userIntro}</p>
-                  </div>
-                  <div>
-                    <button className={follow_css.profilebtn} onClick={() => { setrequestname(follow.userName); setrequestidx(follow.followIdx); dispatch(setModal('팔로우채팅')) }}>채팅</button>
-                    <button className={follow_css.profilebtn} onClick={() => { setrequestname(follow.userName); setrequestidx(follow.followIdx); dispatch(setModal('팔로우화상')) }}>화상</button>
-                  </div>
+              <div className={follow_css.profile}>
+                <img src="assets/default_profile.png" alt="" />
+                <div className={follow_css.profiledata}>
+                  <b>{follow.userNickName}</b>
+                  <p>{follow.userIntro}</p>
                 </div>
-                <hr />
+                <div>
+                  <button className={follow_css.profilebtn} onClick={()=>{setrequestname(follow.userNickName);setrequestidx(follow.followIdx); dispatch(setModal('팔로우채팅'))}}>채팅</button>
+                  <button className={follow_css.profilebtn} onClick={()=>{setrequestname(follow.userNickName);setrequestidx(follow.followIdx); dispatch(setModal('팔로우화상'))}}>화상</button>
+                </div>
+              </div>
+              <hr />
               </>
             )
           }

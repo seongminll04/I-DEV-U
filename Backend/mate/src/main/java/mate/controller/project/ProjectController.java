@@ -132,7 +132,7 @@ public class ProjectController {
 		return ResponseEntity.ok(map);
 	}
 
-	@GetMapping("/filter")
+	@PostMapping("/filter")
 	public ResponseEntity<Map<String, Object>> filterProject(@RequestBody Map<String, Object> input) {
 		Map<String, Object> map = new HashMap<>();
 

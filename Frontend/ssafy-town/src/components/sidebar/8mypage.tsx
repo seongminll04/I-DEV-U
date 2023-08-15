@@ -194,9 +194,9 @@ const Mypage: React.FC = () => {
         <h1>내 프로필</h1>
         <div className={mypage_css.mypage_photo}>
           <img
-            src={user.storedFileName ? `https://i9b206.p.ssafy.io:9090/img/${localStorage.getItem("userIdx")}_.png` : "assets/default_profile.png"}
+            src={user.storedFileName ? user.storedFileName : "assets/default_profile.png"}
             alt=""
-            style={{ width: '100px', height: '100px' }}
+            style={{ width: '100px', height: '100px', borderRadius: "50%"}}
           />
         </div>
         <div className={mypage_css.mypage_view}>

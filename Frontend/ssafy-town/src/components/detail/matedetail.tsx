@@ -19,6 +19,7 @@ interface userProps {
   nickname: string,
   intro: string,
   techList: string[]
+  storedFileName: string;
 }
 
 
@@ -50,10 +51,10 @@ const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
 
   }, [userIdx])
 
-  useEffect(()=>{
+  useEffect(() => {
     const userToken = localStorage.getItem('userToken')
-    const userIdxStr=localStorage.getItem('userIdx')
-    const userIndex = userIdxStr ? parseInt(userIdxStr,10): null
+    const userIdxStr = localStorage.getItem('userIdx')
+    const userIndex = userIdxStr ? parseInt(userIdxStr, 10) : null
     axios({
       method: 'get',
       url: `https://i9b206.p.ssafy.io:9090/user/getFollowList/${userIndex}`,
@@ -62,93 +63,93 @@ const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
       },
     })
       .then(res => {
-        if (res.data.data && res.data.data.data.find((user:any)=> user.followIdx === userIdx)) {
+        if (res.data.data && res.data.data.data.find((user: any) => user.followIdx === userIdx)) {
           setFollow(true)
         }
-        else {setFollow(false)}
+        else { setFollow(false) }
       })
       .catch(err => {
         console.log(err);
       })
-  },[userIdx])
+  }, [userIdx])
 
   const onfollow = () => {
-    const userIdxStr=localStorage.getItem('userIdx')
-    const userIndex = userIdxStr ? parseInt(userIdxStr,10): null
+    const userIdxStr = localStorage.getItem('userIdx')
+    const userIndex = userIdxStr ? parseInt(userIdxStr, 10) : null
     const userToken = localStorage.getItem('userToken')
     if (Follow) {
       axios({
-        method:'delete',
+        method: 'delete',
         url: `https://i9b206.p.ssafy.io:9090/user/unfollow`,
         headers: {
           Authorization: 'Bearer ' + userToken
         },
-        data :{
-          userIdx:userIndex,
-          followIdx:userIdx
+        data: {
+          userIdx: userIndex,
+          followIdx: userIdx
         }
       })
-      .then(()=>setFollow(false))
+        .then(() => setFollow(false))
     }
     else {
       axios({
-        method:'post',
+        method: 'post',
         url: `https://i9b206.p.ssafy.io:9090/user/follow`,
         headers: {
           Authorization: 'Bearer ' + userToken
         },
-        data :{
-          userIdx:userIndex,
-          followIdx:userIdx
+        data: {
+          userIdx: userIndex,
+          followIdx: userIdx
         }
       })
-      .then(()=>setFollow(true))
+        .then(() => setFollow(true))
     }
   }
 
   const sendrequest = () => {
     const userToken = localStorage.getItem('userToken')
     const senduserIdxStr = localStorage.getItem('userIdx')
-    const senduserIdx = senduserIdxStr ? parseInt(senduserIdxStr,10) : null
+    const senduserIdx = senduserIdxStr ? parseInt(senduserIdxStr, 10) : null
 
     axios({
-      method:'get',
+      method: 'get',
       url: `https://i9b206.p.ssafy.io:9090/chat/rooms/check`,
       headers: {
         Authorization: 'Bearer ' + userToken
       },
-      params :{
+      params: {
         fromIdx: senduserIdx,
         toIdx: userIdx,
       }
     })
-    .then(res=>{
-      console.log(res)
-      if (res.data.data) {
-        alert('이미 존재하는 채팅방이 있습니다')
-        dispatch(setChatIdx(res.data.data.idx))
-        dispatch(setChatTitle(res.data.data.title))
-        dispatch(setSidebar('채팅방'))
-      }
-      else {
-        if (stompClientRef.current && senduserIdx) {
-          const now = new Date()
-          const data = {
-            fromIdx: senduserIdx,
-            toIdx: userIdx,
-            type:'MATE',
-            createdAt: now
-          };
-          stompClientRef.current.publish({
-            destination: `/pub/user`,
-            body: JSON.stringify(data),
-          });
-          alert('채팅 신청 완료')
-          dispatch(setModal(null))
+      .then(res => {
+        console.log(res)
+        if (res.data.data) {
+          alert('이미 존재하는 채팅방이 있습니다')
+          dispatch(setChatIdx(res.data.data.idx))
+          dispatch(setChatTitle(res.data.data.title))
+          dispatch(setSidebar('채팅방'))
         }
-      }
-    })
-    .catch(err => console.log(err))
+        else {
+          if (stompClientRef.current && senduserIdx) {
+            const now = new Date()
+            const data = {
+              fromIdx: senduserIdx,
+              toIdx: userIdx,
+              type: 'MATE',
+              createdAt: now
+            };
+            stompClientRef.current.publish({
+              destination: `/pub/user`,
+              body: JSON.stringify(data),
+            });
+            alert('채팅 신청 완료')
+            dispatch(setModal(null))
+          }
+        }
+      })
+      .catch(err => console.log(err))
 
   }
 
@@ -157,16 +158,20 @@ const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
       <div className={detail_css.modal}>
         <h1>동료 상세정보</h1>
         {mateUser ?
-          <div style={{display:'flex', width:'90%', margin:'auto'}}>
-            <div style={{width:'35%', borderRight:'2px solid black',}}>
-              <h1>{mateUser.nickname}</h1>  
-              <img src="assets/default_profile.png" alt="" style={{ width: '100px', height: '100px' }} />
+          <div style={{ display: 'flex', width: '90%', margin: 'auto' }}>
+            <div style={{ width: '35%', borderRight: '2px solid black', }}>
+              <h1>{mateUser.nickname}</h1>
+              <img
+                src={mateUser.storedFileName ? mateUser.storedFileName : "assets/default_profile.png"}
+                alt=""
+                style={{ borderRadius: "50%" }}
+              />
               <p>나이 : {mateUser.age}</p>
               <p>성별 : {mateUser.gender}</p>
-              { Follow ? <button onClick={onfollow}>언팔로우</button>:<button onClick={onfollow}>팔로우</button>}
-              
+              {Follow ? <button onClick={onfollow}>언팔로우</button> : <button onClick={onfollow}>팔로우</button>}
+
             </div>
-            <div style={{width:'65%', margin:'0 20px', boxSizing:'border-box'}}>
+            <div style={{ width: '65%', margin: '0 20px', boxSizing: 'border-box' }}>
               <h2>자기소개 : {mateUser.intro}</h2>
               <h2>기술스택 : {mateUser.techList.map((tech) => (
                 tech + ' '

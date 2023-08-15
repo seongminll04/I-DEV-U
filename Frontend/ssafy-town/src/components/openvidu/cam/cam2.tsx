@@ -13,8 +13,8 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import SwitchVideoIcon from '@mui/icons-material/SwitchVideo';
 
-// const APPLICATION_SERVER_URL = process.env.REACT_APP_FRONT_SERVER; // .env에서 서버 주소 가져오기
-const APPLICATION_SERVER_URL = "http://localhost:5000";
+const APPLICATION_SERVER_URL = process.env.REACT_APP_FRONT_SERVER; // .env에서 서버 주소 가져오기
+// const APPLICATION_SERVER_URL = "http://localhost:5000";
 
 interface IState {
     mySessionId: string;

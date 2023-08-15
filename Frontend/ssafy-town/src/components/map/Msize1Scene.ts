@@ -176,7 +176,7 @@ export class Msize1Scene extends Phaser.Scene {
             } else if (tileID === 'e2') {
               this.thing = this.physics.add.sprite((colIndex / 2) * tileSize, rowIndex * tileSize, tileID);
               this.thing.setOrigin(0, 0).setDisplaySize(96, 64).setImmovable(true);
-              this.physics.add.collider(this.character!, this.thing);
+              // this.physics.add.collider(this.character!, this.thing);
               this.thing.setDepth(1);
             }
           }
@@ -353,7 +353,6 @@ export class Msize1Scene extends Phaser.Scene {
     if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnBench) {
         let moved = false;
         
-        // Horizontal movement and animation
         if (this.cursors.left?.isDown) {
             this.character.setVelocityX(-320);
             this.character.play(`${localStorage.getItem("character") || '0'}-left`, true);
@@ -366,7 +365,6 @@ export class Msize1Scene extends Phaser.Scene {
             this.character.setVelocityX(0);
         }
 
-        // Vertical movement and animation
         if (this.cursors.up?.isDown) {
             this.character.setVelocityY(-320);
             if (!this.cursors.right?.isDown && !this.cursors.left?.isDown) {
@@ -415,7 +413,7 @@ export class Msize1Scene extends Phaser.Scene {
           const minX = benchCenterX - 32;
           const maxX = benchCenterX + 32;
           const minY = benchCenterY;
-          const maxY = benchCenterY + 64; //캐릭터 다시 만들고 조정해줘야함
+          const maxY = benchCenterY + 32;
           
           const charX = this.character.x;
           const charY = this.character.y;
@@ -434,13 +432,12 @@ export class Msize1Scene extends Phaser.Scene {
         return;  // 밴치주변에 없으면 놉
       }
       else if(this.sittingOnBench){ //이미 앉아있으면
-        this.character!.y += 64;
         this.character!.setAlpha(1);
         this.sittingOnBench = false;
       }
       else{ //앉아있지않으면
-      this.character!.y -= 64;
       this.character!.setAlpha(0.4);
+      this.character!.anims.stop();
       this.sittingOnBench = true;
       }
     }

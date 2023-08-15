@@ -14,14 +14,14 @@
     border-radius: 1rem;
     width:50%;
     height: 460px;
-    padding: 100px;
+    padding: 40px 80px;
     box-sizing: border-box;
     color : white;
 }
 
 .button_icon {
     margin: 0 100px;
-    margin-top:100px;
+    margin-top: 20px;
     display: flex;
     justify-content: space-between;
 }
@@ -35,4 +35,56 @@
 
 .button:hover {
     background-color: gray;
+}
+
+.input1 {
+    display: flex;
+    align-items: center;
+    /* align-items: flex-start; */
+    margin:auto;
+    width:80%;
+    font-size: large;
+}
+
+.input {
+    display: flex;
+    align-items: center;
+    /* align-items: flex-start; */
+    margin:auto;
+    width:80%;
+    font-size: large;
+}
+
+.input:nth-child(3) {
+    align-items: flex-start;
+}
+.input .label {
+    width:20%;
+    display: flex;
+    justify-content: space-between;
+}
+.input p {
+    margin: 10px 20px;
+}
+
+.input span {
+    margin: 10px;
+}
+.input .input1,textarea {
+    width:60%;
+    border-radius: 0.5rem;
+    padding:5px 10px;
+}
+
+.input textarea {
+    resize:none;
+    border: solid 2px;
+    height: 100px;
+}
+
+.choose {
+    width: '60%';
+    white-space: pre-wrap;
+    display: flex;
+    flex-wrap: wrap;
 }

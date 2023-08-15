@@ -13,6 +13,7 @@ interface FollowUser {
   userIdx: number;
   userName: string;
   userIntro: string;
+  userNickname: string;
 }
 
 const Follow: React.FC = () => {
@@ -77,7 +78,7 @@ const Follow: React.FC = () => {
               <div className={follow_css.profile}>
                 <img src="assets/default_profile.png" alt="" />
                 <div className={follow_css.profiledata}>
-                  <b>{follow.userName}</b>
+                  <b>{follow.userNickname}</b>
                   <p>{follow.userIntro}</p>
                 </div>
                 <div>

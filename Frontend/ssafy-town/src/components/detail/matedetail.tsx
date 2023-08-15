@@ -8,10 +8,13 @@ import { AppState } from '../../store/state';
 
 interface Props {
   userIdx: number;
+  percent: number;
 }
 
 interface userProps {
   userIdx: number,
+  age: number,
+  gender: string,
   name: string,
   nickname: string,
   intro: string,
@@ -19,7 +22,7 @@ interface userProps {
 }
 
 
-const MateDetail: React.FC<Props> = ({ userIdx }) => {
+const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
   const dispatch = useDispatch()
   const [mateUser, setMateUser] = useState<userProps>()
   const stompClientRef = React.useRef<Client | null>(null);
@@ -158,8 +161,8 @@ const MateDetail: React.FC<Props> = ({ userIdx }) => {
             <div style={{width:'35%', borderRight:'2px solid black',}}>
               <h1>{mateUser.nickname}</h1>  
               <img src="assets/default_profile.png" alt="" style={{ width: '100px', height: '100px' }} />
-              <p>나이 : oo</p>
-              <p>성별 : oo</p>
+              <p>나이 : {mateUser.age}</p>
+              <p>성별 : {mateUser.gender}</p>
               { Follow ? <button onClick={onfollow}>언팔로우</button>:<button onClick={onfollow}>팔로우</button>}
               
             </div>
@@ -171,7 +174,7 @@ const MateDetail: React.FC<Props> = ({ userIdx }) => {
               </h2>
               <br />
               <h1>일치율</h1>
-              <h2>ㅁㅁㅁ 님께서 선택하신 조건과 OOO 님의 일치율은 XX% 입니다</h2>
+              <h2>{localStorage.getItem("userNickname")} 님께서 선택하신 조건과 {mateUser.nickname} 님의 일치율은 {percent} % 입니다</h2>
               <br />
               <button onClick={sendrequest}>채팅 신청</button>
             </div>

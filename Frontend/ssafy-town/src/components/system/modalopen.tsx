@@ -9,7 +9,6 @@ import FirstQA from '../survey/firstQA';
 import ReFirstQA from '../survey/RefirstQA';
 import QnA from '../board/QnA';
 
-import ProjectFilter from '../filter/projectFilter';
 import CreateProject from '../board/CreateProject';
 import EnterProject from '../board/EnterProject';
 import SogaeFilter from '../filter/sogaeFilter';
@@ -33,7 +32,6 @@ const ModalOpen: React.FC = () => {
       : isModalOpen === '알림전체' ? <AllAlert />
       : isModalOpen === '로그아웃' ? <Logout />
       : isModalOpen === 'QnA게시판' ? <QnA />
-      : isModalOpen === '프로젝트필터' ? <ProjectFilter />
       : isModalOpen === '프로젝트생성' ? <CreateProject />
       : isModalOpen === '프로젝트참가신청' ? <EnterProject />
       : isModalOpen === '프로젝트상세정보' ? <DetailProject />

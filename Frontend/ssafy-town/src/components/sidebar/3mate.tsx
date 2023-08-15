@@ -26,9 +26,16 @@ interface Filter {
 const Mate: React.FC = () => {
   const dispatch = useDispatch();
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);//사이드바 오픈여부
-  const [matefilter, setMateFilter] = useState<Filter[]>([])
+  const [
+    matefilter, setMateFilter] = useState<Filter[]>([])
   const [mateIdx, setMateIdx] = useState<number>(0)
-  const [mateList, setMateList] = useState<Matep[]>([]);
+  const [matePercent, setMatePercent] = useState<number>(0);
+  const [mateList, setMateList] = useState<Matep[]>([
+    { userIdx: 0, "name": "김싸피", "nickname": "김김김", "percent": 55, "languageList": [] },
+    { userIdx: 1, "name": "이싸피", "nickname": "이이이", "percent": 46, "languageList": [] },
+    { userIdx: 2, "name": "박싸피", "nickname": "박박박", "percent": 37, "languageList": [] },
+    { userIdx: 3, "name": "최싸피", "nickname": "최최최", "percent": 28, "languageList": [] },
+  ]);
 
   useEffect(() => {
     const userToken = localStorage.getItem('userToken');
@@ -84,7 +91,7 @@ const Mate: React.FC = () => {
         <div className={mate_css.scrollbar}>
           {mateList.map((mate: Matep, index: number) => {
             return (
-              <div className={mate_css.usertable} onClick={() => { setMateIdx(mate.userIdx); dispatch(setModal('동료상세정보')) }}>
+              <div className={mate_css.usertable} onClick={() => { setMateIdx(mate.userIdx); setMatePercent(mate.percent); dispatch(setModal('동료상세정보')) }}>
                 <div className={mate_css.userInfo}>
                   <div className={mate_css.profile}>
                     <img src="assets/default_profile.png" alt="" />
@@ -141,7 +148,7 @@ const Mate: React.FC = () => {
         }
       </div>
       {isModalOpen === '동료찾기필터' ? <MateFilter filter={matefilter} onfilter={(value: Filter[]) => setMateFilter(value)} />
-        : isModalOpen === '동료상세정보' ? <MateDetail userIdx={mateIdx} />
+        : isModalOpen === '동료상세정보' ? <MateDetail userIdx={mateIdx} percent={matePercent} />
           : null}
     </div>
   );

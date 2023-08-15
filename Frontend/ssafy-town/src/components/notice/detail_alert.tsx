@@ -18,7 +18,8 @@ interface Props {
     toUser:{
       idx:number,
       nickname:string,
-    }
+    },
+    targetIdx:number|null
   };
 }
 
@@ -92,6 +93,55 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
       .then(() => backpage())
       .catch(err=>console.log(err))
   }
+
+  const meetingok = () => {
+    const userToken = localStorage.getItem('userToken')
+
+    // 수락시 알림 제거
+    axios({
+      method:'delete',
+      url: `https://i9b206.p.ssafy.io:9090/alarm/${Selalert.idx}`,
+      headers: {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+    .then(res => console.log(res))
+    .catch(err=>console.log(err))
+
+    // 프로젝트 참가
+    axios({
+      method:'post',
+      url: `https://i9b206.p.ssafy.io:9090/project/enter`,
+      data:{
+        roomIdx:Selalert.targetIdx,
+        userIdx:Selalert.fromUser.idx,
+      },
+      headers: {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+    .then(() => {
+        // 화상채팅방 참가  
+        axios({
+          method:'post',
+          url: `https://i9b206.p.ssafy.io:9090/video/enter`,
+          data:{
+            roomIdx:Selalert.targetIdx,
+            userIdx:Selalert.fromUser.idx,
+          },
+          headers: {
+            Authorization: 'Bearer ' + userToken
+          },
+        })
+        .then(() => {
+          dispatch(setModal(null))
+        })
+        .catch(err => console.log(err))
+    })
+    .catch(err => console.log(err))
+
+  }
+
   return (
     <div className={alert_css.alert_modal2}>
       <div className={alert_css.buttons}>
@@ -108,9 +158,19 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
             : Selalert.type === 'CHAT' ? `${Selalert.fromUser.nickname}님의 채팅신청입니다.`
             : null}
           </h1>
-          {/* 채팅관련 버튼임 -> 화상신청 수락에 대한 버튼은 따로  */}
-          <button onClick={ok}>수락</button>
-          <button onClick={nope}>거절</button>
+
+          {Selalert.type==='PROJECT' ? 
+          // 화상신청 관련
+            <div>
+              <button onClick={meetingok}>수락</button>
+              <button onClick={nope}>거절</button>
+            </div>
+          :
+          // 채팅 신청에 관련
+          <div>
+            <button onClick={ok}>수락</button>
+            <button onClick={nope}>거절</button>
+          </div>}
           </>
         ) : (
           'Loading...'

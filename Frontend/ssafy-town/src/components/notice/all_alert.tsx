@@ -17,7 +17,8 @@ interface AlertProps {
   toUser:{
     idx:number,
     nickname:string,
-  }
+  },
+  targetIdx:number|null,
 }
 const AllAlert: React.FC = () => {
   const dispatch = useDispatch()
@@ -108,7 +109,7 @@ const AllAlert: React.FC = () => {
           <div>
           <button onClick={()=>{if(pagination+1===1){alert('첫 페이지입니다')} else{setPagination(pagination-1)}}}>이전 페이지</button>
           <span>   {maxpage===0 ? pagination: pagination+1} / {maxpage}   </span>
-          <button onClick={()=>{if(pagination+1>maxpage){alert('마지막 페이지입니다')} else{setPagination(pagination+1)}}}>다음 페이지</button>
+          <button onClick={()=>{if(pagination+1===maxpage){alert('마지막 페이지입니다')} else{setPagination(pagination+1)}}}>다음 페이지</button>
         </div>}
           
         </div>

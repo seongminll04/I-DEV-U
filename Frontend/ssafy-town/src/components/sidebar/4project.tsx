@@ -163,7 +163,6 @@ const Project: React.FC = () => {
             </div>
           ))}
         </div>
-
       </div>
       {isModalOpen === '프로젝트필터' ? <ProjectFilter survey={survey} onSurvey={(value: boolean) => setSurvey(value)} onfilter={(value: Filter) => setProjectFilter(value)} /> : null}
     </div>

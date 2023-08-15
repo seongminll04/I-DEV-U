@@ -43,7 +43,7 @@ import axios from "axios";
         },
       })
         .then((res1) => {
-          console.log(res1.data.data)
+          // console.log(res1.data.data)
           const roomPromises = [];
           for (const room of res1.data.data) {
             const roomPromise = axios({
@@ -55,7 +55,7 @@ import axios from "axios";
             }).then((res) => {
               const date = new Date(res.data.data.createdAt)
               rooms.push({
-                roomIdx: room.roomIdx,
+                roomIdx: room.idx,
                 nickname:res.data.data.nickname,
                 title: room.title,
                 message: res.data.data.message,
@@ -95,14 +95,14 @@ import axios from "axios";
               for (const room of res.data.data) {
                 const roomPromise = axios({
                   method: 'get',
-                  url: `https://i9b206.p.ssafy.io:9090/chat/rooms/${room.roomIdx}/last`,
+                  url: `https://i9b206.p.ssafy.io:9090/chat/rooms/${room.idx}/last`,
                   headers: {
                     Authorization: 'Bearer ' + userToken,
                   },
                 }).then((res) => {
                   const date = new Date(res.data.data.createdAt)
                   rooms.push({
-                    roomIdx: room.roomIdx,
+                    roomIdx: room.idx,
                     nickname:res.data.data.nickname,
                     title: room.title,
                     message: res.data.data.message,

@@ -147,10 +147,19 @@ const SignupForm = () => {
         alert('이메일 중복체크를 해주세요.')
       }
       else {
+        const dataset = {
+          email: values.email,
+          password: values.password,
+          confirmPassword: values.confirmPassword,
+          nickname: values.nickname,
+          name: values.name,
+          birthday: new Date(values.birthday!),
+          gender: values.gender,
+        }
         axios({
           method : 'post',
           url : 'https://i9b206.p.ssafy.io:9090/user/signUp',
-          data : values,
+          data : dataset,
         })
         .then(() => {
           alert('회원가입 성공')

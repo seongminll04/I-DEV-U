@@ -96,8 +96,6 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
 
   const meetingok = () => {
     const userToken = localStorage.getItem('userToken')
-    const userIdxStr = localStorage.getItem('userIdx')
-    const userIdx = userIdxStr ? parseInt(userIdxStr,10) : null
 
     // 수락시 알림 제거
     axios({
@@ -116,7 +114,7 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
       url: `https://i9b206.p.ssafy.io:9090/project/enter`,
       data:{
         roomIdx:Selalert.targetIdx,
-        userIdx:userIdx,
+        userIdx:Selalert.fromUser.idx,
       },
       headers: {
         Authorization: 'Bearer ' + userToken
@@ -129,7 +127,7 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
           url: `https://i9b206.p.ssafy.io:9090/video/enter`,
           data:{
             roomIdx:Selalert.targetIdx,
-            userIdx:userIdx,
+            userIdx:Selalert.fromUser.idx,
           },
           headers: {
             Authorization: 'Bearer ' + userToken

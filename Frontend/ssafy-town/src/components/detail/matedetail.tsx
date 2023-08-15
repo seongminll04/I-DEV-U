@@ -164,7 +164,7 @@ const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
               <img
                 src={mateUser.storedFileName ? mateUser.storedFileName : "assets/default_profile.png"}
                 alt=""
-                style={{ borderRadius: "50%" }}
+                style={{ borderRadius: "50%", width:'125px', height:'125px' }}
               />
               <p>나이 : {mateUser.age}</p>
               <p>성별 : {mateUser.gender}</p>

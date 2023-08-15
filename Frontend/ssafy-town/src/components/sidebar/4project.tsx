@@ -69,10 +69,10 @@ const Project: React.FC = () => {
       },
       data: { keyword: "" }
     }).then(res => {
-      console.log(res)
-        setProjectList(res.data.list)})
-    .catch(err => {console.log(err);});
-  },[isModalOpen])
+      setProjectList(res.data.list)
+    })
+      .catch(err => { console.log(err); });
+  }, [isModalOpen])
 
   const loaddata = () => {
     const userToken = localStorage.getItem('userToken')
@@ -105,50 +105,15 @@ const Project: React.FC = () => {
     }
   }
 
-    return (
-      <div className="sidebar_modal">
-        <div style={{width:'100%', display:'flex',flexDirection:'column', alignItems:'center'}}>
-          <h1>Project</h1>
-          <div className={project_css.search}>
-            <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown}
-            onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}
-            value={inputvalue} onChange={(e)=>setInputValue(e.target.value)}/>
-            <button onClick={loaddata}>검색</button>
-          </div>
-          <div style={{display:'flex', width:'85%'}}>
-            <button className={project_css.button} onClick={()=>dispatch(setModal('프로젝트필터'))}>필터</button>
-            <button className={project_css.button} onClick={()=>dispatch(setModal('프로젝트생성'))}>방 생성</button>
-          </div>
-          <div className={project_css.scrollbox}>
-          <hr style={{width:'75%', color:'black'}}/>
-            {projectList.length===0 ? '조회 결과가 없습니다':null}
-            {projectList.map((project, idx) => (
-                <div key={idx}>
-                    <div className={project_css.project}>
-                        <div className={project_css.project_detail} onClick={() => {dispatch(setModal('프로젝트상세정보')) 
-                          dispatch(setWantPJTId(project.idx))}}>
-                            <img src="assets/default_profile.png" alt="" />
-                            <div className={project_css.project_data}>
-                                <b>{project["title"]}</b>
-                                <p style={{ color: 'gray' }}>
-                                  <span>#{project.type} </span>
-                                  {project.projectLanguages.map((language,index)=>(
-                                    <span>#{language.language} </span>
-                                  ))}
-                                </p>
-                            </div>
-                        </div>
-                        <div>
-                            <button className={project_css.btn} onClick={() => {dispatch(setModal('프로젝트참가신청')) 
-                          dispatch(setWantPJTId(project.idx))}}>참가신청</button>
-                            <span>{project["nowNum"]}/{project["totalNum"]}</span>
-                        </div>
-                    </div>
-                    <hr />
-                </div>
-                ))}
-            </div>
-
+  return (
+    <div className="sidebar_modal">
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <h1>Project</h1>
+        <div className={project_css.search}>
+          <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown}
+            onFocus={() => dispatch(setAllowMove(false))} onBlur={() => dispatch(setAllowMove(true))}
+            value={inputvalue} onChange={(e) => setInputValue(e.target.value)} />
+          <button onClick={loaddata}>검색</button>
         </div>
         <div style={{ display: 'flex', width: '85%' }}>
           <button className={project_css.button} onClick={() => dispatch(setModal('프로젝트필터'))}>필터</button>
@@ -192,9 +157,9 @@ const Project: React.FC = () => {
             </div>
           ))}
         </div>
-
-        {isModalOpen === '프로젝트필터' ? <ProjectFilter applyFilter={applyFilter} onfilter={(value: Filter) => setProjectFilter(value)} /> : null}
       </div>
+      {isModalOpen === '프로젝트필터' ? <ProjectFilter applyFilter={applyFilter} onfilter={(value: Filter) => setProjectFilter(value)} /> : null}
+    </div>
   );
 };
 

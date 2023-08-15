@@ -14,7 +14,6 @@ type User = {
   face: string;
   age: number;
   percent: number;
-  storedFileName: string;
 };
 
 const Sogae: React.FC = () => {
@@ -83,8 +82,8 @@ const Sogae: React.FC = () => {
         </>
         :
         <>
-          <button className={sogae_css.button} onClick={() => dispatch(setModal('소개팅설문'))}>소개팅 설문 수정</button>
-          <p className={sogae_css.redText}>* 설문 응답으로 일치율이 계산됩니다 *</p>
+            <button className={sogae_css.button} onClick={() => dispatch(setModal('소개팅설문'))}>소개팅 설문 수정</button>
+            <p className={sogae_css.redText}>* 설문 응답으로 일치율이 계산됩니다 *</p>
           {/* <div style={{ display: 'flex', width: '85%' }}>
             <button className={sogae_css.button} onClick={() => dispatch(setModal('소개팅필터'))}>필터</button>
           </div> */}
@@ -100,11 +99,7 @@ const Sogae: React.FC = () => {
                   <div className={sogae_css.usertable} key={index} onClick={() => { setUserDetail(user.userIdx); dispatch(setModal('소개팅상세정보')) }}>
                     <div className={sogae_css.userInfo}>
                       <div className={sogae_css.profile}>
-                        <img
-                          src={user.storedFileName ? user.storedFileName : "assets/default_profile.png"}
-                          alt=""
-                          style={{ borderRadius: "50%" }}
-                        />
+                        <img src="assets/default_profile.png" alt="" />
                         <div className={sogae_css.profiledata}>
                           <b>{user.nickname}</b>
                           <p style={{ color: 'gray' }}>#{user.age} #{user.face}</p>

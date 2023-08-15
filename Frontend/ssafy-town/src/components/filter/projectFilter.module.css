@@ -55,6 +55,9 @@
     font-size: large;
 }
 
+.input:nth-child(3) {
+    align-items: flex-start;
+}
 .input .label {
     width:20%;
     display: flex;

@@ -203,6 +203,7 @@ const Mypage: React.FC = () => {
           <div className={mypage_css.mypage_welcome}>
             안녕하세요! {user.nickname} 님
           </div>
+          {/* <button className={mypage_css.button} onClick={() => changeImg()}>사진 수정</button> */}
           <button className={mypage_css.button}
             onClick={() => {
               if (!user.email.includes('@')) {

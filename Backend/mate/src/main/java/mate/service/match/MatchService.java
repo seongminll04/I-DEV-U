@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 import mate.domain.basic.BasicAnswer;
+import mate.domain.user.UserGender;
 import mate.dto.match.MatchDetailDto;
 import mate.repository.user.BasicRepository;
 import org.springframework.stereotype.Service;
@@ -79,7 +80,7 @@ public class MatchService {
 			tag.add(ma.getTag());
 		}
 
-		List<Object> list = matchRepository.listMatchUser(tag, tag.size());
+		List<Object> list = matchRepository.listMatchUser(tag, tag.size(), user.getGender());
 
 		List<MatchDto> output = new ArrayList<>();
 

@@ -12,31 +12,112 @@ interface props {
   onfilter: (value: Filter[]) => void,
 }
 
-const ProjectFilter: React.FC<props> = ({ filter, onfilter}) => {
-  const languages = ["Python", "Java", "C", "C++", "C#", "Object-C", "Kotlin", "Swift", "Ruby", "Go", "Javascript", "typescript", "PyPy", "PHP", "Rust", "Text", "D", "기타"];
-  const positions = ["프론트엔드", "백엔드"];
-  const [selectedLanguages, setSelectedLanguages] = useState<{ language: string; }[]>([]);
-  // const [selectedPositions, setSelectedPositions] = useState<{ position: string; }[]>([]);
+const ProjectFilter: React.FC<props> = ({ filter, onfilter }) => {
+  const [languages, setLanguages] = useState<string[]>([]);
+  const [positions, setPositions] = useState<string[]>([]);
   const [projectType, setProjectType] = useState('PROJECT');
   const dispatch = useDispatch()
 
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (e.target.checked) {
-      if (selectedLanguages.length < 5) {
-        setSelectedLanguages(prev => [...prev, { language: value }]);
+  const languageOptions = ["Python", "Java", "C", "C++", "C#", "Object-C", "Kotlin", "Swift", "Ruby", "Go", "Javascript", "typescript", "PyPy", "PHP", "Rust", "Text", "D", "기타"];
+  const positionsOptions = ["프론트엔드", "백엔드"];
+  const projectOptions = ["프로젝트", "스터디"];
+
+
+  const toggleLanguage = (option: string) => {
+    setLanguages(prevLanguages => {
+      if (prevLanguages.includes(option)) {
+        // 이미 선택된 언어는 항상 제거할 수 있음
+        return prevLanguages.filter(language => language !== option);
       } else {
-        e.preventDefault();
-        alert('최대 5개의 언어만 선택할 수 있습니다.');
+        // 아직 선택되지 않은 언어는 최대 5개까지만 선택 가능
+        if (prevLanguages.length < 5) {
+          return [...prevLanguages, option];
+        } else {
+          return prevLanguages;
+        }
       }
-    } else {
-      setSelectedLanguages(prev => prev.filter(lang => lang.language !== value));
-    }
+    });
+  };
+
+  const togglePosition = (option: string) => {
+    setPositions(prevPositions => {
+      if (prevPositions.includes(option)) {
+        // 이미 선택된 언어는 항상 제거할 수 있음
+        return prevPositions.filter(position => position !== option);
+      } else {
+        return [...prevPositions, option];
+      }
+    });
+  };
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const surveyResults = [
+      {
+        tagList : [projectType],
+      },
+      {
+        tagList : languages,
+      },
+      {
+        tagList : positions,
+      }
+    ]
+    console.log(surveyResults)
+    onfilter(surveyResults);
+    dispatch(setModal(null))
   }
 
-  const handlePositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      
-  }
+  const filterForm = (
+    <form onSubmit={handleSubmit}>
+      <div className={filter_css.input}>
+        <label className={filter_css.label}><span>타</span><span>입</span></label>
+        <p> : </p>
+        {projectOptions.map(option => (
+          <label key={option}>
+            <input type="radio" name="projectType" value={option} onChange={() => setProjectType(option)} checked={projectType === option} />
+            {option}
+          </label>
+        ))}
+      </div>
+      <div className={filter_css.input}>
+        <label className={filter_css.label}><span>언</span><span>어</span></label>
+        <p> : </p>
+        <div className={filter_css.choose} style={{ width: '60%', whiteSpace: 'pre-wrap' }}>
+          {languageOptions.map(option => (
+            <label key={option} style={{ whiteSpace: 'pre-wrap' }}>
+              <input
+                type="checkbox"
+                name="languages"
+                value={option}
+                onChange={() => toggleLanguage(option)}
+                checked={languages.includes(option)}  // checked 속성을 추가하여 렌더링 시 마다 선택 상태를 업데이트함
+              />
+              {option}
+            </label>
+          ))}
+        </div>
+      </div>
+      <div className={filter_css.input}>
+        <label className={filter_css.label}><span>포</span><span>지</span><span>션</span></label>
+        <p> : </p>
+        <div className={filter_css.choose} style={{ width: '60%', whiteSpace: 'pre-wrap' }}>
+          {positionsOptions.map(option => (
+            <label key={option} style={{ whiteSpace: 'pre-wrap' }}>
+              <input
+                type="checkbox"
+                name="positions"
+                value={option}
+                onChange={() => togglePosition}
+                checked={positions.includes(option)}  // checked 속성을 추가하여 렌더링 시 마다 선택 상태를 업데이트함
+              />
+              {option}
+            </label>
+          ))}
+        </div>
+      </div>
+    </form>
+  )
 
   return (
     <div className={filter_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
@@ -44,69 +125,14 @@ const ProjectFilter: React.FC<props> = ({ filter, onfilter}) => {
     }}>
       <div className={filter_css.logout_modal}>
         <h1>프로젝트 찾기 필터</h1>
-        <div className={filter_css.input}>
-          <label className={filter_css.label}><span>타</span><span>입</span></label>
-          <p> : </p>
-          <span>
-            <input
-              type="radio"
-              value="PROJECT"
-              checked={projectType === 'PROJECT'}
-              onChange={(e) => setProjectType(e.target.value)}
-            />
-            프로젝트
-          </span>
-          <span>
-            <input
-              type="radio"
-              value="STUDY"
-              checked={projectType === 'STUDY'}
-              onChange={(e) => setProjectType(e.target.value)}
-            />
-            스터디
-          </span>
-        </div>
-
-        <div className={filter_css.input}>
-          <label className={filter_css.label}><span>언</span><span>어</span></label>
-          <p> : </p>
-          <div className={filter_css.choose} style={{ width: '60%', whiteSpace: 'pre-wrap' }}>
-            {languages.map((lang, index) => (
-              <label key={index} style={{ whiteSpace: 'pre-wrap' }}>
-                <input
-                  type="checkbox"
-                  value={lang}
-                  onChange={handleLanguageChange}
-                  checked={selectedLanguages.some(selLang => selLang.language === lang)}
-                />
-                <span> {lang} </span>
-              </label>
-            ))}
-          </div>
-        </div>
-        <div className={filter_css.input}>
-          <label className={filter_css.label}><span>포</span><span>지</span><span>션</span></label>
-          <p> : </p>
-          <div className={filter_css.choose} style={{ width: '60%', whiteSpace: 'pre-wrap' }}>
-            {positions.map((pos, index) => (
-              <label key={index} style={{ whiteSpace: 'pre-wrap' }}>
-                <input
-                  type="checkbox"
-                  value={pos}
-                  onChange={handlePositionChange}
-                  checked={selectedLanguages.some(selLang => selLang.language === pos)}
-                />
-                <span> {pos} </span>
-              </label>
-            ))}
-          </div>
-        </div>
+        {filterForm}
         <div className={filter_css.button_icon}>
-          <button className={filter_css.button} onClick={() => dispatch(setModal(null))}>적용</button>
+          <button className={filter_css.button} onClick={handleSubmit}>적용</button>
           <button className={filter_css.button} onClick={() => dispatch(setModal(null))}>취소</button>
         </div>
-      </div>
+      </div >
     </div>
+
   );
 };
 

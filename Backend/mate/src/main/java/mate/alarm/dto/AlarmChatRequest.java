@@ -9,6 +9,6 @@ import java.time.LocalDateTime;
 public class AlarmChatRequest {
     private Integer fromIdx;
     private AlarmType type;
-    private LocalDateTime createdAt;
+//    private LocalDateTime createdAt;
     private Integer chatRoomIdx;
 }

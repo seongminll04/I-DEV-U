@@ -13,6 +13,6 @@ public class AlarmRequest{
 
     private AlarmType type;
 
-    private LocalDateTime createdAt;
+//    private LocalDateTime createdAt;
 
 }

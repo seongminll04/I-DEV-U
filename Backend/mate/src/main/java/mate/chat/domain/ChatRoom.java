@@ -56,15 +56,15 @@ public class ChatRoom {
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.title = chatRoomCreateRequest.getTitle();
         chatRoom.type = ChatRoomStatus.LACK;
-        chatRoom.createdAt = chatRoomCreateRequest.getCreatedAt();
-        chatRoom.updatedAt = chatRoomCreateRequest.getCreatedAt();
+        chatRoom.createdAt = LocalDateTime.now();
+        chatRoom.updatedAt = LocalDateTime.now();
         chatRoom.chatRoomUsers.add(ChatParticipation.createChatRoomUser(Role.MASTER, user, chatRoom));
         chatRoom.userCount++;
         return chatRoom;
     }
     public void update(ChatRoomUpdateRequest chatRoomUpdateRequest){
         this.title = chatRoomUpdateRequest.getTitle();
-        this.updatedAt = chatRoomUpdateRequest.getUpdatedAt();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void updateTime(LocalDateTime updatedAt){

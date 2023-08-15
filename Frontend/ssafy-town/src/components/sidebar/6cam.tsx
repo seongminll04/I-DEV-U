@@ -24,6 +24,8 @@ const Cam: React.FC = () => {
   // const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
   const BACKEND_SERVER_URL = 'https://i9b206.p.ssafy.io:9090';
   const [camList, setCamList] = useState<ProjectDataType[]>([]);
+  const [inputvalue, setinputvalue] = useState<string>('');
+
 
   // input 방향키 살리기
   const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
@@ -68,14 +70,14 @@ const Cam: React.FC = () => {
     <div className='sidebar_modal'>
       <h1>내 화상방</h1>
       <div className={cam_css.search}>
-        <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown}
+        <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown} value={inputvalue} onChange={(e)=>setinputvalue(e.target.value)}
             onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
-        <button>검색</button>
+        {/* <button>검색</button> */}
       </div>
       <hr style={{width:'75%', color:'black'}}/>
 
       <div className={cam_css.scrollbox}>
-        {camList.map((cam, index) => (
+        {camList.filter(c => c.title.includes(inputvalue)).map((cam, index) => (
           <div key={index}>
             <div className={cam_css.profile}>
               <img src="assets/default_profile.png" alt="" />

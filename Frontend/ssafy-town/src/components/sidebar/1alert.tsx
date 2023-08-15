@@ -71,7 +71,7 @@ const Alert: React.FC = () => {
     })
       .then(res => {
         console.log(res)
-        setAlertList(res.data.data);
+        setAlertList(res.data.data.slice(0,4));
       })
       .catch(err => {
         console.log(err)
@@ -112,6 +112,11 @@ const Alert: React.FC = () => {
               </div>
               {alertList.map((alert: AlertProps, index: number) => {
                 const date = new Date(alert.createdAt);
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const day = date.getDate().toString().padStart(2, '0');
+                const hours = date.getHours().toString().padStart(2, '0');
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                
                 return (
                   <div key={index} onClick={() => { setPage(2); setAlertIdx(alert.idx) }} className={alert_css.notice}>
                     <span>{index+1}</span>
@@ -120,8 +125,8 @@ const Alert: React.FC = () => {
                        : alert.type==='CHAT' ? `${alert.fromUser.nickname}님의 채팅신청입니다`
                        : alert.type==='MATE' ? `${alert.fromUser.nickname}님의 동료신청입니다` :null }
                     </span>
-                    <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span>
-                    {/* <span>{date.getMonth() + 1}/{date.getDate()}</span> */}
+                    <span>{month}/{day} {hours}:{minutes}</span>
+                   
                   </div>
                 );
               })}

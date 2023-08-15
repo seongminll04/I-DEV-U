@@ -35,7 +35,7 @@ const Project: React.FC = () => {
   const [projectFilter, setProjectFilter] = useState<Filter[]>([]);
   
   // 프로젝트 필터
-  useEffect(() => {
+  useEffect(() => { 
     const userToken = localStorage.getItem('userToken');
     // const userIdxStr = localStorage.getItem('userIdx')
     // var userIdx: number | null;

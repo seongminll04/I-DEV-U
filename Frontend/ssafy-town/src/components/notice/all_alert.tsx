@@ -24,6 +24,10 @@ const AllAlert: React.FC = () => {
   const [alertList, setAlertList] = useState<Alert[]>([]);
   const [alertIdx, setAlertIdx] = useState<number>(0);
 
+  const [maxpage, setMaxpage] = useState<number>(0);
+  const [pagination, setPagination] = useState<number>(0);
+
+
   useEffect(() => {
     const userToken = localStorage.getItem('userToken')
     const userIdxStr = localStorage.getItem('userIdx')
@@ -38,6 +42,7 @@ const AllAlert: React.FC = () => {
       .then(res => {
         console.log(res)
         setAlertList(res.data.data);
+        setMaxpage(Math.ceil(res.data.data.length/10))
       })
       .catch(err => {
         console.log(err)
@@ -73,6 +78,8 @@ const AllAlert: React.FC = () => {
           <br />
           {alertList.map((alert: Alert, index: number) => {
             return (
+              <div>
+              {index < pagination*10 + 10  && index >= pagination*10 ?
               <div onClick={() => { setPage(2); setAlertIdx(alert.idx) }} className={alert_css.notice} key={index}>
                 <span>{index+1}</span>
                 <span>
@@ -81,9 +88,15 @@ const AllAlert: React.FC = () => {
                     : alert.type==='MATE' ? `${alert.fromUser.nickname}님의 동료신청입니다` :null }
                 </span>
                 <span>{alert.createdAt}</span>
-              </div>
+              </div> : null}
+            </div>
             )
           })}
+           <div>
+            <button onClick={()=>{if(pagination+1===1){alert('첫 페이지입니다')} else{setPagination(pagination-1)}}}>이전 페이지</button>
+            <span>   {pagination+1} / {maxpage}   </span>
+            <button onClick={()=>{if(pagination+1===maxpage){alert('마지막 페이지입니다')} else{setPagination(pagination+1)}}}>다음 페이지</button>
+          </div>
         </div>
         : <DetailAlert backpage={backpage} alertIdx={alertIdx} />}
     </div>

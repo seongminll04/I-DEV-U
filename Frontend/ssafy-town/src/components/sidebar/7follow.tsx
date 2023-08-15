@@ -15,6 +15,7 @@ interface FollowUser {
   userName: string;
   userIntro: string;
   userNickName: string;
+  storedFileName: string;
 }
 
 const Follow: React.FC = () => {
@@ -94,22 +95,26 @@ const Follow: React.FC = () => {
       <hr style={{ width: '75%', color: 'black' }} />
 
       <div className={follow_css.scrollbox}>
-        {myFollowList.map((follow : FollowUser, index: number) => {
+        {myFollowList.map((follow: FollowUser, index: number) => {
           if (follow.userNickName.includes(inputvalue)) {
             return (
               <>
-              <div className={follow_css.profile}>
-                <img src="assets/default_profile.png" alt="" />
-                <div className={follow_css.profiledata}>
-                  <b>{follow.userNickName}</b>
-                  <p>{follow.userIntro}</p>
+                <div className={follow_css.profile}>
+                  <img
+                    src={follow.storedFileName ? follow.storedFileName : "assets/default_profile.png"}
+                    alt=""
+                    style={{ borderRadius: "50%" }}
+                  />
+                  <div className={follow_css.profiledata}>
+                    <b>{follow.userNickName}</b>
+                    <p>{follow.userIntro}</p>
+                  </div>
+                  <div>
+                    <button className={follow_css.profilebtn} onClick={() => { setrequestname(follow.userNickName); setrequestidx(follow.followIdx); dispatch(setModal('팔로우채팅')) }}>채팅</button>
+                    <button className={follow_css.profilebtn} onClick={() => { setrequestname(follow.userNickName); setrequestidx(follow.followIdx); dispatch(setModal('팔로우화상')) }}>화상</button>
+                  </div>
                 </div>
-                <div>
-                  <button className={follow_css.profilebtn} onClick={()=>{setrequestname(follow.userNickName);setrequestidx(follow.followIdx); dispatch(setModal('팔로우채팅'))}}>채팅</button>
-                  <button className={follow_css.profilebtn} onClick={()=>{setrequestname(follow.userNickName);setrequestidx(follow.followIdx); dispatch(setModal('팔로우화상'))}}>화상</button>
-                </div>
-              </div>
-              <hr />
+                <hr />
               </>
             )
           }

@@ -142,6 +142,8 @@ public class UserService {
             ss.setUserName(x.getFollowUser().getName());
             ss.setUserIntro(x.getFollowUser().getIntro());
             ss.setUserNickName(x.getFollowUser().getNickname());
+            Optional<String> path = userRepository.findPath(x.getFollowUser().getIdx());
+            path.ifPresent(ss::setStoredFileName);
             return ss;
         }).collect(Collectors.toList());
         Map<String, Object> map = new IdentityHashMap<>();

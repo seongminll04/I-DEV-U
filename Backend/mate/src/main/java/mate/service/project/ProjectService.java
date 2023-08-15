@@ -166,6 +166,7 @@ public class ProjectService {
 		for (Project p : result) {
 			ProjectDto dto = new ProjectDto();
 
+			dto.setIdx(p.getIdx());
 			dto.setTitle(p.getTitle());
 			dto.setUserIdx(p.getManager().getIdx());
 			dto.setNickname(p.getManager().getNickname());
@@ -177,6 +178,7 @@ public class ProjectService {
 			dto.setMax_back(p.getMax_back());
 			dto.setType(p.getType());
 			dto.setLanguageList(p.getProjectLanguages());
+			dto.setSession(p.getSession());
 
 			list.add(dto);
 		}

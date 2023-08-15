@@ -33,6 +33,17 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
     .then(res => {
       const userIdxStr = localStorage.getItem('userIdx')
       const userIdx = userIdxStr ? parseInt(userIdxStr,10) : null
+
+      axios({
+        method:'delete',
+        url: `https://i9b206.p.ssafy.io:9090/alarm/${message.idx}`,
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        },
+      })
+      .then(res => console.log(res))
+      .catch(err=>console.log(err))
+
       // 채팅방 참가
       dispatch(setChatIdx(res.data.data.roomIdx))
       dispatch(setChatTitle(message.fromUser.nickname + '님의 mate 채팅방'))

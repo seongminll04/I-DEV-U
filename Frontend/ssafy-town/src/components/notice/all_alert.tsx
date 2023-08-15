@@ -6,12 +6,15 @@ import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 import DetailAlert from './detail_alert';
 
-interface Alert {
+interface AlertProps {
   idx: number;
-  checked: string;
   createdAt: string;
   type: string;
   fromUser:{
+    idx:number,
+    nickname:string,
+  },
+  toUser:{
     idx:number,
     nickname:string,
   }
@@ -21,8 +24,8 @@ const AllAlert: React.FC = () => {
   const [page, setPage] = useState<Number>(0);
   const [search, setsearch] = useState<string>('');
   const [nowsearch, setnowsearch] = useState<boolean>(false);
-  const [alertList, setAlertList] = useState<Alert[]>([]);
-  const [alertIdx, setAlertIdx] = useState<number>(0);
+  const [alertList, setAlertList] = useState<AlertProps[]>([]);
+  const [Selalert, setSelAlert] = useState<AlertProps>();
 
   const [maxpage, setMaxpage] = useState<number>(0);
   const [pagination, setPagination] = useState<number>(0);
@@ -42,12 +45,12 @@ const AllAlert: React.FC = () => {
       .then(res => {
         console.log(res)
         setAlertList(res.data.data);
-        setMaxpage(Math.ceil(res.data.data.length/10))
+        setMaxpage(Math.ceil(res.data.data.length/10)|0)
       })
       .catch(err => {
         console.log(err)
       })
-  },[])
+  },[page])
 
   const searchdata = () => {
     setnowsearch(true)
@@ -76,11 +79,13 @@ const AllAlert: React.FC = () => {
             </div>
           </div>
           <br />
-          {alertList.map((alert: Alert, index: number) => {
+          {alertList.length > 0 ? 
+            <div>
+            {alertList.map((alert: AlertProps, index: number) => {
             return (
               <div>
               {index < pagination*10 + 10  && index >= pagination*10 ?
-              <div onClick={() => { setPage(2); setAlertIdx(alert.idx) }} className={alert_css.notice} key={index}>
+              <div onClick={() => { setPage(2); setSelAlert(alert) }} className={alert_css.notice} key={index}>
                 <span>{index+1}</span>
                 <span>
                   { alert.type==='PROJECT' ? `${alert.fromUser.nickname}님의 프로젝트 가입신청입니다`
@@ -92,13 +97,22 @@ const AllAlert: React.FC = () => {
             </div>
             )
           })}
-           <div>
-            <button onClick={()=>{if(pagination+1===1){alert('첫 페이지입니다')} else{setPagination(pagination-1)}}}>이전 페이지</button>
-            <span>   {pagination+1} / {maxpage}   </span>
-            <button onClick={()=>{if(pagination+1===maxpage){alert('마지막 페이지입니다')} else{setPagination(pagination+1)}}}>다음 페이지</button>
-          </div>
+            </div>
+          
+          
+          : <h2>알림이 없습니다.</h2> }
+
+          {maxpage===0 ?
+          null
+          :
+          <div>
+          <button onClick={()=>{if(pagination+1===1){alert('첫 페이지입니다')} else{setPagination(pagination-1)}}}>이전 페이지</button>
+          <span>   {maxpage===0 ? pagination: pagination+1} / {maxpage}   </span>
+          <button onClick={()=>{if(pagination+1>maxpage){alert('마지막 페이지입니다')} else{setPagination(pagination+1)}}}>다음 페이지</button>
+        </div>}
+          
         </div>
-        : <DetailAlert backpage={backpage} alertIdx={alertIdx} />}
+        : <DetailAlert backpage={backpage} Selalert={Selalert!} />}
     </div>
   );
 };

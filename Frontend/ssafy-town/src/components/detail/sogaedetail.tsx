@@ -8,6 +8,7 @@ import { AppState } from '../../store/state';
 
 interface Props {
   userIdx: number;
+  percent: number;
 }
 
 interface userProps {
@@ -25,7 +26,7 @@ interface userProps {
   storedFileName: string;
 }
 
-const SogaeDetail: React.FC<Props> = ({ userIdx }) => {
+const SogaeDetail: React.FC<Props> = ({ userIdx, percent }) => {
   const dispatch = useDispatch()
   const [mateUser, setMateUser] = useState<userProps>()
   const [Follow, setFollow] = useState(false);
@@ -174,13 +175,12 @@ const SogaeDetail: React.FC<Props> = ({ userIdx }) => {
               {/* {mateUser.language.map((lang) => (
                 lang + '    '
               ))} */}
-              <br /><br /><br />
               {Follow ? <button onClick={onfollow}>언팔로우</button> : <button onClick={onfollow}>팔로우</button>}
+              <br /><br /><br />
             </div>
             <div style={{ width: '65%', margin: '0 20px', boxSizing: 'border-box' }}>
-              <h2>자기소개 : {mateUser.intro}</h2>
               <br />
-              <h1>일치율</h1>
+              <h2>일치율 : {percent} %</h2>
               <br />
               <button onClick={sendrequest}>채팅 신청</button>
             </div>

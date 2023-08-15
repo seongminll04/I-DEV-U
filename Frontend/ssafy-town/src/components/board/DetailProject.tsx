@@ -1,16 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Detail_css from './DetailProject.module.css';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../store/actions';
 import { AppState } from '../../store/state';
 import axios from 'axios';
+// import Project from '../sidebar/4project';
+
+interface ProjectDataType {
+  "idx": number;
+  "title": string;
+  "managerIdx": number;
+  "nickname": string,
+  "totalNum": number;
+  "nowNum": number;
+  "front": number;
+  "max_front": number;
+  "back": number;
+  "max_back": number;
+  "type": string;
+  "projectLanguages": { idx: number, language: string }[];
+  "session": string;
+  "content": string;
+};
 
 const DetailProject: React.FC = () => {
   const dispatch=useDispatch()
   const wantPJTId = useSelector((state: AppState) => state.wantPJTId);
   const userToken = localStorage.getItem('userToken')
-
+  const [project, setProject] = useState<ProjectDataType>();
   useEffect(()=>{
     axios({
       method:'get',
@@ -21,9 +39,10 @@ const DetailProject: React.FC = () => {
     })
     .then(res =>{
       console.log(res)
+      setProject(res.data.project)
     })
     .catch(err => console.log(err))
-  })
+  }, [])
 
   return (
     <div className={Detail_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
@@ -31,9 +50,15 @@ const DetailProject: React.FC = () => {
       <div className={Detail_css.modal}>
         <p className={Detail_css.closebtn} onClick={() => {dispatch(setModal(null))}}>닫기</p>
         <h1>프로젝트 상세정보</h1>
-        <h2>프로젝트1</h2>
-        {wantPJTId}
+        <h2>제목 : {project?.title}</h2>
+        <h2>내용 : {project?.content}</h2>
 
+        <p> 프론트엔드 : {project?.front} / {project?.max_front}</p>
+        <p> 백엔드 : {project?.back} / {project?.max_back}</p>
+        <p> 언어 : 
+          {/* {project?.projectLanguages.map(val => (val.language) string} */}
+        </p>        
+        <p> 타입 : {project?.type}</p>
         </div>  
     </div>
   );

@@ -36,29 +36,34 @@ const Project: React.FC = () => {
   const [inputvalue, setInputValue] = useState<string>('');
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
   const [projectFilter, setProjectFilter] = useState<Filter>();
+  const [survey, setSurvey] = useState<boolean>(false);
 
   // 프로젝트 필터
-  const applyFilter = () => {
+  useEffect(() => {
     const userToken = localStorage.getItem('userToken');
     // const userIdxStr = localStorage.getItem('userIdx')
     // var userIdx: number | null;
     // if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
-    console.log(projectFilter)
-    axios({
-      method: 'post',
-      url: 'https://localhost:9090/project/filter',
-      headers: {
-        Authorization: 'Bearer ' + userToken
-      },
-      data: projectFilter
-    })
-      .then(res => {
-        console.log(res.data)
-        // setProjectList(res.data);
+    if (survey) {
+      setSurvey(false)
+      console.log(projectFilter)
+      axios({
+        method: 'post',
+        url: 'https://localhost:9090/project/filter',
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        },
+        data: projectFilter
       })
-      .catch(err => console.log(err))
-  }
+        .then(res => {
+          console.log(res.data)
+          // setProjectList(res.data);
+        })
+        .catch(err => console.log(err))
+    }
+  }, [survey])
 
+  // 처음에 가져오는 프로젝트 리스트
   useEffect(() => {
     const userToken = localStorage.getItem('userToken')
     axios({
@@ -74,6 +79,7 @@ const Project: React.FC = () => {
       .catch(err => { console.log(err); });
   }, [isModalOpen])
 
+  // 키워드로 프로젝트 검색
   const loaddata = () => {
     const userToken = localStorage.getItem('userToken')
     axios({
@@ -127,7 +133,7 @@ const Project: React.FC = () => {
               <div className={project_css.project}>
                 <div className={project_css.project_detail} onClick={() => {
                   dispatch(setModal('프로젝트상세정보'))
-                  // dispatch(setWantPJTId(project.idx))
+                  dispatch(setWantPJTId(project.idx))
                 }}>
                   <img src="assets/default_profile.png" alt="" />
                   <div className={project_css.project_data}>
@@ -159,7 +165,7 @@ const Project: React.FC = () => {
         </div>
 
       </div>
-      {isModalOpen === '프로젝트필터' ? <ProjectFilter applyFilter={applyFilter} onfilter={(value: Filter) => setProjectFilter(value)} /> : null}
+      {isModalOpen === '프로젝트필터' ? <ProjectFilter survey={survey} onSurvey={(value: boolean) => setSurvey(value)} onfilter={(value: Filter) => setProjectFilter(value)} /> : null}
     </div>
   );
 };

@@ -18,3 +18,9 @@
     box-sizing: border-box;
     color : white;
 }
+
+img {
+    width: 60px ;
+    height: 60px;
+    margin:0 10px;
+}

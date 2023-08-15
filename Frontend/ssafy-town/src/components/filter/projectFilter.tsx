@@ -10,11 +10,12 @@ interface Filter {
 }
 
 interface props {
-  applyFilter: () => void,
+  survey:boolean,
   onfilter: (value: Filter) => void,
+  onSurvey: (value: boolean) => void,
 }
 
-const ProjectFilter: React.FC<props> = ({ onfilter, applyFilter }) => {
+const ProjectFilter: React.FC<props> = ({ survey, onfilter, onSurvey }) => {
   const [languages, setLanguages] = useState<string[]>([]);
   const [position, setPosition] = useState<string>('');
   const [projectType, setProjectType] = useState<string>('');
@@ -50,10 +51,8 @@ const ProjectFilter: React.FC<props> = ({ onfilter, applyFilter }) => {
         position: position,
       }
     ;
-
-    console.log(surveyResults)
     onfilter(surveyResults);
-    applyFilter();
+    onSurvey(true);
     dispatch(setModal(null))
   }
 

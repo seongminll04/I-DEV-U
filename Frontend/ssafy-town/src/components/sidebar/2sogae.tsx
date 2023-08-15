@@ -22,6 +22,7 @@ const Sogae: React.FC = () => {
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);//사이드바 오픈여부
 
   const [userdetail, setUserDetail] = useState<number>(0);
+  const [percent, setPercent] = useState<number>(0);
   // const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [survey, setServey] = useState<boolean>(false);
   const [users, setUsers] = useState<User[]>([])
@@ -97,7 +98,7 @@ const Sogae: React.FC = () => {
             <>
               <div className={sogae_css.scrollbar}>
                 {users.map((user, index) => (
-                  <div className={sogae_css.usertable} key={index} onClick={() => { setUserDetail(user.userIdx); dispatch(setModal('소개팅상세정보')) }}>
+                  <div className={sogae_css.usertable} key={index} onClick={() => { setUserDetail(user.userIdx); setPercent(user.percent); dispatch(setModal('소개팅상세정보')) }}>
                     <div className={sogae_css.userInfo}>
                       <div className={sogae_css.profile}>
                         <img
@@ -109,7 +110,7 @@ const Sogae: React.FC = () => {
                           <b>{user.nickname}</b>
                           <p style={{ color: 'gray' }}>#{user.age} #{user.face}</p>
                         </div>
-                      </div>
+                      </div> 
                     </div>
                     <div className={sogae_css.matchRate}>{user.percent}%</div>
                   </div>
@@ -124,7 +125,7 @@ const Sogae: React.FC = () => {
             </div>}
         </>}
       {isModalOpen === '소개팅설문' ? <SecondQAModal survey={survey} onsurvey={(value) => setServey(value)} />
-        : isModalOpen === '소개팅상세정보' ? <SogaeDetail userIdx={userdetail} />
+        : isModalOpen === '소개팅상세정보' ? <SogaeDetail userIdx={userdetail} percent={percent}/>
           : null}
     </div>
 

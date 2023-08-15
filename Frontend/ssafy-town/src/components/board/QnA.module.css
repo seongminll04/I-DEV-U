@@ -52,6 +52,10 @@
     display: flex;
     justify-content: space-between;
     margin: 0px 20px;
+    cursor: pointer;
+}
+.notice:hover {
+    color:gray;
 }
 .search_frame select {
     height: 30px;

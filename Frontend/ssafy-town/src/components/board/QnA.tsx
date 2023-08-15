@@ -192,8 +192,7 @@ const QnA: React.FC = () => {
                     onClick={() => {
                       setPage(2);
                       setQnaid(question.idx);
-                    }}
-                    >
+                    }}>
                     <p style={{margin:'5px'}}>{index+1}</p>
                     <p style={{margin:'5px'}}>{question.title}</p>
                     <p style={{margin:'5px'}}>

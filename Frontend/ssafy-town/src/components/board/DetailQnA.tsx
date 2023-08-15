@@ -120,33 +120,56 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
       <p className={Create_css.backbtn} onClick={onback}>돌아가기</p>
       <div>
         <h1>Q n A 게시글</h1>
-        {question ? (
-          <>
-            <p>제목 : {question.title}</p>
-            <p>내용 : {question.content}</p>
-            <p>날짜 : {qTime.getMonth() + 1}/{qTime.getDate()} {qTime.getHours()}:{qTime.getMinutes()}</p>
-          </>
-        ) : (
-          'Loading...'
-        )}
-        <h2>댓글</h2>
         <hr />
-        {commentlist.map((comment: Comment, index: number) => {
+        <div style={{display:'flex', width:'100%', margin:'auto'}}>
+          <div style={{width:'60%', textAlign:'left', margin:'10px 5%',}}>
+              {question ? (
+            <>
+                <h3>제목 : {question.title}</h3>
+                <h3>내용 : {question.content}</h3>
+                <h3>날짜 : {(qTime.getMonth() + 1).toString().padStart(2, '0')}/{qTime.getDate().toString().padStart(2, '0')} { qTime.getHours().toString().padStart(2, '0')}:{qTime.getMinutes().toString().padStart(2, '0')}</h3>
+              </>
+            ) : (
+              'Loading...'
+            )}
+          </div>
+
+          <div  style={{width:'40%', margin:'0 2%'}}>
+        <h3 style={{margin:'5px 0'}}>댓글</h3>
+        <div className={Create_css.scrollbox}>
+        <div>
+          <span></span>
+        </div>
+        {commentlist.sort((a,b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime() ).map((comment: Comment, index: number) => {
+          const now= new Date()
           const date = new Date(comment.createdAt);
+          const month = (date.getMonth() + 1).toString().padStart(2, '0');
+          const day = date.getDate().toString().padStart(2, '0');
+          const hours = date.getHours().toString().padStart(2, '0');
+          const minutes = date.getMinutes().toString().padStart(2, '0');
+
+          var createdtime:string=''
+          if (now.getMonth()===date.getMonth() && now.getDate()===date.getDate()) {createdtime=hours+' : '+minutes}
+          else {
+            createdtime = `${month}/${day} ${hours}:${minutes}`
+          }
           return (
-            <div key={index}>
-              <span>[{comment.userNickname}] </span>
-              <span>{comment.content}, </span>
-              <span>
-                작성시간 : {date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}
+            <div key={index} style={{width:'90%', display:'flex',justifyContent:'space-between', margin:'auto'}}>
+              <span>{comment.userNickname} : {comment.content} </span>
+              <span style={{color:'gray',fontSize:'12px'}}>
+                {createdtime}
               </span>
             </div>
           )
         })}
-        <input type="text" value={inputvalue} onChange={(e) => setInputvalue(e.target.value)} onKeyDown={handlekeydown} />
-        <button onClick={onInputSubmit}>작성</button>
+        {commentlist.length>0 ? null : <h2>댓글이 없습니다</h2>}
+         </div>
+          <br />
+          <input className={Create_css.commentbox} type="text" value={inputvalue} onChange={(e) => setInputvalue(e.target.value)} onKeyDown={handlekeydown} />
+          <button onClick={onInputSubmit}>작성</button>
+          </div>
+        </div>
       </div>
-      <hr />
     </div>
   );
 };

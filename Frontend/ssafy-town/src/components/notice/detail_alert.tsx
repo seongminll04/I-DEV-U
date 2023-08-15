@@ -108,6 +108,7 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
             : Selalert.type === 'CHAT' ? `${Selalert.fromUser.nickname}님의 채팅신청입니다.`
             : null}
           </h1>
+          {/* 채팅관련 버튼임 -> 화상신청 수락에 대한 버튼은 따로  */}
           <button onClick={ok}>수락</button>
           <button onClick={nope}>거절</button>
           </>

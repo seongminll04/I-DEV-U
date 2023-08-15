@@ -41,7 +41,7 @@ public class Alarm {
         alarm.fromIdx = alarmRequest.getFromIdx();
         alarm.toIdx = alarmRequest.getToIdx();
         alarm.type = alarmRequest.getType();
-        alarm.createdAt = alarmRequest.getCreatedAt();
+        alarm.createdAt = LocalDateTime.now();
         alarm.checked = AlarmChecked.N;
 
         return alarm;

@@ -31,22 +31,26 @@ public class PartnerService {
 
 		List<PartnerDto> list = new ArrayList<>();
 
-		for (Object o : partners) {
-			Object[] result = (Object[])o;
-			// Assuming the order of elements in the array corresponds to the order of fields in PartnerDto
-			String name = (String)result[0];
-			String nickname = (String)result[1];
-			Long percent = (Long)result[2];
-			Integer Idx = (Integer)result[3];
+        for (Object o : partners) {
+            Object[] result = (Object[]) o;
+            // Assuming the order of elements in the array corresponds to the order of fields in PartnerDto
+            String name = (String) result[0];
+            String nickname = (String) result[1];
+            Long percent = (Long) result[2];
+            Integer Idx = (Integer) result[3];
+            String invite = (String) result[4];
+            if (invite.equals("false")) {
+                continue;
+            }
+            List<String> language = basicRepository.findLanguage(Idx);
 
-			List<String> language = basicRepository.findLanguage(Idx);
-
-			PartnerDto partnerDto = new PartnerDto();
-			partnerDto.setUserIdx(Idx);
-			partnerDto.setName(name);
-			partnerDto.setNickname(nickname);
-			partnerDto.setPercent(percent);
-			partnerDto.setLanguageList(language);
+            PartnerDto partnerDto = new PartnerDto();
+            partnerDto.setUserIdx(Idx);
+            partnerDto.setName(name);
+            partnerDto.setNickname(nickname);
+            partnerDto.setPercent(percent);
+            partnerDto.setInvite(invite);
+            partnerDto.setLanguageList(language);
 
 			list.add(partnerDto);
 		}
@@ -65,7 +69,11 @@ public class PartnerService {
 			String nickname = u.getNickname();
 			Integer Idx = u.getIdx();
 
-			List<String> language = basicRepository.findLanguage(Idx);
+            if (u.getInvite().equals("false")) {
+                continue;
+            }
+
+            List<String> language = basicRepository.findLanguage(Idx);
 
 			PartnerDto partnerDto = new PartnerDto();
 			partnerDto.setUserIdx(Idx);

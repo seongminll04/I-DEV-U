@@ -14,8 +14,5 @@ public class UserUpdateDto {
     private LocalDate birth;
     private UserGender gender;
     private String intro;
-    private String image;
     private String password;
-    private String originalFileName;
-    private String storedFileName;
 }

@@ -99,6 +99,7 @@ public class UserService {
                     .originalFileName(user.getOriginalFileName())
                     .storedFileName(user.getStoredFileName())
                     .invite(user.getInvite())
+                    .basicAnswerList(user.getBasicAnswerList())
                     .build();
 
             userRepository.save(user);

@@ -60,6 +60,11 @@ const CreateProject: React.FC = () => {
       return;
     }
 
+    if (selectedLanguages.length<1) {
+      alert('프로젝트 언어를 1개 이상 선택해주세요')
+      return
+    }
+
     console.log("1단계")
     // OpenVidu 세션 생성
     const userToken = localStorage.getItem('userToken')

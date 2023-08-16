@@ -187,16 +187,53 @@ const Mypage: React.FC = () => {
   }
 
 
+  const onChangeImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const userToken = localStorage.getItem('userToken');
+    const userIdxStr = localStorage.getItem('userIdx')
+    let userIdx: number | null = null; // 타입을 number | null로 변경
 
+    if (userIdxStr) {
+      userIdx = parseInt(userIdxStr, 10);
+    }
+    e.preventDefault();
+
+    if (e.target.files) {
+      const uploadFile = e.target.files[0]
+      const formData = new FormData()
+      formData.append('file', uploadFile);
+      if (userIdx !== null) {
+        formData.append('userIdx', userIdx.toString()); // number 타입을 문자열로 변환하여 추가
+      }
+
+      await axios({
+        method: 'post',
+        url: 'https://i9b206.p.ssafy.io:9090/user/uploadFile',
+        data: formData,
+        headers: {
+          'Authorization': 'Bearer ' + userToken,
+          'Content-Type': 'multipart/form-data',
+        }
+      }).then((res) => {
+        console.log(res);
+        // setChangeData(false)
+        alert("성공")
+      })
+        .catch((err) => {
+          alert("실패")
+          console.log(err);
+        });
+    }
+  }
   return (
     <div>
       <div className='sidebar_modal' id={mypage_css.modal}>
         <h1>내 프로필</h1>
         <div className={mypage_css.mypage_photo}>
-          <img
+          <input type="file" id="file1" accept=".jpg, .jpeg, .png" style={{display:'none'}} onChange={onChangeImg}/>
+          <img className={mypage_css.profileImg}
             src={user.storedFileName ? user.storedFileName : "assets/default_profile.png"}
             alt=""
-            style={{ width: '100px', height: '100px', borderRadius: "50%"}}
+            onClick={()=>{document.getElementById('file1')?.click()}}
           />
         </div>
         <div className={mypage_css.mypage_view}>

@@ -13,5 +13,7 @@ public class AlarmProjectInviteRequest {
     private AlarmType type;
 //    private LocalDateTime createdAt;
     private Integer projectIdx;
+    private String comment;
+
 
 }

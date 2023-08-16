@@ -34,6 +34,7 @@ public class Alarm {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime createdAt;
     private Integer targetIdx;
+    private String comment;
 
 
 
@@ -43,16 +44,18 @@ public class Alarm {
         alarm.toIdx = alarmRequest.getToIdx();
         alarm.type = alarmRequest.getType();
         alarm.createdAt = LocalDateTime.now();
-
+        alarm.comment = alarmRequest.getComment();
         return alarm;
     }
-    public static Alarm create(Integer fromIdx, Integer toIdx, AlarmType type, LocalDateTime time, Integer targetIdx){
+    public static Alarm create(Integer fromIdx, Integer toIdx, AlarmType type,
+                               LocalDateTime time, Integer targetIdx, String comment){
         Alarm alarm = new Alarm();
         alarm.fromIdx = fromIdx;
         alarm.toIdx = toIdx;
         alarm.type = type;
         alarm.createdAt = time;
         alarm.targetIdx = targetIdx;
+        alarm.comment = comment;
         return alarm;
     }
 

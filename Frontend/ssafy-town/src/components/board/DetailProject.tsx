@@ -14,10 +14,6 @@ interface ProjectDataType {
   "nickname": string,
   "totalNum": number;
   "nowNum": number;
-  "front": number;
-  "max_front": number;
-  "back": number;
-  "max_back": number;
   "type": string;
   "projectLanguages": { idx: number, language: string }[];
   "session": string;

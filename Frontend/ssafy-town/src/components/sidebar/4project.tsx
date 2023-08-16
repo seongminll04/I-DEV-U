@@ -15,10 +15,6 @@ type ProjectDataType = {
   "nickname": string,
   "totalNum": number;
   "nowNum": number;
-  "front": number;
-  "max_front": number;
-  "back": number;
-  "max_back": number;
   "type": string;
   "languageList": { idx: number, language: string }[];
   "session": string;
@@ -27,7 +23,6 @@ type ProjectDataType = {
 interface Filter {
   type: string,
   languageList: string[],
-  position: string
 }
 
 const Project: React.FC = () => {

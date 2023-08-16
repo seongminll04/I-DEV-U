@@ -6,7 +6,6 @@ import { setModal } from '../../store/actions';
 interface Filter {
   type: string,
   languageList: string[],
-  position: string
 }
 
 interface props {
@@ -16,12 +15,10 @@ interface props {
 
 const ProjectFilter: React.FC<props> = ({ onfilter, onSurvey }) => {
   const [languages, setLanguages] = useState<string[]>([]);
-  const [position, setPosition] = useState<string>('');
   const [projectType, setProjectType] = useState<string>('');
   const dispatch = useDispatch()
 
   const languageOptions = ["Python", "Java", "C", "C++", "C#", "Object-C", "Kotlin", "Swift", "Ruby", "Go", "Javascript", "typescript", "PyPy", "PHP", "Rust", "Text", "D", "기타"];
-  const positionsOptions = ["front", "back"];
   const projectOptions = ["PROJECT", "STUDY"];
 
 
@@ -43,13 +40,12 @@ const ProjectFilter: React.FC<props> = ({ onfilter, onSurvey }) => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    const surveyResults: Filter = 
-      {
-        type: projectType,
-        languageList: languages,
-        position: position,
-      }
-    ;
+    const surveyResults: Filter =
+    {
+      type: projectType,
+      languageList: languages,
+    }
+      ;
     onfilter(surveyResults);
     onSurvey(true);
     dispatch(setModal(null))
@@ -58,43 +54,34 @@ const ProjectFilter: React.FC<props> = ({ onfilter, onSurvey }) => {
   const filterForm = (
     <form onSubmit={handleSubmit}>
       <div className={filter_css.input}>
-        <label className={filter_css.label}><span>타</span><span>입</span></label>
-        <p> : </p>
+        <label className={filter_css.label}>
+        <p>타 입 : </p>
         {projectOptions.map(option => (
           <label key={option}>
             <input type="radio" name="projectType" value={option} onChange={() => setProjectType(option)} checked={projectType === option} />
             {option}
           </label>
         ))}
+        </label>
       </div>
       <div className={filter_css.input}>
-        <label className={filter_css.label}><span>언</span><span>어</span></label>
-        <p> : </p>
-        <div className={filter_css.choose} style={{ width: '60%', whiteSpace: 'pre-wrap' }}>
-          {languageOptions.map(option => (
-            <label key={option} style={{ whiteSpace: 'pre-wrap' }}>
-              <input
-                type="checkbox"
-                name="languages"
-                value={option}
-                onChange={() => toggleLanguage(option)}
-                checked={languages.includes(option)}  // checked 속성을 추가하여 렌더링 시 마다 선택 상태를 업데이트함
-              />
-              {option}
-            </label>
-          ))}
-        </div>
-      </div>
-      <div className={filter_css.input}>
-        <label className={filter_css.label}><span>포</span><span>지</span><span>션</span></label>
-        <p> : </p>
-        {positionsOptions.map(option => (
-          <label key={option}>
-            {/* checked 속성을 추가하여 렌더링 시 마다 선택 상태를 업데이트함 */}
-            <input type="radio" name="position" value={option} onChange={() => setPosition(option)} checked={position === option} />
-            {option}
-          </label>
-        ))}
+        <label className={filter_css.label}>
+          <p>언 어 : </p>
+          <div className={filter_css.choose} style={{ width: '60%', whiteSpace: 'pre-wrap' }}>
+            {languageOptions.map(option => (
+              <label key={option} style={{ whiteSpace: 'pre-wrap' }}>
+                <input
+                  type="checkbox"
+                  name="languages"
+                  value={option}
+                  onChange={() => toggleLanguage(option)}
+                  checked={languages.includes(option)}  // checked 속성을 추가하여 렌더링 시 마다 선택 상태를 업데이트함
+                />
+                {option}
+              </label>
+            ))}
+          </div>
+        </label>
       </div>
     </form>
   )
@@ -112,7 +99,6 @@ const ProjectFilter: React.FC<props> = ({ onfilter, onSurvey }) => {
         </div>
       </div >
     </div>
-
   );
 };
 

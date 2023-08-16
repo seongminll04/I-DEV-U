@@ -20,7 +20,6 @@ const LMeetingRoom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
   const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
-  const [openchat, setopenchat] = useState(false);
   const stompClientRef = React.useRef<Client | null>(null);
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
 
@@ -65,8 +64,6 @@ const LMeetingRoom: React.FC = () => {
     };
     const newGame = new Phaser.Game(config);
     setGame(newGame);
-    setopenchat(true)
-    
     return () => {
       newGame.destroy(true);
     }
@@ -103,7 +100,7 @@ const LMeetingRoom: React.FC = () => {
       <div id="phaser_game" className={ssafytown_css.phaser_game} >
         <div className={ssafytown_css.video_bar}><Cam2 /></div>
       </div>
-      {stompClientRef.current && openchat  ? <MeetingChat/> : null}
+      {stompClientRef.current  ? <MeetingChat/> : null}
     </div>
   );
 }

@@ -58,12 +58,12 @@ const MeetingChat: React.FC = () => {
         const subscription = stompClientRef.current.subscribe(`/meeting/messages/${OVsession}`, function(message: Message) {
             const newMessage = JSON.parse(message.body);
             const date = new Date(newMessage.createdAt)
-            const newd=[{
+            const newd={
             'userName':newMessage.userName,
             'message':newMessage.message,
             'createdAt':date,
-            }]
-            setReceiveMessages(prev => [...prev, ...newd]);
+            }
+            setReceiveMessages(prev => [...prev, newd]);
         });
         return () => {
             if (stompClientRef.current) {
@@ -74,31 +74,29 @@ const MeetingChat: React.FC = () => {
     }, []);
 
   return (
-    <div style={{position:'absolute',top:'60%',left:'35%',background:'gray', width:'400px', height:'200px'}}>
-        <div>
-        {isSidebarOpen ? 
-      <div style={{position:'absolute',top:'60%',left:'35%',background:'gray', width:'400px', height:'200px'}}>
-        <div>
-          {receiveMessages.map((message)=>(
-            <p>{message.userName+' : '+message.message} </p>
-          ))}
+    <div>
+    {isSidebarOpen ? 
+        <div style={{position:'absolute',top:'60%',left:'35%',background:'gray', width:'400px', height:'200px'}}>
+            <div>
+            {receiveMessages.map((message)=>(
+                <p>{message.userName+' : '+message.message} </p>
+            ))}
+            </div>
+            <input type="text" value={messageInput} onChange={(e)=>setMessageInput(e.target.value)} onKeyDown={handlekeydown} 
+            onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
+            <button onClick={sendMessage}></button>
         </div>
-        <input type="text" value={messageInput} onChange={(e)=>setMessageInput(e.target.value)} onKeyDown={handlekeydown} 
-        onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
-        <button onClick={sendMessage}></button>
-      </div>
-      :      
-      <div style={{position:'absolute',top:'60%',left:'10%',background:'gray', width:'400px', height:'200px'}}>
-        <div>
-          {receiveMessages.map((message)=>(
-            <p>{message.userName+' : '+message.message} </p>
-          ))}
-        </div>
-        <input type="text" value={messageInput} onChange={(e)=>setMessageInput(e.target.value)} onKeyDown={handlekeydown} 
-        onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
-        <button onClick={sendMessage}></button>
-      </div>}
-        </div>
+        :      
+        <div style={{position:'absolute',top:'60%',left:'10%',background:'gray', width:'400px', height:'200px'}}>
+            <div>
+            {receiveMessages.map((message)=>(
+                <p>{message.userName+' : '+message.message} </p>
+            ))}
+            </div>
+            <input type="text" value={messageInput} onChange={(e)=>setMessageInput(e.target.value)} onKeyDown={handlekeydown} 
+            onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
+            <button onClick={sendMessage}></button>
+        </div>}
   </div>
   );
 };

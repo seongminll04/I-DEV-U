@@ -158,18 +158,20 @@ const QAModal: React.FC<Props> = ({survey,onsurvey}) => {
         })
         .then(() =>{
             // 설문 시 소개팅 사용자 등록
-            axios({
-                method:'post',
-                url:`https://i9b206.p.ssafy.io:9090/date/register/${userIdx}`,
-                headers : {
-                    Authorization: 'Bearer ' + userToken
-                },
-            })
-            .then(()=>{
-                alert('설문완료')
-                onsurvey(true)
-                dispatch(setModal(null))
-            })
+            if (!survey) {
+                axios({
+                    method:'post',
+                    url:`https://i9b206.p.ssafy.io:9090/date/register/${userIdx}`,
+                    headers : {
+                        Authorization: 'Bearer ' + userToken
+                    },
+                })
+                .then(()=>{
+                    alert('설문완료')
+                    onsurvey(true)
+                    dispatch(setModal(null))
+                })
+            }
         })
         .catch(()=>alert('설문등록실패'))
     };

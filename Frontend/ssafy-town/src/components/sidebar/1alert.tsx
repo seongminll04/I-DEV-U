@@ -24,6 +24,13 @@ interface AlertProps {
   fromUser:{
     idx:number,
     nickname:string,
+    basicAnswerList:{
+      surveyIdx:number,
+      tag:string,
+    }
+    gener:number,
+    intro:string|null,
+    storedFileName:string,
   },
   toUser:{
     idx:number,

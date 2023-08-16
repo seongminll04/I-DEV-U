@@ -14,6 +14,13 @@ interface Props {
     fromUser:{
       idx:number,
       nickname:string,
+      basicAnswerList:{
+        surveyIdx:number,
+        tag:string,
+      }
+      gener:number,
+      intro:string|null,
+      storedFileName:string|null,
     },
     toUser:{
       idx:number,
@@ -143,7 +150,7 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
   }
 
   return (
-    <div className={alert_css.alert_modal2}>
+    <div className={alert_css.alert_modal}>
       <div className={alert_css.buttons}>
         <p className={alert_css.backbtn} onClick={backpage}>돌아가기</p>
         <p className={alert_css.closebtn} onClick={() => { dispatch(setModal(null)) }}>닫기</p>
@@ -158,6 +165,17 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
             : Selalert.type === 'CHAT' ? `${Selalert.fromUser.nickname}님의 채팅신청입니다.`
             : null}
           </h1>
+
+
+          <div>
+            {Selalert.fromUser.nickname}
+          </div>
+
+
+
+
+
+
 
           {Selalert.type==='PROJECT' ? 
           // 화상신청 관련

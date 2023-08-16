@@ -7,26 +7,23 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import mate.domain.basic.BasicAnswer;
-import mate.domain.user.UserGender;
-import mate.dto.match.MatchDetailDto;
-import mate.repository.user.BasicRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mate.domain.basic.BasicAnswer;
 import mate.domain.match.MatchAnswer;
 import mate.domain.match.MatchUser;
 import mate.domain.user.User;
+import mate.dto.match.MatchDetailDto;
 import mate.dto.match.MatchDto;
 import mate.dto.match.MatchSurvey;
 import mate.dto.user.SurveyResult;
 import mate.repository.match.MatchRepository;
 import mate.repository.match.MatchUserRepository;
+import mate.repository.user.BasicRepository;
 import mate.repository.user.UserRepository;
-
-import javax.persistence.Id;
 
 @Service
 @Transactional
@@ -42,6 +39,15 @@ public class MatchService {
 	public void registerSurvey(MatchSurvey matchSurvey) {
 		User user = userRepository.findByIdx(matchSurvey.getUserIdx()).get();
 		List<SurveyResult> surveyResult = matchSurvey.getSurveyResult();
+
+		// 이미 해당 사용자가 MatchUser에 등록되어 있는지 확인
+		MatchUser existingMatchUser = matchUserRepository.findByUser(user).get();
+
+		if (existingMatchUser == null) {
+			matchUserRepository.saveAndFlush(MatchUser.builder()
+				.user(user)
+				.build());
+		}
 
 		for (SurveyResult result : surveyResult) {
 			List<String> tagList = result.getTagList();
@@ -59,7 +65,15 @@ public class MatchService {
 	public void registerMatchUser(int userIdx) {
 		User user = userRepository.findByIdx(userIdx).get();
 
-		matchUserRepository.save(MatchUser.builder()
+		// 이미 해당 사용자가 MatchUser에 등록되어 있는지 확인
+		MatchUser existingMatchUser = matchUserRepository.findByUser(user).get();
+
+		// 이미 등록된 사용자
+		if (existingMatchUser != null) {
+			return;
+		}
+
+		matchUserRepository.saveAndFlush(MatchUser.builder()
 			.user(user)
 			.build());
 	}

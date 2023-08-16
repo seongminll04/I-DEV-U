@@ -61,6 +61,7 @@ const Mypage: React.FC = () => {
   const [user, setUser] = useState(userdata)
   const [sogae, setSogae] = useState(true)
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
+  const [mouseover, setMouseover] = useState(false)
 
   const [changeDate, setChangeData] = useState(true)
 
@@ -234,7 +235,11 @@ const Mypage: React.FC = () => {
             src={user.storedFileName ? user.storedFileName : "assets/default_profile.png"}
             alt=""
             onClick={()=>{document.getElementById('file1')?.click()}}
+            onMouseEnter={()=>setMouseover(true)}
+            onMouseLeave={()=>setMouseover(false)}
           />
+          {mouseover ?  <div className={mypage_css.profileImgtext}>프로필 사진 변경</div>:null}
+
         </div>
         <div className={mypage_css.mypage_view}>
           <div className={mypage_css.mypage_welcome}>

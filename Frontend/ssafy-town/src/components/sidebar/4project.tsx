@@ -14,7 +14,7 @@ import DetailProject from "../board/DetailProject";
 type ProjectDataType = {
   "idx": number;
   "title": string;
-  "managerIdx": number;
+  "userIdx": number;
   "nickname": string,
   "totalNum": number;
   "nowNum": number;
@@ -37,6 +37,9 @@ const Project: React.FC = () => {
   const [projectFilter, setProjectFilter] = useState<Filter>();
   const [survey, setSurvey] = useState<boolean>(false);
   const [selpjt, setSelpjt] = useState<ProjectDataType>();
+  const userIdxStr = localStorage.getItem('userIdx')
+  var userIdx: number | null;
+  if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
   // 프로젝트 필터
   useEffect(() => {
     const userToken = localStorage.getItem('userToken');
@@ -150,14 +153,19 @@ const Project: React.FC = () => {
                   </div>
                 </div>
                 <div>
-                  <button className={project_css.btn} onClick={() => {
+                  {project.userIdx === userIdx ? 
+                  <button className={project_css.btn} style={{color:'red'}} onClick={() => {
+                    localStorage.setItem('OVsession',project.session)
+                    window.location.href = "https://i9b206.p.ssafy.io/meeting"}}>입장</button>
+                  :
+                    <button className={project_css.btn} onClick={() => {
                     if (project["nowNum"]>=project["totalNum"]){
                       alert('구인이 끝난 프로젝트입니다')
                       return
                     }
                     dispatch(setModal('프로젝트참가신청'))
-                    setSelpjt(project)
-                  }}>참가신청</button>
+                    setSelpjt(project)}}>참가신청</button>
+                  }
                   <span>{project["nowNum"]}/{project["totalNum"]}</span>
                 </div>
               </div>

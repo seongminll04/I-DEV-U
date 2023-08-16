@@ -156,22 +156,31 @@ const QAModal: React.FC<Props> = ({survey,onsurvey}) => {
                 surveyResult : surveyResult
             }
         })
-        .then(() =>{
-            // 설문 시 소개팅 사용자 등록
-            if (!survey) {
-                axios({
-                    method:'post',
-                    url:`https://i9b206.p.ssafy.io:9090/date/register/${userIdx}`,
-                    headers : {
-                        Authorization: 'Bearer ' + userToken
-                    },
-                })
-                .then(()=>{
-                    alert('설문완료')
-                    onsurvey(true)
-                    dispatch(setModal(null))
-                })
+        .then((res) =>{
+            if (res.data.resmsg!=='소개팅 등록 성공' && !survey) {
+                alert('등록 실패')
+                return
             }
+
+            if (res.data.resmsg!=='설문 수정 완료' && survey) {
+                alert('수정 실패')
+                return
+            }
+
+            // 설문 시 소개팅 사용자 등록
+            axios({
+                method:'post',
+                url:`https://i9b206.p.ssafy.io:9090/date/register/${userIdx}`,
+                headers : {
+                    Authorization: 'Bearer ' + userToken
+                },
+            })
+            .then(()=>{
+                alert('설문완료')
+                onsurvey(true)
+                dispatch(setModal(null))
+            })
+            
         })
         .catch(()=>alert('설문등록실패'))
     };

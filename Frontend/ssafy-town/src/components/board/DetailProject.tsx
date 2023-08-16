@@ -7,7 +7,7 @@ import { setModal } from '../../store/actions';
 type ProjectDataType = {
   "idx": number;
   "title": string;
-  "managerIdx": number;
+  "userIdx": number;
   "nickname": string,
   "totalNum": number;
   "nowNum": number;

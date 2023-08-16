@@ -55,6 +55,7 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
   const ok = () => {
     const userToken = localStorage.getItem('userToken')
     const now = new Date()
+    console.log(Selalert)
     // 채팅방 생성
     axios({
       method:'post',
@@ -69,6 +70,7 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
       },
     })
     .then(res => {
+      console.log('채팅방 생성')
       const userIdxStr = localStorage.getItem('userIdx')
       const userIdx = userIdxStr ? parseInt(userIdxStr,10) : null
 
@@ -96,6 +98,7 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
         },
       })
       .then(() => {
+        console.log('채팅방 참가')
         dispatch(setSidebar('채팅방'))
         dispatch(setModal(null))
 
@@ -156,13 +159,13 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
         <p className={alert_css.backbtn} onClick={backpage}>돌아가기</p>
         <p className={alert_css.closebtn} onClick={() => { dispatch(setModal(null)) }}>닫기</p>
       </div>
-      <br></br>
       <div className={alert_css.alert_detail}>
         {Selalert ? (
           <>
-          <h1>알림 상세정보</h1>
+          <h1 style={{ margin: '-20px 0 20px 0' }}>알림 상세정보</h1>
+          <hr style={{ border: 'solid 1px gray' }} />
           <div style={{display:'flex'}}>
-            <div style={{width:'35%'}}>
+            <div style={{width:'35%', borderRight:'1px solid gray'}}>
               <img
                 src={Selalert.fromUser.storedFileName ? Selalert.fromUser.storedFileName : "assets/default_profile.png"}
                 alt=""
@@ -176,29 +179,40 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
                 <p>{Selalert.fromUser.basicAnswerList.map(a=> a.tag==='있다'? '#프로젝트경험O ' : a.tag==='없다' ? '#프로젝트경험X ' :  '#'+a.tag + ' ')}</p>
             </div>
             <div style={{margin:'auto'}}>
-                {Selalert.type==='PROJECT' ? 
-              // 화상신청 관련
-                <div>
-                  <h1>
-                    {Selalert.type === 'PROJECT' ? <>
-                    <p>프로젝트 : {pjtdata} </p>
-                    <p>{Selalert.fromUser.nickname}님의 가입신청입니다.</p>
-                    <p>{Selalert.comment}</p>
-                    </>
-                    : Selalert.type === 'MATE' ? `${Selalert.fromUser.nickname}님의 동료신청입니다.`
-                    : Selalert.type === 'CHAT' ? `${Selalert.fromUser.nickname}님의 채팅신청입니다.`
-                    : null}
-                  </h1>
+              <div>
 
+                <h1>
+                  {Selalert.type === 'PROJECT' ? <>
+                  <p>프로젝트 : {pjtdata} </p>
+                  <p>{Selalert.fromUser.nickname}님의 가입신청입니다.</p>
+                  <p>{Selalert.comment}</p>
+                  <div>
                   <button onClick={meetingok}>수락</button>
                   <button onClick={nope}>거절</button>
-                </div>
-              :
-              // 채팅 신청에 관련
-              <div>
-                <button onClick={ok}>수락</button>
-                <button onClick={nope}>거절</button>
-              </div>}
+                  </div>
+                  </>
+                  : Selalert.type === "MATE" ? 
+                  <>
+                    <p>동료찾기</p>
+                    <p>{Selalert.fromUser.nickname}님의 동료신청입니다.</p>
+                    <div>
+                      <button onClick={ok}>수락</button>
+                      <button onClick={nope}>거절</button>
+                    </div>
+                  </>
+                  : Selalert.type === 'CHAT' ? <>
+                  <p>
+                  {Selalert.fromUser.nickname}님의 채팅신청입니다.
+                  </p>
+                  <div>
+                    <button onClick={ok}>수락</button>
+                    <button onClick={nope}>거절</button>
+                  </div>
+                  </>
+                  
+                  : 'null'}
+                </h1>
+              </div>
             </div>
           </div>
 

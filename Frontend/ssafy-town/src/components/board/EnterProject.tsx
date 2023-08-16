@@ -9,7 +9,7 @@ import { Client } from '@stomp/stompjs';
 type ProjectDataType = {
   "idx": number;
   "title": string;
-  "managerIdx": number;
+  "userIdx": number;
   "nickname": string,
   "totalNum": number;
   "nowNum": number;

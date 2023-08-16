@@ -41,6 +41,7 @@ const Sogae: React.FC = () => {
       },
     })
       .then(res => {
+        console.log(res)
         if (res.data.resmsg === '설문 했음') {
           setServey(true)
         }

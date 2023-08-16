@@ -41,9 +41,7 @@ public class MatchService {
 		List<SurveyResult> surveyResult = matchSurvey.getSurveyResult();
 
 		// 이미 해당 사용자가 MatchUser에 등록되어 있는지 확인
-		MatchUser existingMatchUser = matchUserRepository.findByUser(user).get();
-
-		if (existingMatchUser == null) {
+		if (!matchUserRepository.findByUser(user).isPresent()) {
 			matchUserRepository.saveAndFlush(MatchUser.builder()
 				.user(user)
 				.build());

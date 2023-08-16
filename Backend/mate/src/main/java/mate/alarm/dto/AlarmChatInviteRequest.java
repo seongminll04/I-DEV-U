@@ -12,4 +12,5 @@ public class AlarmChatInviteRequest {
     private AlarmType type;
 //    private LocalDateTime createdAt;
     private Integer chatRoomIdx;
+    private String comment;
 }

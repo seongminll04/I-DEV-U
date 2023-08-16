@@ -73,7 +73,7 @@ public class AlarmService {
         ChatRoomResponse chatRoom = ChatRoomResponse.from(findChatRoom);
 
         Alarm makeAlarm = Alarm.create(fromUser.getIdx(), toUser.getIdx(),
-                request.getType(), LocalDateTime.now(), request.getChatRoomIdx());
+                request.getType(), LocalDateTime.now(), request.getChatRoomIdx(), request.getComment());
         alarmRepository.saveAndFlush(makeAlarm);
 
         AlarmResponse alarm = AlarmResponse.from(makeAlarm, fromUser, toUser);
@@ -123,7 +123,7 @@ public class AlarmService {
         ChatRoomResponse chatRoom = ChatRoomResponse.from(findChatRoom);
 
         Alarm makeAlarm = Alarm.create(fromUser.getIdx(), toUser.getIdx(),
-                request.getType(), LocalDateTime.now(), request.getChatRoomIdx());
+                request.getType(), LocalDateTime.now(), request.getChatRoomIdx(), request.getComment());
         alarmRepository.saveAndFlush(makeAlarm);
 
         AlarmResponse alarm = AlarmResponse.from(makeAlarm, fromUser, toUser);
@@ -145,7 +145,7 @@ public class AlarmService {
         User findToUser = findProject.getManager();
 
         Alarm makeAlarm = Alarm.create(request.getFromIdx(), findToUser.getIdx(),
-                request.getType(), LocalDateTime.now(), request.getProjectIdx());
+                request.getType(), LocalDateTime.now(), request.getProjectIdx(), request.getComment());
 
         alarmRepository.saveAndFlush(makeAlarm);
 
@@ -171,7 +171,7 @@ public class AlarmService {
         User findToUser = findProject.getManager();
 
         Alarm makeAlarm = Alarm.create(request.getFromIdx(), findToUser.getIdx(),
-                request.getType(), LocalDateTime.now(), request.getProjectIdx());
+                request.getType(), LocalDateTime.now(), request.getProjectIdx(), request.getComment());
 
         alarmRepository.saveAndFlush(makeAlarm);
 
@@ -198,7 +198,8 @@ public class AlarmService {
         ChatRoom findChatRoom = chatRoomRepository.findWithChatRoomUsersByIdx(request.getChatRoomIdx())
                 .orElseThrow(() -> new NotFoundException(CHAT_ROOM_NOT_FOUND));
 
-        Alarm makeAlarm = Alarm.create(request.getFromIdx(), request.getToIdx(), request.getType(), LocalDateTime.now(), request.getChatRoomIdx());
+        Alarm makeAlarm = Alarm.create(request.getFromIdx(), request.getToIdx(), request.getType(),
+                LocalDateTime.now(), request.getChatRoomIdx(), request.getComment());
         alarmRepository.saveAndFlush(makeAlarm);
 
         UserResponse fromUser = UserResponse.from(findFromUser);
@@ -222,7 +223,8 @@ public class AlarmService {
         ChatRoom findChatRoom = chatRoomRepository.findWithChatRoomUsersByIdx(request.getChatRoomIdx())
                 .orElseThrow(() -> new NotFoundException(CHAT_ROOM_NOT_FOUND));
 
-        Alarm makeAlarm = Alarm.create(request.getFromIdx(), request.getToIdx(), request.getType(), LocalDateTime.now(), request.getChatRoomIdx());
+        Alarm makeAlarm = Alarm.create(request.getFromIdx(), request.getToIdx(), request.getType(),
+                LocalDateTime.now(), request.getChatRoomIdx(), request.getComment());
         alarmRepository.saveAndFlush(makeAlarm);
 
         UserResponse fromUser = UserResponse.from(findFromUser);
@@ -248,7 +250,8 @@ public class AlarmService {
         Project findProject = projectRepository.findProject(request.getProjectIdx())
                 .orElseThrow(() -> new NotFoundException(CHAT_ROOM_NOT_FOUND));
 
-        Alarm makeAlarm = Alarm.create(request.getFromIdx(), request.getToIdx(), request.getType(), LocalDateTime.now(), request.getProjectIdx());
+        Alarm makeAlarm = Alarm.create(request.getFromIdx(), request.getToIdx(), request.getType(),
+                LocalDateTime.now(), request.getProjectIdx(), request.getComment());
         alarmRepository.saveAndFlush(makeAlarm);
 
         UserResponse fromUser = UserResponse.from(findFromUser);
@@ -273,7 +276,8 @@ public class AlarmService {
         Project findProject = projectRepository.findProject(request.getProjectIdx())
                 .orElseThrow(() -> new NotFoundException(CHAT_ROOM_NOT_FOUND));
 
-        Alarm makeAlarm = Alarm.create(request.getFromIdx(), request.getToIdx(), request.getType(), LocalDateTime.now(), request.getProjectIdx());
+        Alarm makeAlarm = Alarm.create(request.getFromIdx(), request.getToIdx(), request.getType(),
+                LocalDateTime.now(), request.getProjectIdx(), request.getComment());
         alarmRepository.saveAndFlush(makeAlarm);
 
         UserResponse fromUser = UserResponse.from(findFromUser);

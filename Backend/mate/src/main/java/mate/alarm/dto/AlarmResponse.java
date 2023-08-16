@@ -20,6 +20,8 @@ public class AlarmResponse {
     private AlarmType type;
     private LocalDateTime createdAt;
     private Integer targetIdx;
+    private String comment;
+
 
     public static AlarmResponse from (Alarm alarm, UserResponse fromUser, UserResponse toUser){
 
@@ -30,7 +32,7 @@ public class AlarmResponse {
         alarmResponse.type = alarm.getType();
         alarmResponse.createdAt = alarm.getCreatedAt();
         alarmResponse.targetIdx = alarm.getTargetIdx();
-
+        alarmResponse.comment = alarm.getComment();
         return alarmResponse;
     }
 

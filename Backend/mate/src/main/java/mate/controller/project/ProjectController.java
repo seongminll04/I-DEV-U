@@ -134,11 +134,10 @@ public class ProjectController {
 		Map<String, Object> map = new HashMap<>();
 
 		String type = (String)input.get("type");
-		String position = (String)input.get("position");
 		List<String> languageList = (List<String>)input.get("languageList");
 
 		try {
-			map.put("list", projectService.filterProject(type, position, languageList));
+			map.put("list", projectService.filterProject(type, languageList));
 			map.put("resmsg", "프로젝트 리스트 조회 성공");
 		} catch (Exception e) {
 			map.put("resmsg", "프로젝트 리스트 조회 실패");

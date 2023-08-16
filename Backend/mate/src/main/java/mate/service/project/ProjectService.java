@@ -46,10 +46,6 @@ public class ProjectService {
 			.content(projectDto.getContent())
 			.totalNum(projectDto.getTotalNum())
 			.nowNum(projectDto.getNowNum())
-			.front(projectDto.getFront())
-			.max_front(projectDto.getMax_front())
-			.back(projectDto.getBack())
-			.max_back(projectDto.getMax_back())
 			.session(projectDto.getSession())
 			.type(projectDto.getType()).build());
 
@@ -206,10 +202,10 @@ public class ProjectService {
 		return dto_list;
 	}
 
-	public List<ProjectDto> filterProject(String type, String position, List<String> languageList) {
+	public List<ProjectDto> filterProject(String type, List<String> languageList) {
 		List<ProjectDto> list = new ArrayList<>();
 
-		List<Project> result = projectRepository.findProjectsByFilter(languageList, type, position);
+		List<Project> result = projectRepository.findProjectsByFilter(languageList, type);
 
 		for (Project p : result) {
 			ProjectDto dto = new ProjectDto();

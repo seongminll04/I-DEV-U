@@ -22,7 +22,6 @@ const Setting: React.FC = () => {
       <button onClick={()=>{window.location.href = 'https://i9b206.p.ssafy.io/love';}}>소개팅룸</button>
 
       <hr />
-      <button onClick={()=>dispatch(setModal('프로젝트가입알림'))}>프로젝트 가입알림</button>
     </div>
   );
 };

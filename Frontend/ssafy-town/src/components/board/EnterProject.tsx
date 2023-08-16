@@ -6,9 +6,25 @@ import { setModal } from '../../store/actions';
 import { AppState } from '../../store/state';
 import { Client } from '@stomp/stompjs';
 
-const EnterProject: React.FC = () => {
+type ProjectDataType = {
+  "idx": number;
+  "title": string;
+  "managerIdx": number;
+  "nickname": string,
+  "totalNum": number;
+  "nowNum": number;
+  "type": string;
+  "languageList": { idx: number, language: string }[];
+  "session": string;
+  content:string;
+};
+
+interface Props {
+  selpjt : ProjectDataType;
+}
+
+const EnterProject: React.FC<Props> = ({selpjt}) => {
   const dispatch=useDispatch()
-  const wantPJTId = useSelector((state: AppState) => state.wantPJTId);
   const [inputvalue, setInputValue] = useState('')
   const stompClientRef = React.useRef<Client | null>(null);
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
@@ -23,7 +39,7 @@ const EnterProject: React.FC = () => {
         fromIdx:userIdx,
         type:'PROJECT',
         createdAt:now,
-        projectIdx: wantPJTId,
+        projectIdx: selpjt.idx,
         comment:inputvalue
       };
       stompClientRef.current.publish({
@@ -32,6 +48,7 @@ const EnterProject: React.FC = () => {
           });
       }
     dispatch(setModal(null))
+    alert('참가 신청완료')
   }
   // input 방향키 살리기
   const handlekeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -51,7 +68,7 @@ const EnterProject: React.FC = () => {
     <div className={enter_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) {dispatch(setModal(null))}}}>
         <div className={enter_css.modal}>
-            <h1>OO 프로젝트</h1>
+            <h1>프로젝트 : {selpjt.title}</h1>
             <h2>참가신청 하시겠습니까?</h2>
             <p>(선택) 가입 한마디</p>
             <input style={{width:'300px', borderRadius:'0.7rem', padding:'5px'}}

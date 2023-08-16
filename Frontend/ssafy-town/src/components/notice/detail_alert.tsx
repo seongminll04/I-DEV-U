@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import alert_css from '../sidebar/1alert.module.css';
 import axios from 'axios';
 
@@ -26,13 +26,31 @@ interface Props {
       idx:number,
       nickname:string,
     },
-    targetIdx:number|null
+    targetIdx:number|null,
+    comment:string|null
   };
 }
 
 
 const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
   const dispatch = useDispatch()
+  const [pjtdata, setpjtdata] = useState()
+
+  useEffect(()=>{
+    if (Selalert.type==='PROJECT') {
+      const userToken = localStorage.getItem('userToken')
+      axios({
+        method:'get',
+        url: `https://i9b206.p.ssafy.io:9090/project/detail/${Selalert.targetIdx}`,
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        },
+      })
+      .then(res=>
+        setpjtdata(res.data.project.title))
+      .catch(err=>console.log(err))
+    }
+  },[Selalert])
 
   const ok = () => {
     const userToken = localStorage.getItem('userToken')
@@ -103,7 +121,6 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
 
   const meetingok = () => {
     const userToken = localStorage.getItem('userToken')
-
     // 수락시 알림 제거
     axios({
       method:'delete',
@@ -112,9 +129,8 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
         Authorization: 'Bearer ' + userToken
       },
     })
-    .then(res => console.log(res))
+    .then(res => console.log(res,'삭제완료'))
     .catch(err=>console.log(err))
-
     // 프로젝트 참가 (백에서 비디오 룸까지 입장하게 처리됌)
     axios({
       method:'post',
@@ -127,7 +143,10 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
         Authorization: 'Bearer ' + userToken
       },
     })
-    .then(() => {})
+    .then(() => {
+      console.log('참가완료')
+      dispatch(setModal(null))
+    })
     .catch(err => console.log(err))
   }
 
@@ -149,10 +168,11 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
                 alt=""
                 style={{ borderRadius: "50%" , width:'125px', height:'125px' }}/>
                 <p>
-              {Selalert.fromUser.nickname}
+              닉네임 : {Selalert.fromUser.nickname}
 
                 </p>
-                <p>{Selalert.fromUser.gender}</p>
+                <p>성별 : {Selalert.fromUser.gender}</p>
+                <p>태그</p>
                 <p>{Selalert.fromUser.basicAnswerList.map(a=>'#'+a.tag + ' ')}</p>
             </div>
             <div style={{margin:'auto'}}>
@@ -160,7 +180,11 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
               // 화상신청 관련
                 <div>
                   <h1>
-                    {Selalert.type === 'PROJECT' ? `${Selalert.fromUser.nickname}님의 프로젝트 가입신청입니다.`
+                    {Selalert.type === 'PROJECT' ? <>
+                    <p>프로젝트 : {pjtdata} </p>
+                    <p>{Selalert.fromUser.nickname}님의 가입신청입니다.</p>
+                    <p>{Selalert.comment}</p>
+                    </>
                     : Selalert.type === 'MATE' ? `${Selalert.fromUser.nickname}님의 동료신청입니다.`
                     : Selalert.type === 'CHAT' ? `${Selalert.fromUser.nickname}님의 채팅신청입니다.`
                     : null}

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import project_css from "./4project.module.css";
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllowMove, setModal, setWantPJTId } from '../../store/actions';
+import { setAllowMove, setModal } from '../../store/actions';
 import axios from "axios";
 import { AppState } from "../../store/state";
 import ProjectFilter from "../filter/projectFilter";
+import EnterProject from "../board/EnterProject";
+import CreateProject from "../board/CreateProject";
+import DetailProject from "../board/DetailProject";
 
 // const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
 
@@ -18,6 +21,7 @@ type ProjectDataType = {
   "type": string;
   "languageList": { idx: number, language: string }[];
   "session": string;
+  content:string;
 };
 
 interface Filter {
@@ -32,7 +36,7 @@ const Project: React.FC = () => {
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
   const [projectFilter, setProjectFilter] = useState<Filter>();
   const [survey, setSurvey] = useState<boolean>(false);
-
+  const [selpjt, setSelpjt] = useState<ProjectDataType>();
   // 프로젝트 필터
   useEffect(() => {
     const userToken = localStorage.getItem('userToken');
@@ -133,7 +137,7 @@ const Project: React.FC = () => {
               <div className={project_css.project}>
                 <div className={project_css.project_detail} onClick={() => {
                   dispatch(setModal('프로젝트상세정보'))
-                  dispatch(setWantPJTId(project.idx))
+                  setSelpjt(project)
                 }}>
                   <img src="assets/default_profile.png" alt="" />
                   <div className={project_css.project_data}>
@@ -148,7 +152,7 @@ const Project: React.FC = () => {
                 <div>
                   <button className={project_css.btn} onClick={() => {
                     dispatch(setModal('프로젝트참가신청'))
-                    dispatch(setWantPJTId(project.idx))
+                    setSelpjt(project)
                   }}>참가신청</button>
                   <span>{project["nowNum"]}/{project["totalNum"]}</span>
                 </div>
@@ -158,7 +162,11 @@ const Project: React.FC = () => {
           ))}
         </div>
       </div>
-      {isModalOpen === '프로젝트필터' ? <ProjectFilter onSurvey={(value: boolean) => setSurvey(value)} onfilter={(value: Filter) => setProjectFilter(value)} /> : null}
+      {isModalOpen === '프로젝트필터' ? <ProjectFilter onSurvey={(value: boolean) => setSurvey(value)} onfilter={(value: Filter) => setProjectFilter(value)} />
+      : isModalOpen === '프로젝트참가신청' ? <EnterProject selpjt={selpjt!}/>
+      : isModalOpen === '프로젝트상세정보' ? <DetailProject selpjt={selpjt!}/>
+      : isModalOpen === '프로젝트생성' ? <CreateProject />
+      : null}
     </div>
   );
 };

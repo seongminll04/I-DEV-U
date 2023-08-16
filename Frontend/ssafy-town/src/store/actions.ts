@@ -16,11 +16,6 @@ export const setAllowMove = (value: boolean) => ({
   payload: value,
 });
 
-export const setWantPJTId = (value: number|null) => ({
-  type: 'SET_WANTPJT',
-  payload: value,
-});
-
 export const setStomp = (value: Client) => ({
   type: 'SET_STOMP',
   payload: value,

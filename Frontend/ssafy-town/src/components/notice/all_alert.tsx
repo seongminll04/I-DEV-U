@@ -25,7 +25,8 @@ interface AlertProps {
     idx:number,
     nickname:string,
   },
-  targetIdx:number|null
+  targetIdx:number|null,
+  comment:string|null
 }
 
 const AllAlert: React.FC = () => {

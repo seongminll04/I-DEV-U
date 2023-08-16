@@ -5,7 +5,6 @@ export interface AppState {
   isModalOpen: string|null;
   isSidebarOpen: string|null;
   isAllowMove:boolean;
-  wantPJTId:number|null;
 
   stompClientRef:Client|null;
 

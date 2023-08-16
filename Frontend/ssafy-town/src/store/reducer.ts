@@ -4,7 +4,6 @@ const initialState: AppState = {
     isModalOpen: null,
     isSidebarOpen:null,
     isAllowMove:true,
-    wantPJTId:null,
 
     stompClientRef:null,
 
@@ -23,10 +22,7 @@ const reducer = (state: AppState = initialState, action: { type: string; payload
       else {return {...state, isSidebarOpen: action.payload,}}
     case 'SET_ALLOWMOVE':
         return {...state, isAllowMove: action.payload}
-    case 'SET_WANTPJT':
-        return {...state, wantPJTId: action.payload}
-
-
+        
     case 'SET_STOMP':
         return {...state, stompClientRef: action.payload}
     case 'SET_RECEIVEALERT':

@@ -113,7 +113,7 @@ public class ProjectService {
 
 		VideoRoom videoRoom = videoRepository.findVideoRoomByIdx(projectIdx);
 
-		videoParticipationRepository.deleteByUserIdxAndRoomIdx(userIdx, videoRoom.getIdx());
+		videoParticipationRepository.deleteByUserIdxAndRoomIdx(videoRoom.getIdx(), userIdx);
 	}
 
 	public Project modifyProject(ProjectDto projectDto) {

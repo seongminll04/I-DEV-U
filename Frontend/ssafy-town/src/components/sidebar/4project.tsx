@@ -21,7 +21,7 @@ type ProjectDataType = {
   "type": string;
   "languageList": { idx: number, language: string }[];
   "session": string;
-  content:string;
+  content: string;
 };
 
 interface Filter {
@@ -145,6 +145,9 @@ const Project: React.FC = () => {
                   <img src="assets/default_profile.png" alt="" />
                   <div className={project_css.project_data}>
                     <b>{project["title"]}</b>
+                    <b>{project["type"]}</b>
+                    <br></br>
+                    <p style={{ fontSize: "14px" }}>{project["title"]}</p>
                     <p style={{ color: 'gray' }}>
                       {project.languageList.map((lang, idx2) => (
                         <span key={idx2}>#{lang.language} </span>
@@ -170,15 +173,15 @@ const Project: React.FC = () => {
                 </div>
               </div>
               <hr />
-            </div>
+            </div> 
           ))}
         </div>
       </div>
       {isModalOpen === '프로젝트필터' ? <ProjectFilter onSurvey={(value: boolean) => setSurvey(value)} onfilter={(value: Filter) => setProjectFilter(value)} />
-      : isModalOpen === '프로젝트참가신청' ? <EnterProject selpjt={selpjt!}/>
-      : isModalOpen === '프로젝트상세정보' ? <DetailProject selpjt={selpjt!}/>
-      : isModalOpen === '프로젝트생성' ? <CreateProject />
-      : null}
+        : isModalOpen === '프로젝트참가신청' ? <EnterProject selpjt={selpjt!} />
+          : isModalOpen === '프로젝트상세정보' ? <DetailProject selpjt={selpjt!} />
+            : isModalOpen === '프로젝트생성' ? <CreateProject />
+              : null}
     </div>
   );
 };

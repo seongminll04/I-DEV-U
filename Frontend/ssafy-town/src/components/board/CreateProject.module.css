@@ -20,6 +20,18 @@
     overflow-y: scroll;
 }
 
+.button {
+    margin-top: 20px;
+    background-color: white;
+    width: 150px;
+    height: 50px;
+    border-radius: 0.5rem;
+}
+
+.button:hover {
+    background-color: gray;
+}
+
 .closebtn {
     margin:10px;
     text-align: right;
@@ -34,11 +46,11 @@
 .info {
     overflow-y:none;
 }
+
+
 .input {
     display: flex;
     align-items: center;
-    /* justify-content: center; */
-    align-items: flex-start;
     margin:auto;
     width:70%;
     font-size: large;

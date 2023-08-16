@@ -171,7 +171,7 @@ const CreateProject: React.FC = () => {
                 defaultValue={4}
                 style={{ width: '10%' }}
               />
-              <span>최대 6명</span>
+              <span style={{color : 'red', marginLeft: '5px'}}>최대 6명</span>
             </div>
     
             <div className={Create_css.input}>
@@ -195,18 +195,14 @@ const CreateProject: React.FC = () => {
                   value="PROJECT"
                   checked={projectType === 'PROJECT'}
                   onChange={(e) => setProjectType(e.target.value)}
-                />
-                프로젝트
-              </span>
+                /> 프로젝트 </span>
               <span>
                 <input
                   type="radio"
                   value="STUDY"
                   checked={projectType === 'STUDY'}
                   onChange={(e) => setProjectType(e.target.value)}
-                />
-                스터디
-              </span>
+                /> 스터디 </span>
             </div>
     
             <div className={Create_css.input}>
@@ -227,7 +223,7 @@ const CreateProject: React.FC = () => {
               </div>
             </div>
 
-            <button onClick={() => Create()}>생성하기</button>
+            <button className={Create_css.button} onClick={() => Create()}>생성하기</button>
           </div>
         </div>
       </div>

@@ -168,12 +168,12 @@ const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
               />
               <p>나이 : {mateUser.age}</p>
               <p>성별 : {mateUser.gender}</p>
-              {Follow ? <button onClick={onfollow}>언팔로우</button> : <button onClick={onfollow}>팔로우</button>}
+              {Follow ? <button className={detail_css.button} onClick={onfollow}>언팔로우</button> : <button className={detail_css.button} onClick={onfollow}>팔로우</button>}
 
             </div>
             <div style={{ width: '65%', margin: '0 20px', boxSizing: 'border-box' }}>
               <h2>자기소개 : {mateUser.intro}</h2>
-              <h2>기술스택 : {mateUser.techList.map((tech) => (
+              <h2>사용언어 : {mateUser.techList.map((tech) => (
                 tech + ' '
               ))}
               </h2>
@@ -181,7 +181,7 @@ const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
               <h1>일치율</h1>
               <h2>{localStorage.getItem("userNickname")} 님께서 선택하신 조건과 {mateUser.nickname} 님의 일치율은 {percent} % 입니다</h2>
               <br />
-              <button onClick={sendrequest}>채팅 신청</button>
+              <button className={detail_css.button}  onClick={sendrequest}>채팅 신청</button>
             </div>
           </div>
           :

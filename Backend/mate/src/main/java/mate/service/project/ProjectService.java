@@ -114,6 +114,10 @@ public class ProjectService {
 	public void leaveProject(int userIdx, int projectIdx) {
 		projectParticipationRepository.leaveProject(userIdx, projectIdx);
 		projectRepository.minusnowNum(projectIdx);
+
+		VideoRoom videoRoom = videoRepository.findVideoRoomByIdx(projectIdx);
+
+		videoParticipationRepository.deleteByUserIdxAndRoomIdx(userIdx, videoRoom.getIdx());
 	}
 
 	public Project modifyProject(ProjectDto projectDto) {

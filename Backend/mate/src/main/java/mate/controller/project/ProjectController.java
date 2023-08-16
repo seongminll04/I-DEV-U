@@ -61,7 +61,7 @@ public class ProjectController {
 		Map<String, Object> map = new HashMap<>();
 
 		try {
-			projectService.enterProject(projectParticipationDto);
+			map.put("videoroomIdx", projectService.enterProject(projectParticipationDto));
 			map.put("resmsg", "프로젝트 입장 성공");
 		} catch (Exception e) {
 			map.put("resmsg", "프로젝트 입장 실패");

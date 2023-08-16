@@ -12,6 +12,8 @@ import mate.domain.project.ProjectLanguage;
 import mate.domain.project.ProjectParticipation;
 import mate.domain.project.ProjectTech;
 import mate.domain.user.User;
+import mate.domain.video.VideoParticipation;
+import mate.domain.video.VideoRoom;
 import mate.dto.project.ProjectDto;
 import mate.dto.project.ProjectParticipationDto;
 import mate.repository.project.ProjectLanguageRepository;
@@ -19,6 +21,8 @@ import mate.repository.project.ProjectParticipationRepository;
 import mate.repository.project.ProjectRepository;
 import mate.repository.project.ProjectTechRepository;
 import mate.repository.user.UserRepository;
+import mate.repository.video.VideoParticipationRepository;
+import mate.repository.video.VideoRepository;
 
 @Service
 @Transactional
@@ -30,6 +34,8 @@ public class ProjectService {
 	private final ProjectParticipationRepository projectParticipationRepository;
 	private final ProjectTechRepository projectTechRepository;
 	private final ProjectLanguageRepository projectLanguageRepository;
+	private final VideoRepository videoRepository;
+	private final VideoParticipationRepository videoParticipationRepository;
 
 	public User registerProject(ProjectDto projectDto) {
 		User user = userRepository.findById(projectDto.getUserIdx()).get();
@@ -84,7 +90,7 @@ public class ProjectService {
 		return project;
 	}
 
-	public void enterProject(ProjectParticipationDto dto) {
+	public int enterProject(ProjectParticipationDto dto) {
 		User user = userRepository.findByIdx(dto.getUserIdx()).get();
 		Project project = projectRepository.findById(dto.getProjectIdx()).get();
 
@@ -93,6 +99,16 @@ public class ProjectService {
 			.user(user)
 			.build());
 		projectRepository.plusnowNum(project.getIdx());
+
+		VideoRoom videoRoom = videoRepository.findVideoRoomByIdx(project.getIdx());
+
+		// 비디오방에도 동시에 입장
+		videoParticipationRepository.saveAndFlush(VideoParticipation.builder()
+			.videoRoom(videoRoom)
+			.user(user)
+			.build());
+
+		return videoRoom.getIdx();
 	}
 
 	public void leaveProject(int userIdx, int projectIdx) {

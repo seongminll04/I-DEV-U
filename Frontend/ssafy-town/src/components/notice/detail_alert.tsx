@@ -136,7 +136,7 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
       method:'post',
       url: `https://i9b206.p.ssafy.io:9090/project/enter`,
       data:{
-        roomIdx:Selalert.targetIdx,
+        projectIdx:Selalert.targetIdx,
         userIdx:Selalert.fromUser.idx,
       },
       headers: {
@@ -173,7 +173,7 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
                 </p>
                 <p>성별 : {Selalert.fromUser.gender}</p>
                 <p>태그</p>
-                <p>{Selalert.fromUser.basicAnswerList.map(a=>'#'+a.tag + ' ')}</p>
+                <p>{Selalert.fromUser.basicAnswerList.map(a=> a.tag==='있다'? '#프로젝트경험O ' : a.tag==='없다' ? '#프로젝트경험X ' :  '#'+a.tag + ' ')}</p>
             </div>
             <div style={{margin:'auto'}}>
                 {Selalert.type==='PROJECT' ? 

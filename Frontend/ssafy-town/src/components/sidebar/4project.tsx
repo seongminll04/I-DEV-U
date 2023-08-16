@@ -151,6 +151,10 @@ const Project: React.FC = () => {
                 </div>
                 <div>
                   <button className={project_css.btn} onClick={() => {
+                    if (project["nowNum"]>=project["totalNum"]){
+                      alert('구인이 끝난 프로젝트입니다')
+                      return
+                    }
                     dispatch(setModal('프로젝트참가신청'))
                     setSelpjt(project)
                   }}>참가신청</button>

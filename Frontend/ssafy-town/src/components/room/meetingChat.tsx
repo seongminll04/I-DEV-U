@@ -18,6 +18,7 @@ const MeetingChat: React.FC = () => {
   const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
   const [receiveMessages, setReceiveMessages] = useState<messageProps[]>([])
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
+  const OVsession = localStorage.getItem('OVsession')
 
   const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget
@@ -37,7 +38,6 @@ const MeetingChat: React.FC = () => {
     if (stompClientRef.current) {
       const now = new Date()
       const userName = localStorage.getItem('userNickname')
-      const OVsession = localStorage.getItem('OVsession')
       const data = {
         userName: userName, 
         message: messageInput,
@@ -53,7 +53,6 @@ const MeetingChat: React.FC = () => {
 
     // 구독등록
     useEffect(() => {
-        const OVsession = localStorage.getItem('OVsession')
         if (stompClientRef.current) {
         const subscription = stompClientRef.current.subscribe(`/meeting/messages/${OVsession}`, function(message: Message) {
             const newMessage = JSON.parse(message.body);
@@ -71,7 +70,7 @@ const MeetingChat: React.FC = () => {
             }
         };
         }
-    }, []);
+    }, [OVsession]);
 
   return (
     <div>
@@ -84,7 +83,7 @@ const MeetingChat: React.FC = () => {
             </div>
             <input type="text" value={messageInput} onChange={(e)=>setMessageInput(e.target.value)} onKeyDown={handlekeydown} 
             onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
-            <button onClick={sendMessage}></button>
+            <button onClick={sendMessage}>전송</button>
         </div>
         :      
         <div style={{position:'absolute',top:'60%',left:'10%',background:'gray', width:'400px', height:'200px'}}>
@@ -95,7 +94,7 @@ const MeetingChat: React.FC = () => {
             </div>
             <input type="text" value={messageInput} onChange={(e)=>setMessageInput(e.target.value)} onKeyDown={handlekeydown} 
             onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
-            <button onClick={sendMessage}></button>
+            <button onClick={sendMessage}>전송</button>
         </div>}
   </div>
   );

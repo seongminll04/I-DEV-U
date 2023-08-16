@@ -45,7 +45,7 @@ const MeetingChat: React.FC = () => {
       };
       // console.log(data)
       stompClientRef.current.publish({
-          destination: `/meeting/messages/${OVsession}`,
+          destination: `/sub/meetingmessages/${OVsession}`,
           body: JSON.stringify(data),
           });
         setMessageInput('');
@@ -54,7 +54,7 @@ const MeetingChat: React.FC = () => {
     // 구독등록
     useEffect(() => {
         if (stompClientRef.current) {
-        const subscription = stompClientRef.current.subscribe(`/meeting/messages/${OVsession}`, function(message: Message) {
+        const subscription = stompClientRef.current.subscribe(`/sub/meetingmessages/${OVsession}`, function(message: Message) {
             const newMessage = JSON.parse(message.body);
             const date = new Date(newMessage.createdAt)
             const newd={

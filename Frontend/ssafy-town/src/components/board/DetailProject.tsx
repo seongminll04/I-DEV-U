@@ -27,9 +27,9 @@ interface ProjectDataType {
 const DetailProject: React.FC = () => {
   const dispatch=useDispatch()
   const wantPJTId = useSelector((state: AppState) => state.wantPJTId);
-  const userToken = localStorage.getItem('userToken')
   const [project, setProject] = useState<ProjectDataType>();
   useEffect(()=>{
+    const userToken = localStorage.getItem('userToken')
     axios({
       method:'get',
       url:`https://i9b206.p.ssafy.io:9090/project/detail/${wantPJTId}`,
@@ -42,7 +42,7 @@ const DetailProject: React.FC = () => {
       setProject(res.data.project)
     })
     .catch(err => console.log(err))
-  }, [])
+  }, [wantPJTId])
 
   return (
     <div className={Detail_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
@@ -53,10 +53,8 @@ const DetailProject: React.FC = () => {
         <h2>제목 : {project?.title}</h2>
         <h2>내용 : {project?.content}</h2>
 
-        <p> 프론트엔드 : {project?.front} / {project?.max_front}</p>
-        <p> 백엔드 : {project?.back} / {project?.max_back}</p>
         <p> 언어 : 
-          {/* {project?.projectLanguages.map(val => (val.language) string} */}
+          {project?.projectLanguages.map(val => val.language).join(', ')}
         </p>        
         <p> 타입 : {project?.type}</p>
         </div>  

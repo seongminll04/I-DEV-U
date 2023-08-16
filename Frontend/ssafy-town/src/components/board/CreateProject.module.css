@@ -63,3 +63,10 @@
     border: solid 2px;
     height: 100px;
 }
+
+.choose {
+    width: '60%';
+    white-space: pre-wrap;
+    display: flex;
+    flex-wrap: wrap;
+}

@@ -4,6 +4,7 @@ import Create_css from './CreateProject.module.css';
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 import axios from 'axios';
+// import { wrap } from 'module';
 
 
 const CreateProject: React.FC = () => {
@@ -233,7 +234,7 @@ const CreateProject: React.FC = () => {
             <div className={Create_css.input}>
               <label className={Create_css.label}><span>언</span><span>어</span></label>
               <p> : </p>
-              <div style={{width:'60%', whiteSpace:'pre-wrap'}}>
+              <div className={Create_css.choose} style={{width:'60%', whiteSpace:'pre-wrap'}}>
               {languages.map((lang, index) => (
                 <label key={index} style={{whiteSpace:'pre-wrap'}}>
                   <input

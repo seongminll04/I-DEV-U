@@ -55,14 +55,16 @@ const Project: React.FC = () => {
         data: projectFilter
       })
         .then(res => {
-          // setProjectList(res.data);
+          console.log("프로젝트 필터링결과")
+          console.log(res.data)
+          setProjectList(res.data.list);
         })
         .catch(err => {
           alert("알 수 없는 오류 발생! 새로고침 후 다시 시도해주세요!")
           console.log(err)
         })
     }
-  }, [survey])
+  }, [survey, projectFilter])
 
   // 처음에 가져오는 프로젝트 리스트
   useEffect(() => {
@@ -130,8 +132,8 @@ const Project: React.FC = () => {
         </div>
         <div className={project_css.scrollbox}>
           <hr style={{ width: '75%', color: 'black' }} />
-          {projectList.length === 0 ? '조회 결과가 없습니다' : null}
-          {projectList.map((project, idx) => (
+          {Array.isArray(projectList) && projectList.length === 0 ? '조회 결과가 없습니다' : null}
+          {Array.isArray(projectList) && projectList.map((project, idx) => (
             <div key={idx}>
               <div className={project_css.project}>
                 <div className={project_css.project_detail} onClick={() => {
@@ -145,12 +147,6 @@ const Project: React.FC = () => {
                       {project.languageList.map((lang, idx2) => (
                         <span key={idx2}>#{lang.language} </span>
                       ))}
-                    </p>
-                    <p style={{ color: 'gray' }}>
-                      F: {project.front}/{project.max_front}, B: {project.back} / {project.max_back}
-                    </p>
-                    <p style={{ color: 'gray' }}>
-                      B : {project.back} / {project.max_back}
                     </p>
                   </div>
                 </div>
@@ -167,7 +163,7 @@ const Project: React.FC = () => {
           ))}
         </div>
       </div>
-      {isModalOpen === '프로젝트필터' ? <ProjectFilter survey={survey} onSurvey={(value: boolean) => setSurvey(value)} onfilter={(value: Filter) => setProjectFilter(value)} /> : null}
+      {isModalOpen === '프로젝트필터' ? <ProjectFilter onSurvey={(value: boolean) => setSurvey(value)} onfilter={(value: Filter) => setProjectFilter(value)} /> : null}
     </div>
   );
 };

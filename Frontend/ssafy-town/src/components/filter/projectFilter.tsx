@@ -10,12 +10,11 @@ interface Filter {
 }
 
 interface props {
-  survey:boolean,
   onfilter: (value: Filter) => void,
   onSurvey: (value: boolean) => void,
 }
 
-const ProjectFilter: React.FC<props> = ({ survey, onfilter, onSurvey }) => {
+const ProjectFilter: React.FC<props> = ({ onfilter, onSurvey }) => {
   const [languages, setLanguages] = useState<string[]>([]);
   const [position, setPosition] = useState<string>('');
   const [projectType, setProjectType] = useState<string>('');

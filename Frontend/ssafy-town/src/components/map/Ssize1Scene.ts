@@ -331,7 +331,6 @@ changeEffectSprite.on('animationcomplete', () => {
     this.input.keyboard?.on('keydown-E', () => {
       const nearbyObject = this.NearbyObjects();
 
-      console.log(this.character!.x + "@@" + this.character!.y)
       if (!store.getState().isAllowMove){
         return
       }

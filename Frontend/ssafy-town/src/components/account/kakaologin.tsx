@@ -37,7 +37,7 @@ const KakaoCallback = () => {
                 setNickname('kakao_'+res.data.id)
                 setKakaotoken(access_token)
             } catch (error) {
-  
+
             }
         };
 
@@ -51,22 +51,22 @@ const KakaoCallback = () => {
             axios({
                 method:'get',
                 url:`https://i9b206.p.ssafy.io:9090/user/signUp/emailCheck/${nickname}`,
-              })
-              .then(res => {
+            })
+            .then(res => {
                 if (res.data.status.statusCodeValue===200) {
                     navigate('/kakaosignup',{
                         state:{
                             nickname:nickname,
                         }
                     });
-                  }
+                }
                 else{
                     axios({
                         method:'post',
                         url:'https://i9b206.p.ssafy.io:9090/user/kakaologin',
                         data:{'email': nickname}
-                      })
-                      .then(res => {
+                    })
+                    .then(res => {
                         // 로그인 시, 로컬 스토리지에 토큰 저장
                         localStorage.setItem('userToken',res.headers.authorization);
                         localStorage.setItem('userIdx', res.data.userIdx);
@@ -74,13 +74,13 @@ const KakaoCallback = () => {
                         //   throw new ValidationError("탈퇴처리된 회원입니다!");
                         // } 
                         navigate('/home')
-                      })
-                      .catch(() => {
+                    })
+                    .catch(() => {
                         alert('카카오 로그인 실패')
                         navigate('/login')
-                      })
+                    })
                 }
-              })
+            })
         }
     }, [kakaotoken, nickname, navigate]);
     

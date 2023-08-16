@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { AppState } from '../../store/state';
 import { Client, Message } from '@stomp/stompjs';
+import { setAllowMove } from '../../store/actions';
 
 interface messageProps {
     userName: string, 
@@ -51,31 +52,31 @@ const MeetingChat: React.FC = () => {
     }};
 
     // 구독등록
-    // useEffect(() => {
-    //     const OVsession = localStorage.getItem('OVsession')
-    //     if (stompClientRef.current) {
-    //     const subscription = stompClientRef.current.subscribe(`/meeting/messages/${OVsession}`, function(message: Message) {
-    //         const newMessage = JSON.parse(message.body);
-    //         const date = new Date(newMessage.createdAt)
-    //         const newd=[{
-    //         'userName':newMessage.userName,
-    //         'message':newMessage.message,
-    //         'createdAt':date,
-    //         }]
-    //         setReceiveMessages(prev => [...prev, ...newd]);
-    //     });
-    //     return () => {
-    //         if (stompClientRef.current) {
-    //         subscription.unsubscribe();
-    //         }
-    //     };
-    //     }
-    // }, []);
+    useEffect(() => {
+        const OVsession = localStorage.getItem('OVsession')
+        if (stompClientRef.current) {
+        const subscription = stompClientRef.current.subscribe(`/meeting/messages/${OVsession}`, function(message: Message) {
+            const newMessage = JSON.parse(message.body);
+            const date = new Date(newMessage.createdAt)
+            const newd=[{
+            'userName':newMessage.userName,
+            'message':newMessage.message,
+            'createdAt':date,
+            }]
+            setReceiveMessages(prev => [...prev, ...newd]);
+        });
+        return () => {
+            if (stompClientRef.current) {
+            subscription.unsubscribe();
+            }
+        };
+        }
+    }, []);
 
   return (
     <div style={{position:'absolute',top:'60%',left:'35%',background:'gray', width:'400px', height:'200px'}}>
         <div>
-        {/* {isSidebarOpen ? 
+        {isSidebarOpen ? 
       <div style={{position:'absolute',top:'60%',left:'35%',background:'gray', width:'400px', height:'200px'}}>
         <div>
           {receiveMessages.map((message)=>(
@@ -96,7 +97,7 @@ const MeetingChat: React.FC = () => {
         <input type="text" value={messageInput} onChange={(e)=>setMessageInput(e.target.value)} onKeyDown={handlekeydown} 
         onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
         <button onClick={sendMessage}></button>
-      </div>} */}
+      </div>}
         </div>
   </div>
   );

@@ -8,7 +8,6 @@ import mate.domain.project.ProjectTech;
 
 @Data
 public class ProjectDto {
-
 	private Integer idx;
 	private Integer userIdx;
 	private String nickname;

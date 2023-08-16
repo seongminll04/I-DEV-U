@@ -2,7 +2,6 @@ package mate.service.project;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,17 +51,17 @@ public class ProjectService {
 			.project(project)
 			.user(user).build());
 
-//		List<ProjectTech> techs = new ArrayList<>();
+		//		List<ProjectTech> techs = new ArrayList<>();
 
 		// 일단 비어있는 projectTechDto의 project에 방금 생성된 project 삽입
-//		for (ProjectTech tech : projectDto.getTechList()) {
-//			techs.add(ProjectTech.builder()
-//				.project(project)
-//				.tech(tech.getTech())
-//				.build());
-//		}
+		//		for (ProjectTech tech : projectDto.getTechList()) {
+		//			techs.add(ProjectTech.builder()
+		//				.project(project)
+		//				.tech(tech.getTech())
+		//				.build());
+		//		}
 
-//		projectTechRepository.saveAll(techs);
+		//		projectTechRepository.saveAll(techs);
 
 		List<ProjectLanguage> languages = new ArrayList<>();
 
@@ -151,11 +150,40 @@ public class ProjectService {
 		projectRepository.deleteById(projectIdx);
 	}
 
-	public List<Project> listProject(String keyword) {
-		if (keyword == null)
-			return projectRepository.findAll();
-		else
-			return projectRepository.findProjectsByTitleOrContent(keyword);
+	public List<ProjectDto> listProject(String keyword) {
+
+		List<ProjectDto> dto_list = new ArrayList<>();
+		List<Project> list = new ArrayList<>();
+
+		if (keyword == null) {
+			list = projectRepository.findAll();
+		} else {
+			list = projectRepository.findProjectsByTitleOrContent(keyword);
+		}
+
+		for (Project p : list) {
+			ProjectDto dto = new ProjectDto();
+
+			dto.setIdx(p.getIdx());
+			dto.setTitle(p.getTitle());
+			dto.setContent(p.getContent());
+			dto.setUserIdx(p.getManager().getIdx());
+			dto.setNickname(p.getManager().getNickname());
+			dto.setTotalNum(p.getTotalNum());
+			dto.setNowNum(p.getNowNum());
+			dto.setStatus(p.getStatus());
+			dto.setFront(p.getFront());
+			dto.setMax_front(p.getMax_front());
+			dto.setBack(p.getBack());
+			dto.setMax_back(p.getMax_back());
+			dto.setType(p.getType());
+			dto.setLanguageList(p.getProjectLanguages());
+			dto.setSession(p.getSession());
+
+			dto_list.add(dto);
+		}
+
+		return dto_list;
 	}
 
 	public List<ProjectDto> filterProject(String type, String position, List<String> languageList) {
@@ -168,9 +196,11 @@ public class ProjectService {
 
 			dto.setIdx(p.getIdx());
 			dto.setTitle(p.getTitle());
+			dto.setContent(p.getContent());
 			dto.setUserIdx(p.getManager().getIdx());
 			dto.setNickname(p.getManager().getNickname());
 			dto.setTotalNum(p.getTotalNum());
+			dto.setStatus(p.getStatus());
 			dto.setNowNum(p.getNowNum());
 			dto.setFront(p.getFront());
 			dto.setMax_front(p.getMax_front());

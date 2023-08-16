@@ -21,9 +21,6 @@ import mate.dto.project.ProjectDto;
 import mate.dto.project.ProjectParticipationDto;
 import mate.service.project.ProjectService;
 
-import javax.persistence.OneToMany;
-import javax.swing.text.html.ObjectView;
-
 @RestController
 @RequestMapping("/project")
 @CrossOrigin(origins = "*")
@@ -122,7 +119,7 @@ public class ProjectController {
 		Map<String, Object> map = new HashMap<>();
 
 		try {
-			List<Project> list = projectService.listProject(keyword);
+			List<ProjectDto> list = projectService.listProject(keyword);
 			map.put("list", list);
 			map.put("resmsg", "프로젝트 리스트 조회 성공");
 		} catch (Exception e) {
@@ -136,9 +133,9 @@ public class ProjectController {
 	public ResponseEntity<Map<String, Object>> filterProject(@RequestBody Map<String, Object> input) {
 		Map<String, Object> map = new HashMap<>();
 
-		String type = (String) input.get("type");
-		String position = (String) input.get("position");
-		List<String> languageList = (List<String>) input.get("languageList");
+		String type = (String)input.get("type");
+		String position = (String)input.get("position");
+		List<String> languageList = (List<String>)input.get("languageList");
 
 		try {
 			map.put("list", projectService.filterProject(type, position, languageList));

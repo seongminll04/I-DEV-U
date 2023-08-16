@@ -16,8 +16,8 @@ interface AlertProps {
     basicAnswerList:{
       surveyIdx:number,
       tag:string,
-    }
-    gener:number,
+    }[]
+    gender:string,
     intro:string|null,
     storedFileName:string,
   },

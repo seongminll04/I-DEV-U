@@ -17,8 +17,8 @@ interface Props {
       basicAnswerList:{
         surveyIdx:number,
         tag:string,
-      }
-      gener:number,
+      }[]
+      gender:string,
       intro:string|null,
       storedFileName:string|null,
     },
@@ -115,7 +115,7 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
     .then(res => console.log(res))
     .catch(err=>console.log(err))
 
-    // 프로젝트 참가
+    // 프로젝트 참가 (백에서 비디오 룸까지 입장하게 처리됌)
     axios({
       method:'post',
       url: `https://i9b206.p.ssafy.io:9090/project/enter`,
@@ -127,26 +127,8 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
         Authorization: 'Bearer ' + userToken
       },
     })
-    .then(() => {
-        // 화상채팅방 참가  
-        axios({
-          method:'post',
-          url: `https://i9b206.p.ssafy.io:9090/video/enter`,
-          data:{
-            roomIdx:Selalert.targetIdx,
-            userIdx:Selalert.fromUser.idx,
-          },
-          headers: {
-            Authorization: 'Bearer ' + userToken
-          },
-        })
-        .then(() => {
-          dispatch(setModal(null))
-        })
-        .catch(err => console.log(err))
-    })
+    .then(() => {})
     .catch(err => console.log(err))
-
   }
 
   return (
@@ -159,36 +141,43 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
       <div className={alert_css.alert_detail}>
         {Selalert ? (
           <>
-          <h1>
-            {Selalert.type === 'PROJECT' ? `${Selalert.fromUser.nickname}님의 프로젝트 가입신청입니다.`
-            : Selalert.type === 'MATE' ? `${Selalert.fromUser.nickname}님의 동료신청입니다.`
-            : Selalert.type === 'CHAT' ? `${Selalert.fromUser.nickname}님의 채팅신청입니다.`
-            : null}
-          </h1>
+          <h1>알림 상세정보</h1>
+          <div style={{display:'flex'}}>
+            <div style={{width:'35%'}}>
+              <img
+                src={Selalert.fromUser.storedFileName ? Selalert.fromUser.storedFileName : "assets/default_profile.png"}
+                alt=""
+                style={{ borderRadius: "50%" , width:'125px', height:'125px' }}/>
+                <p>
+              {Selalert.fromUser.nickname}
 
+                </p>
+                <p>{Selalert.fromUser.gender}</p>
+                <p>{Selalert.fromUser.basicAnswerList.map(a=>'#'+a.tag + ' ')}</p>
+            </div>
+            <div style={{margin:'auto'}}>
+                {Selalert.type==='PROJECT' ? 
+              // 화상신청 관련
+                <div>
+                  <h1>
+                    {Selalert.type === 'PROJECT' ? `${Selalert.fromUser.nickname}님의 프로젝트 가입신청입니다.`
+                    : Selalert.type === 'MATE' ? `${Selalert.fromUser.nickname}님의 동료신청입니다.`
+                    : Selalert.type === 'CHAT' ? `${Selalert.fromUser.nickname}님의 채팅신청입니다.`
+                    : null}
+                  </h1>
 
-          <div>
-            {Selalert.fromUser.nickname}
+                  <button onClick={meetingok}>수락</button>
+                  <button onClick={nope}>거절</button>
+                </div>
+              :
+              // 채팅 신청에 관련
+              <div>
+                <button onClick={ok}>수락</button>
+                <button onClick={nope}>거절</button>
+              </div>}
+            </div>
           </div>
 
-
-
-
-
-
-
-          {Selalert.type==='PROJECT' ? 
-          // 화상신청 관련
-            <div>
-              <button onClick={meetingok}>수락</button>
-              <button onClick={nope}>거절</button>
-            </div>
-          :
-          // 채팅 신청에 관련
-          <div>
-            <button onClick={ok}>수락</button>
-            <button onClick={nope}>거절</button>
-          </div>}
           </>
         ) : (
           'Loading...'

@@ -109,42 +109,6 @@ const EditAccount: React.FC<Props> = ({ user, change }) => {
     }
   }
 
-  const onChangeImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const userToken = localStorage.getItem('userToken');
-    const userIdxStr = localStorage.getItem('userIdx')
-    let userIdx: number | null = null; // 타입을 number | null로 변경
-
-    if (userIdxStr) {
-      userIdx = parseInt(userIdxStr, 10);
-    }
-    e.preventDefault();
-
-    if (e.target.files) {
-      const uploadFile = e.target.files[0]
-      const formData = new FormData()
-      formData.append('file', uploadFile);
-      if (userIdx !== null) {
-        formData.append('userIdx', userIdx.toString()); // number 타입을 문자열로 변환하여 추가
-      }
-
-      await axios({
-        method: 'post',
-        url: 'https://i9b206.p.ssafy.io:9090/user/uploadFile',
-        data: formData,
-        headers: {
-          'Authorization': 'Bearer ' + userToken,
-          'Content-Type': 'multipart/form-data',
-        }
-      }).then((res) => {
-        console.log(res);
-        alert("성공")
-      })
-        .catch((err) => {
-          alert("실패")
-          console.log(err);
-        });
-    }
-  }
 
   return (
     <div className={edit_css.mypage_modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
@@ -194,10 +158,6 @@ const EditAccount: React.FC<Props> = ({ user, change }) => {
             <span>자기소개</span>
           </div>
           <input type="text" className={edit_css.mypage_input} {...formik.getFieldProps('intro')} onKeyDown={handlekeydown} />
-          <div className={edit_css.mypage_info}>
-            <span>사진</span>
-          </div>
-          <input type="file" className={edit_css.mypage_input} onChange={onChangeImg} />
           <button className={edit_css.mypage_button} type="submit">수정</button>
         </form>
       </div>

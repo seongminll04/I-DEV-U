@@ -90,21 +90,26 @@ public class ProjectService {
 		User user = userRepository.findByIdx(dto.getUserIdx()).get();
 		Project project = projectRepository.findById(dto.getProjectIdx()).get();
 
-		ProjectParticipation projectParticipation = projectParticipationRepository.save(ProjectParticipation.builder()
-			.project(project)
-			.user(user)
-			.build());
-		projectRepository.plusnowNum(project.getIdx());
+		if (projectParticipationRepository.findProjectParticipationByProjectAndUser(project, user) == null) {
+			ProjectParticipation projectParticipation = projectParticipationRepository.save(
+				ProjectParticipation.builder()
+					.project(project)
+					.user(user)
+					.build());
+			projectRepository.plusnowNum(project.getIdx());
 
-		VideoRoom videoRoom = videoRepository.findVideoRoomByIdx(project.getIdx());
+			VideoRoom videoRoom = videoRepository.findVideoRoomByIdx(project.getIdx());
 
-		// 비디오방에도 동시에 입장
-		videoParticipationRepository.saveAndFlush(VideoParticipation.builder()
-			.videoRoom(videoRoom)
-			.user(user)
-			.build());
+			// 비디오방에도 동시에 입장
+			videoParticipationRepository.saveAndFlush(VideoParticipation.builder()
+				.videoRoom(videoRoom)
+				.user(user)
+				.build());
 
-		return videoRoom.getIdx();
+			return videoRoom.getIdx();
+		} else {
+			return 0;
+		}
 	}
 
 	public void leaveProject(int userIdx, int projectIdx) {

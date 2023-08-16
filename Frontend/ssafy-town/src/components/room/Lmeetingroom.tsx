@@ -13,6 +13,7 @@ import { Lsize1Scene } from '../map/Lsize1Scene';
 import ModalOpen from '../system/modalopen';
 // import Cam from '../openvidu/cam/cam'
 import Cam2 from '../openvidu/cam/cam2'
+import MeetingChat from './meetingChat';
 
 const LMeetingRoom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
@@ -99,6 +100,7 @@ const LMeetingRoom: React.FC = () => {
       <div id="phaser_game" className={ssafytown_css.phaser_game} >
         <div className={ssafytown_css.video_bar}><Cam2 /></div>
       </div>
+      <MeetingChat/>
     </div>
   );
 }

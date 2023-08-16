@@ -84,6 +84,32 @@ const Follow: React.FC = () => {
     }
   }
 
+  const unfollow = (followIdx : number, nickname : string) => {
+    if (window.confirm(`${nickname} 님을 언팔로우하시겠습니까?`)) {
+      const userToken = localStorage.getItem('userToken');
+      const userIdxStr = localStorage.getItem('userIdx');
+      const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
+
+      axios({
+        method: "delete",
+        url: 'https://i9b206.p.ssafy.io:9090/user/unfollow',
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        },
+        data : {
+          userIdx : userIdx,
+          followIdx : followIdx
+        }
+      }).then(() => {
+        alert("팔로우 취소 완료")
+        refresh();
+      }).catch((err) => {
+        alert("해당하는 유저가 없습니다")
+        console.log(err);
+      })
+    }
+  }
+
   return (
     <div className='sidebar_modal'>
       <h1>내 팔로우 목록</h1>
@@ -109,10 +135,11 @@ const Follow: React.FC = () => {
                     <b>{follow.userNickName}</b>
                     <p>{follow.userIntro}</p>
                   </div>
-                  <div>
+                  <div className={follow_css.buttons}>
                     <button className={follow_css.profilebtn} onClick={() => { setrequestname(follow.userNickName); setrequestidx(follow.followIdx); dispatch(setModal('팔로우채팅')) }}>채팅</button>
                     <button className={follow_css.profilebtn} onClick={() => { setrequestname(follow.userNickName); setrequestidx(follow.followIdx); dispatch(setModal('팔로우화상')) }}>화상</button>
                   </div>
+                  <div className={follow_css.x} onClick={() => unfollow(follow.followIdx, follow.userNickName)}>X</div>
                 </div>
                 <hr />
               </>

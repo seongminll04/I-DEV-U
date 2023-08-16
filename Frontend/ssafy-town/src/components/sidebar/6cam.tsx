@@ -60,7 +60,7 @@ const Cam: React.FC = () => {
       });
   },[BACKEND_SERVER_URL]); //BACKEND_SERVER_URL는 환경변수라서 차피 안바뀌는데 에러나와서 그냥 넣어둠
 
-  // 접속 반응 추가하기
+  // 접속 반응
   const EnterCam = (sessionId: string) => {
     localStorage.setItem("OVsession", sessionId);  // 토큰을 로컬 스토리지에 저장
     window.location.href = "https://i9b206.p.ssafy.io/meeting";

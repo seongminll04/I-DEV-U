@@ -40,12 +40,12 @@ const FollowDetail: React.FC<Props> = ({refresh}) => {
 
     axios({
       method: "get",
-      url: 'https://i9b206.p.ssafy.io:9090/user/search/email',
+      url: 'https://i9b206.p.ssafy.io:9090/user/search/nickname',
       headers: {
         Authorization: 'Bearer ' + userToken
       },
       params: {
-        email : text
+        nickname : text
       }
     }).then((res) => {
       console.log(res.data.data[0]);
@@ -88,7 +88,7 @@ const FollowDetail: React.FC<Props> = ({refresh}) => {
     }}>
       {find ? (
         <div className={followDetail_css.bye_modal}>
-          <h1>찾으시는 유저가 {findUser?.nickname} 이 맞나요?</h1>
+          <h1>찾으시는 유저가 "{findUser?.nickname}" 이(가) 맞나요?</h1>
           <div className={followDetail_css.btn}>
             <button onClick={handleFollow}>확인</button>
             <button onClick={() => dispatch(setModal('null'))}>취소</button>
@@ -109,9 +109,9 @@ const FollowDetail: React.FC<Props> = ({refresh}) => {
             유저 찾기
           </h1>
           <br />
-          <p>이메일로 유저를 직접 추가할 수 있습니다.</p>
+          <p>닉네임으로 유저를 직접 추가할 수 있습니다.</p>
           <p>
-            이메일을 입력해주세요. ex)
+            닉네임을 입력해주세요. ex)
           </p>
           <br />
 

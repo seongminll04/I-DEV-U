@@ -22,7 +22,7 @@ const LMeetingRoom: React.FC = () => {
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
   const stompClientRef = React.useRef<Client | null>(null);
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
-
+  
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -50,6 +50,7 @@ const LMeetingRoom: React.FC = () => {
     };
     
   }, [dispatch,isModalOpen,isSidebarOpen]);
+
   useEffect(() => {
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
@@ -72,6 +73,7 @@ const LMeetingRoom: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+
   useEffect(() => {
     if(game) {
       const resize = () => {
@@ -93,14 +95,13 @@ const LMeetingRoom: React.FC = () => {
   return (
     <div className={ssafytown_css.container}>
       <Sidebar/>
-
       {/* 사이드바 오픈 */}
       {isSidebarOpen ? <Navbar /> : null}
       <ModalOpen />
       <div id="phaser_game" className={ssafytown_css.phaser_game} >
         <div className={ssafytown_css.video_bar}><Cam2 /></div>
       </div>
-      {stompClientRef.current  ? <MeetingChat/> : null}
+      <MeetingChat />
     </div>
   );
 }

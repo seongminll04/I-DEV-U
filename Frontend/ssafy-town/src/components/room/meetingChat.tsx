@@ -20,8 +20,27 @@ const MeetingChat: React.FC = () => {
   const [receiveMessages, setReceiveMessages] = useState<messageProps[]>([])
   const stompClientRef = React.useRef<Client | null>(null);
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
-  const OVsession = localStorage.getItem('OVsession')
-  
+  // 구독등록
+  useEffect(() => {
+    const OVsession = localStorage.getItem('OVsession')
+    if (stompClientRef.current) {
+      console.log(123123)
+      const subscription = stompClientRef.current.subscribe(`/sub/msg/${OVsession}`, function(message: Message) {
+        const newMessage = JSON.parse(message.body);
+        const newd={
+        'userName':newMessage.userName,
+        'message':newMessage.message,
+        'createdAt':new Date(newMessage.createdAt),
+        }
+        setReceiveMessages(prev => [...prev, newd]);
+    });
+    return () => {
+        if (stompClientRef.current) {
+        subscription.unsubscribe();
+        }
+    };
+    }
+}, [stompClientRef]);
 
   const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget
@@ -38,6 +57,7 @@ const MeetingChat: React.FC = () => {
     }}
 
   const sendMessage = () => {
+    const OVsession = localStorage.getItem('OVsession')
     if (stompClientRef.current) {
       const userName = localStorage.getItem('userNickname')
       const data = {
@@ -47,35 +67,14 @@ const MeetingChat: React.FC = () => {
       };
       // console.log(data)
       stompClientRef.current.publish({
-          destination: `/sub/meetingmessages/${OVsession}`,
+          destination: `/sub/msg/${OVsession}`,
           body: JSON.stringify(data),
           });
         setMessageInput('');
     }};
-
-    // 구독등록
-    useEffect(() => {
-        if (stompClientRef.current) {
-        const subscription = stompClientRef.current.subscribe(`/sub/meetingmessages/${OVsession}`, function(message: Message) {
-            const newMessage = JSON.parse(message.body);
-            const newd={
-            'userName':newMessage.userName,
-            'message':newMessage.message,
-            'createdAt':new Date(newMessage.createdAt),
-            }
-            setReceiveMessages(prev => [...prev, newd]);
-        });
-        return () => {
-            if (stompClientRef.current) {
-            subscription.unsubscribe();
-            }
-        };
-        }
-    }, [OVsession]);
-
   return (
     <div>
-    {isSidebarOpen ? 
+    {isSidebarOpen!==null ? 
         <div style={{position:'absolute',top:'60%',left:'35%',background:'gray', width:'400px', height:'200px'}}>
             <div>
             {receiveMessages.map((message)=>(

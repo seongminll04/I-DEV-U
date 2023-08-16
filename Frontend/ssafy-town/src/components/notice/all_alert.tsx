@@ -13,13 +13,21 @@ interface AlertProps {
   fromUser:{
     idx:number,
     nickname:string,
+    basicAnswerList:{
+      surveyIdx:number,
+      tag:string,
+    }
+    gener:number,
+    intro:string|null,
+    storedFileName:string,
   },
   toUser:{
     idx:number,
     nickname:string,
   },
-  targetIdx:number|null,
+  targetIdx:number|null
 }
+
 const AllAlert: React.FC = () => {
   const dispatch = useDispatch()
   const [page, setPage] = useState<Number>(0);

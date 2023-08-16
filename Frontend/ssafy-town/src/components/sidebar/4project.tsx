@@ -20,7 +20,7 @@ type ProjectDataType = {
   "back": number;
   "max_back": number;
   "type": string;
-  "projectLanguages": { idx: number, language: string }[];
+  "languageList": { idx: number, language: string }[];
   "session": string;
 };
 
@@ -46,25 +46,27 @@ const Project: React.FC = () => {
     // if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
     if (survey) {
       setSurvey(false)
-      console.log(projectFilter)
       axios({
         method: 'post',
-        url: 'https://localhost:9090/project/filter',
+        url: 'https://i9b206.p.ssafy.io:9090/project/filter',
         headers: {
           Authorization: 'Bearer ' + userToken
         },
         data: projectFilter
       })
         .then(res => {
-          console.log(res.data)
           // setProjectList(res.data);
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          alert("알 수 없는 오류 발생! 새로고침 후 다시 시도해주세요!")
+          console.log(err)
+        })
     }
   }, [survey])
 
   // 처음에 가져오는 프로젝트 리스트
   useEffect(() => {
+    console.log("first");
     const userToken = localStorage.getItem('userToken')
     axios({
       method: 'get',
@@ -74,10 +76,11 @@ const Project: React.FC = () => {
       },
       data: { keyword: "" }
     }).then(res => {
+      console.log(res.data)
       setProjectList(res.data.list)
     })
       .catch(err => { console.log(err); });
-  }, [isModalOpen])
+  }, [])
 
   // 키워드로 프로젝트 검색
   const loaddata = () => {
@@ -139,7 +142,7 @@ const Project: React.FC = () => {
                   <div className={project_css.project_data}>
                     <b>{project["title"]}</b>
                     <p style={{ color: 'gray' }}>
-                      {project.projectLanguages.map((lang, idx2) => (
+                      {project.languageList.map((lang, idx2) => (
                         <span key={idx2}>#{lang.language} </span>
                       ))}
                     </p>

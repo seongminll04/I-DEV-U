@@ -14,15 +14,11 @@ import ModalOpen from '../system/modalopen';
 // import Cam from '../openvidu/cam/cam'
 import Cam2 from '../openvidu/cam/cam2'
 import MeetingChat from './meetingChat';
-import { Client } from '@stomp/stompjs';
 
 const LMeetingRoom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
   const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
-  const stompClientRef = React.useRef<Client | null>(null);
-  stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
-  
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -101,6 +97,7 @@ const LMeetingRoom: React.FC = () => {
       <div id="phaser_game" className={ssafytown_css.phaser_game} >
         <div className={ssafytown_css.video_bar}><Cam2 /></div>
       </div>
+      
       <MeetingChat />
     </div>
   );

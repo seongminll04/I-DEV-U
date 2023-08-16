@@ -54,34 +54,35 @@ const ProjectFilter: React.FC<props> = ({ onfilter, onSurvey }) => {
   const filterForm = (
     <form onSubmit={handleSubmit}>
       <div className={filter_css.input}>
-        <label className={filter_css.label}>
-        <p>타 입 : </p>
+        <label className={filter_css.label}><span>타</span><span>입</span></label>
+        <p> : </p>
         {projectOptions.map(option => (
           <label key={option}>
-            <input type="radio" name="projectType" value={option} onChange={() => setProjectType(option)} checked={projectType === option} />
-            {option}
-          </label>
+            <input
+              type="radio"
+              name="projectType"
+              value={option}
+              onChange={() => setProjectType(option)}
+              checked={projectType === option}
+            /> {option} </label>
         ))}
-        </label>
       </div>
       <div className={filter_css.input}>
-        <label className={filter_css.label}>
-          <p>언 어 : </p>
-          <div className={filter_css.choose} style={{ width: '60%', whiteSpace: 'pre-wrap' }}>
-            {languageOptions.map(option => (
-              <label key={option} style={{ whiteSpace: 'pre-wrap' }}>
-                <input
-                  type="checkbox"
-                  name="languages"
-                  value={option}
-                  onChange={() => toggleLanguage(option)}
-                  checked={languages.includes(option)}  // checked 속성을 추가하여 렌더링 시 마다 선택 상태를 업데이트함
-                />
-                {option}
-              </label>
-            ))}
-          </div>
-        </label>
+        <label className={filter_css.label}><span>언</span><span>어</span></label>
+        <p> : </p>
+        <div className={filter_css.choose} style={{ width: '60%', whiteSpace: 'pre-wrap' }}>
+          {languageOptions.map(option => (
+            <label key={option} style={{ whiteSpace: 'pre-wrap' }}>
+              <input
+                className={filter_css.checkbox}
+                type="checkbox"
+                name="languages"
+                value={option}
+                onChange={() => toggleLanguage(option)}
+                checked={languages.includes(option)}  // checked 속성을 추가하여 렌더링 시 마다 선택 상태를 업데이트함
+              /> {option} </label>
+          ))}
+        </div>
       </div>
     </form>
   )
@@ -92,6 +93,7 @@ const ProjectFilter: React.FC<props> = ({ onfilter, onSurvey }) => {
     }}>
       <div className={filter_css.logout_modal}>
         <h1>프로젝트 찾기 필터</h1>
+        <hr />
         {filterForm}
         <div className={filter_css.button_icon}>
           <button className={filter_css.button} onClick={handleSubmit}>적용</button>

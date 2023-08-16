@@ -37,15 +37,6 @@
     background-color: gray;
 }
 
-.input1 {
-    display: flex;
-    align-items: center;
-    /* align-items: flex-start; */
-    margin:auto;
-    width:80%;
-    font-size: large;
-}
-
 .input {
     display: flex;
     align-items: center;
@@ -55,32 +46,27 @@
     font-size: large;
 }
 
+
 .input .label {
     width:20%;
     display: flex;
     justify-content: space-between;
+    margin: 10px 0;
 }
 .input p {
     margin: 10px 20px;
 }
 
+.checkbox {
+    margin: 3px;
+}
+
 .input span {
     margin: 10px;
 }
-.input .input1,textarea {
-    width:60%;
-    border-radius: 0.5rem;
-    padding:5px 10px;
-}
-
-.input textarea {
-    resize:none;
-    border: solid 2px;
-    height: 100px;
-}
 
 .choose {
-    width: '60%';
+    width: 60%;
     white-space: pre-wrap;
     display: flex;
     flex-wrap: wrap;

@@ -11,18 +11,17 @@ interface messageProps {
     createdAt: Date
   }
 
-interface Props {
-  openchat:boolean
-}
+
   
-const MeetingChat: React.FC<Props> = ({openchat}) => {
+const MeetingChat: React.FC = () => {
   const dispatch=useDispatch()
   const [messageInput, setMessageInput] = useState('');
-  const stompClientRef = React.useRef<Client | null>(null);
   const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
   const [receiveMessages, setReceiveMessages] = useState<messageProps[]>([])
+  const stompClientRef = React.useRef<Client | null>(null);
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
   const OVsession = localStorage.getItem('OVsession')
+  
 
   const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget
@@ -40,12 +39,11 @@ const MeetingChat: React.FC<Props> = ({openchat}) => {
 
   const sendMessage = () => {
     if (stompClientRef.current) {
-      const now = new Date()
       const userName = localStorage.getItem('userNickname')
       const data = {
         userName: userName, 
         message: messageInput,
-        createdAt: now
+        createdAt: new Date()
       };
       // console.log(data)
       stompClientRef.current.publish({
@@ -60,11 +58,10 @@ const MeetingChat: React.FC<Props> = ({openchat}) => {
         if (stompClientRef.current) {
         const subscription = stompClientRef.current.subscribe(`/sub/meetingmessages/${OVsession}`, function(message: Message) {
             const newMessage = JSON.parse(message.body);
-            const date = new Date(newMessage.createdAt)
             const newd={
             'userName':newMessage.userName,
             'message':newMessage.message,
-            'createdAt':date,
+            'createdAt':new Date(newMessage.createdAt),
             }
             setReceiveMessages(prev => [...prev, newd]);
         });
@@ -74,7 +71,7 @@ const MeetingChat: React.FC<Props> = ({openchat}) => {
             }
         };
         }
-    }, [OVsession,openchat]);
+    }, [OVsession]);
 
   return (
     <div>

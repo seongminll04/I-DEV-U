@@ -10,8 +10,12 @@ interface messageProps {
     message: string,
     createdAt: Date
   }
+
+interface Props {
+  openchat:boolean
+}
   
-const MeetingChat: React.FC = () => {
+const MeetingChat: React.FC<Props> = ({openchat}) => {
   const dispatch=useDispatch()
   const [messageInput, setMessageInput] = useState('');
   const stompClientRef = React.useRef<Client | null>(null);
@@ -70,7 +74,7 @@ const MeetingChat: React.FC = () => {
             }
         };
         }
-    }, [OVsession]);
+    }, [OVsession,openchat]);
 
   return (
     <div>

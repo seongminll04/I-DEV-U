@@ -19,7 +19,7 @@ const LMeetingRoom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
   const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);// 모달창 오픈여부 (알림, 로그아웃)
-
+  const [openchat, setopenchat] = useState(false);
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -60,10 +60,10 @@ const LMeetingRoom: React.FC = () => {
       pixelArt: true, //  픽셀 아트 스타일의 게임에서 그래픽이 더 깔끔하고 정확하게 표시되도록 도와줍니다. 라네요
       scene: Lsize1Scene //맵들 여기 다넣으면됨
     };
-
     const newGame = new Phaser.Game(config);
     setGame(newGame);
-
+    setopenchat(true)
+    
     return () => {
       newGame.destroy(true);
     }
@@ -100,7 +100,8 @@ const LMeetingRoom: React.FC = () => {
       <div id="phaser_game" className={ssafytown_css.phaser_game} >
         <div className={ssafytown_css.video_bar}><Cam2 /></div>
       </div>
-      <MeetingChat/>
+      
+      <MeetingChat openchat={openchat}/>
     </div>
   );
 }

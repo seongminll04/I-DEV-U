@@ -18,7 +18,15 @@
   box-sizing: border-box;
   color : white;
 }
-
+.modal2 {
+  background-color: rgba(109, 206, 245, 0.9);
+  border-radius: 1rem;
+  width:40%;
+  height: 400px;
+  padding: 10px;
+  box-sizing: border-box;
+  color : white;
+}
 .closebtn {
   margin:10px;
   text-align: right;

@@ -64,7 +64,6 @@ export class Msize1Scene extends Phaser.Scene {
     private remoteCharactersLastUpdate: { [id: string]: number } = {}; // 여기에 추가
 
     private character?: Phaser.Physics.Arcade.Sprite;
-    private character2?: Phaser.Physics.Arcade.Sprite;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
     private walls?: Phaser.Physics.Arcade.StaticGroup;
     private balloon!: Phaser.GameObjects.Sprite;
@@ -106,6 +105,7 @@ export class Msize1Scene extends Phaser.Scene {
       this.load.image('character', 'assets/admin_character.png');
       this.load.image('character2', 'assets/admin_character.png');
       this.load.image('balloon', 'assets/ekey.png');
+      this.load.image('nightSky', 'assets/nightSkY.png');
     }
   
     create() {
@@ -122,13 +122,19 @@ export class Msize1Scene extends Phaser.Scene {
 
       const userCharacter = localStorage.getItem("character") || '0';
 
-      this.character = this.physics.add.sprite(52, mapCenterY + 72, `${  userCharacter}2`).setOrigin(0.5, 0.5);
+      let playerNumber = 1;  // 예: 1 또는 2
+
+      let startX = 52;
+
+      if (playerNumber === 1) {
+          startX = 52;
+      } else if (playerNumber === 2) {
+          startX = 3210;
+      }
+
+      this.character = this.physics.add.sprite(startX, mapCenterY + 72, `${  userCharacter}2`).setOrigin(0.5, 0.5);
       this.physics.add.collider(this.character, this.walls);  // 캐릭터와 벽 사이의 충돌 설정
       this.character?.setDepth(2); // 캐릭터부터 생성했으니 depth를 줘야 캐릭터가 화면에 보임
-
-      this.character2 = this.physics.add.sprite(3210, mapCenterY + 72, `${  userCharacter}2`).setOrigin(0.5, 0.5);
-      this.physics.add.collider(this.character2, this.walls);
-      this.character2.setDepth(2);
 
       this.createAnimationsForCharacter(userCharacter); // 방향 애니메이션
 
@@ -411,7 +417,7 @@ export class Msize1Scene extends Phaser.Scene {
           const benchCenterY = 150;  // 벤치중심 Y 좌표
 
           const minX = benchCenterX - 32;
-          const maxX = benchCenterX + 32;
+          const maxX = benchCenterX + 64;
           const minY = benchCenterY;
           const maxY = benchCenterY + 32;
           
@@ -419,7 +425,10 @@ export class Msize1Scene extends Phaser.Scene {
           const charY = this.character.y;
           
           if (charX >= minX && charX <= maxX && charY >= minY && charY <= maxY) {
-            this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
+            this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2);
+            if (!this.sittingOnBench) {
+              this.balloon.setVisible(true);
+            }
             return true;
         }
       }
@@ -433,11 +442,13 @@ export class Msize1Scene extends Phaser.Scene {
       }
       else if(this.sittingOnBench){ //이미 앉아있으면
         this.character!.setAlpha(1);
+        this.balloon.setVisible(true);
         this.sittingOnBench = false;
       }
       else{ //앉아있지않으면
       this.character!.setAlpha(0.4);
       this.character!.anims.stop();
+      this.balloon.setVisible(false);
       this.sittingOnBench = true;
       }
     }

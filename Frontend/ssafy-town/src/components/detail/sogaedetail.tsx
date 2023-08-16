@@ -165,22 +165,20 @@ const SogaeDetail: React.FC<Props> = ({ userIdx, percent }) => {
               <img
                 src={mateUser.storedFileName ? mateUser.storedFileName : "assets/default_profile.png"}
                 alt=""
-                style={{ borderRadius: "50%" }}
+                style={{ borderRadius: "50%" ,width:'125px', height:'125px'}}
               />
               <p>나이 : {mateUser.age}</p>
               <p>성별 : {mateUser.gender}</p>
-
-              <br />
-              <p>자기소개 : {mateUser.intro}</p>
-              <br />
+   
+        
               {/* {mateUser.language.map((lang) => (
                 lang + '    '
               ))} */}
               {Follow ? <button onClick={onfollow}>언팔로우</button> : <button onClick={onfollow}>팔로우</button>}
-              <br /><br /><br />
             </div>
             <div style={{ width: '65%', margin: '0 20px', boxSizing: 'border-box' }}>
               <br />
+              <h3>자기소개 : {mateUser.intro ? mateUser.intro:'등록된 자기소개가 없습니다'}</h3>
               <h2>일치율 : {percent} %</h2>
               <br />
               <button onClick={sendrequest}>채팅 신청</button>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { OpenVidu } from 'openvidu-browser';
 import UserVideoComponent from './UserVideoComponent';
-import cam_set_css from './cam.module.css'
+import cam_set_css from './cam.module.css';
 import axios from 'axios';
 
 import Button from '@mui/material/Button';
@@ -13,269 +13,246 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import SwitchVideoIcon from '@mui/icons-material/SwitchVideo';
 
-interface AppState {
-    session?: any;
-    publisher?: any;
+// const APPLICATION_SERVER_URL = process.env.REACT_APP_FRONT_SERVER; // .env에서 서버 주소 가져오기
+const APPLICATION_SERVER_URL = "http://localhost:5000";
+
+interface IState {
+    mySessionId: string;
+    myUserName: string;
+    session: any;
+    mainStreamManager: any;
+    publisher: any;
     subscribers: any[];
-    currentVideoDevice?: MediaDeviceInfo;
+
     publishVideo: boolean;
     publishAudio: boolean;
     audioVolume: number;   // 스피커 볼륨 상태
     hideAll: boolean;      // 화면 숨기기 상태
-    eventBindingsSet: boolean;
+    currentVideoDevice?: MediaDeviceInfo;
 }
 
-class Cam extends Component<{}, AppState> {
-    private OV: any;
+class Cam extends Component<{}, IState> {
+    private OV: any; // OpenVidu를 위한 private 변수 선언
 
-    constructor(props: {}) {
+    constructor(props: any) {
         super(props);
-        this.state = { 
+        
+        
+        // 초기 상태
+        this.state = {
+            mySessionId: localStorage.getItem("OVsession") || 'defaultSession',
+            myUserName: localStorage.getItem("userNickname") || '알수없음',
+            session: undefined,
+            mainStreamManager: undefined,
+            publisher: undefined,
             subscribers: [],
+
             publishVideo: false,
             publishAudio: false,
             audioVolume: 100,
             hideAll: false,
-            eventBindingsSet: false,
         };
 
-        this.joinSession = this.joinSession.bind(this);
-        this.switchCamera = this.switchCamera.bind(this)
-        this.toggleVisibility = this.toggleVisibility.bind(this);
+        // 여기서 필요하다면 OpenVidu 초기화
+        this.OV = new OpenVidu();
     }
 
     componentDidMount() {
         this.joinSession();
-        window.addEventListener('beforeunload', this.handleBeforeUnload);
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('beforeunload', this.handleBeforeUnload);
-
-        if (this.state.publisher) {
-            this.state.publisher.destroy();
-        }
-    
-        if (this.state.session) {
-            this.state.session.disconnect();
-        }
-    }
-
-    handleBeforeUnload(event: BeforeUnloadEvent) {
-        event.preventDefault();
-        event.returnValue = '다른 맵으로 가시겠습니까?';
     }
 
     toggleVideo = () => {
         if (this.state.publisher) {
             this.state.publisher.publishVideo(!this.state.publishVideo);
-            this.setState({ publishVideo: !this.state.publishVideo });
+            this.setState(prevState => ({ publishVideo: !prevState.publishVideo }));
         }
     };
     
     toggleAudio = () => {
         if (this.state.publisher) {
             this.state.publisher.publishAudio(!this.state.publishAudio);
-            this.setState({ publishAudio: !this.state.publishAudio });
+            this.setState(prevState => ({ publishAudio: !prevState.publishAudio }));
         }
     };
 
     toggleSpeaker = () => {
-        if (this.state.audioVolume === 0) {
-            this.setState({ audioVolume: 100 });
-        } else {
+        this.setState(prevState => ({
+            audioVolume: prevState.audioVolume === 0 ? 100 : 0
+        }), () => {
+            this.state.subscribers.forEach(subscriber => {
+                const videoElem = document.getElementById(subscriber.stream.streamId) as HTMLVideoElement;
+                if (videoElem) {
+                    videoElem.volume = this.state.audioVolume / 100;
+                }
+            });
+        });
+    }
+    
+
+toggleVisibility = () => {
+    this.setState(prevState => ({ hideAll: !prevState.hideAll }), () => {
+        if (this.state.hideAll) {
+            if (this.state.publisher) {
+                this.state.publisher.publishVideo(false);
+                this.state.publisher.publishAudio(false);
+            }
             this.setState({ audioVolume: 0 });
-        }
-        this.state.subscribers.forEach(subscriber => {
-            const videoElem = document.getElementById(subscriber.stream.streamId) as HTMLVideoElement;
-            if (videoElem) {
-                videoElem.volume = this.state.audioVolume / 100;
-            }
-        });
-    }
-
-    toggleVisibility() {
-        this.setState(prevState => ({ hideAll: !prevState.hideAll }), () => {
-            if (this.state.hideAll) {  // If everything is turned off
-                if (this.state.publisher) {
-                    // 카메라와 마이크 끄기
-                    this.state.publisher.publishVideo(false);
-                    this.state.publisher.publishAudio(false);
-                }
-                // 스피커 끄기
-                this.setState({ audioVolume: 0 });
-                this.state.subscribers.forEach(subscriber => {
-                    const videoElem = document.getElementById(subscriber.stream.streamId) as HTMLVideoElement;
-                    if (videoElem) {
-                        videoElem.volume = 0;
-                    }
-                });
-            } else {
-                // Optionally, if you want to turn everything back on when toggling back to "ON"
-                if (this.state.publisher) {
-                    this.state.publisher.publishVideo(true);
-                    this.state.publisher.publishAudio(true);
-                }
-                this.setState({ audioVolume: 100 });
-                this.state.subscribers.forEach(subscriber => {
-                    const videoElem = document.getElementById(subscriber.stream.streamId) as HTMLVideoElement;
-                    if (videoElem) {
-                        videoElem.volume = 1;
-                    }
-                });
-            }
-        });
-    }
-
-    async joinSession() {
-        // 1. 세션 초기화
-        this.OV = new OpenVidu();
-        const session = this.OV.initSession();
-    
-        // 2. 이벤트 리스너 설정
-        if (!this.state.eventBindingsSet) {
-            session.on('streamCreated', (event: any) => {
-                if (this.state.publisher && event.stream.streamId === this.state.publisher.stream.streamId) {
-                    return;
-                }
-                if (event.stream.connection.connectionId === session.connection.connectionId) {
-                    return;
-                }
-                if (!this.state.subscribers.some(sub => sub.stream.streamId === event.stream.streamId)) {
-                    const subscriber = session.subscribe(event.stream, undefined);
-                    const subscribers = [...this.state.subscribers, subscriber];
-                    this.setState({ subscribers });
+            this.state.subscribers.forEach(subscriber => {
+                const videoElem = document.getElementById(subscriber.stream.streamId) as HTMLVideoElement;
+                if (videoElem) {
+                    videoElem.volume = 0;
                 }
             });
-    
-            session.on('streamDestroyed', (event: any) => {
-                this.setState(prevState => ({
-                    subscribers: prevState.subscribers.filter(subscriber => subscriber.stream.streamId !== event.stream.streamId)
-                }));
-            });
-    
-            this.setState({ eventBindingsSet: true });
-        }
-    
-        // 3. 세션을 위한 토큰 얻기
-        try {
-            const sessionId = localStorage.getItem('OVsession');
-            if (!sessionId) {
-                console.error("세션 ID가 없습니다.");
-                return;
+        } else {
+            if (this.state.publisher) {
+                // On 버튼을 누를 때 카메라와 마이크를 꺼진 상태로 시작
+                this.state.publisher.publishVideo(false);
+                this.state.publisher.publishAudio(false);
             }
-    
-            const response = await axios.post(`https://i9b206.p.ssafy.io:5000/api/sessions/${sessionId}/connections`);
-            const token = response.data;
-            localStorage.setItem("OVtoken", token);
-    
-            if (!token) {
-                console.error("서버에서 토큰을 가져오는데 실패했습니다.");
-                return;
-            }
-    
-            // 4. 세션에 연결
-            const userNickname = localStorage.getItem('userNickname');
-            session.connect(token, userNickname).then(() => {
-                console.log(session,"세션@@@@@@@@@@@@@@@@");
-                // 5. 세션에 게시
-                const publisher = this.OV.initPublisher(undefined, {
-                    audio: false,
-                    video: false
-                });
-    
-                publisher.on('accessAllowed', () => {
-                    publisher.publishVideo(false);
-                    publisher.publishAudio(false);
-                    session.publish(publisher).then(() => {
-                        this.setState({ publisher });
-                    });
-                });
-    
-                // 주기적으로 스트림 목록 업데이트
-                const updateStreams = async () => {
-                    console.log("..............................................");
-                    const existingSubscribers: any[] = [...this.state.subscribers];
-                    const notFoundStreams: string[] = [];
-                
-                    try {
-                        const response = await axios.get(`https://i9b206.p.ssafy.io:5000/api/sessions/${sessionId}/streams`);
-                        const streamIds = response.data.concat(notFoundStreams); // 이전에 찾지 못한 스트림들도 함께 검색
-                
-                        console.log("1111111111111111111111111111111111:", streamIds);
-                        
-                        streamIds.forEach((streamId: string) => {
-                            const foundStream = session.streamManagers.find((sm: any) => sm.stream && sm.stream.streamId === streamId);
-                            console.log("22222222222222222222222222222222222:", session.streamManagers.map((sm:any) => sm.stream && sm.stream.streamId));
-                
-                            if (foundStream) {
-                                if (!this.state.subscribers.some(sub => sub.stream.streamId === foundStream.stream.streamId)) {
-                                    const subscriber = session.subscribe(foundStream.stream, undefined);
-                                    existingSubscribers.push(subscriber);
-                                }
-                                const index = notFoundStreams.indexOf(streamId);
-                                if (index > -1) {
-                                    notFoundStreams.splice(index, 1); // 스트림을 찾았으므로 notFoundStreams에서 제거
-                                }
-                            } else {
-                                // 스트림을 찾지 못했으면 notFoundStreams에 추가
-                                if (!notFoundStreams.includes(streamId)) {
-                                    notFoundStreams.push(streamId);
-                                }
-                            }
-                        });
-                
-                        this.setState({ subscribers: existingSubscribers });
-                    } catch (error) {
-                        console.error("Error fetching streams:", error);
-                    }
-                };
-                
-                updateStreams();
-                const updateInterval = setInterval(updateStreams, 5000);
-                window.addEventListener('beforeunload', () => {
-                    clearInterval(updateInterval);
-                });
-            }).catch((error: any) => {
-                console.error("세션 연결 중 오류:", error);
+            this.setState({ 
+                publishVideo: false, // 카메라를 꺼진 상태로 업데이트
+                publishAudio: false, // 마이크를 꺼진 상태로 업데이트
+                audioVolume: 100 
             });
-        } catch (error) {
-            console.error("토큰 가져오기 오류:", error);
+            this.state.subscribers.forEach(subscriber => {
+                const videoElem = document.getElementById(subscriber.stream.streamId) as HTMLVideoElement;
+                if (videoElem) {
+                    videoElem.volume = 1;
+                }
+            });
         }
-        this.setState({ session });
-    }
+    });
+}
 
     
 
-
-    async switchCamera() {
-        if (this.state.publisher) {
-            const devices = await navigator.mediaDevices.enumerateDevices();
-            const videoInputDevices = devices.filter(device => device.kind === "videoinput");
+    // switchMainCamera = async () => {
+    //     if (this.state.publisher) {
+    //         const devices = await navigator.mediaDevices.enumerateDevices();
+    //         const videoInputDevices = devices.filter(device => device.kind === "videoinput");
             
-            if (this.state.currentVideoDevice) {
-                let index = videoInputDevices.findIndex(device => device.deviceId === this.state.currentVideoDevice?.deviceId);
-                index = index < videoInputDevices.length - 1 ? index + 1 : 0;
-                this.state.publisher.switchCamera(videoInputDevices[index].deviceId);
-                this.setState({ currentVideoDevice: videoInputDevices[index] });
-            } else if (videoInputDevices[1]) {
-                this.state.publisher.switchCamera(videoInputDevices[1].deviceId);
-                this.setState({ currentVideoDevice: videoInputDevices[1] });
-            }
+    //         if (this.state.currentVideoDevice) {
+    //             let index = videoInputDevices.findIndex(device => device.deviceId === this.state.currentVideoDevice?.deviceId);
+    //             index = index < videoInputDevices.length - 1 ? index + 1 : 0;
+                
+    //             // mainStreamManager를 이용하여 카메라를 전환
+    //             this.state.mainStreamManager.switchCamera(videoInputDevices[index].deviceId);
+    //             this.setState({ currentVideoDevice: videoInputDevices[index] });
+    //         } else if (videoInputDevices[1]) {
+    //             this.state.mainStreamManager.switchCamera(videoInputDevices[1].deviceId);
+    //             this.setState({ currentVideoDevice: videoInputDevices[1] });
+    //         }
+    //     }
+    // }
+
+    joinSession = () => {
+        // OpenVidu가 아직 초기화되지 않았다면 이제 초기화
+        if (!this.OV) {
+            this.OV = new OpenVidu();
         }
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@")
+    
+        // 세션 초기화
+        this.setState({
+            session: this.OV.initSession(),
+        }, async () => {
+            var mySession = this.state.session;
+    
+            // 새로운 Stream을 받을 때마다...
+            mySession.on('streamCreated', (event: any) => {
+                // Stream을 받기 위해 구독
+                var subscriber = mySession.subscribe(event.stream, undefined);
+    
+                // 새 스트림을 푸시하기 위한 보조 배열 사용
+                var subscribers = this.state.subscribers;
+                subscribers.push(subscriber);
+    
+                // 새 구독자로 상태 업데이트
+                this.setState({
+                    subscribers: subscribers,
+                });
+            });
+    
+            // 스트림이 파괴될 때마다...
+            mySession.on('streamDestroyed', (event: any) => {
+                event.preventDefault();
+                this.deleteSubscriber(event.stream.streamManager);
+            });
+    
+            // 비동기 예외가 발생할 때마다...
+            mySession.on('exception', (exception: any) => {
+                console.warn(exception);
+            });
+    
+            // 유효한 사용자 토큰과 함께 세션에 연결
+            const token = await this.getToken();
+    
+            mySession.connect(token, { clientData: this.state.myUserName })
+                .then(async () => {
+    
+                    // 자신의 카메라 스트림 가져오기
+                    let publisher = await this.OV.initPublisherAsync(undefined, {
+                        audioSource: undefined, 
+                        videoSource: undefined, 
+                        publishAudio: false,
+                        publishVideo: false,
+                        resolution: '640x480',
+                        frameRate: 30,
+                        insertMode: 'APPEND',
+                        mirror: false,
+                    });
+    
+                    // 스트림 발행
+                    mySession.publish(publisher);
+    
+                    // 사용 중인 현재 비디오 장치 가져오기
+                    var devices = await this.OV.getDevices();
+                    var videoDevices = devices.filter((device:any) => device.kind === 'videoinput');
+                    var currentVideoDeviceId = publisher.stream.getMediaStream().getVideoTracks()[0].getSettings().deviceId;
+                    var currentVideoDevice = videoDevices.find((device:any) => device.deviceId === currentVideoDeviceId);
+    
+                    // 메인 비디오 페이지 설정 및 발행자 저장
+                    this.setState({
+                        currentVideoDevice: currentVideoDevice,
+                        mainStreamManager: publisher,
+                        publisher: publisher,
+                    });
+                })
+                .catch((error:any) => {
+                    console.log('세션에 연결하는 중 오류 발생:', error.code, error.message);
+                });
+        });
+    }
+    
+
+    deleteSubscriber = (streamManager: any) => {
+        const subscribers = this.state.subscribers.filter(sub => sub !== streamManager);
+        this.setState({ subscribers });
+    }
+
+    getToken = async () => {
+        const sessionId = this.state.mySessionId;
+        return await this.createToken(sessionId);
+    }
+
+    createToken = async (sessionId: string) => {
+        const response = await axios.post(APPLICATION_SERVER_URL + '/api/sessions/' + sessionId + '/connections', {}, {
+            headers: { 'Content-Type': 'application/json', },
+        });
+        return response.data; // 토큰
     }
 
     render() {
-        const { session, publisher, subscribers } = this.state;
+        const { session, publisher, subscribers, hideAll, publishVideo, publishAudio, audioVolume } = this.state;
     
-        if (this.state.hideAll) {
+        if (hideAll) {
             return (
                 <div>
                     <Button 
-                    className={cam_set_css.toggleVisibility} 
-                    onClick={this.toggleVisibility}
-                    style={{ fontSize: '1.5em',fontWeight: 'bold', color: 'red', transform: 'translateX(1030%) translateY(1250%)'}} >
-                    on
+                        className={cam_set_css.toggleVisibility} 
+                        onClick={this.toggleVisibility}
+                        style={{ fontSize: '1.5em', fontWeight: 'bold', color: 'red', transform: 'translateX(1030%) translateY(1250%)'}} >
+                        on
                     </Button>
                 </div>
             );
@@ -289,34 +266,34 @@ class Cam extends Component<{}, AppState> {
                             <Button 
                                 className={cam_set_css.toggleVisibility} 
                                 onClick={this.toggleVisibility}
-                                style={{ fontSize: '1.5em',fontWeight: 'bold', color: 'black' }} >
+                                style={{ fontSize: '1.5em', fontWeight: 'bold', color: 'white' }} >
                                 off
                             </Button>
                             <Button 
-                            className={cam_set_css.toggleVideo} 
-                            onClick={this.toggleVideo}
-                            startIcon={this.state.publishVideo ? 
-                                <VideocamIcon style={{ fontSize: '3em', color: 'black' }} /> :
-                                <VideocamOffIcon style={{ fontSize: '3em', color: 'black' }} />} >
+                                className={cam_set_css.toggleVideo} 
+                                onClick={this.toggleVideo}
+                                startIcon={publishVideo ? 
+                                    <VideocamIcon style={{ fontSize: '3em', color: 'white' }} /> :
+                                    <VideocamOffIcon style={{ fontSize: '3em', color: 'white' }} />} >
                             </Button>
                             <Button 
                                 className={cam_set_css.toggleAudio} 
                                 onClick={this.toggleAudio}
-                                startIcon={this.state.publishAudio ? 
-                                    <MicIcon style={{ fontSize: '3em', color: 'black' }} /> : 
-                                    <MicOffIcon style={{ fontSize: '3em', color: 'black' }} />} >
+                                startIcon={publishAudio ? 
+                                    <MicIcon style={{ fontSize: '3em', color: 'white' }} /> : 
+                                    <MicOffIcon style={{ fontSize: '3em', color: 'white' }} />} >
                             </Button>
                             <Button 
                                 className={cam_set_css.toggleSpeaker} 
                                 onClick={this.toggleSpeaker}
-                                startIcon={this.state.audioVolume === 0 ? 
-                                    <VolumeUpIcon style={{ fontSize: '3em', color: 'black' }} /> : 
-                                    <VolumeOffIcon style={{ fontSize: '3em', color: 'black' }} />}>
+                                startIcon={audioVolume === 0 ? 
+                                    <VolumeUpIcon style={{ fontSize: '3em', color: 'white' }} /> : 
+                                    <VolumeOffIcon style={{ fontSize: '3em', color: 'white' }} />} >
                             </Button>
                             <Button 
                                 className={cam_set_css.switchCamera} 
-                                onClick={this.switchCamera}
-                                startIcon={<SwitchVideoIcon style={{ fontSize: '3em', color: 'black' }} />} >
+                                // onClick={this.switchMainCamera}
+                                startIcon={<SwitchVideoIcon style={{ fontSize: '3em', color: 'white' }} />} >
                             </Button>
                         </div>
     

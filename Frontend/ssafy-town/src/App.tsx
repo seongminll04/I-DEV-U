@@ -40,7 +40,7 @@ function App() {
       Authorization: "Bearer " + userToken
     }
     stompClientRef.current.debug= function(str){
-      // console.log(str)
+      console.log(str)
       const userToken = localStorage.getItem('userToken')
       if (userToken && str.includes('연결 거부')) {
         localStorage.removeItem('userToken')

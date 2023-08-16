@@ -439,11 +439,7 @@ export class Lsize1Scene extends Phaser.Scene {
     this.input.keyboard?.on('keydown-E', () => {
       const nearbyObject = this.NearbyObjects();
 
-      const userIds = Object.keys(this.dataChannels);
-      console.log(userIds)
-
-
-      console.log(this.character!.x + "@@" + this.character!.y)
+      // console.log(this.character!.x + "@@" + this.character!.y)
   
       if (nearbyObject === 'door') {
         this.openDoor();

@@ -65,6 +65,17 @@ export class Ssize1Scene extends Phaser.Scene {
   private addedPlant: boolean = false;
   private addedAircondition: boolean = false;
   private addedMirror: boolean = false;
+
+  private emoji1!: Phaser.GameObjects.Sprite;
+  private emoji2!: Phaser.GameObjects.Sprite;
+  private emoji3!: Phaser.GameObjects.Sprite;
+  private emoji4!: Phaser.GameObjects.Sprite;
+  private emoji5!: Phaser.GameObjects.Sprite;
+  private emoji6!: Phaser.GameObjects.Sprite;
+  private emoji7!: Phaser.GameObjects.Sprite;
+  private emoji8!: Phaser.GameObjects.Sprite;
+  private emoji9!: Phaser.GameObjects.Sprite;
+  private emoji10!: Phaser.GameObjects.Sprite;
   
 
   constructor() {
@@ -115,6 +126,9 @@ export class Ssize1Scene extends Phaser.Scene {
           this.load.image(imageKey, imagePath);
       }
     }
+      for(let i = 1; i <=10; i++){
+        this.load.image('emoji'+i,'assets/emoji'+i+'.png');
+      }
   }
 
   create() {
@@ -127,6 +141,17 @@ export class Ssize1Scene extends Phaser.Scene {
   this.balloon.setDepth(2);
   this.heart = this.add.sprite(0, 0, 'heart').setVisible(false);
   this.heart.setDepth(2);
+
+  this.emoji1 = this.add.sprite(0, 0, 'imoji1').setVisible(false); this.emoji1.setDepth(2);
+  this.emoji2 = this.add.sprite(0, 0, 'imoji2').setVisible(false); this.emoji2.setDepth(2);
+  this.emoji3 = this.add.sprite(0, 0, 'imoji3').setVisible(false); this.emoji3.setDepth(2);
+  this.emoji4 = this.add.sprite(0, 0, 'imoji4').setVisible(false); this.emoji4.setDepth(2);
+  this.emoji5 = this.add.sprite(0, 0, 'imoji5').setVisible(false); this.emoji5.setDepth(2);
+  this.emoji6 = this.add.sprite(0, 0, 'imoji6').setVisible(false); this.emoji6.setDepth(2);
+  this.emoji7 = this.add.sprite(0, 0, 'imoji7').setVisible(false); this.emoji7.setDepth(2);
+  this.emoji8 = this.add.sprite(0, 0, 'imoji8').setVisible(false); this.emoji8.setDepth(2);
+  this.emoji9 = this.add.sprite(0, 0, 'imoji9').setVisible(false); this.emoji9.setDepth(2);
+  this.emoji10 = this.add.sprite(0, 0, 'imoji10').setVisible(false); this.emoji10.setDepth(2);
 
   const mapCenterX = this.rows[0].length * tileSize / 2;
   const mapCenterY = this.rows.length * tileSize / 2;
@@ -327,6 +352,20 @@ changeEffectSprite.on('animationcomplete', () => {
         }
       }
     });
+
+    const keyNames = ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'ZERO'];
+
+    for (let i = 1; i <= 10; i++) {
+        this.input.keyboard?.on('keydown-' + keyNames[i - 1], () => {
+            const emojiKey = 'emoji' + i;
+            const targetEmoji = (this as any)[emojiKey];
+            const emoji = this.add.image(this.character!.x, this.character!.y - this.character!.height / 2 - targetEmoji.height / 2, 'emoji' + i);
+            emoji.setDepth(5);
+            setTimeout(() => {
+                emoji.destroy();
+            }, 300);
+        });
+    }
 
     this.input.keyboard?.on('keydown-E', () => {
       const nearbyObject = this.NearbyObjects();

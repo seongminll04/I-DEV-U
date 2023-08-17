@@ -22,7 +22,7 @@ import InquiryList from '../board/all_inquiry'
 const ModalOpen: React.FC = () => {
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);//사이드바 오픈여부
   return (
-    <>
+    <div style={{ zIndex: 1000 }}>
       { isModalOpen === '최초설문' ? <FirstQA />
       : isModalOpen === 'Re최초설문' ? <ReFirstQA />
       : isModalOpen === '공지알림' ? <Alert />
@@ -37,7 +37,7 @@ const ModalOpen: React.FC = () => {
       : isModalOpen === '문의' ? <Inquiry />
       : isModalOpen === '문의목록' ? <InquiryList />
       : null }
-    </>
+    </div>
   );
 }
 

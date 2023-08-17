@@ -63,11 +63,13 @@ export class Msize1Scene extends Phaser.Scene {
     private lastSentTime: number = 0;
     private remoteCharacterNames: { [id: string]: Phaser.GameObjects.Text } = {};
     private remoteCharactersLastUpdate: { [id: string]: number } = {}; // 여기에 추가
+    private remoteEmojis: { [key: string]: Phaser.GameObjects.Image } = {};
 
     private character?: Phaser.Physics.Arcade.Sprite;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
     private walls?: Phaser.Physics.Arcade.StaticGroup;
     private balloon!: Phaser.GameObjects.Sprite;
+    private settingemoji: number = 0; // 이모지 번호
 
     private thing?: Phaser.Physics.Arcade.Sprite;
 
@@ -102,6 +104,9 @@ export class Msize1Scene extends Phaser.Scene {
             this.load.image(imageKey, imagePath);
         }
     }
+      for(let i = 1; i <=10; i++){
+        this.load.image('emoji'+i,'assets/emoji'+i+'.png');
+      }
 
       // 타일 이미지 로드
       this.load.image('character', 'assets/admin_character.png');
@@ -197,6 +202,23 @@ export class Msize1Scene extends Phaser.Scene {
           }
       });
 
+      const keyNames = ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'ZERO'];
+
+      for (let i = 1; i <= 10; i++) {
+          this.input.keyboard?.on('keydown-' + keyNames[i - 1], () => {
+              this.settingemoji = i;
+              const emojiKey = 'emoji' + i;
+              const targetEmoji = (this as any)[emojiKey];
+              const emoji = this.add.image(this.character!.x, this.character!.y - this.character!.height / 2 - targetEmoji.height / 2, 'emoji' + i);
+              emoji.setDepth(5);
+              setTimeout(() => {
+                  emoji.destroy();
+                  this.settingemoji = 0;
+              }, 300);
+          });
+      }
+
+
       this.input.keyboard?.on('keydown-E', () => {
         const nearbyObject = this.isNear();
 
@@ -288,6 +310,7 @@ export class Msize1Scene extends Phaser.Scene {
     }, 5000);
   
     if (stompClientRef) {
+      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
       stompClientRef.subscribe(`/sub/channel/${sessionName}`, function(message:Message) {
         const newMessage = JSON.parse(message.body);
   
@@ -323,6 +346,28 @@ export class Msize1Scene extends Phaser.Scene {
             }
             remoteChar.setAlpha(newMessage.state ? 0.4 : 1);
           }
+            //이모지
+            if (newMessage.settingemoji && newMessage.settingemoji > 0) {
+              const emojiKey = 'emoji' + newMessage.settingemoji;
+              let remoteEmoji = location.remoteEmojis[newMessage.id];
+          
+              // 만약 해당 사용자에 대한 이모지가 아직 생성되지 않았다면 생성합니다.
+              if (!remoteEmoji) {
+                  remoteEmoji = location.add.image(remoteChar.x, remoteChar.y - remoteChar.height / 2, emojiKey);
+                  location.remoteEmojis[newMessage.id] = remoteEmoji;
+              } else {
+                  // 이미 생성된 이모지가 있다면, 해당 이모지를 업데이트합니다.
+                  remoteEmoji.setTexture(emojiKey);
+                  remoteEmoji.setPosition(remoteChar.x, remoteChar.y - remoteChar.height / 2);
+                  remoteEmoji.setVisible(true);
+              }
+          
+              // 300ms 후에 이모지를 숨깁니다.
+              setTimeout(() => {
+                  remoteEmoji.setVisible(false);
+              }, 300);
+            }
+
           if(newMessage.text){
             location.buttontext = newMessage.text;
           }
@@ -351,6 +396,7 @@ export class Msize1Scene extends Phaser.Scene {
         frame: this.character?.anims.currentFrame?.index || 2,       // 현재 프레임 번호
         nickname: currentUserNickname,
         text: this.buttontext,
+        settingemoji: this.settingemoji,
       };
       // const stompClientRef:Client|null = null;
       
@@ -375,7 +421,10 @@ export class Msize1Scene extends Phaser.Scene {
         this.sendCharacterData();
         this.prevPosition = currentPlayerPosition;
     }
-    this.add.text(1650, 350, this.buttontext, { color: '#ffffff', align: 'left', fontSize: '32px' });
+    const text = this.add.text(1600, 480, this.buttontext, { color: '#ffffff', align: 'left', fontSize: '32px', fontStyle:'bold'});
+      setTimeout(() => {
+        text.destroy();
+      }, 5000);
 
     if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnBench) {
         let moved = false;
@@ -488,12 +537,12 @@ export class Msize1Scene extends Phaser.Scene {
     showtext() {
       
       const texts = [
-          "1. 장점", "2. 단점", "3. 별명", "4. 취미", "5. 특기",
-          "6. 여행", "7. 운동", "8. 책", "9. 영화", "10. 동물",
-          "11. 이상형", "12. 계절", "13. 음악", "14. 음식", "15. 친구",
-          "16. 로또", "17. 초능력", "18. 추억", "19. 경치", "20. 색깔",
-          "21. 기분", "22. 단골", "23. 좌우명", "24. 수면", "25. MBTI",
-          "26. 언어", "27. 관심사", "28. 트렌드", "29. 식물", "30. 날씨"
+          "장점", "단점", "별명", "취미", "특기",
+          "여행", "운동", "책", "영화", " 동물",
+          "이상형", "계절", "음악", "음식", "친구",
+          "로또", "초능력", "추억", "경치", "색깔",
+          "기분", "단골", "좌우명", "수면", "MBTI",
+          "언어", "관심사", "트렌드", "식물", "날씨"
       ];
       
       const randomText = Phaser.Math.RND.pick(texts);

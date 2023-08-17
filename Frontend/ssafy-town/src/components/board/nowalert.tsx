@@ -3,7 +3,7 @@ import now_css from './nowalert.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChatIdx, setChatTitle, setModal, setSidebar } from '../../store/actions';
 import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
-import { Client } from '@stomp/stompjs';
+import { Client, Message } from '@stomp/stompjs';
 import { AppState } from '../../store/state';
 
 interface Props {
@@ -84,9 +84,52 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
   }
 
   const sogaeOK = () => {
-    const random = generateRandomString(8)
+    const random = generateRandomString(12)
+    // 수락 반응 리스폰
+    setTimeout(() => {
+      if (stompClientRef.current) {
+        localStorage.setItem('userNum',random)
+        localStorage.setItem('OVsession',random)
+        const data = {
+          message:'수락',
+          OVsession:random
+        };
+        stompClientRef.current.publish({
+          destination: `/sub/wait/${message.fromUser.idx}`,
+          body: JSON.stringify(data),
+        });
+        // 해당 알람삭제
+        axiosInstance({
+          method:'delete',
+          url: `https://i9b206.p.ssafy.io:9090/alarm/${message.idx}`,
+          headers: {
+            Authorization: 'Bearer ' + userToken
+          },
+        })
+        .then(() => {
+          if (stompClientRef.current) {
+            stompClientRef.current.subscribe(`/sub/response/${random}`, function(message: Message) {
+              alert('소개팅 맵으로 이동합니다.')
+              window.location.href='https://i9b206.p.ssafy.io/love'
 
-    // 해당 알림 삭제
+          });
+          return ()=>{
+            if (stompClientRef.current) {
+              stompClientRef.current.unsubscribe(`/sub/response/${random}`);
+            }
+          }
+          }
+          setTimeout(() => {
+            alert('상대방이 온라인 상태가 아닙니다. 취소되었습니다.')
+            onMessage()
+          }, 10000);
+        
+        })
+        .catch(err=>console.log(err))
+      }
+    }, 1000);
+  }
+  const nono = () => {
     axiosInstance({
       method:'delete',
       url: `https://i9b206.p.ssafy.io:9090/alarm/${message.idx}`,
@@ -94,25 +137,11 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
         Authorization: 'Bearer ' + userToken
       },
     })
-    .then(res => console.log(res))
+    .then(() => {
+      onMessage()
+    })
     .catch(err=>console.log(err))
-
-    // 수락 반응 리스폰
-    if (stompClientRef.current) {
-      localStorage.setItem('OVsession',random)
-      const data = {
-        message:'수락',
-        OVsession:'ses_'+random
-      };
-      stompClientRef.current.publish({
-        destination: `/sub/${message.fromUser.idx}`,
-        body: JSON.stringify(data),
-      });
-      alert('소개팅 맵으로 이동합니다.')
-      window.location.href='https://i9b206.p.ssafy.io/love'
-    }
   }
-
   return (
     <div className={now_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) { onMessage(); dispatch(setModal(null)) }}} >
@@ -126,13 +155,11 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
               {message.createdAt}
             </p>
             <button onClick={sogaeOK}>수락</button>
-            <button>거절</button>
+            <button onClick={nono}>거절</button>
           </div>
-          :null}
-
-          <h1>동료찾기 요청</h1>
-          {message ? 
+          : message.type==='MATE' ? 
           <>
+            <h1>동료찾기 요청</h1>
             <p>
               {message.fromUser.nickname}님의 채팅신청이 들어왔습니다
             </p>
@@ -140,7 +167,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
               {message.createdAt}
             </p>
             <button onClick={ok}>수락</button>
-            <button>거절</button>
+            <button onClick={nono}>거절</button>
           </>
           :null}
         </div>

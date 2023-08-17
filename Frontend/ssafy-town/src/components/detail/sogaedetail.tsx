@@ -126,7 +126,6 @@ const SogaeDetail: React.FC<Props> = ({ userIdx, percent }) => {
         destination: `/pub/user`,
         body: JSON.stringify(data),
       });
-      alert('소개팅 신청 완료')
       dispatch(setModal('매칭중'))
     }
 

@@ -126,8 +126,13 @@ const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
       .then(res => {
         if (res.data.data) {
           alert('이미 존재하는 채팅방이 있습니다')
+          if (res.data.data.chatRoomUsers[0].user.idx ===senduserIdx) {
+            dispatch(setChatTitle(res.data.data.chatRoomUsers[1].user.nickname+'의 채팅방'))
+          }
+          else {
+            dispatch(setChatTitle(res.data.data.chatRoomUsers[0].user.nickname+'의 채팅방'))
+          }
           dispatch(setChatIdx(res.data.data.idx))
-          dispatch(setChatTitle(res.data.data.title))
           dispatch(setSidebar('채팅방'))
         }
         else {

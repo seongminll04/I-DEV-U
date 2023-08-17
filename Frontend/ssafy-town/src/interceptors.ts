@@ -21,14 +21,16 @@ axiosInstance.interceptors.response.use(
     const originalRequest = config;
 
     if (status === 403) {
-      const accessToken = localStorage.getItem('userToken');
-      const refreshToken = localStorage.getItem('refreshToken');
-
+      const refreshToken = localStorage.getItem('refreshToken');  // Get the refreshToken
+    
       try {
         const { data } = await axios({
           method: 'get',
           url: `https://i9b206.p.ssafy.io:9090/user/sleep`,
-          data: { accessToken, refreshToken },
+          headers: {  // Set headers including the refreshToken
+            'Content-Type': 'application/json',
+            'Authorization-refresh': refreshToken,
+          },
         });
         console.log(data);
         const newAccessToken = data.data.accessToken;

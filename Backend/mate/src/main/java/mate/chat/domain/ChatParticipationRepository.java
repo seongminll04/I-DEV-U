@@ -5,10 +5,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ChatParticipationRepository extends JpaRepository<ChatParticipation, Integer> {
 
-    @Query("select p from ChatParticipation p where p.chatRoom.idx = : roomIdx")
+    @Query("select p from ChatParticipation p where p.chatRoom.idx = :roomIdx")
     List<ChatParticipation> findUser(@Param("roomIdx") Integer roomIdx);
 
 

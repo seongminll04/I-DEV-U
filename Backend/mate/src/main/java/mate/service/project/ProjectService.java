@@ -2,7 +2,13 @@ package mate.service.project;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import mate.alarm.dto.UserResponse;
+import mate.controller.Result;
+import mate.dto.project.ProjectResponse;
+import mate.global.exception.NotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -235,5 +241,26 @@ public class ProjectService {
 		}
 
 		return list;
+	}
+
+	public Result findMember(Integer idx) {
+
+		VideoRoom videoRoom = videoRepository.findRoom(idx)
+				.orElseThrow(() -> new NotFoundException(NotFoundException.CHAT_ROOM_NOT_FOUND));
+
+		List<Project> projects = projectRepository.findSession(videoRoom.getOvSession());
+		if (projects.isEmpty()) throw new NotFoundException(NotFoundException.CHAT_ROOM_NOT_FOUND);
+
+		Project project = projects.get(0);
+		Integer projectIdx = project.getIdx();
+		List<ProjectParticipation> user = projectParticipationRepository.findUser(projectIdx);
+		List<UserResponse> list = new ArrayList<>();
+		for (ProjectParticipation projectParticipation : user) {
+			UserResponse from = UserResponse.from(projectParticipation.getUser());
+			list.add(from);
+		}
+		ProjectResponse response = ProjectResponse.from(list, project.getType());
+
+		return Result.builder().data(response).status(ResponseEntity.ok("프로젝트 유저")).build();
 	}
 }

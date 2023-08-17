@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mate.controller.Result;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,6 +29,13 @@ import mate.service.project.ProjectService;
 public class ProjectController {
 
 	private final ProjectService projectService;
+
+	@GetMapping("/video/user/{videoRoomIdx}")
+	public Result findMember(@PathVariable("videoRoomIdx") Integer idx){
+		return projectService.findMember(idx);
+	}
+
+
 
 	@PostMapping("/register")
 	public ResponseEntity<Map<String, Object>> registerProject(@RequestBody ProjectDto projectDto) {

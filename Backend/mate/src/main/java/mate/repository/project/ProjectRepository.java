@@ -36,4 +36,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 		"AND pl.language IN (:language)")
 		// "AND ((:position = 'back' AND p.back < p.max_back) OR (:position = 'front' AND p.front < p.max_front))")
 	List<Project> findProjectsByFilter(@Param("language") List<String> language, @Param("type") String type);
+
+	@Query("select distinct p from Project p join fetch p.manager where p.session = :session")
+	List<Project> findSession(@Param("session") String session);
 }

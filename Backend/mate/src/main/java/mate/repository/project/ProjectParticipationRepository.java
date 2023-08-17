@@ -11,6 +11,8 @@ import mate.domain.project.Project;
 import mate.domain.project.ProjectParticipation;
 import mate.domain.user.User;
 
+import java.util.List;
+
 @Repository
 public interface ProjectParticipationRepository extends JpaRepository<ProjectParticipation, Integer> {
 	@Transactional
@@ -19,4 +21,7 @@ public interface ProjectParticipationRepository extends JpaRepository<ProjectPar
 	void leaveProject(@Param("userIdx") int userIdx, @Param("projectIdx") int projectIdx);
 
 	ProjectParticipation findProjectParticipationByProjectAndUser(Project project, User user);
+
+	@Query("select p from ProjectParticipation p where p.project.idx = :projectIdx")
+	List<ProjectParticipation> findUser(@Param("projectIdx") Integer projectIdx);
 }

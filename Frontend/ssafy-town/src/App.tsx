@@ -48,7 +48,7 @@ function App() {
         if (window.location.href!=='/login'){window.location.href='/login'}
       }
     }
-    stompClientRef.current.reconnectDelay=5000 //자동재연결
+    stompClientRef.current.reconnectDelay=1000 //자동재연결
     stompClientRef.current.heartbeatIncoming=4000
     stompClientRef.current.heartbeatOutgoing=4000
     

@@ -1,0 +1,57 @@
+.sideclose {
+    position: absolute;
+    top: 70%;
+    left: 8%;
+    width: 400px;
+    height: 200px;
+    border-radius: 0.5rem;
+}
+
+.sideopen {
+    position: absolute;
+    top: 60%;
+    left: 35%;
+    width: 400px;
+    height: 200px;
+    border-radius: 0.5rem;
+}
+
+.scrollbar {
+    overflow-y: auto;
+    height: 80%;
+    background-color: rgba(255,255,255,0.8);
+    border-radius: 0.5rem;
+    padding: 0px 10px;
+    text-align: left;
+    border:darkgray 0.5px solid;
+    
+}
+.scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(189, 189, 189, 0.8); /* 스크롤바 슬라이더 배경색 */
+  }
+
+.inputbar {
+    margin-top: 5px;
+    height: 15%;
+    border-radius: 0.5rem;
+}
+
+.inputbar input {
+    background-color: rgba(255,255,255,0.8);
+    width:84%;
+    height: 80%;
+    padding:5px 10px;
+    box-sizing: border-box;
+    margin: 5px 0;
+    border:darkgray 0.5px solid;
+    border-radius: 1rem;
+}
+
+.inputbar button {
+    width: 12%;
+    height: 80%;
+    box-sizing: border-box;
+    margin-left: 5px;
+    border-radius: 1rem;
+    cursor: pointer;
+}

@@ -5,6 +5,8 @@ import { AppState } from '../../store/state';
 import { Client, Message } from '@stomp/stompjs';
 import { setAllowMove } from '../../store/actions';
 
+import styled_css from './meetingChat.module.css'
+
 interface messageProps {
     userName: string, 
     message: string,
@@ -32,7 +34,9 @@ const MeetingChat: React.FC = () => {
       inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
     } else if (event.key === 'Enter') {
       sendMessage()
-    }}
+    } else if (event.key==='Escape') {
+      inputElement.blur()
+    }} 
     
     const sendMessage = () => {
       const OVsession = localStorage.getItem('OVsession')
@@ -76,31 +80,49 @@ const MeetingChat: React.FC = () => {
     
       // Clean-up 함수에서 타임아웃 해제
       return () => clearTimeout(timeoutId);
-    }, [stompClientRef]);
+    }, []);
   return (
     <div>
-    {isSidebarOpen ? 
-        <div style={{position:'absolute',top:'60%',left:'35%',background:'gray', width:'400px', height:'200px'}}>
-            <div>
-            {receiveMessages.map((message)=>(
-              <p>{message.userName+' : '+message.message} </p>
-              ))}
-            </div>
+      <div className={isSidebarOpen ? `${styled_css.sideopen}` : `${styled_css.sideclose}`}>
+          <div className={styled_css.scrollbar}>
+          {receiveMessages.map((message)=>{
+            const now = new Date()
+            const date = message.createdAt
+            var today;
+            if (now.getFullYear()+''+now.getMonth()+''+now.getDate()=== date.getFullYear()+''+date.getMonth()+''+date.getDate()) {
+              const hours = date.getHours().toString().padStart(2, '0');
+              const minutes = date.getMinutes().toString().padStart(2, '0');
+              today = `${hours} : ${minutes}`;              
+            }
+            else { 
+              const year = date.getFullYear();
+              const month = (date.getMonth() + 1).toString().padStart(2, '0');
+              const day = date.getDate().toString().padStart(2, '0');
+              const hours = date.getHours().toString().padStart(2, '0');
+              const minutes = date.getMinutes().toString().padStart(2, '0');
+              if (year===1970) {
+                today=''
+              }
+              else if (year===now.getFullYear()) {
+                today = `${month}/${day} ${hours}:${minutes}`;
+              }
+              else {
+                today = `${year}/${month}/${day} ${hours}:${minutes}`;
+              }
+              
+            }
+
+            return (
+            <p style={{margin:'5px'}}>{message.userName+' : '+message.message} <span style={{color:'gray', fontSize:'10px'}}>
+                {today}</span></p>
+            )})}
+          </div>
+          <div className={styled_css.inputbar}>
             <input type="text" value={messageInput} onChange={(e)=>setMessageInput(e.target.value)} onKeyDown={handlekeydown} 
             onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
             <button onClick={sendMessage}>전송</button>
-        </div>
-        :      
-        <div style={{position:'absolute',top:'60%',left:'10%',background:'gray', width:'400px', height:'200px'}}>
-            <div>
-            {receiveMessages.map((message)=>(
-                <p>{message.userName+' : '+message.message} </p>
-            ))}
-            </div>
-            <input type="text" value={messageInput} onChange={(e)=>setMessageInput(e.target.value)} onKeyDown={handlekeydown} 
-            onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
-            <button onClick={sendMessage}>전송</button>
-        </div>}
+          </div>
+      </div>
   </div>
   );
 };

@@ -22,11 +22,11 @@ logging.level:
 
 # SSL 관련 설정
 server:
-#  port: 9090
-#  ssl:
-#    key-store: ${SSL_KEY_PATH}certificate.p12
-#    key-store-type: PKCS12
-#    key-store-password: ${SSL_PASSWORD}
+  port: 9090
+  ssl:
+    key-store: ${SSL_KEY_PATH}certificate.p12
+    key-store-type: PKCS12
+    key-store-password: ${SSL_PASSWORD}
 
 
 jwt:

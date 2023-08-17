@@ -63,11 +63,13 @@ export class Msize1Scene extends Phaser.Scene {
     private lastSentTime: number = 0;
     private remoteCharacterNames: { [id: string]: Phaser.GameObjects.Text } = {};
     private remoteCharactersLastUpdate: { [id: string]: number } = {}; // 여기에 추가
+    private remoteEmojis: { [key: string]: Phaser.GameObjects.Image } = {};
 
     private character?: Phaser.Physics.Arcade.Sprite;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
     private walls?: Phaser.Physics.Arcade.StaticGroup;
     private balloon!: Phaser.GameObjects.Sprite;
+    private settingemoji: number = 0; // 이모지 번호
 
     private thing?: Phaser.Physics.Arcade.Sprite;
 
@@ -197,6 +199,23 @@ export class Msize1Scene extends Phaser.Scene {
           }
       });
 
+      const keyNames = ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'ZERO'];
+
+      for (let i = 1; i <= 10; i++) {
+          this.input.keyboard?.on('keydown-' + keyNames[i - 1], () => {
+              this.settingemoji = i;
+              const emojiKey = 'emoji' + i;
+              const targetEmoji = (this as any)[emojiKey];
+              const emoji = this.add.image(this.character!.x, this.character!.y - this.character!.height / 2 - targetEmoji.height / 2, 'emoji' + i);
+              emoji.setDepth(2);
+              setTimeout(() => {
+                  emoji.destroy();
+                  this.settingemoji = 0;
+              }, 300);
+          });
+      }
+
+
       this.input.keyboard?.on('keydown-E', () => {
         const nearbyObject = this.isNear();
 
@@ -324,6 +343,28 @@ export class Msize1Scene extends Phaser.Scene {
             }
             remoteChar.setAlpha(newMessage.state ? 0.4 : 1);
           }
+            //이모지
+            if (newMessage.settingemoji && newMessage.settingemoji > 0) {
+              const emojiKey = 'emoji' + newMessage.settingemoji;
+              let remoteEmoji = location.remoteEmojis[newMessage.id];
+          
+              // 만약 해당 사용자에 대한 이모지가 아직 생성되지 않았다면 생성합니다.
+              if (!remoteEmoji) {
+                  remoteEmoji = location.add.image(remoteChar.x, remoteChar.y - remoteChar.height / 2, emojiKey);
+                  location.remoteEmojis[newMessage.id] = remoteEmoji;
+              } else {
+                  // 이미 생성된 이모지가 있다면, 해당 이모지를 업데이트합니다.
+                  remoteEmoji.setTexture(emojiKey);
+                  remoteEmoji.setPosition(remoteChar.x, remoteChar.y - remoteChar.height / 2);
+                  remoteEmoji.setVisible(true);
+              }
+          
+              // 300ms 후에 이모지를 숨깁니다.
+              setTimeout(() => {
+                  remoteEmoji.setVisible(false);
+              }, 300);
+            }
+
           if(newMessage.text){
             location.buttontext = newMessage.text;
           }
@@ -352,6 +393,7 @@ export class Msize1Scene extends Phaser.Scene {
         frame: this.character?.anims.currentFrame?.index || 2,       // 현재 프레임 번호
         nickname: currentUserNickname,
         text: this.buttontext,
+        settingemoji: this.settingemoji,
       };
       // const stompClientRef:Client|null = null;
       

@@ -175,7 +175,8 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
   return (
     <div className={now_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) { onMessage(); dispatch(setModal(null)) }}} >
-        <div className={now_css.QnA_modal}>
+        {message ? 
+          <div className={now_css.QnA_modal}>
           {message.type === 'SOGAE' ? 
           <div>
             <h1>소개팅 신청</h1>
@@ -214,7 +215,8 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
             <button className={now_css.chatreq} onClick={meetingok}>수락</button>
             <button className={now_css.chatreq} onClick={()=>{onMessage(); dispatch(setModal(null))}}>거절</button>
           </>:null}
-        </div>
+        </div>           
+        : null}
     </div>
   );
 };

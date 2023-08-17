@@ -20,8 +20,17 @@ const MeetingChat: React.FC = () => {
   const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
   const [messageInput, setMessageInput] = useState('');
   const [receiveMessages, setReceiveMessages] = useState<messageProps[]>([])
+  const chatScrollRef = React.useRef<HTMLDivElement | null>(null); // Ref for chat_scroll div
+  // const [sch, setSch] = useState<number>()
 
-  
+  useEffect(() => {
+    if (chatScrollRef.current) {
+      if ((chatScrollRef.current.scrollHeight-(chatScrollRef.current.scrollTop+chatScrollRef.current.clientHeight)) < 70) {
+        chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
+      }
+    }
+  }, [receiveMessages]);
+
   const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget
     const currentCursorPosition = inputElement.selectionStart || 0;
@@ -84,7 +93,7 @@ const MeetingChat: React.FC = () => {
   return (
     <div>
       <div className={isSidebarOpen ? `${styled_css.sideopen}` : `${styled_css.sideclose}`}>
-          <div className={styled_css.scrollbar}>
+          <div className={styled_css.scrollbar} ref={chatScrollRef}>
           {receiveMessages.map((message)=>{
             const now = new Date()
             const date = message.createdAt

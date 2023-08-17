@@ -57,8 +57,6 @@ const Project: React.FC = () => {
         data: projectFilter
       })
         .then(res => {
-          console.log("프로젝트 필터링결과")
-          console.log(res.data)
           setProjectList(res.data.list);
         })
         .catch(err => {
@@ -80,7 +78,6 @@ const Project: React.FC = () => {
       },
       data: { keyword: "" }
     }).then(res => {
-      console.log(res.data)
       setProjectList(res.data.list)
     })
       .catch(err => { console.log(err); });
@@ -99,7 +96,6 @@ const Project: React.FC = () => {
       setProjectList(res.data.list)
     })
       .catch(err => { console.log(err); });
-
   }
 
   // input 방향키 살리기
@@ -144,11 +140,9 @@ const Project: React.FC = () => {
                 }}>
                   <img src="assets/default_profile.png" alt="" />
                   <div className={project_css.project_data}>
-                    <b>{project["title"]}</b>
-                    <b>{project["type"]}</b>
-                    <br></br>
-                    <p style={{ fontSize: "14px" }}>{project["title"]}</p>
-                    <p style={{ color: 'gray' }}>
+                    <b className={project_css.ttt} style={{fontSize:'15px'}}>{project["title"]}</b>
+                    <b style={{fontSize:'15px'}}>({project["type"]})</b>
+                    <p style={{ color: 'gray',fontSize:'15px'}}>
                       {project.languageList.map((lang, idx2) => (
                         <span key={idx2}>#{lang.language} </span>
                       ))}

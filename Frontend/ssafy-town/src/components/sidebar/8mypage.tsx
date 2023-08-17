@@ -253,6 +253,9 @@ const Mypage: React.FC = () => {
             }}>회원정보 수정</button>
 
           <button className={mypage_css.button} onClick={() => dispatch(setModal('Re최초설문'))}>최초 설문 수정</button>
+          <br /><br /><br /><br />
+          <h2>-기능 ON / OFF-</h2>
+          <br />
           <div className={mypage_css.mypage_toggle}>내 정보 검색 허용
             <ToggleContainer onClick={() => { toggleHandler() }}>
               <div className={`toggle-container ${user.invite === 'true' ? "toggle--checked" : null}`} />
@@ -260,7 +263,7 @@ const Mypage: React.FC = () => {
                 {user.invite === 'true' ? 'On' : 'Off'}</div>
             </ToggleContainer>
           </div>
-
+            <br />
           <div className={mypage_css.mypage_toggle_container}>소개팅 등록
             <ToggleContainer onClick={() => { onregistMeeting() }}>
               <div className={`toggle-container ${sogae ? "toggle--checked" : null}`} />

@@ -2,9 +2,11 @@ import React from 'react';
 import now_css from './nowalert.module.css';
 
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setChatIdx, setChatTitle, setModal, setSidebar } from '../../store/actions';
 import axios from 'axios';
+import { Client } from '@stomp/stompjs';
+import { AppState } from '../../store/state';
 
 interface Props {
   message:any;
@@ -14,7 +16,9 @@ interface Props {
 const NowAlert: React.FC<Props> = ({message,onMessage}) => {
   const dispatch = useDispatch()
   const userToken = localStorage.getItem('userToken')
-  console.log(message)
+  const stompClientRef = React.useRef<Client | null>(null);
+  stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
+
   const ok = () => {
     const now = new Date()
     // 채팅방 생성
@@ -69,10 +73,66 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
 
   }
 
+  // 난수 만들기 함수
+  function generateRandomString(length:number) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters.charAt(randomIndex);
+    }
+
+    return result;
+  }
+
+  const sogaeOK = () => {
+    const random = generateRandomString(8)
+
+    // 해당 알림 삭제
+    axios({
+      method:'delete',
+      url: `https://i9b206.p.ssafy.io:9090/alarm/${message.idx}`,
+      headers: {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+    .then(res => console.log(res))
+    .catch(err=>console.log(err))
+
+    // 수락 반응 리스폰
+    if (stompClientRef.current) {
+      localStorage.setItem('OVsession',random)
+      const data = {
+        message:'수락',
+        OVsession:random
+      };
+      stompClientRef.current.publish({
+        destination: `/sub/${message.fromUser.idx}`,
+        body: JSON.stringify(data),
+      });
+      alert('소개팅 맵으로 이동합니다.')
+      onMessage()
+      window.location.href='https://i9b206.p.ssafy.io/love'
+    }
+  }
+
   return (
     <div className={now_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) { onMessage(); dispatch(setModal(null)) }}} >
         <div className={now_css.QnA_modal}>
+          {message.type === 'SOGAE' ? 
+          <div>
+            <p>
+              {message.fromUser.nickname}님의 소개팅 신청이 들어왔습니다
+            </p>
+            <p>
+              {message.createdAt}
+            </p>
+            <button onClick={sogaeOK}>수락</button>
+            <button>거절</button>
+          </div>
+          :null}
+
           <h1>동료찾기 요청</h1>
           {message ? 
           <>

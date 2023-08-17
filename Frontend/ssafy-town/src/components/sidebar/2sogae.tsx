@@ -7,6 +7,7 @@ import { setModal } from '../../store/actions';
 import { AppState } from '../../store/state';
 import SecondQAModal from '../survey/secondQA';
 import SogaeDetail from '../detail/sogaedetail';
+import SogaeMatch from '../enter/sogaematch';
 
 type User = {
   userIdx: number,
@@ -105,7 +106,7 @@ const Sogae: React.FC = () => {
                         <img
                           src={user.storedFileName ? user.storedFileName : "assets/default_profile.png"}
                           alt=""
-                          style={{ borderRadius: "50%" }}
+                          style={{ borderRadius: "50%"}}
                         />
                         <div className={sogae_css.profiledata}>
                           <b>{user.nickname}</b>
@@ -118,7 +119,7 @@ const Sogae: React.FC = () => {
                 ))}
                 <p>-더 업슴-</p>
               </div>
-              <button className={sogae_css.button}>매칭</button>
+              {/* <button className={sogae_css.button} onClick={()=>{dispatch(setModal('매칭중'))}}>매칭</button> */}
             </>
             :
             <div className={sogae_css.scrollbar}>
@@ -127,6 +128,7 @@ const Sogae: React.FC = () => {
         </>}
       {isModalOpen === '소개팅설문' ? <SecondQAModal survey={survey} onsurvey={(value) => setServey(value)} />
         : isModalOpen === '소개팅상세정보' ? <SogaeDetail userIdx={userdetail} percent={percent}/>
+        : isModalOpen === '매칭중' ? <SogaeMatch />
           : null}
     </div>
 

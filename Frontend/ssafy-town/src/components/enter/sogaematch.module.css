@@ -1,0 +1,51 @@
+.modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.modal {
+    background-color: rgba(109, 206, 245, 0.9);
+    border-radius: 1rem;
+    width:30%;
+    height: 250px;
+    padding: 10px;
+    box-sizing: border-box;
+    color : white;
+}
+.loadingContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* height: 100vh; */
+    margin:50px;
+  }
+  
+  .dot {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #3498db;
+    margin: 0 10px;
+    animation: loadingAnimation 3s infinite;
+  }
+  
+  .delayed {
+    animation-delay: 0s;
+  }
+  
+  @keyframes loadingAnimation {
+    0%, 100% {
+      opacity: 0;
+      transform: scale(0);
+    }
+    40%, 60% { /* 점이 사라지는 속도 조절 */
+        opacity: 1;
+        transform: scale(1);
+    }
+  }

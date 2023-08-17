@@ -67,6 +67,7 @@ function App() {
         stompClientRef.current.subscribe(`/sub/request/project/${userIdx}`, function(message: Message) {
           const newMessage = JSON.parse(message.body);
           console.log(newMessage)
+          setNewmessage(newMessage)
         });
         return () => {
           if (stompClientRef.current) {

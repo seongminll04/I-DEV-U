@@ -252,7 +252,8 @@ const Mypage: React.FC = () => {
               else { dispatch(setModal('회원정보수정1')) }
             }}>회원정보 수정</button>
 
-          <div className={mypage_css.mypage_toggle_container}>내 정보 검색 허용
+          <button className={mypage_css.button} onClick={() => dispatch(setModal('Re최초설문'))}>최초 설문 수정</button>
+          <div className={mypage_css.mypage_toggle}>내 정보 검색 허용
             <ToggleContainer onClick={() => { toggleHandler() }}>
               <div className={`toggle-container ${user.invite === 'true' ? "toggle--checked" : null}`} />
               <div className={`${mypage_css.mypage_toggle} toggle-circle ${user.invite === 'true' ? "toggle--checked" : null}`}>
@@ -267,16 +268,14 @@ const Mypage: React.FC = () => {
                 {sogae ? 'On' : 'Off'}</div>
             </ToggleContainer>
           </div>
-
-          <button className={mypage_css.button} onClick={() => dispatch(setModal('Re최초설문'))}>최초 설문 수정</button>
-          <button className={mypage_css.button} onClick={() => dispatch(setModal('Re소개팅설문'))}>소개팅 설문 수정</button>
+          
+            {/* <button className={mypage_css.button} onClick={() => dispatch(setModal('Re소개팅설문'))}>소개팅 설문 수정</button> */}
 
         </div>
         {isModalOpen === '회원정보수정3' ? <EditAcount user={user} change={() => setChangeData(true)} /> :
           isModalOpen === '비밀번호변경' ? <ChangePass user={user} /> : null}
       </div>
     </div>
-
   );
 };
 

@@ -68,7 +68,6 @@ export class Msize1Scene extends Phaser.Scene {
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
     private walls?: Phaser.Physics.Arcade.StaticGroup;
     private balloon!: Phaser.GameObjects.Sprite;
-    private emoji!: Phaser.GameObjects.Sprite;
 
     private thing?: Phaser.Physics.Arcade.Sprite;
 
@@ -107,10 +106,6 @@ export class Msize1Scene extends Phaser.Scene {
       this.load.image('character', 'assets/admin_character.png');
       this.load.image('character2', 'assets/admin_character.png');
       this.load.image('balloon', 'assets/ekey.png');
-
-      for(let i = 1; i <=10; i++){
-        this.load.image('emoji','assets/emoji'+i+'.png');
-      }
     }
   
     create() {
@@ -120,9 +115,7 @@ export class Msize1Scene extends Phaser.Scene {
       this.walls = this.physics.add.staticGroup();
 
       this.balloon = this.add.sprite(0, 0, 'balloon').setVisible(false);
-      this.emoji = this.add.sprite(0, 0, 'imoji').setVisible(false);
       this.balloon.setDepth(2);
-      this.emoji.setDepth(2);
   
       // const mapCenterX = rows[0].length * tileSize / 2;
       const mapCenterY = rows.length * tileSize / 2;
@@ -209,9 +202,6 @@ export class Msize1Scene extends Phaser.Scene {
         }
         else if(nearbyObject === 'button'){
           this.showtext();
-        }
-        else{
-          this.setemoji();
         }
 
       });
@@ -488,11 +478,6 @@ export class Msize1Scene extends Phaser.Scene {
     }
     showtext(){
 
-    }
-    setemoji(){
-      if(this.character){
-        this.emoji.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
-      }    
     }
   }
   

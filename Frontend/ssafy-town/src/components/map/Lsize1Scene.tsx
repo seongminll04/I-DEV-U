@@ -464,17 +464,19 @@ export class Lsize1Scene extends Phaser.Scene {
 
 
     
+    const keyNames = ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'ZERO'];
+
     for (let i = 1; i <= 10; i++) {
-      this.input.keyboard?.on('keydown-' + i, () => {
-        this.settingemoji = i;
-        const emojiKey = 'emoji' + i;
-        const targetEmoji = (this as any)[emojiKey];
-        const emoji = this.add.image(this.character!.x, this.character!.y - this.character!.height / 2 - targetEmoji.height / 2, 'emoji' + i);
-        setTimeout(() => {
-            emoji.destroy();
-            this.settingemoji = 0;
-        }, 300);
-      });
+        this.input.keyboard?.on('keydown-' + keyNames[i - 1], () => {
+            this.settingemoji = i;
+            const emojiKey = 'emoji' + i;
+            const targetEmoji = (this as any)[emojiKey];
+            const emoji = this.add.image(this.character!.x, this.character!.y - this.character!.height / 2 - targetEmoji.height / 2, 'emoji' + i);
+            setTimeout(() => {
+                emoji.destroy();
+                this.settingemoji = 0;
+            }, 300);
+        });
     }
     
 

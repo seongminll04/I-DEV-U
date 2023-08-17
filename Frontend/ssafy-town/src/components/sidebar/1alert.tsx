@@ -129,7 +129,7 @@ const Alert: React.FC = () => {
               </div>
               {alertList.length > 0 ?
                 <div>
-                  {alertList.map((alert: AlertProps, index: number) => {
+                  {alertList.filter(a=>a.type!=='SOGAE').map((alert: AlertProps, index: number) => {
                     const date = new Date(alert.createdAt);
                     const month = (date.getMonth() + 1).toString().padStart(2, '0');
                     const day = date.getDate().toString().padStart(2, '0');

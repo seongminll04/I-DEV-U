@@ -237,18 +237,18 @@ const Chatroom: React.FC = () => {
                 }
                 else {
                   datee=`${month}/${day}`
-                  today = `${month}/${day} ${hours}:${minutes} PM`;
+                  today = `${hours}:${minutes} PM`;
                 }
 
               }
               else {
                 if (message.createdAt.getHours() < 12) {
                   datee=`${year}/${month}/${day}`
-                  today = `${year}/${month}/${day} ${hours}:${minutes} AM`;
+                  today = `${hours}:${minutes} AM`;
                 }
                 else {
                   datee=`${year}/${month}/${day}`
-                  today = `${year}/${month}/${day} ${hours}:${minutes} PM`;
+                  today = `${hours}:${minutes} PM`;
                 }
   
               }

@@ -2,10 +2,10 @@ import React from 'react';
 import enter_css from '../board/EnterProject.module.css';
 
 import { useDispatch,useSelector } from 'react-redux';
-import { setChatIdx, setChatTitle, setModal, setSidebar } from '../../store/actions';
+import { setModal } from '../../store/actions';
 import { AppState } from '../../store/state';
 import { Client } from '@stomp/stompjs';
-import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
+
 
 interface Props {
     sendusername:string,
@@ -17,49 +17,23 @@ const EnterChatF: React.FC<Props> = ({sendusername,senduserIdx}) => {
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
   
   const enter = () => {
-    const userToken = localStorage.getItem('userToken')
     const userIdxStr = localStorage.getItem('userIdx')
     const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
-    axiosInstance({
-      method:'get',
-      url: `https://i9b206.p.ssafy.io:9090/chat/rooms/check`,
-      headers: {
-        Authorization: 'Bearer ' + userToken
-      },
-      params :{
+    if (stompClientRef.current && senduserIdx) {
+      const now = new Date()
+      const data = {
         fromIdx: userIdx,
         toIdx: senduserIdx,
-      }
-    })
-    .then(res=>{
-      console.log(res)
-      if (res.data.data) {
-        alert('이미 존재하는 채팅방이 있습니다')
-        dispatch(setChatIdx(res.data.data.idx))
-        dispatch(setChatTitle(res.data.data.title))
-        dispatch(setSidebar('채팅방'))
-        dispatch(setModal(null))
-      }
-      else {
-        if (stompClientRef.current && senduserIdx) {
-          const now = new Date()
-          const data = {
-            fromIdx: userIdx,
-            toIdx: senduserIdx,
-            type:'CHAT',
-            createdAt: now
-          };
-          stompClientRef.current.publish({
-            destination: `/pub/user`,
-            body: JSON.stringify(data),
-          });
-          alert('채팅 신청 완료')
-          dispatch(setModal(null))
-        }
-      }
-    })
-    .catch(err => console.log(err))
-
+        type:'CHAT',
+        createdAt: now
+      };
+      stompClientRef.current.publish({
+        destination: `/pub/user`,
+        body: JSON.stringify(data),
+      });
+      alert('채팅 신청 완료')
+      dispatch(setModal(null))
+    }
   }
 
   return (

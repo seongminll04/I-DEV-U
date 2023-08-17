@@ -129,7 +129,7 @@ const Sogae: React.FC = () => {
       {isModalOpen === '소개팅설문' ? <SecondQAModal survey={survey} onsurvey={(value) => setServey(value)} />
         : isModalOpen === '소개팅상세정보' ? <SogaeDetail userIdx={userdetail} percent={percent}/>
         : isModalOpen === '매칭중' ? <SogaeMatch />
-          : null}
+        : null}
     </div>
 
   );

@@ -181,7 +181,6 @@ const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
               <br />
               <h1>일치율</h1>
               <h2>{localStorage.getItem("userNickname")} 님께서 선택하신 조건과<br /> {mateUser.nickname} 님의 일치율은 {percent===-1 ? '??': percent} % 입니다</h2>
-              <br />
               <button className={detail_css.button}  onClick={sendrequest}>채팅 신청</button>
             </div>
           </div>

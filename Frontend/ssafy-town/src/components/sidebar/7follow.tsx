@@ -3,7 +3,7 @@ import follow_css from './7follow.module.css'
 import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllowMove, setModal } from '../../store/actions';
+import { setAllowMove, setChatIdx, setChatTitle, setModal, setSidebar } from '../../store/actions';
 import { AppState } from '../../store/state';
 import EnterChatF from '../enter/enterchatF';
 import EnterCamF from '../enter/entercamF';
@@ -111,6 +111,37 @@ const Follow: React.FC = () => {
     }
   }
 
+  const enter = (senduserNick:string,senduserIdx:number) => {
+    const userToken = localStorage.getItem('userToken')
+    const userIdxStr = localStorage.getItem('userIdx')
+    const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
+    axiosInstance({
+      method:'get',
+      url: `https://i9b206.p.ssafy.io:9090/chat/rooms/check`,
+      headers: {
+        Authorization: 'Bearer ' + userToken
+      },
+      params :{
+        fromIdx: userIdx,
+        toIdx: senduserIdx,
+      }
+    })
+    .then(res=>{
+      if (res.data.data) {
+        dispatch(setChatIdx(res.data.data.idx))
+        dispatch(setChatTitle(res.data.data.title))
+        dispatch(setSidebar('채팅방'))
+      }
+      else {
+        setrequestname(senduserNick); 
+        setrequestidx(senduserIdx); 
+        dispatch(setModal('팔로우채팅')) 
+      }
+    })
+    .catch(err => console.log(err))
+  }
+
+
   return (
     <div className='sidebar_modal'>
       <h1>내 팔로우 목록</h1>
@@ -139,10 +170,10 @@ const Follow: React.FC = () => {
                     </div>
                     <p className={follow_css.profileintro} style={{margin:'0',}}>{follow.userIntro ? follow.userIntro : <span style={{color:'darkgray'}}>자기소개가 없습니다</span> }</p>
                   </div>
-                  <div className={follow_css.buttons}>
-                    <button className={follow_css.profilebtn} onClick={() => { setrequestname(follow.userNickName); setrequestidx(follow.followIdx); dispatch(setModal('팔로우채팅')) }}>채팅</button>
+                    <button className={follow_css.profilebtn2} onClick={() => {enter(follow.userNickName,follow.followIdx)}}>채팅</button>
+                  {/* <div className={follow_css.buttons}>
                     <button className={follow_css.profilebtn} onClick={() => { setrequestname(follow.userNickName); setrequestidx(follow.followIdx); dispatch(setModal('팔로우화상')) }}>화상</button>
-                  </div>
+                  </div> */}
                   {/* <div className={follow_css.x} onClick={() => unfollow(follow.followIdx, follow.userNickName)}>X</div> */}
                   {/* <button className={follow_css.profilebtn} onClick={() => { unfollow(follow.followIdx, follow.userNickName) }}>제거</button> */}
                 </div>

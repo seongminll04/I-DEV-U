@@ -14,36 +14,38 @@ const SogaeMatch: React.FC = () => {
 
   useEffect(()=>{
     setTimeout(() => {
-      if (stompClientRef.current) {
-        const userIdx = localStorage.getItem('userIdx')
-        const subscription = stompClientRef.current.subscribe(`/sub/wait/${userIdx}`, function(message: Message) {
-          const newMessage = JSON.parse(message.body);
-          if (newMessage.message==='수락') {
-            localStorage.setItem('OVsession',newMessage.OVsession)
-            alert('매칭 성공!')
-            if (stompClientRef.current){
-              stompClientRef.current.publish({
-                destination: `/sub/response/${newMessage.OVsession}`,
-                body: JSON.stringify(''),
-              });
-            }
-            setTimeout(() => {
-              window.location.href='https://i9b206.p.ssafy.io/love'
-            }, 1000);
+      alert('응답없음')
+      dispatch(setModal(null))
+    }, 60000);
+
+    if (stompClientRef.current) {
+      const userIdx = localStorage.getItem('userIdx')
+      const subscription = stompClientRef.current.subscribe(`/sub/wait/${userIdx}`, function(message: Message) {
+        const newMessage = JSON.parse(message.body);
+        if (newMessage.message==='수락') {
+          localStorage.setItem('OVsession',newMessage.OVsession)
+          alert('매칭 성공!')
+          if (stompClientRef.current){
+            stompClientRef.current.publish({
+              destination: `/sub/response/${newMessage.OVsession}`,
+              body: JSON.stringify(''),
+            });
+            window.location.href='https://i9b206.p.ssafy.io/love'
           }
-          else {
-            alert('매칭 거절')
-          }
-        });
-        
-        return () => {
-          if (stompClientRef.current) {
-            subscription.unsubscribe();
-          }
-        };
-      }
-    }, 2000);
-  },[stompClientRef])
+        }
+        else {
+          alert('매칭 거절')
+        }
+      });
+      
+      return () => {
+        if (stompClientRef.current) {
+          subscription.unsubscribe();
+        }
+      };
+    }
+    
+  },[stompClientRef, dispatch])
 
   const matchout = () =>{
     if (stompClientRef.current) {
@@ -52,7 +54,6 @@ const SogaeMatch: React.FC = () => {
     }
     dispatch(setModal(null))
   }
-
 
   return (
     <div className={enter_css.modal_overlay}>

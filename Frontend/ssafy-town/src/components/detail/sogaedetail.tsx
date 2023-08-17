@@ -129,78 +129,39 @@ const SogaeDetail: React.FC<Props> = ({ userIdx, percent }) => {
       dispatch(setModal('매칭중'))
     }
 
-    // axiosInstance({
-    //   method: 'get',
-    //   url: `https://i9b206.p.ssafy.io:9090/chat/rooms/check`,
-    //   headers: {
-    //     Authorization: 'Bearer ' + userToken
-    //   },
-    //   params: {
-    //     fromIdx: senduserIdx,
-    //     toIdx: userIdx,
-    //   }
-    // })
-    //   .then(res => {
-    //     console.log(res)
-    //     if (res.data.data) {
-    //       alert('이미 존재하는 채팅방이 있습니다')
-    //       dispatch(setChatIdx(res.data.data.idx))
-    //       dispatch(setChatTitle(res.data.data.title))
-    //       dispatch(setSidebar('채팅방'))
-    //     }
-    //     else {
-    //       if (stompClientRef.current && senduserIdx) {
-    //         const now = new Date()
-    //         const data = {
-    //           fromIdx: senduserIdx,
-    //           toIdx: userIdx,
-    //           type: 'SOGAE',
-    //           createdAt: now
-    //         };
-    //         stompClientRef.current.publish({
-    //           destination: `/pub/user`,
-    //           body: JSON.stringify(data),
-    //         });
-    //         alert('채팅 신청 완료')
-    //         dispatch(setModal(null))
-    //       }
-    //     }
-    //   })
-    //   .catch(err => console.log(err))
-
   }
   return (
     <div className={detail_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => { if (e.target === e.currentTarget) { dispatch(setModal(null)) } }} >
       <div className={detail_css.modal}>
         <h1>소개팅 상세정보</h1>
         {mateUser ?
-          <div style={{ display: 'flex', width: '90%', margin: 'auto' }}>
+                 <div style={{ display: 'flex', width: '90%', margin: 'auto' }}>
             <div style={{ width: '35%', borderRight: '2px solid black', }}>
               <h1>{mateUser.nickname}</h1>
               <img
                 src={mateUser.storedFileName ? mateUser.storedFileName : "assets/default_profile.png"}
                 alt=""
-                style={{ borderRadius: "50%", width: '125px', height: '125px' }}
+                style={{ borderRadius: "50%" ,width: "125px", height: "125px"}}
               />
               <p>나이 : {mateUser.age}</p>
               <p>성별 : {mateUser.gender}</p>
-              {Follow ? <button onClick={onfollow}>언팔로우</button> : <button onClick={onfollow}>팔로우</button>}
+              {Follow ? <button className={detail_css.button} onClick={onfollow}>언팔로우</button> : <button className={detail_css.button} onClick={onfollow}>팔로우</button>}
+
             </div>
             <div style={{ width: '65%', margin: '0 20px', boxSizing: 'border-box' }}>
+              <h2>자기소개 : {mateUser.intro? mateUser.intro: '자기소개가 없습니다.'}</h2>
+              <h2>사용언어 : {mateUser.language.map((tech) => (
+                tech + ' '
+              ))}
+              </h2>
               <br />
-              <h3>자기소개 : {mateUser.intro ? mateUser.intro : '등록된 자기소개가 없습니다'}</h3>
-              <h3>
-                언어 : {mateUser.language.map((lang) => (
-                  lang + '    '
-                ))}
-              </h3>
-              <h2>일치율 : {percent} %</h2>
-              <br />
-              <button onClick={sendrequest}>소개팅 신청</button>
+              <h1>일치율</h1>
+              <h2>{localStorage.getItem("userNickname")} 님의 소개팅 설문 답변과<br /> {mateUser.nickname} 님의 일치율은 {percent===-1 ? '??': percent} % 입니다</h2>
+              <button className={detail_css.button}  onClick={sendrequest}>채팅 신청</button>
             </div>
           </div>
           :
-          <div>aa
+          <div>
             <h1>유저 조회 실패</h1>
           </div>
         }

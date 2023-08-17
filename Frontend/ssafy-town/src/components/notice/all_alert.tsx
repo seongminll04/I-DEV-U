@@ -54,8 +54,9 @@ const AllAlert: React.FC = () => {
     })
       .then(res => {
         console.log(res)
-        setAlertList(res.data.data);
-        setMaxpage(Math.ceil(res.data.data.length/10)|0)
+        const receivedata = res.data.data.filter((a:any) => a.type!=='SOGAE')
+        setAlertList(receivedata);
+        setMaxpage(Math.ceil(receivedata.length/10)|0)
       })
       .catch(err => {
         console.log(err)
@@ -86,7 +87,7 @@ const AllAlert: React.FC = () => {
             </div>
           </div>
           <br />
-          {alertList.length > 0 ? 
+          {alertList.filter(a=>a.type!=='SOGAE').length > 0 ? 
             <div>
               {/* <div className={alert_css.notice}>
                 <span>Num</span>
@@ -94,7 +95,7 @@ const AllAlert: React.FC = () => {
                 <span>CreatedAt</span>
               </div>
               <hr /> */}
-            {alertList.map((alert: AlertProps, index: number) => {
+            {alertList.filter(a=>a.type!=='SOGAE').map((alert: AlertProps, index: number) => {
             return (
               <div>
               {index < pagination*10 + 10  && index >= pagination*10 ?
@@ -115,14 +116,14 @@ const AllAlert: React.FC = () => {
           
           : <h2>알림이 없습니다.</h2> }
 
-          {maxpage===0 ?
-          null
+          {alertList.filter(a=>a.type!=='SOGAE').length > 0 ?
+           <div>
+           <button onClick={()=>{if(pagination+1===1){alert('첫 페이지입니다')} else{setPagination(pagination-1)}}}>이전 페이지</button>
+           <span>   {maxpage===0 ? pagination: pagination+1} / {maxpage}   </span>
+           <button onClick={()=>{if(pagination+1===maxpage){alert('마지막 페이지입니다')} else{setPagination(pagination+1)}}}>다음 페이지</button>
+         </div>
           :
-          <div>
-          <button onClick={()=>{if(pagination+1===1){alert('첫 페이지입니다')} else{setPagination(pagination-1)}}}>이전 페이지</button>
-          <span>   {maxpage===0 ? pagination: pagination+1} / {maxpage}   </span>
-          <button onClick={()=>{if(pagination+1===maxpage){alert('마지막 페이지입니다')} else{setPagination(pagination+1)}}}>다음 페이지</button>
-        </div>}
+         null}
           
         </div>
         : <DetailAlert backpage={backpage} Selalert={Selalert!} />}

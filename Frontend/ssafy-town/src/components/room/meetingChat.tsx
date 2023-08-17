@@ -18,6 +18,8 @@ const MeetingChat: React.FC = () => {
   const stompClientRef = React.useRef<Client | null>(null);
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef!)
   const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
+  const isModalOpen = useSelector((state: AppState) => state.isModalOpen);//사이드바 오픈여부
+
   const [messageInput, setMessageInput] = useState('');
   const [receiveMessages, setReceiveMessages] = useState<messageProps[]>([])
   const chatScrollRef = React.useRef<HTMLDivElement | null>(null); // Ref for chat_scroll div
@@ -92,6 +94,7 @@ const MeetingChat: React.FC = () => {
     }, []);
   return (
     <div>
+      {isModalOpen ? null :
       <div className={isSidebarOpen ? `${styled_css.sideopen}` : `${styled_css.sideclose}`}>
           <div className={styled_css.scrollbar} ref={chatScrollRef}>
           {receiveMessages.map((message)=>{
@@ -132,6 +135,7 @@ const MeetingChat: React.FC = () => {
             <button onClick={sendMessage}>전송</button>
           </div>
       </div>
+      }
   </div>
   );
 };

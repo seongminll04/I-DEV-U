@@ -84,7 +84,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
   }
 
   const sogaeOK = () => {
-    const random = generateRandomString(8)
+    const random = generateRandomString(12)
 
     // 해당 알림 삭제
     axiosInstance({
@@ -99,17 +99,21 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
 
     // 수락 반응 리스폰
     if (stompClientRef.current) {
+      localStorage.setItem('userNum',random)
       localStorage.setItem('OVsession',random)
       const data = {
         message:'수락',
-        OVsession:'ses_'+random
+        OVsession:random
       };
       stompClientRef.current.publish({
         destination: `/sub/${message.fromUser.idx}`,
         body: JSON.stringify(data),
       });
-      alert('소개팅 맵으로 이동합니다.')
-      window.location.href='https://i9b206.p.ssafy.io/love'
+
+      setTimeout(() => {
+        alert('소개팅 맵으로 이동합니다.')
+        window.location.href='https://i9b206.p.ssafy.io/love'
+      }, 1000);
     }
   }
 

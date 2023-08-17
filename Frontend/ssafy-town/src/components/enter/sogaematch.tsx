@@ -12,28 +12,28 @@ const SogaeMatch: React.FC = () => {
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
 
 
-  useEffect(()=>{
-    setTimeout(() => {
-      if (stompClientRef.current) {
-        const userIdx = localStorage.getItem('userIdx')
-        const subscription = stompClientRef.current.subscribe(`/sub/wait/${userIdx}`, function(message: Message) {
-          const newMessage = JSON.parse(message.body);
-          if (newMessage.message==='수락') {
+  useEffect(()=>{  
+    if (stompClientRef.current) {
+      const userIdx = localStorage.getItem('userIdx')
+      const subscription = stompClientRef.current.subscribe(`/sub/wait/${userIdx}`, function(message: Message) {
+        const newMessage = JSON.parse(message.body);
+        if (newMessage.message==='수락') {
+          localStorage.setItem('OVsession',newMessage.OVsession)
+          localStorage.setItem('userNum',newMessage.OVsession)
+          console.log(newMessage.OVsession)
+          setTimeout(() => {
             alert('매칭 성공!')
-            console.log(newMessage.OVsession)
-            localStorage.setItem('OVsession',newMessage.OVsession)
-            localStorage.setItem('userNum',newMessage.OVsession)
             window.location.href='https://i9b206.p.ssafy.io/love'
-          }
-        });
-        
-        return () => {
-          if (stompClientRef.current) {
-            subscription.unsubscribe();
-          }
-        };
-      }
-    }, 1000);
+          }, 1000);
+        }
+      });
+      
+      return () => {
+        if (stompClientRef.current) {
+          subscription.unsubscribe();
+        }
+      };
+    }
   },[stompClientRef])
 
   // const matchout = () =>{

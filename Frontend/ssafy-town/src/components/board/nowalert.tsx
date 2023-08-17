@@ -85,18 +85,6 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
 
   const sogaeOK = () => {
     const random = generateRandomString(12)
-
-    // 해당 알림 삭제
-    axiosInstance({
-      method:'delete',
-      url: `https://i9b206.p.ssafy.io:9090/alarm/${message.idx}`,
-      headers: {
-        Authorization: 'Bearer ' + userToken
-      },
-    })
-    .then(res => console.log(res))
-    .catch(err=>console.log(err))
-
     // 수락 반응 리스폰
     if (stompClientRef.current) {
       localStorage.setItem('userNum',random)
@@ -112,7 +100,17 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
 
       setTimeout(() => {
         alert('소개팅 맵으로 이동합니다.')
-        window.location.href='https://i9b206.p.ssafy.io/love'
+        // 해당 알림 삭제
+        axiosInstance({
+          method:'delete',
+          url: `https://i9b206.p.ssafy.io:9090/alarm/${message.idx}`,
+          headers: {
+            Authorization: 'Bearer ' + userToken
+          },
+        })
+        .then(() => window.location.href='https://i9b206.p.ssafy.io/love')
+        .catch(err=>console.log(err))
+        
       }, 1000);
     }
   }

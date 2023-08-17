@@ -95,7 +95,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
           OVsession:random
         };
         stompClientRef.current.publish({
-          destination: `/sub/${message.fromUser.idx}`,
+          destination: `/sub/wait/${message.fromUser.idx}`,
           body: JSON.stringify(data),
         });
   

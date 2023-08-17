@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 import axiosInstance from '../../interceptors';
-import setting_css from './9setting.module.css';
 
 const Setting: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
@@ -33,9 +32,7 @@ const Setting: React.FC = () => {
       <h2>관리자에게 문의하기</h2>
       <button style={{width:'200px', height:'100px', borderRadius:'0.8rem',cursor:'pointer',fontSize:'18px', color:'red',}}  onClick={()=>dispatch(setModal('문의'))}>1 : 1 문의</button>
       <br /><br />
-      {/* <button style={{width:'200px', height:'100px', borderRadius:'0.8rem',cursor:'pointer',fontSize:'18px', color:'red',}}  onClick={()=>dispatch(setModal('문의'))}>1 : 1 문의</button> */}
-      <button className={setting_css.button} style={{display: isAdmin? 'block' : "none"}} onClick={()=>dispatch(setModal('문의목록'))}>1 : 1 문의사항 목록조회</button>
-
+      <button style={{visibility: isAdmin? 'visible' : 'hidden', width:'200px', height:'100px', borderRadius:'0.8rem',cursor:'pointer',fontSize:'18px', color:'red'}} onClick={()=>dispatch(setModal('문의목록'))}>1 : 1 문의 목록</button>
       <hr />
       <div style={{height:'250px'}}></div>
       <hr style={{border:'1px solid black', width:'90%'}}/>

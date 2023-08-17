@@ -104,6 +104,9 @@ export class Msize1Scene extends Phaser.Scene {
             this.load.image(imageKey, imagePath);
         }
     }
+      for(let i = 1; i <=10; i++){
+        this.load.image('emoji'+i,'assets/emoji'+i+'.png');
+      }
 
       // 타일 이미지 로드
       this.load.image('character', 'assets/admin_character.png');
@@ -207,7 +210,7 @@ export class Msize1Scene extends Phaser.Scene {
               const emojiKey = 'emoji' + i;
               const targetEmoji = (this as any)[emojiKey];
               const emoji = this.add.image(this.character!.x, this.character!.y - this.character!.height / 2 - targetEmoji.height / 2, 'emoji' + i);
-              emoji.setDepth(2);
+              emoji.setDepth(5);
               setTimeout(() => {
                   emoji.destroy();
                   this.settingemoji = 0;

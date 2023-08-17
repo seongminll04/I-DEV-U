@@ -472,7 +472,7 @@ export class Lsize1Scene extends Phaser.Scene {
             const emojiKey = 'emoji' + i;
             const targetEmoji = (this as any)[emojiKey];
             const emoji = this.add.image(this.character!.x, this.character!.y - this.character!.height / 2 - targetEmoji.height / 2, 'emoji' + i);
-            emoji.setDepth(2);
+            emoji.setDepth(5);
             setTimeout(() => {
                 emoji.destroy();
                 this.settingemoji = 0;

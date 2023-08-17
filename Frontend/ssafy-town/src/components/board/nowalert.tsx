@@ -165,12 +165,12 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
       },
     })
       .then(() => {
-        console.log('참가완료')
-        onMessage();
-        dispatch(setModal(null));
+        alert('참가완료')
+        window.location.href='/home'
       })
       .catch(err => console.log(err))
   }
+
 
   return (
     <div className={now_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {

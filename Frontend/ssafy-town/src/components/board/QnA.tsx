@@ -92,6 +92,28 @@ const QnA: React.FC = () => {
     }
   }
 
+  const cancel = () => {
+    const userToken = localStorage.getItem('userToken')
+    axiosInstance({
+      method: 'get',
+      url: 'https://i9b206.p.ssafy.io:9090/qna/list',
+      headers: {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+      .then(res => {
+        setQuestionList(res.data["Q&A"]);
+        setPagination(0)
+        setMaxpage(Math.ceil(res.data['Q&A'].length / 10))
+        setsearch('')
+        setnowsearch(false)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
+
+  }
 
   const handlekeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget
@@ -168,7 +190,7 @@ const QnA: React.FC = () => {
               </select>
               <input type="text" value={search} onChange={(event) => { setsearch(event.target.value) }} onKeyDown={handlekeydown} />
               <button className={QnA_css.createQnA} onClick={searchdata}>검색</button>
-              {!nowsearch ? <span></span> : <span className={QnA_css.movebtn} onClick={() => { setsearch(''); setnowsearch(false); reload() }}>검색취소</span>}
+              {!nowsearch ? <span></span> : <span className={QnA_css.movebtn} onClick={() => {cancel()}}>검색취소</span>}
             </div>
             <button className={QnA_css.createQnA} onClick={() => setPage(1)}>질문하기</button>
           </div>
@@ -191,7 +213,7 @@ const QnA: React.FC = () => {
                         setPage(2);
                         setQnaid(question.idx);
                       }}>
-                      <p style={{ margin: '5px' }}>{question.idx}</p>
+                      <p style={{ margin: '5px' }}>{index+1}</p>
                       <p style={{ margin: '5px' }}>{question.title}</p>
                       <p style={{ margin: '5px' }}>
                         {month}/{day} {hours}:{minutes}

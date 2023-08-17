@@ -114,7 +114,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
           },
         })
         .then(() => {
-          const timeout2 = setTimeout(() => {
+          
             if (stompClientRef.current) {
               stompClientRef.current.subscribe(`/sub/response/${random}`, function(message: Message) {
                 alert('소개팅 맵으로 이동합니다.')
@@ -127,10 +127,6 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
               }
             }
             }
-          }, 1000);
-          return ()=>{
-            clearTimeout(timeout2)
-          }
         })
         .catch(err=>console.log(err))
 

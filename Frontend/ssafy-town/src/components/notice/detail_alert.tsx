@@ -62,7 +62,7 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
       url: 'https://i9b206.p.ssafy.io:9090/chat/rooms',
       data: {
         userIdx: Selalert.fromUser.idx,
-        title: Selalert.fromUser.nickname + '님의 mate 채팅방',
+        title: Selalert.fromUser.nickname,
         createdAt: now
       },
       headers: {
@@ -85,7 +85,7 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
           .catch(err => console.log(err))
         // 채팅방 참가
         dispatch(setChatIdx(res.data.data.roomIdx))
-        dispatch(setChatTitle(Selalert.fromUser.nickname + '님의 mate 채팅방'))
+        dispatch(setChatTitle(Selalert.fromUser.nickname + '의 채팅방'))
         axiosInstance({
           method: 'post',
           url: `https://i9b206.p.ssafy.io:9090/chat/rooms/${res.data.data.roomIdx}/users`,

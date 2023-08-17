@@ -24,7 +24,7 @@ const SogaeMatch: React.FC = () => {
         const newMessage = JSON.parse(message.body);
         if (newMessage.message==='수락') {
           localStorage.setItem('OVsession',newMessage.OVsession)
-          alert('매칭 성공!')
+          // alert('매칭 성공!')
           if (stompClientRef.current){
             stompClientRef.current.publish({
               destination: `/sub/response/${newMessage.OVsession}`,

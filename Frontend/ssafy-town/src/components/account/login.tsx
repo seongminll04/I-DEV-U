@@ -39,6 +39,7 @@ const Login: React.FC = () => {
       localStorage.setItem('userToken',res.headers.authorization);
       localStorage.setItem('userIdx', res.data.userIdx);
       localStorage.setItem('userNickname', res.data.userNickname);
+      localStorage.setItem('refreshToken',res.headers["authorization-refresh"]);
 
       // if (res.data.user.status === "D") {
       //   throw new ValidationError("탈퇴처리된 회원입니다!");

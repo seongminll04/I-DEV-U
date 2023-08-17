@@ -6,7 +6,7 @@ import { Message } from '@stomp/stompjs';
 type AssetKeys = 'A' | 'B' | 'C' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' 
               | 'T' | 'U' | 'V' | 'W' | 'X' | '1' | '2' | '3' | '4'
               | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's'
-              | 't' | 'u' | 'z';
+              | 't' | 'u' | 'z' | 'ㄱ';
 const ASSETS: Record<AssetKeys, string> = {
   'A': '/assets/L1-B1.png',
   'B': '/assets/L1-C4.png',
@@ -57,6 +57,7 @@ const ASSETS: Record<AssetKeys, string> = {
   't': '/assets/의자2.png',
   'u': '/assets/피아노의자.png',
   'z': '/assets/장식용허수코드.png',
+  'ㄱ': '/assets/컴퓨터1.png',
 };
 
 const pattern = `
@@ -116,7 +117,7 @@ BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCjjjhhhiiigggfffB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCkkkeeeaaabbbdddB
 BRBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCCCCCBCCCCCCmCCmCCmCCmCCmCB
 BAAAAAAAAAAAAAAAAAAAABCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
+BCCCCCCCCCCㄱCCCㄱCCCㄱCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCClCClCClCClCClCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCiiifffhhhjjjgggB
 BCCCCCCCCCCCCCCCCCCCCACCCCCCCCCCCCCCCCCCCCBECCCCdddaaabbbaaacccB
@@ -164,6 +165,7 @@ export class Lsize1Scene extends Phaser.Scene {
     private d9?: Phaser.Physics.Arcade.Sprite;
     private d10?: Phaser.Physics.Arcade.Sprite;
     private d11?: Phaser.Physics.Arcade.Sprite;
+    private d12?: Phaser.Physics.Arcade.Sprite;
     private water?: Phaser.Physics.Arcade.Sprite;
     private copy?: Phaser.Physics.Arcade.Sprite;
 
@@ -234,7 +236,7 @@ export class Lsize1Scene extends Phaser.Scene {
       this.walls = this.physics.add.staticGroup();
 
       this.balloon = this.add.sprite(0, 0, 'balloon').setVisible(false);
-      this.balloon.setDepth(2);
+      this.balloon.setDepth(5);
       this.emoji1 = this.add.sprite(0, 0, 'imoji1').setVisible(false); this.emoji1.setDepth(2);
       this.emoji2 = this.add.sprite(0, 0, 'imoji2').setVisible(false); this.emoji2.setDepth(2);
       this.emoji3 = this.add.sprite(0, 0, 'imoji3').setVisible(false); this.emoji3.setDepth(2);
@@ -457,6 +459,11 @@ export class Lsize1Scene extends Phaser.Scene {
               this.d11.setOrigin(0, 0).setDisplaySize(96, 32).setImmovable(true);
               this.physics.add.collider(this.character!, this.d11);
               colIndex +=2
+            } else if (tileID === 'ㄱ') {
+              this.d12 = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.d12.setOrigin(0, 0).setDisplaySize(64, 64).setImmovable(true);
+              this.physics.add.collider(this.character!, this.d12);
+              this.d12.setDepth(2);
             }
         }
       }        
@@ -484,6 +491,8 @@ export class Lsize1Scene extends Phaser.Scene {
 
     this.input.keyboard?.on('keydown-E', () => {
       const nearbyObject = this.NearbyObjects();
+
+      console.log(this.character!.x)
   
       if (nearbyObject === 'door') {
         this.openDoor();
@@ -491,6 +500,8 @@ export class Lsize1Scene extends Phaser.Scene {
         store.dispatch(setModal('QnA게시판'))
       } else if (nearbyObject && typeof nearbyObject !== 'string') {
         this.sitdown(nearbyObject);
+      } else if (nearbyObject === 'computer') {
+        store.dispatch(setModal('게임'))
       }
   });
       this.loadDoorParts();
@@ -807,10 +818,13 @@ export class Lsize1Scene extends Phaser.Scene {
 
 
 
-    private NearbyObjects(): 'door' | 'board' | { x: number, y: number } | null {
+    private NearbyObjects(): 'door' | 'board' | 'computer' |{ x: number, y: number } | null {
       const doorPosition = { x: 1024, y: 768 }; // 문
       const boardPosition = { x: 1236, y: 835 }; // 게시판
       const chairPositions = this.chairPositions; // 의자
+      const computerPositions = {x: 380, y:1840}; //컴퓨터
+      const computerPositions2 = {x: 500, y:1840}; //컴퓨터
+      const computerPositions3 = {x: 630, y:1840}; //컴퓨터
 
       if (this.character) {
           const distanceToDoor = Phaser.Math.Distance.Between(this.character.x, this.character.y, doorPosition.x, doorPosition.y);
@@ -823,6 +837,13 @@ export class Lsize1Scene extends Phaser.Scene {
           if (distanceToBoard <= 64) {
             this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
             return 'board';
+        }
+          const distanceToComputer = Phaser.Math.Distance.Between(this.character.x, this.character.y, computerPositions.x, computerPositions.y);
+          const distanceToComputer2 = Phaser.Math.Distance.Between(this.character.x, this.character.y, computerPositions2.x, computerPositions2.y);
+          const distanceToComputer3 = Phaser.Math.Distance.Between(this.character.x, this.character.y, computerPositions3.x, computerPositions3.y);
+        if (distanceToComputer <= 60 || distanceToComputer2 <= 60 || distanceToComputer3 <= 60) {
+          this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
+            return 'computer';
         }
   
           let nearestChair: { x: number, y: number } | null = null;

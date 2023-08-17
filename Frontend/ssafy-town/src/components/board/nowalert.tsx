@@ -86,33 +86,35 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
   const sogaeOK = () => {
     const random = generateRandomString(12)
     // 수락 반응 리스폰
-    if (stompClientRef.current) {
-      localStorage.setItem('userNum',random)
-      localStorage.setItem('OVsession',random)
-      const data = {
-        message:'수락',
-        OVsession:random
-      };
-      stompClientRef.current.publish({
-        destination: `/sub/${message.fromUser.idx}`,
-        body: JSON.stringify(data),
-      });
-
-      setTimeout(() => {
-        alert('소개팅 맵으로 이동합니다.')
-        // 해당 알림 삭제
-        axiosInstance({
-          method:'delete',
-          url: `https://i9b206.p.ssafy.io:9090/alarm/${message.idx}`,
-          headers: {
-            Authorization: 'Bearer ' + userToken
-          },
-        })
-        .then(() => window.location.href='https://i9b206.p.ssafy.io/love')
-        .catch(err=>console.log(err))
-        
-      }, 1000);
-    }
+    setTimeout(() => {
+      if (stompClientRef.current) {
+        localStorage.setItem('userNum',random)
+        localStorage.setItem('OVsession',random)
+        const data = {
+          message:'수락',
+          OVsession:random
+        };
+        stompClientRef.current.publish({
+          destination: `/sub/wait/${message.fromUser.idx}`,
+          body: JSON.stringify(data),
+        });
+  
+        setTimeout(() => {
+          alert('소개팅 맵으로 이동합니다.')
+          // 해당 알림 삭제
+          axiosInstance({
+            method:'delete',
+            url: `https://i9b206.p.ssafy.io:9090/alarm/${message.idx}`,
+            headers: {
+              Authorization: 'Bearer ' + userToken
+            },
+          })
+          .then(() => window.location.href='https://i9b206.p.ssafy.io/love')
+          .catch(err=>console.log(err))
+          
+        }, 1000);
+      }
+    }, 1000);
   }
 
   return (

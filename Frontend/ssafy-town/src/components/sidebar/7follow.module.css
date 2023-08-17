@@ -43,13 +43,30 @@
     text-align: left;
     margin-top:5px;
 }
+
+.profiledata2{
+    min-width: 90px;
+}
+
+.profileintro{
+    /* width: fit-content; */
+    word-break:keep-all;
+}
+
 .profilebtn {
     /* width: 100%; */
-    min-width: 35px;
+    min-width: 45px;
     height:22px;
     border-radius: 0.5rem;
     font-size: medium;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+    padding: 1px 3px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.profilebtn:hover {
+    color: red;
 }
 
 .button {

@@ -111,7 +111,7 @@ const FollowDetail: React.FC<Props> = ({refresh}) => {
           <br />
           <p>닉네임으로 유저를 직접 추가할 수 있습니다.</p>
           <p>
-            닉네임을 입력해주세요. ex)
+            닉네임을 입력해주세요.
           </p>
           <br />
 

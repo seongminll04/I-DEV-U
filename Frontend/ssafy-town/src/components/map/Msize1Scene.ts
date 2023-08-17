@@ -375,12 +375,12 @@ export class Msize1Scene extends Phaser.Scene {
           
               // 만약 해당 사용자에 대한 이모지가 아직 생성되지 않았다면 생성합니다.
               if (!remoteEmoji) {
-                  remoteEmoji = location.add.image(remoteChar.x, remoteChar.y - remoteChar.height / 2, emojiKey);
+                  remoteEmoji = location.add.image(remoteChar.x, remoteChar.y - 32, emojiKey);
                   location.remoteEmojis[newMessage.id] = remoteEmoji;
               } else {
                   // 이미 생성된 이모지가 있다면, 해당 이모지를 업데이트합니다.
                   remoteEmoji.setTexture(emojiKey);
-                  remoteEmoji.setPosition(remoteChar.x, remoteChar.y - remoteChar.height / 2);
+                  remoteEmoji.setPosition(remoteChar.x, remoteChar.y - 32);
                   remoteEmoji.setVisible(true);
               }
           

@@ -46,6 +46,7 @@ export class Ssize1Scene extends Phaser.Scene {
   private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
   private walls?: Phaser.Physics.Arcade.StaticGroup;
   private rows: string[] = [];
+  private introduce!: Phaser.GameObjects.Image;
 
   private bed?: Phaser.Physics.Arcade.Sprite;
   private table?: Phaser.Physics.Arcade.Sprite;
@@ -102,6 +103,7 @@ export class Ssize1Scene extends Phaser.Scene {
     this.load.image('pet-left-1', 'assets/파왼1.png')
     this.load.image('pet-left-2', 'assets/파왼2.png')
     this.load.image('pet-left-3', 'assets/파왼3.png')
+    this.load.image('introduce', 'assets/introduce.png')
 
     for (let i = 1; i <= 50; i++) {
       this.load.image('WE' + i, 'assets/WE' + i + '.png');
@@ -136,6 +138,8 @@ export class Ssize1Scene extends Phaser.Scene {
   const tileSize = 32;  
 
   this.walls = this.physics.add.staticGroup();
+  
+  this.introduce = this.add.image(700,300,'introduce').setVisible(true);
 
   this.balloon = this.add.sprite(0, 0, 'balloon').setVisible(false);
   this.balloon.setDepth(2);

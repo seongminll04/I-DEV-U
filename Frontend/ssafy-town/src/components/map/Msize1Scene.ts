@@ -428,7 +428,7 @@ export class Msize1Scene extends Phaser.Scene {
       if (this.character) {            
           const benchCenterX = 1650;  // 벤치중심 X 좌표
           const benchCenterY = 150;  // 벤치중심 Y 좌표
-          const buttonCenterX = 1650;
+          const buttonCenterX = 1620;
           const buttonCenterY = 280;
 
           const minX = benchCenterX - 32;
@@ -476,8 +476,23 @@ export class Msize1Scene extends Phaser.Scene {
       this.sittingOnBench = true;
       }
     }
-    showtext(){
 
-    }
+    showtext() {
+      const x = 1650;
+      const y = 350;
+      
+      const texts = [
+          "1. 장점", "2. 단점", "3. 별명", "4. 취미", "5. 특기",
+          "6. 여행", "7. 운동", "8. 책", "9. 영화", "10. 동물",
+          "11. 이상형", "12. 계절", "13. 음악", "14. 음식", "15. 친구",
+          "16. 로또", "17. 초능력", "18. 추억", "19. 경치", "20. 색깔",
+          "21. 기분", "22. 단골", "23. 좌우명", "24. 수면", "25. MBTI",
+          "26. 언어", "27. 관심사", "28. 트렌드", "29. 식물", "30. 날씨"
+      ];
+      
+      const randomText = Phaser.Math.RND.pick(texts);
+      
+      this.add.text(x, y, randomText, { color: '#ffffff', align: 'left', fontSize: '32px' });
+  }
   }
   

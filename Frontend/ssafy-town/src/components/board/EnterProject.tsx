@@ -75,7 +75,7 @@ const EnterProject: React.FC<Props> = ({selpjt}) => {
             type="text" value={inputvalue} onChange={(e)=>setInputValue(e.target.value)} onKeyDown={handlekeydown} />
             <br />
             <br />
-            <button onClick={enter}>참가</button><button onClick={()=>dispatch(setModal(null))}>취소</button>
+            <button className={enter_css.button} onClick={enter}>참가</button><button className={enter_css.button} onClick={()=>dispatch(setModal(null))}>취소</button>
         </div>
 
   </div>

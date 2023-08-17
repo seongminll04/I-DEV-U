@@ -13,7 +13,7 @@
     background-color: rgba(109, 206, 245, 0.9);
     border-radius: 1rem;
     width:30%;
-    height: 250px;
+    height: 300px;
     padding: 10px;
     box-sizing: border-box;
     color : white;
@@ -25,4 +25,12 @@
     height: 30px;
     border-radius: 0.5rem;
     cursor: pointer;
+}
+
+.button {
+    width: 16%;
+    height:22px;
+    margin-left: 10px;
+    border-radius: 0.5rem;
+    font-size: medium;
 }

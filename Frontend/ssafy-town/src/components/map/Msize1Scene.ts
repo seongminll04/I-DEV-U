@@ -72,6 +72,7 @@ export class Msize1Scene extends Phaser.Scene {
     private thing?: Phaser.Physics.Arcade.Sprite;
 
     private sittingOnBench: boolean = false; // 현재 앉아있니?
+    private buttontext: string = '';
   
     constructor() {
       super({ key: 'Msize1Scene' });
@@ -320,6 +321,9 @@ export class Msize1Scene extends Phaser.Scene {
             }
             remoteChar.setAlpha(newMessage.state ? 0.4 : 1);
           }
+          if(newMessage.text){
+            location.buttontext = newMessage.text;
+          }
           location.remoteCharactersLastUpdate[newMessage.id] = Date.now();
         }
       });
@@ -344,6 +348,7 @@ export class Msize1Scene extends Phaser.Scene {
         direction: this.character?.anims.currentAnim?.key,  // 현재 애니메이션 상태
         frame: this.character?.anims.currentFrame?.index || 2,       // 현재 프레임 번호
         nickname: currentUserNickname,
+        text: this.buttontext,
       };
       // const stompClientRef:Client|null = null;
       
@@ -368,6 +373,7 @@ export class Msize1Scene extends Phaser.Scene {
         this.sendCharacterData();
         this.prevPosition = currentPlayerPosition;
     }
+    this.add.text(1650, 350, this.buttontext, { color: '#ffffff', align: 'left', fontSize: '32px' });
 
     if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnBench) {
         let moved = false;
@@ -478,8 +484,6 @@ export class Msize1Scene extends Phaser.Scene {
     }
 
     showtext() {
-      const x = 1650;
-      const y = 350;
       
       const texts = [
           "1. 장점", "2. 단점", "3. 별명", "4. 취미", "5. 특기",
@@ -492,7 +496,7 @@ export class Msize1Scene extends Phaser.Scene {
       
       const randomText = Phaser.Math.RND.pick(texts);
       
-      this.add.text(x, y, randomText, { color: '#ffffff', align: 'left', fontSize: '32px' });
-  }
+      this.buttontext = randomText;
+    }
   }
   

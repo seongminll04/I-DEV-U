@@ -484,8 +484,6 @@ export class Lsize1Scene extends Phaser.Scene {
 
     this.input.keyboard?.on('keydown-E', () => {
       const nearbyObject = this.NearbyObjects();
-
-      // console.log(this.character!.x + "@@" + this.character!.y)
   
       if (nearbyObject === 'door') {
         this.openDoor();
@@ -595,11 +593,15 @@ export class Lsize1Scene extends Phaser.Scene {
             remoteChar.setDepth(3);
             location.remoteCharacters[newMessage.id] = remoteChar;
 
+            if(newMessage.settingemoji === 0){
+
             const userName = newMessage.nickname || 'Unknown';
             const nameText = location.add.text(newMessage.position.x, newMessage.position.y - 30, userName, { color: 'black', align: 'center', fontSize: '14px', fontStyle: 'bold'});
             nameText.setOrigin(0.5, 0.5);
             nameText.setDepth(4);  // 캐릭터보다 위에 표시되게 depth를 설정
             location.remoteCharacterNames[newMessage.id] = nameText;
+            }
+
           }
             else if(remoteChar){
             // 캐릭터가 이미 존재하면 위치와 애니메이션 상태 업데이트
@@ -641,6 +643,10 @@ export class Lsize1Scene extends Phaser.Scene {
               // 300ms 후에 이모지를 숨깁니다.
               setTimeout(() => {
                   remoteEmoji.setVisible(false);
+                  const userName = newMessage.nickname || 'Unknown';
+                  const nameText = location.add.text(newMessage.position.x, newMessage.position.y - 30, userName, { color: 'black', align: 'center', fontSize: '14px', fontStyle: 'bold'});
+                  nameText.setOrigin(0.5, 0.5);
+                  nameText.setDepth(4);  // 캐릭터보다 위에 표시되게 depth를 설정
               }, 300);
             }
 

@@ -375,7 +375,10 @@ export class Msize1Scene extends Phaser.Scene {
         this.sendCharacterData();
         this.prevPosition = currentPlayerPosition;
     }
-    this.add.text(1650, 350, this.buttontext, { color: '#ffffff', align: 'left', fontSize: '32px' });
+    const text = this.add.text(1550, 400, this.buttontext, { color: '#ffffff', align: 'left', fontSize: '32px', fontStyle:'bold'});
+      setTimeout(() => {
+        text.destroy();
+      }, 5000);
 
     if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnBench) {
         let moved = false;

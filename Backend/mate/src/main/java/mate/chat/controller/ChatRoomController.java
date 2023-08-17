@@ -3,6 +3,7 @@ package mate.chat.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mate.alarm.dto.ChatRoomResponse;
+import mate.chat.domain.ChatRoomRes;
 import mate.chat.dto.ChatRoomCreateRequest;
 import mate.chat.dto.ChatRoomUpdateRequest;
 import mate.chat.dto.ChatRoomUserRequest;
@@ -34,7 +35,7 @@ public class ChatRoomController {
     @GetMapping("/list/{userIdx}")
     public Result findByUser(@PathVariable("userIdx") Integer userIdx) {
 
-        List<ChatRoomResponse> response = chatRoomService.findByUser(userIdx);
+        List<ChatRoomRes> response = chatRoomService.findByUser(userIdx);
 
         return Result.builder().data(response).status(ResponseEntity.ok("채팅방 리스트")).build();
     }

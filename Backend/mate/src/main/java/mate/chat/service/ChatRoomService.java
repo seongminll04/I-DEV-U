@@ -38,14 +38,22 @@ public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
+    private final ChatParticipationRepository chatParticipationRepository;
 
-    public List<ChatRoomResponse> findByUser(Integer userIdx) {
+    public List<ChatRoomRes> findByUser(Integer userIdx) {
         User user = userRepository.findByIdx(userIdx).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
-        List<ChatRoom> findChatRooms = chatRoomRepository.findWithChatRoomUsers(userIdx);
+        List<ChatRoom> findChatRooms = chatRoomRepository.findWithUser(user);
 
-        return findChatRooms.stream()
-                .map(chatRoom -> mate.alarm.dto.ChatRoomResponse.from(chatRoom))
-                .collect(Collectors.toList());
+        List<ChatRoomRes> list = new ArrayList<>();
+
+        for (ChatRoom findChatRoom : findChatRooms) {
+            List<ChatParticipation> findUser = chatParticipationRepository.findUser(findChatRoom.getIdx());
+            ChatRoomRes response = ChatRoomRes.from(findChatRoom, findUser);
+
+            list.add(response);
+        }
+
+        return list;
     }
 
     public Result createRoom(ChatRoomCreateRequest chatRoomCreateRequest){

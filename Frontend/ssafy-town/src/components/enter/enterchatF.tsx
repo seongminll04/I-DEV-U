@@ -38,6 +38,7 @@ const EnterChatF: React.FC<Props> = ({sendusername,senduserIdx}) => {
         dispatch(setChatIdx(res.data.data.idx))
         dispatch(setChatTitle(res.data.data.title))
         dispatch(setSidebar('채팅방'))
+        dispatch(setModal(null))
       }
       else {
         if (stompClientRef.current && senduserIdx) {

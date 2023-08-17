@@ -55,7 +55,7 @@
 
 .scrollbox {
     width:100%;
-    height: 60vh;
+    height: 70vh;
     overflow-y: scroll;
 }
 .scrollbox hr {

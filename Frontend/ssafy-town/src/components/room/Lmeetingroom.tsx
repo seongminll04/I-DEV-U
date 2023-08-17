@@ -94,6 +94,9 @@ const LMeetingRoom: React.FC = () => {
       {/* 사이드바 오픈 */}
       {isSidebarOpen ? <Navbar /> : null}
       <ModalOpen />
+      <button className={ssafytown_css.GO_myroom} onClick={()=>{
+        localStorage.removeItem('OVsession'); window.location.href='/home'
+      }}>나가기</button>
       <div id="phaser_game" className={ssafytown_css.phaser_game} >
         <div className={ssafytown_css.video_bar}><Cam2 /></div>
       </div>

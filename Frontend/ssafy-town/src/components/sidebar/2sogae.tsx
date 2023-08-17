@@ -117,7 +117,7 @@ const Sogae: React.FC = () => {
                     <div className={sogae_css.matchRate}>{user.percent}%</div>
                   </div>
                 ))}
-                <p>-더 업슴-</p>
+                {/* <p>-더 업슴-</p> */}
               </div>
               {/* <button className={sogae_css.button} onClick={()=>{dispatch(setModal('매칭중'))}}>매칭</button> */}
             </>

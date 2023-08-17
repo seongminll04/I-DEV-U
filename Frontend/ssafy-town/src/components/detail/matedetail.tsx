@@ -173,14 +173,14 @@ const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
 
             </div>
             <div style={{ width: '65%', margin: '0 20px', boxSizing: 'border-box' }}>
-              <h2>자기소개 : {mateUser.intro}</h2>
+              <h2>자기소개 : {mateUser.intro? mateUser.intro: '자기소개가 없습니다.'}</h2>
               <h2>사용언어 : {mateUser.techList.map((tech) => (
                 tech + ' '
               ))}
               </h2>
               <br />
               <h1>일치율</h1>
-              <h2>{localStorage.getItem("userNickname")} 님께서 선택하신 조건과 {mateUser.nickname} 님의 일치율은 {percent} % 입니다</h2>
+              <h2>{localStorage.getItem("userNickname")} 님께서 선택하신 조건과<br /> {mateUser.nickname} 님의 일치율은 {percent===-1 ? '??': percent} % 입니다</h2>
               <br />
               <button className={detail_css.button}  onClick={sendrequest}>채팅 신청</button>
             </div>

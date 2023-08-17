@@ -69,3 +69,20 @@
     width: 240px;
     height: 180px;
 }
+
+.GO_myroom {
+    position: absolute;
+    top:3%;
+    right:2%;
+    width: 70px;
+    height: 70px;
+    background-color: rgb(75, 144, 247);
+    border-radius: 50%;
+    color:white;
+    border:2px blue solid;
+    cursor:pointer;
+}
+
+.GO_myroom:hover {
+    background-color: gray;
+}

@@ -39,6 +39,7 @@ const Follow: React.FC = () => {
       },
     })
       .then(res => {
+        console.log(res.data.data)
         if (res.data.data) {
           setMyFollowList(res.data.data.data)
         }
@@ -136,8 +137,7 @@ const Follow: React.FC = () => {
                       <b className={follow_css.nickname}>{follow.userNickName} </b>
                       <button className={follow_css.profilebtn} onClick={() => { unfollow(follow.followIdx, follow.userNickName) }}>언팔</button>
                     </div>
-
-                    <p className={follow_css.profileintro}>{follow.userIntro}</p>
+                    <p className={follow_css.profileintro} style={{margin:'0',}}>{follow.userIntro ? follow.userIntro : <span style={{color:'darkgray'}}>자기소개가 없습니다</span> }</p>
                   </div>
                   <div className={follow_css.buttons}>
                     <button className={follow_css.profilebtn} onClick={() => { setrequestname(follow.userNickName); setrequestidx(follow.followIdx); dispatch(setModal('팔로우채팅')) }}>채팅</button>

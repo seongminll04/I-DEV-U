@@ -136,9 +136,8 @@ const Mate: React.FC = () => {
                         <div className={mate_css.profiledata}>
                           <b>{mate.nickname}</b>
                           {mate.languageList.map((lang: string) => {
-                            return (<p style={{ color: 'gray', marginTop: 0, marginBottom: 0 }}>
-                              # {lang}
-                            </p>)
+                            return (<p style={{ color: 'gray', marginTop: '5px', marginBottom: '0', overflow:'hidden' }}>
+                              #{lang} </p>)
                           })}
                         </div>
                       </div>
@@ -147,14 +146,14 @@ const Mate: React.FC = () => {
                   </div>
                 )
               })}
-              <p>-더 없음-</p>
+              {/* <p>-마지막입니다-</p> */}
             </div>
           </>
 
         }
       </div>
       {isModalOpen === '동료찾기필터' ? <MateFilter filter={matefilter} onfilter={(value: Filter[]) => setMateFilter(value)} />
-        : isModalOpen === '동료상세정보' ? <MateDetail userIdx={mateIdx} percent={matePercent} />
+        : isModalOpen === '동료상세정보' ? <MateDetail userIdx={mateIdx} percent={matefilter[0] ? matePercent:-1} />
           : null}
     </div>
   );

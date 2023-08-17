@@ -204,13 +204,67 @@ const Chatroom: React.FC = () => {
         <hr />
       </div>
       <div className={chat_css.chat_scroll} onScroll={handleScroll} style={{ height: '80vh' }} ref={chatScrollRef}>
-        {receiveMessages.sort((a, b) => a.idx - b.idx).map((message, index) => (
+        {receiveMessages.sort((a, b) => a.idx - b.idx).map((message, index) => {
+            
+            const now = new Date()
+            const date = message.createdAt
+            var today;
+            var datee;
+
+            if (now.getFullYear() + '' + now.getMonth() + '' + now.getDate() === date.getFullYear() + '' + date.getMonth() + '' + date.getDate()) {
+              const hours = message.createdAt.getHours().toString().padStart(2, '0');
+              const minutes = message.createdAt.getMinutes().toString().padStart(2, '0');
+              if (message.createdAt.getHours() < 12) {
+                today = `${hours}:${minutes} AM`;
+              }
+              else {
+                today = `${hours}:${minutes} PM`;
+              }
+            }
+            else {
+              const year = message.createdAt.getFullYear();
+              const month = (message.createdAt.getMonth() + 1).toString().padStart(2, '0');
+              const day = message.createdAt.getDate().toString().padStart(2, '0');
+              const hours = message.createdAt.getHours().toString().padStart(2, '0');
+              const minutes = message.createdAt.getMinutes().toString().padStart(2, '0');
+              if (year === 1970) {
+                today = ''
+              }
+              else if (year === now.getFullYear()) {
+                if (message.createdAt.getHours() < 12) {
+                  datee=`${month}/${day}`
+                  today = `${hours}:${minutes} AM`;
+                }
+                else {
+                  datee=`${month}/${day}`
+                  today = `${month}/${day} ${hours}:${minutes} PM`;
+                }
+
+              }
+              else {
+                if (message.createdAt.getHours() < 12) {
+                  datee=`${year}/${month}/${day}`
+                  today = `${year}/${month}/${day} ${hours}:${minutes} AM`;
+                }
+                else {
+                  datee=`${year}/${month}/${day}`
+                  today = `${year}/${month}/${day} ${hours}:${minutes} PM`;
+                }
+  
+              }
+            }
+
+
+          return (
           <div className={chat_css.chat_container} key={index}>
             {message.userIdx === userIdx ?
               <><div style={{ alignSelf: 'flex-end', marginTop: '10px' }}>{message.nickname}</div>
                 <div style={{ alignSelf: 'flex-end', marginTop: '5px', display: 'flex', justifyContent: 'flex-end' }}>
                   <div style={{ display: 'flex', alignItems: 'flex-end', marginRight: '10px', fontSize: '12px' }}>
-                    {message.createdAt.getHours() + ' : ' + message.createdAt.getMinutes()}
+                    <div style={{ display: 'grid'}}>
+                      <span>{datee}</span>
+                      <span>{today}</span>
+                    </div>
                   </div>
                   <div style={{ backgroundColor: 'rgba(109, 206, 245, 1)', padding: '10px', borderRadius: '1rem', maxWidth: '60%', textAlign: 'left' }}>
                     {message.message}
@@ -221,10 +275,13 @@ const Chatroom: React.FC = () => {
                     {message.message}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'flex-end', marginLeft: '10px', fontSize: '12px' }}>
-                    {message.createdAt.getHours() + ' : ' + message.createdAt.getMinutes()}
+                    <div style={{ display: 'grid'}}>
+                      <span>{datee}</span>
+                      <span>{today}</span>
+                    </div>  
                   </div>
                 </div></>}
-          </div>))}
+          </div>)})}
       </div>
 
       <hr style={{ width: '80%' }} />

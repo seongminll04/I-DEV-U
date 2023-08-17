@@ -89,8 +89,8 @@ const Cam: React.FC = () => {
                 </p>
               </div>
               <div>
-                <button className={cam_css.profilebtn} onClick={() => EnterCam(cam.ovSession)}>접속</button>
-                <button className={cam_css.profilebtn}>나가기</button>
+                <button className={cam_css.profilebtn} onClick={() => EnterCam(cam.ovSession)}>화상접속</button>
+                {/* <button className={cam_css.profilebtn}>나가기</button> */}
               </div>
             </div>
             <hr />

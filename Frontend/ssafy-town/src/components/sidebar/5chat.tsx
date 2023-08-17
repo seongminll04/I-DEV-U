@@ -43,7 +43,7 @@ const Chat: React.FC = () => {
       },
     })
       .then((res1) => {
-        // console.log(res1.data.data)
+        console.log(res1.data.data)
         const roomPromises = [];
         for (const room of res1.data.data) {
           const roomPromise = axiosInstance({
@@ -189,11 +189,17 @@ const Chat: React.FC = () => {
             const now = new Date()
             const date = room.createdAt
             var today;
+            var datee;
 
             if (now.getFullYear() + '' + now.getMonth() + '' + now.getDate() === date.getFullYear() + '' + date.getMonth() + '' + date.getDate()) {
               const hours = room.createdAt.getHours().toString().padStart(2, '0');
               const minutes = room.createdAt.getMinutes().toString().padStart(2, '0');
-              today = `${hours} : ${minutes} PM`;
+              if (room.createdAt.getHours() < 12) {
+                today = `${hours}:${minutes} AM`;
+              }
+              else {
+                today = `${hours}:${minutes} PM`;
+              }
             }
             else {
               const year = room.createdAt.getFullYear();
@@ -205,13 +211,29 @@ const Chat: React.FC = () => {
                 today = ''
               }
               else if (year === now.getFullYear()) {
-                today = `${month}/${day} ${hours}:${minutes}`;
+                if (room.createdAt.getHours() < 12) {
+                  datee=`${month}/${day}`
+                  today = `${hours}:${minutes} AM`;
+                }
+                else {
+                  datee=`${month}/${day}`
+                  today = `${month}/${day} ${hours}:${minutes} PM`;
+                }
+
               }
               else {
-                today = `${year}/${month}/${day} ${hours}:${minutes}`;
+                if (room.createdAt.getHours() < 12) {
+                  datee=`${year}/${month}/${day}`
+                  today = `${year}/${month}/${day} ${hours}:${minutes} AM`;
+                }
+                else {
+                  datee=`${year}/${month}/${day}`
+                  today = `${year}/${month}/${day} ${hours}:${minutes} PM`;
+                }
+  
               }
-
             }
+
             if (!room.title.includes(inputvalue)) {
               return (<div>
 
@@ -227,13 +249,18 @@ const Chat: React.FC = () => {
 
                       <div>
                         {/* <span className={chat_css.chattime}>마지막 채팅시간</span> */}
-                        <span className={chat_css.chattime}>{today}</span>
+                        <span className={chat_css.chattime}></span>
                         <br />
                       </div>
 
                     </div>
                     <div className={chat_css.roomdata}>
                       <p className={chat_css.lastchat}>{room.message}</p>
+                      <div className={chat_css.chattime} style={{ display: 'grid'}}>
+                        <span>{datee}</span>
+                        <span>{today}</span>
+                      </div>  
+                      {/* <span className={chat_css.chattime}>{today}</span> */}
                       {/* <p className={chat_css.chatcount}></p> */}
                     </div>
                   </div>

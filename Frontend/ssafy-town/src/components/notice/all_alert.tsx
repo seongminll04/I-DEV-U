@@ -32,8 +32,8 @@ interface AlertProps {
 const AllAlert: React.FC = () => {
   const dispatch = useDispatch()
   const [page, setPage] = useState<Number>(0);
-  const [search, setsearch] = useState<string>('');
-  const [nowsearch, setnowsearch] = useState<boolean>(false);
+  // const [search, setsearch] = useState<string>('');
+  // const [nowsearch, setnowsearch] = useState<boolean>(false);
   const [alertList, setAlertList] = useState<AlertProps[]>([]);
   const [Selalert, setSelAlert] = useState<AlertProps>();
 
@@ -62,10 +62,7 @@ const AllAlert: React.FC = () => {
       })
   },[page])
 
-  const searchdata = () => {
-    setnowsearch(true)
-    // 여기서 모든데이터 중 검색어랑 일치하는 것만 리스트화 하는 코드작성
-  }
+
   const backpage = () => {
     setPage(0)
   }
@@ -81,16 +78,22 @@ const AllAlert: React.FC = () => {
             <h1 style={{ margin: '-20px 0 20px 0' }}>알림</h1>
             <hr style={{ border: 'solid 1px gray' }} />
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              {!nowsearch ? <span></span> : <span className={alert_css.movebtn} onClick={() => { setsearch(''); setnowsearch(false) }}>검색취소</span>}
-              <div>
+              {/* {!nowsearch ? <span></span> : <span className={alert_css.movebtn} onClick={() => { setsearch(''); setnowsearch(false) }}>검색취소</span>} */}
+              {/* <div>
                 <input type="text" value={search} onChange={(event) => { setsearch(event.target.value); }} />
                 <button onClick={searchdata}>검색icon</button>
-              </div>
+              </div> */}
             </div>
           </div>
           <br />
           {alertList.length > 0 ? 
             <div>
+              {/* <div className={alert_css.notice}>
+                <span>Num</span>
+                <span>Title</span>
+                <span>CreatedAt</span>
+              </div>
+              <hr /> */}
             {alertList.map((alert: AlertProps, index: number) => {
             return (
               <div>

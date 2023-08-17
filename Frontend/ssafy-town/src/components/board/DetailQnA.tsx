@@ -10,11 +10,17 @@ interface Props {
   onback: () => void;
 }
 
+interface User {
+  nickname : string;
+  storedFileName : string;
+}
+
 interface Question {
   idx: number;
   title: string;
   content: string;
   createdAt: string;
+  user : User;
 }
 
 interface Comment {
@@ -125,9 +131,15 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
           <div style={{ width: '60%', textAlign: 'left', margin: '10px 5%', }}>
             {question ? (
               <>
-                <h3>제목 : {question.title}</h3>
-                <h3>내용 : {question.content}</h3>
-                <h3>날짜 : {(qTime.getMonth() + 1).toString().padStart(2, '0')}/{qTime.getDate().toString().padStart(2, '0')} {qTime.getHours().toString().padStart(2, '0')}:{qTime.getMinutes().toString().padStart(2, '0')}</h3>
+                <div className={Create_css.title}>{question.title}</div>
+                <div className={Create_css.profile}>
+                  <img src={question.user.storedFileName? question.user.storedFileName : "assets/default_profile.png"}
+                  alt=""
+                  />
+                  <h3>{question.user.nickname}</h3>
+                </div>
+                <h3 className={Create_css.date}>{(qTime.getMonth() + 1).toString().padStart(2, '0')}/{qTime.getDate().toString().padStart(2, '0')} {qTime.getHours().toString().padStart(2, '0')}:{qTime.getMinutes().toString().padStart(2, '0')}</h3>
+                <h2 className={Create_css.content}>{question.content}</h2>
               </>
             ) : (
               'Loading...'
@@ -162,11 +174,11 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
                   </div>
                 )
               })}
-              {commentlist.length > 0 ? null : <h2>댓글이 없습니다</h2>}
+              {commentlist.length > 0 ? null : <h2 style={{textAlign: "center"}}>댓글이 없습니다</h2>}
             </div>
             <br />
             <input className={Create_css.commentbox} type="text" value={inputvalue} onChange={(e) => setInputvalue(e.target.value)} onKeyDown={handlekeydown} />
-            <button onClick={onInputSubmit}>작성</button>
+            <button className={Create_css.button} onClick={onInputSubmit}>작성</button>
           </div>
         </div>
       </div>

@@ -35,6 +35,10 @@
     background-color: gray;
 }
 
+.movebtn{
+    margin-left: 5px;
+}
+
 .movebtn:hover {
     color: gray;
 }

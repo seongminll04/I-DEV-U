@@ -75,7 +75,6 @@ const QnA: React.FC = () => {
     }
 
     else {
-
       const userToken = localStorage.getItem('userToken')
       axiosInstance({
         method: 'get',
@@ -193,7 +192,7 @@ const QnA: React.FC = () => {
                         setPage(2);
                         setQnaid(question.idx);
                       }}>
-                      <p style={{ margin: '5px' }}>{index + 1}</p>
+                      <p style={{ margin: '5px' }}>{question.idx}</p>
                       <p style={{ margin: '5px' }}>{question.title}</p>
                       <p style={{ margin: '5px' }}>
                         {month}/{day} {hours}:{minutes}

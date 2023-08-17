@@ -84,7 +84,7 @@ const CreateQnA: React.FC<Props> = ({onback}) => {
             <p> : </p>
             <input type="file" style={{marginTop:'5px'}}/>
           </div> */}
-          <button onClick={create}>생성하기</button>
+          <button className={Create_css.button} onClick={create}>생성하기</button>
         </div>
       </div>
   );

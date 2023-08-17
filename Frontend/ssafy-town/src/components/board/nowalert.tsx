@@ -166,7 +166,8 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
     })
       .then(() => {
         console.log('참가완료')
-        dispatch(setModal(null))
+        dispatch(setModal(null));
+        onMessage();
       })
       .catch(err => console.log(err))
   }
@@ -206,6 +207,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
           : message.alarmResponse.type==='PROJECT' ? 
           <>
             <h1>프로젝트 참가신청</h1>
+            <h2>프로젝트 : {message.projectResponse.title}</h2>
             <h2>
               {message.alarmResponse.fromUser.nickname}님의 프로젝트 참가신청이 들어왔습니다
             </h2>

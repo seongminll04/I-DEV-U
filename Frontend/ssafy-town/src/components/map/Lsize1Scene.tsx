@@ -619,26 +619,26 @@ export class Lsize1Scene extends Phaser.Scene {
             }
             
             //이모지
-            if (newMessage.settingemoji && newMessage.settingemoji > 0) {
-              const emojiKey = 'emoji' + newMessage.settingemoji;
-              let remoteEmoji = location.remoteEmojis[newMessage.id];
+            // if (newMessage.settingemoji && newMessage.settingemoji > 0) {
+            //   const emojiKey = 'emoji' + newMessage.settingemoji;
+            //   let remoteEmoji = location.remoteEmojis[newMessage.id];
           
-              // 만약 해당 사용자에 대한 이모지가 아직 생성되지 않았다면 생성합니다.
-              if (!remoteEmoji) {
-                  remoteEmoji = location.add.image(remoteChar.x, remoteChar.y - remoteChar.height / 2, emojiKey);
-                  location.remoteEmojis[newMessage.id] = remoteEmoji;
-              } else {
-                  // 이미 생성된 이모지가 있다면, 해당 이모지를 업데이트합니다.
-                  remoteEmoji.setTexture(emojiKey);
-                  remoteEmoji.setPosition(remoteChar.x, remoteChar.y - remoteChar.height / 2);
-                  remoteEmoji.setVisible(true);
-              }
+            //   // 만약 해당 사용자에 대한 이모지가 아직 생성되지 않았다면 생성합니다.
+            //   if (!remoteEmoji) {
+            //       remoteEmoji = location.add.image(remoteChar.x, remoteChar.y - remoteChar.height / 2, emojiKey);
+            //       location.remoteEmojis[newMessage.id] = remoteEmoji;
+            //   } else {
+            //       // 이미 생성된 이모지가 있다면, 해당 이모지를 업데이트합니다.
+            //       remoteEmoji.setTexture(emojiKey);
+            //       remoteEmoji.setPosition(remoteChar.x, remoteChar.y - remoteChar.height / 2);
+            //       remoteEmoji.setVisible(true);
+            //   }
           
-              // 300ms 후에 이모지를 숨깁니다.
-              setTimeout(() => {
-                  remoteEmoji.setVisible(false);
-              }, 300);
-            }
+            //   // 300ms 후에 이모지를 숨깁니다.
+            //   setTimeout(() => {
+            //       remoteEmoji.setVisible(false);
+            //   }, 300);
+            // }
 
           }
           location.remoteCharactersLastUpdate[newMessage.id] = Date.now();
@@ -667,7 +667,7 @@ export class Lsize1Scene extends Phaser.Scene {
       frame: this.character?.anims.currentFrame?.index || 2,       // 현재 프레임 번호
       nickname: currentUserNickname,
       doorOpened: this.doorOpened,
-      settingemoji: this.settingemoji,
+      // settingemoji: this.settingemoji,
     };
     // const stompClientRef:Client|null = null;
     

@@ -288,6 +288,7 @@ export class Msize1Scene extends Phaser.Scene {
     }, 5000);
   
     if (stompClientRef) {
+      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
       stompClientRef.subscribe(`/sub/channel/${sessionName}`, function(message:Message) {
         const newMessage = JSON.parse(message.body);
   
@@ -375,7 +376,7 @@ export class Msize1Scene extends Phaser.Scene {
         this.sendCharacterData();
         this.prevPosition = currentPlayerPosition;
     }
-    const text = this.add.text(1600, 400, this.buttontext, { color: '#ffffff', align: 'left', fontSize: '32px', fontStyle:'bold'});
+    const text = this.add.text(1600, 480, this.buttontext, { color: '#ffffff', align: 'left', fontSize: '32px', fontStyle:'bold'});
       setTimeout(() => {
         text.destroy();
       }, 5000);

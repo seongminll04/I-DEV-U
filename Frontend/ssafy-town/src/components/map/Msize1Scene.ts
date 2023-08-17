@@ -233,6 +233,7 @@ export class Msize1Scene extends Phaser.Scene {
               const targetEmoji = (this as any)[emojiKey];
               const emoji = this.add.image(this.character!.x, this.character!.y - this.character!.height / 2 - targetEmoji.height / 2, 'emoji' + i);
               emoji.setDepth(5);
+              this.sendCharacterData();
               setTimeout(() => {
                   emoji.destroy();
                   this.settingemoji = 0;
@@ -308,7 +309,6 @@ export class Msize1Scene extends Phaser.Scene {
   /////////////////////////// WEBRTC
 
   initializeWebRTC() {
-    console.log("66666666666666666666666666666666666666666")
     const stompClientRef = store.getState().stompClientRef;
     const sessionName = localStorage.getItem('OVsession');
     this.remoteCharacterNames = {};
@@ -333,19 +333,16 @@ export class Msize1Scene extends Phaser.Scene {
     }, 5000);
   
     if (stompClientRef) {
-      console.log("1111111111111111111111111111111111111111111111111111111")
       stompClientRef.subscribe(`/sub/channel/${sessionName}`, function(message:Message) {
         const newMessage = JSON.parse(message.body);
   
         if (newMessage) {
-          console.log("2222222222222222222222222222222222222222222222222222222222")
           // 기존 캐릭터가 존재하는지 확인
           let remoteChar = location.remoteCharacters[newMessage.id];
           const userIdx = localStorage.getItem('userToken')
   
           // 캐릭터가 존재하지 않으면 새로 생성
           if (!remoteChar && newMessage.id !== userIdx) {
-            console.log("33333333333333333333333333333333333333333333333333")
             remoteChar = location.physics.add.sprite(newMessage.position.x, newMessage.position.y, `${newMessage.type}2`);
             remoteChar.setDepth(3);
             location.remoteCharacters[newMessage.id] = remoteChar;
@@ -357,7 +354,6 @@ export class Msize1Scene extends Phaser.Scene {
             location.remoteCharacterNames[newMessage.id] = nameText;
           }
             else if(remoteChar){
-              console.log("4444444444444444444444444444444444444444444444444")
             // 캐릭터가 이미 존재하면 위치와 애니메이션 상태 업데이트
             remoteChar.setPosition(newMessage.position.x, newMessage.position.y);
 
@@ -405,7 +401,6 @@ export class Msize1Scene extends Phaser.Scene {
 
     // 캐릭터의 위치나 상태가 변경될 때 호출
     sendCharacterData(message?: string) {
-      console.log("55555555555555555555555555555555555555555555555")
       const currentUserId = localStorage.getItem('userToken');
       const currentUserNickname = localStorage.getItem('userNickname') || 'Unknown';  // 닉네임 가져오기
   
@@ -430,7 +425,6 @@ export class Msize1Scene extends Phaser.Scene {
       const stompClientRef =store.getState().stompClientRef
       const sessionName = localStorage.getItem('OVsession');
       if (stompClientRef) {
-        console.log("777777777777777777777777777777777777777")
         stompClientRef.publish({
           destination:`/sub/channel/${sessionName}`,
           body:JSON.stringify(dataToSend)

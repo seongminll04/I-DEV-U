@@ -66,7 +66,6 @@ public class NoticeController {
 		map.put("list", noticeService.listNotice().stream().map(notice -> {
 			NoticeDto dto = new NoticeDto();
 			dto.setIdx(notice.getIdx());
-			dto.setUserIdx(notice.getUser().getIdx());
 			dto.setTitle(notice.getTitle());
 			dto.setContent(notice.getContent());
 			dto.setCreatedAt(notice.getCreatedAt());

@@ -166,8 +166,8 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
     })
       .then(() => {
         console.log('참가완료')
-        dispatch(setModal(null));
         onMessage();
+        dispatch(setModal(null));
       })
       .catch(err => console.log(err))
   }

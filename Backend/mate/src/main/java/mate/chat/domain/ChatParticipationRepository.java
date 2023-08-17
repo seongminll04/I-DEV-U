@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ChatParticipationRepository extends JpaRepository<ChatParticipation, Integer> {
 
-    @Query("select p from ChatParticipation p where p.chatRoom.idx = :roomIdx")
+    @Query("select p from ChatParticipation p join fetch p.user where p.chatRoom.idx = :roomIdx")
     List<ChatParticipation> findUser(@Param("roomIdx") Integer roomIdx);
 
 

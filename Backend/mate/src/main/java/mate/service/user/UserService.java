@@ -256,4 +256,12 @@ public class UserService {
         }
         return Result.builder().data(list).status(ResponseEntity.ok("닉네임 검색 결과")).build();
     }
+    public ResponseEntity isAdmin(Integer userIdx) {
+        User user = userRepository.findByIdx(userIdx)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.USER_NOT_FOUND));
+        if (user.getRole() != Role.ADMIN){
+            throw new NotFoundException(NotFoundException.USER_NOT_FOUND);
+        }
+        return ResponseEntity.ok("관리자 맞음");
+    }
 }

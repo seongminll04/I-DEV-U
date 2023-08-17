@@ -233,6 +233,7 @@ export class Msize1Scene extends Phaser.Scene {
               const targetEmoji = (this as any)[emojiKey];
               const emoji = this.add.image(this.character!.x, this.character!.y - this.character!.height / 2 - targetEmoji.height / 2, 'emoji' + i);
               emoji.setDepth(5);
+              this.sendCharacterData();
               setTimeout(() => {
                   emoji.destroy();
                   this.settingemoji = 0;
@@ -252,7 +253,7 @@ export class Msize1Scene extends Phaser.Scene {
         }
 
       });
-
+      this.initializeWebRTC();
     }
      /////////////////////////// 캐릭터 이동 애니메이션
   
@@ -332,19 +333,16 @@ export class Msize1Scene extends Phaser.Scene {
     }, 5000);
   
     if (stompClientRef) {
-      console.log("1111111111111111111111111111111111111111111111111111111")
       stompClientRef.subscribe(`/sub/channel/${sessionName}`, function(message:Message) {
         const newMessage = JSON.parse(message.body);
   
         if (newMessage) {
-          console.log("2222222222222222222222222222222222222222222222222222222222")
           // 기존 캐릭터가 존재하는지 확인
           let remoteChar = location.remoteCharacters[newMessage.id];
           const userIdx = localStorage.getItem('userToken')
   
           // 캐릭터가 존재하지 않으면 새로 생성
           if (!remoteChar && newMessage.id !== userIdx) {
-            console.log("33333333333333333333333333333333333333333333333333")
             remoteChar = location.physics.add.sprite(newMessage.position.x, newMessage.position.y, `${newMessage.type}2`);
             remoteChar.setDepth(3);
             location.remoteCharacters[newMessage.id] = remoteChar;
@@ -356,7 +354,6 @@ export class Msize1Scene extends Phaser.Scene {
             location.remoteCharacterNames[newMessage.id] = nameText;
           }
             else if(remoteChar){
-              console.log("4444444444444444444444444444444444444444444444444")
             // 캐릭터가 이미 존재하면 위치와 애니메이션 상태 업데이트
             remoteChar.setPosition(newMessage.position.x, newMessage.position.y);
 
@@ -378,12 +375,12 @@ export class Msize1Scene extends Phaser.Scene {
           
               // 만약 해당 사용자에 대한 이모지가 아직 생성되지 않았다면 생성합니다.
               if (!remoteEmoji) {
-                  remoteEmoji = location.add.image(remoteChar.x, remoteChar.y - remoteChar.height / 2, emojiKey);
+                  remoteEmoji = location.add.image(remoteChar.x, remoteChar.y - 32, emojiKey);
                   location.remoteEmojis[newMessage.id] = remoteEmoji;
               } else {
                   // 이미 생성된 이모지가 있다면, 해당 이모지를 업데이트합니다.
                   remoteEmoji.setTexture(emojiKey);
-                  remoteEmoji.setPosition(remoteChar.x, remoteChar.y - remoteChar.height / 2);
+                  remoteEmoji.setPosition(remoteChar.x, remoteChar.y - 32);
                   remoteEmoji.setVisible(true);
               }
           

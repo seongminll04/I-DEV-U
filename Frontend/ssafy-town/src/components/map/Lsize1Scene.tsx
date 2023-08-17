@@ -473,6 +473,7 @@ export class Lsize1Scene extends Phaser.Scene {
             const targetEmoji = (this as any)[emojiKey];
             const emoji = this.add.image(this.character!.x, this.character!.y - this.character!.height / 2 - targetEmoji.height / 2, 'emoji' + i);
             emoji.setDepth(5);
+            this.sendCharacterData();
             setTimeout(() => {
                 emoji.destroy();
                 this.settingemoji = 0;
@@ -628,12 +629,12 @@ export class Lsize1Scene extends Phaser.Scene {
           
               // 만약 해당 사용자에 대한 이모지가 아직 생성되지 않았다면 생성합니다.
               if (!remoteEmoji) {
-                  remoteEmoji = location.add.image(remoteChar.x, remoteChar.y - remoteChar.height / 2, emojiKey);
+                  remoteEmoji = location.add.image(remoteChar.x, remoteChar.y - 32, emojiKey);
                   location.remoteEmojis[newMessage.id] = remoteEmoji;
               } else {
                   // 이미 생성된 이모지가 있다면, 해당 이모지를 업데이트합니다.
                   remoteEmoji.setTexture(emojiKey);
-                  remoteEmoji.setPosition(remoteChar.x, remoteChar.y - remoteChar.height / 2);
+                  remoteEmoji.setPosition(remoteChar.x, remoteChar.y - 32);
                   remoteEmoji.setVisible(true);
               }
           

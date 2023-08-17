@@ -22,6 +22,7 @@ const SogaeMatch: React.FC = () => {
             alert('매칭 성공!')
             console.log(newMessage.OVsession)
             localStorage.setItem('OVsession',newMessage.OVsession)
+            localStorage.setItem('userNum',newMessage.OVsession)
             window.location.href='https://i9b206.p.ssafy.io/love'
           }
         });

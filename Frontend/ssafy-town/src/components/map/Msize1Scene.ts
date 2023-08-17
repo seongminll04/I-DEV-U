@@ -123,8 +123,10 @@ export class Msize1Scene extends Phaser.Scene {
 
       const userCharacter = localStorage.getItem("character") || '0';
 
-      let playerNumber = 1;  // 예: 1 또는 2
-
+      var playerNumber = 1;  // 예: 1 또는 2
+      if (localStorage.getItem('userNum')===localStorage.getItem('OVsession')) {
+        playerNumber=2
+      }
       let startX = 52;
 
       if (playerNumber === 1) {

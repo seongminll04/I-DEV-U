@@ -45,7 +45,7 @@ const AllNotice: React.FC = () => {
       {page === 0 ?
         <div className={alert_css.alert_modal}>
           <div className={alert_css.buttons}>
-            <p className={alert_css.backbtn} onClick={() => dispatch(setModal('문의목록'))}>돌아가기</p>
+            <p className={alert_css.backbtn} style={{visibility: "hidden"}} onClick={() => dispatch(setModal('문의목록'))}>돌아가기</p>
             <p className={alert_css.closebtn} onClick={() => { dispatch(setModal(null)) }}>닫기</p>
           </div>
           <div>

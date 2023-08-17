@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 import axiosInstance from '../../interceptors';
-
+import setting_css from './9setting.module.css';
 
 const Setting: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
@@ -30,18 +30,20 @@ const Setting: React.FC = () => {
     <div className='sidebar_modal'>
       <h1>Setting</h1>
       <br /><br />
-      <button onClick={()=>dispatch(setModal('문의'))}>1 : 1 문의</button>
+      <button className={setting_css.button} onClick={()=>dispatch(setModal('문의'))}>1 : 1 문의</button>
       <br /><br />
-      {isAdmin && (
-        <div className="aaa">
-          <button className={"aaa"} onClick={()=>dispatch(setModal('문의목록'))}>1 : 1 문의사항 목록조회</button>
+      {/* {isAdmin && (
+        <div>
+          <button className={setting_css.button2} onClick={()=>dispatch(setModal('문의목록'))}>1 : 1 문의사항 목록조회</button>
         </div>
-      )}
+      )} */}
+      <button className={setting_css.button} style={{display: isAdmin? 'block' : "none"}} onClick={()=>dispatch(setModal('문의목록'))}>1 : 1 문의사항 목록조회</button>
+
       <hr />
       <h1>방 이동하기(구경)</h1>
-      <button onClick={()=>{window.location.href = '/home';}}>마이룸</button>
-      <button onClick={()=>{localStorage.setItem('OVsession',`test_${userIdx}`); window.location.href = '/meeting';}}>회의룸</button>
-      <button onClick={()=>{localStorage.setItem('OVsession',`test_${userIdx}`); window.location.href = '/love';}}>소개팅룸</button>
+      <button className={setting_css.button} onClick={()=>{window.location.href = '/home';}}>마이룸</button>
+      <button className={setting_css.button} onClick={()=>{localStorage.setItem('OVsession',`test_${userIdx}`); window.location.href = '/meeting';}}>회의룸</button>
+      <button className={setting_css.button} onClick={()=>{localStorage.setItem('OVsession',`test_${userIdx}`); window.location.href = '/love';}}>소개팅룸</button>
       <hr />
     </div>
   );

@@ -70,3 +70,12 @@
     text-align: left;
     cursor: pointer;
 }
+
+.button {
+    background-color: white;
+    height: 25px;
+    border-radius: 0.5rem;
+}
+.button:hover {
+    background-color: gray;
+}

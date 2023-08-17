@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 @Data
 public class NoticeDto {
 
+    private int idx;
+
     private int userIdx;
 
     private String title;

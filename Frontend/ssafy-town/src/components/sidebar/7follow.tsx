@@ -84,7 +84,7 @@ const Follow: React.FC = () => {
     }
   }
 
-  const unfollow = (followIdx : number, nickname : string) => {
+  const unfollow = (followIdx: number, nickname: string) => {
     if (window.confirm(`${nickname} 님을 언팔로우하시겠습니까?`)) {
       const userToken = localStorage.getItem('userToken');
       const userIdxStr = localStorage.getItem('userIdx');
@@ -96,9 +96,9 @@ const Follow: React.FC = () => {
         headers: {
           Authorization: 'Bearer ' + userToken
         },
-        data : {
-          userIdx : userIdx,
-          followIdx : followIdx
+        data: {
+          userIdx: userIdx,
+          followIdx: followIdx
         }
       }).then(() => {
         alert("팔로우 취소 완료")
@@ -132,14 +132,19 @@ const Follow: React.FC = () => {
                     style={{ borderRadius: "50%" }}
                   />
                   <div className={follow_css.profiledata}>
-                    <b>{follow.userNickName}</b>
-                    <p>{follow.userIntro}</p>
+                    <div className={follow_css.profiledata2}>
+                      <b className={follow_css.nickname}>{follow.userNickName} </b>
+                      <button className={follow_css.profilebtn} onClick={() => { unfollow(follow.followIdx, follow.userNickName) }}>언팔</button>
+                    </div>
+
+                    <p className={follow_css.profileintro}>{follow.userIntro}</p>
                   </div>
                   <div className={follow_css.buttons}>
                     <button className={follow_css.profilebtn} onClick={() => { setrequestname(follow.userNickName); setrequestidx(follow.followIdx); dispatch(setModal('팔로우채팅')) }}>채팅</button>
                     <button className={follow_css.profilebtn} onClick={() => { setrequestname(follow.userNickName); setrequestidx(follow.followIdx); dispatch(setModal('팔로우화상')) }}>화상</button>
                   </div>
-                  <div className={follow_css.x} onClick={() => unfollow(follow.followIdx, follow.userNickName)}>X</div>
+                  {/* <div className={follow_css.x} onClick={() => unfollow(follow.followIdx, follow.userNickName)}>X</div> */}
+                  {/* <button className={follow_css.profilebtn} onClick={() => { unfollow(follow.followIdx, follow.userNickName) }}>제거</button> */}
                 </div>
                 <hr />
               </>

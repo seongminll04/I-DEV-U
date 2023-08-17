@@ -108,7 +108,7 @@ const Cam: React.FC = () => {
               <img src="assets/default_profile.png" alt="" />
               <div className={cam_css.profiledata}>
                 <b>{cam.title}</b>
-                <p style={{ color: 'gray' }}>
+                <p style={{ color: 'gray', margin:'0', marginTop:'5px'}}>
                   {cam.users.map((name:string)=>('#'+name+' '))}
                 </p>
               </div>

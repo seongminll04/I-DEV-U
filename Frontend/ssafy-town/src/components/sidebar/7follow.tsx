@@ -127,9 +127,10 @@ const Follow: React.FC = () => {
       }
     })
     .then(res=>{
+      console.log(res.data)
       if (res.data.data) {
         dispatch(setChatIdx(res.data.data.idx))
-        dispatch(setChatTitle(res.data.data.title))
+        dispatch(setChatTitle(senduserNick+'의 채팅방'))
         dispatch(setSidebar('채팅방'))
       }
       else {

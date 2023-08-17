@@ -134,9 +134,11 @@ export class Lsize1Scene extends Phaser.Scene {
     private lastSentTime: number = 0;
     private remoteCharacterNames: { [id: string]: Phaser.GameObjects.Text } = {};
     private remoteCharactersLastUpdate: { [id: string]: number } = {}; // 여기에 추가
+    private remoteEmojis: { [key: string]: Phaser.GameObjects.Image } = {};
 
     private character?: Phaser.Physics.Arcade.Sprite;
     private balloon!: Phaser.GameObjects.Sprite;
+    private emoji!: Phaser.GameObjects.Sprite;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
     private walls?: Phaser.Physics.Arcade.StaticGroup;
     private clockText!: Phaser.GameObjects.Text; //우하시계
@@ -149,6 +151,7 @@ export class Lsize1Scene extends Phaser.Scene {
     private doorOpened: boolean = false; // 현재 문의 상태
     private chairPositions: {x: number, y: number}[] = [];
     private sittingOnChair: boolean = false; // 현재 앉아있니?
+    private settingemoji: number = 0; // 이모지 번호
 
     private d1?: Phaser.Physics.Arcade.Sprite;
     private d2?: Phaser.Physics.Arcade.Sprite;
@@ -163,6 +166,17 @@ export class Lsize1Scene extends Phaser.Scene {
     private d11?: Phaser.Physics.Arcade.Sprite;
     private water?: Phaser.Physics.Arcade.Sprite;
     private copy?: Phaser.Physics.Arcade.Sprite;
+
+    private emoji1!: Phaser.GameObjects.Sprite;
+    private emoji2!: Phaser.GameObjects.Sprite;
+    private emoji3!: Phaser.GameObjects.Sprite;
+    private emoji4!: Phaser.GameObjects.Sprite;
+    private emoji5!: Phaser.GameObjects.Sprite;
+    private emoji6!: Phaser.GameObjects.Sprite;
+    private emoji7!: Phaser.GameObjects.Sprite;
+    private emoji8!: Phaser.GameObjects.Sprite;
+    private emoji9!: Phaser.GameObjects.Sprite;
+    private emoji10!: Phaser.GameObjects.Sprite;
 
     constructor() {
       super({ key: 'Lsize1Scene' });
@@ -198,6 +212,9 @@ export class Lsize1Scene extends Phaser.Scene {
         for (let i = 1; i <= 72; i++) {
             this.load.image('문' + i, 'assets/문' + i + '.png');
         }
+        for(let i = 1; i <=10; i++){
+            this.load.image('emoji'+i,'assets/emoji'+i+'.png');
+        }
     }
 
 
@@ -218,6 +235,16 @@ export class Lsize1Scene extends Phaser.Scene {
 
       this.balloon = this.add.sprite(0, 0, 'balloon').setVisible(false);
       this.balloon.setDepth(2);
+      this.emoji1 = this.add.sprite(0, 0, 'imoji1').setVisible(false); this.emoji1.setDepth(2);
+      this.emoji2 = this.add.sprite(0, 0, 'imoji2').setVisible(false); this.emoji2.setDepth(2);
+      this.emoji3 = this.add.sprite(0, 0, 'imoji3').setVisible(false); this.emoji3.setDepth(2);
+      this.emoji4 = this.add.sprite(0, 0, 'imoji4').setVisible(false); this.emoji4.setDepth(2);
+      this.emoji5 = this.add.sprite(0, 0, 'imoji5').setVisible(false); this.emoji5.setDepth(2);
+      this.emoji6 = this.add.sprite(0, 0, 'imoji6').setVisible(false); this.emoji6.setDepth(2);
+      this.emoji7 = this.add.sprite(0, 0, 'imoji7').setVisible(false); this.emoji7.setDepth(2);
+      this.emoji8 = this.add.sprite(0, 0, 'imoji8').setVisible(false); this.emoji8.setDepth(2);
+      this.emoji9 = this.add.sprite(0, 0, 'imoji9').setVisible(false); this.emoji9.setDepth(2);
+      this.emoji10 = this.add.sprite(0, 0, 'imoji10').setVisible(false); this.emoji10.setDepth(2);
 
       const mapCenterX = rows[0].length * tileSize / 2;
       const mapCenterY = rows.length * tileSize / 2;
@@ -434,6 +461,21 @@ export class Lsize1Scene extends Phaser.Scene {
         }
       }        
     });
+
+
+    
+    for (let i = 1; i <= 10; i++) {
+      this.input.keyboard?.on('keydown-' + i, () => {
+        this.settingemoji = i;
+        const emojiKey = 'emoji' + i;
+        const targetEmoji = (this as any)[emojiKey];
+        const emoji = this.add.image(this.character!.x, this.character!.y - this.character!.height / 2 - targetEmoji.height / 2, 'emoji' + i);
+        setTimeout(() => {
+            emoji.destroy();
+            this.settingemoji = 0;
+        }, 300);
+      });
+    }
     
 
     this.input.keyboard?.on('keydown-E', () => {
@@ -447,7 +489,7 @@ export class Lsize1Scene extends Phaser.Scene {
         store.dispatch(setModal('QnA게시판'))
       } else if (nearbyObject && typeof nearbyObject !== 'string') {
         this.sitdown(nearbyObject);
-    }
+      }
   });
       this.loadDoorParts();
       
@@ -575,6 +617,29 @@ export class Lsize1Scene extends Phaser.Scene {
             } else if (!newMessage.doorOpened && location.doorOpened) {
               location.closeDoor(); // 다른 유저가 문을 닫았다면
             }
+            
+            //이모지
+            if (newMessage.settingemoji && newMessage.settingemoji > 0) {
+              const emojiKey = 'emoji' + newMessage.settingemoji;
+              let remoteEmoji = location.remoteEmojis[newMessage.id];
+          
+              // 만약 해당 사용자에 대한 이모지가 아직 생성되지 않았다면 생성합니다.
+              if (!remoteEmoji) {
+                  remoteEmoji = location.add.image(remoteChar.x, remoteChar.y - remoteChar.height / 2, emojiKey);
+                  location.remoteEmojis[newMessage.id] = remoteEmoji;
+              } else {
+                  // 이미 생성된 이모지가 있다면, 해당 이모지를 업데이트합니다.
+                  remoteEmoji.setTexture(emojiKey);
+                  remoteEmoji.setPosition(remoteChar.x, remoteChar.y - remoteChar.height / 2);
+                  remoteEmoji.setVisible(true);
+              }
+          
+              // 300ms 후에 이모지를 숨깁니다.
+              setTimeout(() => {
+                  remoteEmoji.setVisible(false);
+              }, 300);
+            }
+
           }
           location.remoteCharactersLastUpdate[newMessage.id] = Date.now();
         }
@@ -601,7 +666,8 @@ export class Lsize1Scene extends Phaser.Scene {
       direction: this.character?.anims.currentAnim?.key,  // 현재 애니메이션 상태
       frame: this.character?.anims.currentFrame?.index || 2,       // 현재 프레임 번호
       nickname: currentUserNickname,
-      doorOpened: this.doorOpened
+      doorOpened: this.doorOpened,
+      settingemoji: this.settingemoji,
     };
     // const stompClientRef:Client|null = null;
     

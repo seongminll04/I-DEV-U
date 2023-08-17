@@ -6,7 +6,7 @@ import { Message } from '@stomp/stompjs';
 type AssetKeys = 'A2' | 'B2' | 'C2' | 'D2' | 'E2' | 'F2' | 'G2' | 'H2' | 'I2' | 'J2' |
                  'K2' | 'L2' | 'M2' | 'N2' | 'O2' | 'P2' | 'Q2' | 'R2' | 'S2' | 'T2' |
                  'U2' | 'V2' | 'W2' | 'X2' | 'Y2' | 'Z2' | 'a2' | 'b2' | 'c2' | 'd2' |
-                 'e2';
+                 'e2' | 'f2';
 const ASSETS: Record<AssetKeys, string> = {
   'A2': '/assets/M1-B1.png',
   'B2': '/assets/M1-C1.png',
@@ -39,6 +39,7 @@ const ASSETS: Record<AssetKeys, string> = {
   'c2': '/assets/봄나무7.png',
   'd2': '/assets/분수대.png',
   'e2': '/assets/벤치2.png',
+  'f2': '/assets/button.png'
 };
 
 const pattern = `
@@ -51,7 +52,7 @@ B2G2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2A2
 B2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2D2E2F2C2B2
 B2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2P2Q2R2O2B2
 B2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2T2U2V2S2B2
-B2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2B2
+B2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2f2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2X2Y2Z2W2B2
 B2L2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2L2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2J2B2
 `;
 
@@ -67,6 +68,7 @@ export class Msize1Scene extends Phaser.Scene {
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
     private walls?: Phaser.Physics.Arcade.StaticGroup;
     private balloon!: Phaser.GameObjects.Sprite;
+    private emoji!: Phaser.GameObjects.Sprite;
 
     private thing?: Phaser.Physics.Arcade.Sprite;
 
@@ -105,7 +107,10 @@ export class Msize1Scene extends Phaser.Scene {
       this.load.image('character', 'assets/admin_character.png');
       this.load.image('character2', 'assets/admin_character.png');
       this.load.image('balloon', 'assets/ekey.png');
-      this.load.image('nightSky', 'assets/nightSkY.png');
+
+      for(let i = 1; i <=10; i++){
+        this.load.image('emoji','assets/emoji'+i+'.png');
+      }
     }
   
     create() {
@@ -115,7 +120,9 @@ export class Msize1Scene extends Phaser.Scene {
       this.walls = this.physics.add.staticGroup();
 
       this.balloon = this.add.sprite(0, 0, 'balloon').setVisible(false);
+      this.emoji = this.add.sprite(0, 0, 'imoji').setVisible(false);
       this.balloon.setDepth(2);
+      this.emoji.setDepth(2);
   
       // const mapCenterX = rows[0].length * tileSize / 2;
       const mapCenterY = rows.length * tileSize / 2;
@@ -184,13 +191,29 @@ export class Msize1Scene extends Phaser.Scene {
               this.thing.setOrigin(0, 0).setDisplaySize(96, 64).setImmovable(true);
               // this.physics.add.collider(this.character!, this.thing);
               this.thing.setDepth(1);
+            } else if (tileID === 'f2') {
+              this.thing = this.physics.add.sprite((colIndex / 2) * tileSize, rowIndex * tileSize, tileID);
+              this.thing.setOrigin(0, 0).setDisplaySize(32, 32).setImmovable(true);
+              // this.physics.add.collider(this.character!, this.thing);
+              this.thing.setDepth(1);
             }
           }
           }
       });
 
       this.input.keyboard?.on('keydown-E', () => {
-        this.sitdown();
+        const nearbyObject = this.isNear();
+
+        if (nearbyObject === 'bench') {
+          this.sitdown();
+        }
+        else if(nearbyObject === 'button'){
+          this.showtext();
+        }
+        else{
+          this.setemoji();
+        }
+
       });
 
     }
@@ -411,15 +434,21 @@ export class Msize1Scene extends Phaser.Scene {
   }
 
 
-    private isNear(): boolean {     //캐릭터가 벤치 주변에 있는가?
+    private isNear(): 'bench' | 'button' | null {     //캐릭터가 벤치 주변에 있는가?
       if (this.character) {            
           const benchCenterX = 1650;  // 벤치중심 X 좌표
           const benchCenterY = 150;  // 벤치중심 Y 좌표
+          const buttonCenterX = 1650;
+          const buttonCenterY = 280;
 
           const minX = benchCenterX - 32;
           const maxX = benchCenterX + 64;
           const minY = benchCenterY;
           const maxY = benchCenterY + 32;
+          const minX2 = buttonCenterX - 32;
+          const maxX2 = buttonCenterX + 32;
+          const minY2 = buttonCenterY - 32;
+          const maxY2 = buttonCenterY + 32;
           
           const charX = this.character.x;
           const charY = this.character.y;
@@ -429,11 +458,16 @@ export class Msize1Scene extends Phaser.Scene {
             if (!this.sittingOnBench) {
               this.balloon.setVisible(true);
             }
-            return true;
-        }
+            return 'bench';
+          }
+          if (charX >= minX2 && charX <= maxX2 && charY >= minY2 && charY <= maxY2) {
+            this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2);
+            this.balloon.setVisible(true);
+            return 'button';
+          }
       }
       this.balloon.setVisible(false);
-      return false;  // 캐릭터가 없는 경우, 문 주변에 없다고 가정하고 false
+      return null;
   }
 
     sitdown(){
@@ -451,6 +485,14 @@ export class Msize1Scene extends Phaser.Scene {
       this.balloon.setVisible(false);
       this.sittingOnBench = true;
       }
+    }
+    showtext(){
+
+    }
+    setemoji(){
+      if(this.character){
+        this.emoji.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
+      }    
     }
   }
   

@@ -252,7 +252,7 @@ export class Msize1Scene extends Phaser.Scene {
         }
 
       });
-
+      this.initializeWebRTC();
     }
      /////////////////////////// 캐릭터 이동 애니메이션
   
@@ -430,6 +430,7 @@ export class Msize1Scene extends Phaser.Scene {
       const stompClientRef =store.getState().stompClientRef
       const sessionName = localStorage.getItem('OVsession');
       if (stompClientRef) {
+        console.log("777777777777777777777777777777777777777")
         stompClientRef.publish({
           destination:`/sub/channel/${sessionName}`,
           body:JSON.stringify(dataToSend)

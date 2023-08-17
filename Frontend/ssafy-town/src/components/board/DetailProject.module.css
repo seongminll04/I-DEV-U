@@ -37,3 +37,12 @@
   color:gray;
   cursor: pointer;
 }
+
+.button {
+  background-color: white;
+  height: 30px;
+  border-radius: 0.5rem;
+}
+.button:hover {
+  background-color: gray;
+}

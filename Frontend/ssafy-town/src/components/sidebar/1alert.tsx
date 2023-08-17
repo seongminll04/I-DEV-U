@@ -82,7 +82,6 @@ const Alert: React.FC = () => {
       },
     })
       .then(res => {
-        console.log(res.data.data)
         if (res.data.data && res.data.data.length > 4) {
           setAlertList(res.data.data.slice(0, 4));
         }
@@ -114,7 +113,7 @@ const Alert: React.FC = () => {
                   {noticeList.map((notice: Notice, index: number) => {
                     const date = new Date(notice.createdAt);
                     return (
-                      <div onClick={() => { setPage(1); setNoticeIdx(notice.idx) }} className={alert_css.notice}>
+                      <div key={notice.idx} onClick={() => { setPage(1); setNoticeIdx(notice.idx) }} className={alert_css.notice}>
                         <span>{notice.idx}</span>
                         <span>{notice.title}</span>
                         <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span>

@@ -40,11 +40,11 @@ const DetailProject: React.FC<Props> = ({ selpjt }) => {
         </p>
         <p> 타입 : {selpjt?.type}</p>
           {selpjt.userIdx === userIdx ? 
-            <button onClick={() => {
+            <button className={Detail_css.button} onClick={() => {
               localStorage.setItem('OVsession',selpjt.session)
               window.location.href = "https://i9b206.p.ssafy.io/meeting"}}>입장</button>
             :
-              <button onClick={() => {
+              <button className={Detail_css.button} onClick={() => {
               if (selpjt["nowNum"]>=selpjt["totalNum"]){
                 alert('구인이 끝난 프로젝트입니다')
                 return

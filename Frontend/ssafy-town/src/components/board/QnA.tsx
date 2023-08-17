@@ -24,7 +24,6 @@ const QnA: React.FC = () => {
   const [maxpage, setMaxpage] = useState<number>(0);
   const [pagination, setPagination] = useState<number>(0);
 
-
   const [searchlocation, setSearchloaction] = useState<string>("전체")
   useEffect(() => {
     const userToken = localStorage.getItem('userToken')
@@ -36,7 +35,6 @@ const QnA: React.FC = () => {
       },
     })
       .then(res => {
-        console.log(res.data)
         setQuestionList(res.data["Q&A"]);
         setPagination(0)
         setMaxpage(Math.ceil(res.data['Q&A'].length / 10))
@@ -188,6 +186,7 @@ const QnA: React.FC = () => {
                   {index < pagination * 10 + 10 && index >= pagination * 10 ?
                     <div
                       className={QnA_css.notice}
+                      key={question.idx}
                       onClick={() => {
                         setPage(2);
                         setQnaid(question.idx);

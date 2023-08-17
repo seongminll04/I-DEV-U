@@ -21,7 +21,6 @@ const ProjectFilter: React.FC<props> = ({ onfilter, onSurvey }) => {
   const languageOptions = ["Python", "Java", "C", "C++", "C#", "Object-C", "Kotlin", "Swift", "Ruby", "Go", "Javascript", "typescript", "PyPy", "PHP", "Rust", "Text", "D", "기타"];
   const projectOptions = ["PROJECT", "STUDY"];
 
-
   const toggleLanguage = (option: string) => {
     setLanguages(prevLanguages => {
       if (prevLanguages.includes(option)) {
@@ -40,12 +39,26 @@ const ProjectFilter: React.FC<props> = ({ onfilter, onSurvey }) => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    if (projectType === null && languages.length === 0) {
+      alert("타입과 언어를 선택해주세요!!!")
+      return;
+    }
+
+    if (projectType === null) {
+      alert("타입을 선택해주세요!")
+      return;
+    }
+
+    if (languages.length === 0) {
+      alert("언어를 하나 이상 선택해주세요!")
+      return;
+    }
+
     const surveyResults: Filter =
     {
       type: projectType,
       languageList: languages,
-    }
-      ;
+    };
     onfilter(surveyResults);
     onSurvey(true);
     dispatch(setModal(null))

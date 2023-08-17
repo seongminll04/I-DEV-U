@@ -12,31 +12,34 @@ const SogaeMatch: React.FC = () => {
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
 
 
-  useEffect(()=>{  
-    if (stompClientRef.current) {
-      const userIdx = localStorage.getItem('userIdx')
-      const subscription = stompClientRef.current.subscribe(`/sub/wait/${userIdx}`, function(message: Message) {
-        const newMessage = JSON.parse(message.body);
-        if (newMessage.message==='수락') {
-          localStorage.setItem('OVsession',newMessage.OVsession)
-          localStorage.setItem('userNum',newMessage.OVsession)
-          console.log(newMessage.OVsession)
-          setTimeout(() => {
-            alert('매칭 성공!')
-            window.location.href='https://i9b206.p.ssafy.io/love'
-          }, 1000);
-        }
-        else {
-          alert('매칭 거절')
-        }
-      });
-      
-      return () => {
-        if (stompClientRef.current) {
-          subscription.unsubscribe();
-        }
-      };
-    }
+  useEffect(()=>{
+    setTimeout(() => {
+      if (stompClientRef.current) {
+        const userIdx = localStorage.getItem('userIdx')
+        const subscription = stompClientRef.current.subscribe(`/sub/wait/${userIdx}`, function(message: Message) {
+          const newMessage = JSON.parse(message.body);
+          if (newMessage.OVsession){
+            localStorage.setItem('OVsession',newMessage.OVsession)
+          }
+          if (newMessage.message==='수락') {
+            console.log(newMessage.OVsession)
+            setTimeout(() => {
+              alert('매칭 성공!')
+              window.location.href='https://i9b206.p.ssafy.io/love'
+            }, 1000);
+          }
+          else {
+            alert('매칭 거절')
+          }
+        });
+        
+        return () => {
+          if (stompClientRef.current) {
+            subscription.unsubscribe();
+          }
+        };
+      }
+    }, 2000);
   },[stompClientRef])
 
   // const matchout = () =>{

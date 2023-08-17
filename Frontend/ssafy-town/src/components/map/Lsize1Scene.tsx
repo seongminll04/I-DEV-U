@@ -585,7 +585,7 @@ export class Lsize1Scene extends Phaser.Scene {
         if (newMessage) {
           // 기존 캐릭터가 존재하는지 확인
           let remoteChar = location.remoteCharacters[newMessage.id];
-          const userIdx = localStorage.getItem('OVtoken')
+          const userIdx = localStorage.getItem('userToken')
   
           // 캐릭터가 존재하지 않으면 새로 생성
           if (!remoteChar && newMessage.id !== userIdx) {
@@ -652,7 +652,7 @@ export class Lsize1Scene extends Phaser.Scene {
 
   // 캐릭터의 위치나 상태가 변경될 때 호출
   sendCharacterData(message?: string) {
-    const currentUserId = localStorage.getItem('OVtoken');
+    const currentUserId = localStorage.getItem('userToken');
     const currentUserNickname = localStorage.getItem('userNickname') || 'Unknown';  // 닉네임 가져오기
 
     const now = Date.now();

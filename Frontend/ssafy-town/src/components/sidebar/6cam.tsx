@@ -14,6 +14,7 @@ type ProjectDataType = {
   ovSession:string;
   modify:boolean;
   totalNumber:number;
+  users:string[];
   // name: string; // 프로젝트 이름
   // participants: string[]; // 참가자 이름 리스트
   // sessionId: string; // 각 화상방의 세션 ID
@@ -45,6 +46,7 @@ const Cam: React.FC = () => {
     const userIdxStr = localStorage.getItem('userIdx')
     const userIdx = userIdxStr ? parseInt(userIdxStr,10): null
     const userToken = localStorage.getItem('userToken')
+    const projects: ProjectDataType[] = [];
     axiosInstance({
       method:'get',
       url:BACKEND_SERVER_URL + `/video/list/${userIdx}`,
@@ -52,8 +54,32 @@ const Cam: React.FC = () => {
         Authorization: 'Bearer ' + userToken
       },
     }).then(res => {
-      console.log(res)
-        setCamList(res.data.list);
+      const pjts = [];
+      for (const pjt of res.data.list) {
+        const pjtPromise = axiosInstance({
+          method: 'get',
+          url: `https://i9b206.p.ssafy.io:9090/project/video/user/${pjt.idx}`,
+          headers: {
+            Authorization: 'Bearer ' + userToken,
+          },
+        }).then((res) => {
+          const users = res.data.data.userList.map((user:any) => user.nickname);
+          projects.push({
+            idx:pjt.idx,
+            title:pjt.title,
+            nowNum:pjt.nowNum,
+            ovSession:pjt.ovSession,
+            modify:pjt.modify,
+            totalNumber:pjt.totalNumber,
+            users:users
+          });
+        });
+        pjts.push(pjtPromise);
+      }
+      return Promise.all(pjts);
+      })
+      .then(()=>{
+        setCamList(projects);
       })
       .catch(err => {
         console.log(err);
@@ -83,9 +109,7 @@ const Cam: React.FC = () => {
               <div className={cam_css.profiledata}>
                 <b>{cam.title}</b>
                 <p style={{ color: 'gray' }}>
-                  {/* { cam.name } */}
-                  {/* {cam.participants.slice(0, 3).join(', ')}
-                  {cam.participants.length > 3 && '...'} */}
+                  {cam.users.map((name:string)=>('#'+name+' '))}
                 </p>
               </div>
               <div>

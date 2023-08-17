@@ -157,7 +157,7 @@ const SogaeDetail: React.FC<Props> = ({ userIdx, percent }) => {
               <br />
               <h1>일치율</h1>
               <h2>{localStorage.getItem("userNickname")} 님의 소개팅 설문 답변과<br /> {mateUser.nickname} 님의 일치율은 {percent===-1 ? '??': percent} % 입니다</h2>
-              <button className={detail_css.button}  onClick={sendrequest}>채팅 신청</button>
+              <button className={detail_css.button}  onClick={sendrequest}>소개팅 신청</button>
             </div>
           </div>
           :

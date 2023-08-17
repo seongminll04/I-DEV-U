@@ -107,18 +107,20 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
           },
         })
         .then(() => {
-          if (stompClientRef.current) {
-            stompClientRef.current.subscribe(`/sub/response/${random}`, function(message: Message) {
-              alert('소개팅 맵으로 이동합니다.')
-              window.location.href='https://i9b206.p.ssafy.io/love'
-
-          });
-          return ()=>{
+          setTimeout(() => {
             if (stompClientRef.current) {
-              stompClientRef.current.unsubscribe(`/sub/response/${random}`);
+              stompClientRef.current.subscribe(`/sub/response/${random}`, function(message: Message) {
+                alert('소개팅 맵으로 이동합니다.')
+                window.location.href='https://i9b206.p.ssafy.io/love'
+  
+            });
+            return ()=>{
+              if (stompClientRef.current) {
+                stompClientRef.current.unsubscribe(`/sub/response/${random}`);
+              }
             }
-          }
-          }
+            }
+          }, 1000);
           setTimeout(() => {
             alert('상대방이 온라인 상태가 아닙니다. 취소되었습니다.')
             dispatch(setModal(null))
@@ -139,8 +141,8 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
       },
     })
     .then(() => {
-      dispatch(setModal(null))
       onMessage()
+      dispatch(setModal(null))
     })
     .catch(err=>console.log(err))
   }

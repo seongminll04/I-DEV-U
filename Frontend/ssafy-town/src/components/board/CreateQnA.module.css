@@ -25,6 +25,12 @@
     cursor: pointer;
 }
 
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
 .closebtn:hover, .backbtn:hover{
     color:gray;
     cursor: pointer;
@@ -66,7 +72,6 @@
 .backbtn {
     margin:10px;
     display: flex;
-    margin-top: -25px;
     text-align: left;
     cursor: pointer;
 }

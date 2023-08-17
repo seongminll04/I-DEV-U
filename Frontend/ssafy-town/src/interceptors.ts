@@ -29,7 +29,7 @@ axiosInstance.interceptors.response.use(
           url: `https://i9b206.p.ssafy.io:9090/user/sleep`,
           headers: {  // Set headers including the refreshToken
             'Content-Type': 'application/json',
-            'Authorization-refresh': refreshToken,
+            'Authorization-refresh': 'Bearer' + refreshToken,
           },
         });
         console.log(data);

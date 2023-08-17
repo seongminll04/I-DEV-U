@@ -109,17 +109,22 @@ const Alert: React.FC = () => {
                 <p>공지사항</p>
                 <p className={alert_css.movebtn} onClick={() => { dispatch(setModal('공지전체')) }}>전체보기</p>
               </div>
-              {noticeList.map((notice: Notice, index: number) => {
-                const date = new Date(notice.createdAt);
-                return (
-                  <div onClick={() => { setPage(1); setNoticeIdx(notice.idx) }} className={alert_css.notice}>
-                    <span>{notice.idx}</span>
-                    <span>{notice.title}</span>
-                    <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span>
-                    {/* <span>{date.getMonth() + 1}/{date.getDate()}</span> */}
-                  </div>
-                );
-              })}
+              {noticeList.length > 0 ? 
+                <div>
+                  {noticeList.map((notice: Notice, index: number) => {
+                    const date = new Date(notice.createdAt);
+                    return (
+                      <div onClick={() => { setPage(1); setNoticeIdx(notice.idx) }} className={alert_css.notice}>
+                        <span>{notice.idx}</span>
+                        <span>{notice.title}</span>
+                        <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span>
+                        {/* <span>{date.getMonth() + 1}/{date.getDate()}</span> */}
+                      </div>
+                    );
+                  })}
+                </div>
+                : <h2>공지사항이 없습니다.</h2>
+              }
             </div>
             <br />
             <div className={alert_css.container}>
@@ -151,8 +156,7 @@ const Alert: React.FC = () => {
                     );
                   })}
                 </div>
-                :
-                null
+                : <h2>알림이 없습니다.</h2>
               }
             </div>
           </div>

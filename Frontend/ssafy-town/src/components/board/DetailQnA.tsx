@@ -11,8 +11,8 @@ interface Props {
 }
 
 interface User {
-  nickname : string;
-  storedFileName : string;
+  nickname: string;
+  storedFileName: string;
 }
 
 interface Question {
@@ -20,7 +20,7 @@ interface Question {
   title: string;
   content: string;
   createdAt: string;
-  user : User;
+  user: User;
 }
 
 interface Comment {
@@ -122,8 +122,10 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
 
   return (
     <div className={Create_css.modal}>
-      <p className={Create_css.closebtn} onClick={() => { dispatch(setModal(null)) }}>닫기</p>
-      <p className={Create_css.backbtn} onClick={onback}>돌아가기</p>
+      <div className={Create_css.buttons}>
+        <p className={Create_css.backbtn} onClick={onback}>돌아가기</p>
+        <p className={Create_css.closebtn} onClick={() => { dispatch(setModal(null)) }}>닫기</p>
+      </div>
       <div>
         <h1>Q n A 게시글</h1>
         <hr />
@@ -133,8 +135,8 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
               <>
                 <div className={Create_css.title}>{question.title}</div>
                 <div className={Create_css.profile}>
-                  <img src={question.user.storedFileName? question.user.storedFileName : "assets/default_profile.png"}
-                  alt=""
+                  <img src={question.user.storedFileName ? question.user.storedFileName : "assets/default_profile.png"}
+                    alt=""
                   />
                   <h3>{question.user.nickname}</h3>
                 </div>
@@ -174,7 +176,7 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
                   </div>
                 )
               })}
-              {commentlist.length > 0 ? null : <h2 style={{textAlign: "center"}}>댓글이 없습니다</h2>}
+              {commentlist.length > 0 ? null : <h2 style={{ textAlign: "center" }}>댓글이 없습니다</h2>}
             </div>
             <br />
             <input className={Create_css.commentbox} type="text" value={inputvalue} onChange={(e) => setInputvalue(e.target.value)} onKeyDown={handlekeydown} />

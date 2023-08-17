@@ -15,14 +15,10 @@ interface Notice {
 
 const AllNotice: React.FC = () => {
   const dispatch = useDispatch();
-  const userToken = localStorage.getItem('userToken')
   const [page, setPage] = useState<Number>(0);
 
-  const [search, setsearch] = useState<string>('');
-  const [nowsearch, setnowsearch] = useState<boolean>(false);
   const [noticeList, setNoticeList] = useState<Notice[]>([]);
   const [noticeIdx, setNoticeIdx] = useState<number>(0);
-  const [searchlocation, setSearchloaction] = useState<string>("전체")
 
   useEffect(() => {
     const userToken = localStorage.getItem('userToken')
@@ -34,46 +30,12 @@ const AllNotice: React.FC = () => {
       },
     })
       .then(res => {
-        // console.log(res.data)
+        console.log(res.data)
         setNoticeList(res.data.list)
       })
       .catch(err => console.log(err))
   }, [])
 
-  const handlekeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    const inputElement = event.currentTarget
-    const currentCursorPosition = inputElement.selectionStart || 0;
-    if (event.key === 'ArrowLeft' && currentCursorPosition !== 0) {
-      inputElement.setSelectionRange(currentCursorPosition - 1, currentCursorPosition - 1);
-    } else if (event.key === 'ArrowRight') {
-      inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
-    } else if (event.key === ' ') {
-      inputElement.value = inputElement.value.slice(0, currentCursorPosition) + ' ' + inputElement.value.slice(currentCursorPosition,)
-      inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
-    }
-  }
-  let url = searchlocation === '제목' ? 'find/title'
-    : searchlocation === '내용' ? 'find/content'
-      : 'find'
-
-  const searchdata = () => {
-    axiosInstance({
-      method: 'get',
-      url: 'https://localhost:9090/notice/' + url,
-      headers: {
-        Authorization: 'Bearer ' + userToken
-      },
-      params: {
-        keyWord: search
-      }
-    })
-      .then(res => {
-        // console.log(res.data.list)
-        setNoticeList(res.data.list)
-      })
-    setnowsearch(true)
-    // 여기서 모든데이터 중 검색어랑 일치하는 것만 리스트화 하는 코드작성
-  }
   const backpage = () => {
     setPage(0)
   }
@@ -89,18 +51,6 @@ const AllNotice: React.FC = () => {
           <div>
             <h1 style={{ margin: '-20px 0 20px 0' }}>공지사항</h1>
             <hr style={{ border: 'solid 1px gray' }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <div>
-                <select name="검색대상" id="" value={searchlocation} onChange={(e) => { setSearchloaction(e.target.value) }}>
-                  <option value="전체">전체</option>
-                  <option value="제목">제목</option>
-                  <option value="내용">내용</option>
-                </select>
-                <input type="text" value={search} onChange={(event) => { setsearch(event.target.value) }} onKeyDown={handlekeydown} />
-                <button onClick={searchdata}>검색</button>
-                {!nowsearch ? <span></span> : <span className={alert_css.movebtn} onClick={() => { setsearch(''); setnowsearch(false) }}>검색취소</span>}
-              </div>
-            </div>
           </div>
           {/* <br /> */}
           {noticeList.map((notice: Notice, index: number) => {
@@ -108,7 +58,7 @@ const AllNotice: React.FC = () => {
             return (
               <div onClick={() => { setPage(1); setNoticeIdx(notice.idx) }} className={alert_css.notice} key={index}>
                 <span>{notice.idx}</span>
-                <span>{notice.content}</span>
+                <span>{notice.title}</span>
                 <span>
                   {date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}
                 </span>

@@ -1,10 +1,9 @@
 import React from 'react';
 import now_css from './nowalert.module.css';
 
-
 import { useDispatch } from 'react-redux';
 import { setChatIdx, setChatTitle, setModal, setSidebar } from '../../store/actions';
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 
 interface Props {
   message:any;
@@ -18,7 +17,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
   const ok = () => {
     const now = new Date()
     // 채팅방 생성
-    axios({
+    axiosInstance({
       method:'post',
       url: 'https://i9b206.p.ssafy.io:9090/chat/rooms',
       data:{
@@ -34,7 +33,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
       const userIdxStr = localStorage.getItem('userIdx')
       const userIdx = userIdxStr ? parseInt(userIdxStr,10) : null
 
-      axios({
+      axiosInstance({
         method:'delete',
         url: `https://i9b206.p.ssafy.io:9090/alarm/${message.idx}`,
         headers: {
@@ -47,7 +46,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
       // 채팅방 참가
       dispatch(setChatIdx(res.data.data.roomIdx))
       dispatch(setChatTitle(message.fromUser.nickname + '님의 mate 채팅방'))
-      axios({
+      axiosInstance({
         method:'post',
         url: `https://i9b206.p.ssafy.io:9090/chat/rooms/${res.data.data.roomIdx}/users`,
         data:{

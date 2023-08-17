@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import QnA_css from './QnA.module.css';
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
@@ -28,7 +28,7 @@ const QnA: React.FC = () => {
   const [searchlocation, setSearchloaction] = useState<string>("전체")
   useEffect(() => {
     const userToken = localStorage.getItem('userToken')
-    axios({
+    axiosInstance({
       method: 'get',
       url: 'https://i9b206.p.ssafy.io:9090/qna/list',
       headers: {
@@ -39,7 +39,7 @@ const QnA: React.FC = () => {
         console.log(res.data)
         setQuestionList(res.data["Q&A"]);
         setPagination(0)
-        setMaxpage(Math.ceil(res.data['Q&A'].length/10))
+        setMaxpage(Math.ceil(res.data['Q&A'].length / 10))
       })
       .catch(err => {
         console.log(err)
@@ -51,33 +51,33 @@ const QnA: React.FC = () => {
       const userToken = localStorage.getItem('userToken')
       const url = searchlocation === '제목' ? 'find/title/' + search
         : searchlocation === '내용' ? 'find/content/' + search
-        : 'list/'
-    axios({
-      method: 'get',
-      url: 'https://i9b206.p.ssafy.io:9090/qna/' + url,
-      headers: {
-        Authorization: 'Bearer ' + userToken
-      },
-    })
-      .then(res => {
-        if (searchlocation==='전체') {
-          setQuestionList(res.data["Q&A"].filter((qna:Question) => qna.title.includes(search) || qna.content.includes(search)))
-          setMaxpage(Math.ceil(res.data["Q&A"].filter((qna:Question) => qna.title.includes(search) || qna.content.includes(search)).length/10))
-        }
-        else {
-          setQuestionList(res.data["Q&A"]);
-          setMaxpage(Math.ceil(res.data["Q&A"].length/10))
-        }
+          : 'list/'
+      axiosInstance({
+        method: 'get',
+        url: 'https://i9b206.p.ssafy.io:9090/qna/' + url,
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        },
       })
-      .catch(err => {
-        console.log(err)
-      })
+        .then(res => {
+          if (searchlocation === '전체') {
+            setQuestionList(res.data["Q&A"].filter((qna: Question) => qna.title.includes(search) || qna.content.includes(search)))
+            setMaxpage(Math.ceil(res.data["Q&A"].filter((qna: Question) => qna.title.includes(search) || qna.content.includes(search)).length / 10))
+          }
+          else {
+            setQuestionList(res.data["Q&A"]);
+            setMaxpage(Math.ceil(res.data["Q&A"].length / 10))
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
 
     else {
 
       const userToken = localStorage.getItem('userToken')
-      axios({
+      axiosInstance({
         method: 'get',
         url: 'https://i9b206.p.ssafy.io:9090/qna/list',
         headers: {
@@ -87,14 +87,14 @@ const QnA: React.FC = () => {
         .then(res => {
           setQuestionList(res.data["Q&A"]);
           setPagination(0)
-          setMaxpage(Math.ceil(res.data['Q&A'].length/10))
+          setMaxpage(Math.ceil(res.data['Q&A'].length / 10))
         })
         .catch(err => {
           console.log(err)
         })
     }
   }
-  
+
 
   const handlekeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget
@@ -129,8 +129,8 @@ const QnA: React.FC = () => {
     const userToken = localStorage.getItem('userToken')
     const url = searchlocation === '제목' ? 'find/title/' + search
       : searchlocation === '내용' ? 'find/content/' + search
-      : 'list/'
-    axios({
+        : 'list/'
+    axiosInstance({
       method: 'get',
       url: 'https://i9b206.p.ssafy.io:9090/qna/' + url,
       headers: {
@@ -138,13 +138,13 @@ const QnA: React.FC = () => {
       },
     })
       .then(res => {
-        if (searchlocation==='전체') {
-          setQuestionList(res.data["Q&A"].filter((qna:Question) => qna.title.includes(search) || qna.content.includes(search)))
-          setMaxpage(Math.ceil(res.data["Q&A"].filter((qna:Question) => qna.title.includes(search) || qna.content.includes(search)).length/10))
+        if (searchlocation === '전체') {
+          setQuestionList(res.data["Q&A"].filter((qna: Question) => qna.title.includes(search) || qna.content.includes(search)))
+          setMaxpage(Math.ceil(res.data["Q&A"].filter((qna: Question) => qna.title.includes(search) || qna.content.includes(search)).length / 10))
         }
         else {
           setQuestionList(res.data["Q&A"]);
-          setMaxpage(Math.ceil(res.data["Q&A"].length/10))
+          setMaxpage(Math.ceil(res.data["Q&A"].length / 10))
         }
         setPagination(0)
       })
@@ -176,7 +176,7 @@ const QnA: React.FC = () => {
             <button className={QnA_css.createQnA} onClick={() => setPage(1)}>질문하기</button>
           </div>
           <br />
-          {questionList.length > 0 ? 
+          {questionList.length > 0 ?
             questionList.map((question: Question, index: number) => {
               const date = new Date(question.createdAt);
               const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -186,38 +186,38 @@ const QnA: React.FC = () => {
 
               return (
                 <div>
-                  {index < pagination*10 + 10  && index >= pagination*10 ?
+                  {index < pagination * 10 + 10 && index >= pagination * 10 ?
                     <div
-                    className={QnA_css.notice}
-                    onClick={() => {
-                      setPage(2);
-                      setQnaid(question.idx);
-                    }}>
-                    <p style={{margin:'5px'}}>{index+1}</p>
-                    <p style={{margin:'5px'}}>{question.title}</p>
-                    <p style={{margin:'5px'}}>
-                      {month}/{day} {hours}:{minutes}
-                    </p>
-                    </div>: null}
+                      className={QnA_css.notice}
+                      onClick={() => {
+                        setPage(2);
+                        setQnaid(question.idx);
+                      }}>
+                      <p style={{ margin: '5px' }}>{index + 1}</p>
+                      <p style={{ margin: '5px' }}>{question.title}</p>
+                      <p style={{ margin: '5px' }}>
+                        {month}/{day} {hours}:{minutes}
+                      </p>
+                    </div> : null}
                 </div>
               );
             }
             )
-           : 
+            :
             <div>등록된 질문이 없습니다.</div>
           }
           <br />
-          {questionList.length>0 ?
-          <div>
-            <button className={QnA_css.createQnA} onClick={()=>{if(pagination+1===1){alert('첫 페이지입니다')} else{setPagination(pagination-1)}}}>이전 페이지</button>
-            <span>  {maxpage>0 ? pagination+1 : pagination} / {maxpage}   </span>
-            <button className={QnA_css.createQnA} onClick={()=>{if(pagination+1>=maxpage){alert('마지막 페이지입니다')} else{setPagination(pagination+1)}}}>다음 페이지</button>
-          </div>
-          :
-          null }
+          {questionList.length > 0 ?
+            <div>
+              <button className={QnA_css.createQnA} onClick={() => { if (pagination + 1 === 1) { alert('첫 페이지입니다') } else { setPagination(pagination - 1) } }}>이전 페이지</button>
+              <span>  {maxpage > 0 ? pagination + 1 : pagination} / {maxpage}   </span>
+              <button className={QnA_css.createQnA} onClick={() => { if (pagination + 1 >= maxpage) { alert('마지막 페이지입니다') } else { setPagination(pagination + 1) } }}>다음 페이지</button>
+            </div>
+            :
+            null}
 
         </div>
-        : page === 1 ? <CreateQnA onback={() => { setPage(0); reload()}} />
+        : page === 1 ? <CreateQnA onback={() => { setPage(0); reload() }} />
           : <DetailQnA qnaid={qnaid} onback={() => setPage(0)} />}
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import sogae_css from './2sogae.module.css';
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../store/actions';
@@ -33,7 +33,7 @@ const Sogae: React.FC = () => {
     const userIdxStr = localStorage.getItem('userIdx')
     const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
     // 소개팅 설문 여부 체크
-    axios({
+    axiosInstance({
       method: 'get',
       url: `https://i9b206.p.ssafy.io:9090/date/survey/${userIdx}`,
       headers: {
@@ -55,7 +55,7 @@ const Sogae: React.FC = () => {
     const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
     // 필터에 해당하는 유저 리스트
     if (survey) {
-      axios({
+      axiosInstance({
         method: 'get',
         url: `https://i9b206.p.ssafy.io:9090/date/list/${userIdx}`,
         headers: {
@@ -111,7 +111,7 @@ const Sogae: React.FC = () => {
                           <b>{user.nickname}</b>
                           <p style={{ color: 'gray' }}>#{user.age} #{user.face}</p>
                         </div>
-                      </div> 
+                      </div>
                     </div>
                     <div className={sogae_css.matchRate}>{user.percent}%</div>
                   </div>
@@ -126,7 +126,7 @@ const Sogae: React.FC = () => {
             </div>}
         </>}
       {isModalOpen === '소개팅설문' ? <SecondQAModal survey={survey} onsurvey={(value) => setServey(value)} />
-        : isModalOpen === '소개팅상세정보' ? <SogaeDetail userIdx={userdetail} percent={percent}/>
+        : isModalOpen === '소개팅상세정보' ? <SogaeDetail userIdx={userdetail} percent={percent} />
           : null}
     </div>
 

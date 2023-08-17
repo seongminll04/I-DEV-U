@@ -40,6 +40,14 @@
   width: 40%;
 }
 
+.mypage_toggle_container {
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  font-size: small;
+  margin: 13px 0px;
+}
+
 .mypage_toggle {
   display: flex;
   justify-content:center;

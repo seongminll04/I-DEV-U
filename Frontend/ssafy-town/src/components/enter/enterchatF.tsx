@@ -5,7 +5,7 @@ import { useDispatch,useSelector } from 'react-redux';
 import { setChatIdx, setChatTitle, setModal, setSidebar } from '../../store/actions';
 import { AppState } from '../../store/state';
 import { Client } from '@stomp/stompjs';
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 
 interface Props {
     sendusername:string,
@@ -20,7 +20,7 @@ const EnterChatF: React.FC<Props> = ({sendusername,senduserIdx}) => {
     const userToken = localStorage.getItem('userToken')
     const userIdxStr = localStorage.getItem('userIdx')
     const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
-    axios({
+    axiosInstance({
       method:'get',
       url: `https://i9b206.p.ssafy.io:9090/chat/rooms/check`,
       headers: {

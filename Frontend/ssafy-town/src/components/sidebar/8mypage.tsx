@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import mypage_css from './8mypage.module.css';
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 import EditAcount from '../account/edit';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -71,7 +71,7 @@ const Mypage: React.FC = () => {
     var userIdx: number | null;
     if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
 
-    axios({
+    axiosInstance({
       method: 'put',
       url: `https://i9b206.p.ssafy.io:9090/user/setting`,
       data: {
@@ -83,7 +83,7 @@ const Mypage: React.FC = () => {
       },
     })
       .then(() => {
-        axios({
+        axiosInstance({
           method: 'get',
           url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
           headers: {
@@ -104,7 +104,7 @@ const Mypage: React.FC = () => {
     const userToken = localStorage.getItem('userToken')
     const userIdxStr = localStorage.getItem('userIdx')
     const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
-    axios({
+    axiosInstance({
       method: 'get',
       url: `https://i9b206.p.ssafy.io:9090/date/${userIdx}`,
       headers: {
@@ -112,7 +112,6 @@ const Mypage: React.FC = () => {
       },
     })
       .then(res => {
-        console.log(res.data)
         if (res.data.resmsg === "등록 했음") {
           setSogae(true)
         } else if (res.data.resmsg === "등록 안함") {
@@ -131,7 +130,7 @@ const Mypage: React.FC = () => {
     const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
 
     if (changeDate) {
-      axios({
+      axiosInstance({
         method: 'get',
         url: `https://i9b206.p.ssafy.io:9090/user/detail/${userIdx}`,
         headers: {
@@ -139,7 +138,6 @@ const Mypage: React.FC = () => {
         },
       })
         .then(res => {
-          console.log(res.data.data)
           setUser(res.data.data)
           setChangeData(false)
         })
@@ -156,7 +154,7 @@ const Mypage: React.FC = () => {
     const userToken = localStorage.getItem('userToken');
 
     if (sogae) {
-      axios({
+      axiosInstance({
         method: 'delete',
         url: `https://i9b206.p.ssafy.io:9090/date/release/${userIdx}`,
         headers: {
@@ -171,7 +169,7 @@ const Mypage: React.FC = () => {
         })
     }
     else {
-      axios({
+      axiosInstance({
         method: 'post',
         url: `https://i9b206.p.ssafy.io:9090/date/register/${userIdx}`,
         headers: {
@@ -206,7 +204,7 @@ const Mypage: React.FC = () => {
         formData.append('userIdx', userIdx.toString()); // number 타입을 문자열로 변환하여 추가
       }
 
-      await axios({
+      await axiosInstance({
         method: 'post',
         url: 'https://i9b206.p.ssafy.io:9090/user/uploadFile',
         data: formData,
@@ -215,7 +213,6 @@ const Mypage: React.FC = () => {
           'Content-Type': 'multipart/form-data',
         }
       }).then((res) => {
-        console.log(res);
         // setChangeData(false)
         alert("성공")
       })
@@ -255,21 +252,21 @@ const Mypage: React.FC = () => {
               else { dispatch(setModal('회원정보수정1')) }
             }}>회원정보 수정</button>
 
-          <p className={mypage_css.mypage_toggle}>내 정보 검색 허용
+          <div className={mypage_css.mypage_toggle_container}>내 정보 검색 허용
             <ToggleContainer onClick={() => { toggleHandler() }}>
               <div className={`toggle-container ${user.invite === 'true' ? "toggle--checked" : null}`} />
               <div className={`${mypage_css.mypage_toggle} toggle-circle ${user.invite === 'true' ? "toggle--checked" : null}`}>
                 {user.invite === 'true' ? 'On' : 'Off'}</div>
             </ToggleContainer>
-          </p>
+          </div>
 
-          <p className={mypage_css.mypage_toggle}>소개팅 등록
+          <div className={mypage_css.mypage_toggle_container}>소개팅 등록
             <ToggleContainer onClick={() => { onregistMeeting() }}>
               <div className={`toggle-container ${sogae ? "toggle--checked" : null}`} />
               <div className={`${mypage_css.mypage_toggle} toggle-circle ${sogae ? "toggle--checked" : null}`}>
                 {sogae ? 'On' : 'Off'}</div>
             </ToggleContainer>
-          </p>
+          </div>
 
           <button className={mypage_css.button} onClick={() => dispatch(setModal('Re최초설문'))}>최초 설문 수정</button>
           <button className={mypage_css.button} onClick={() => dispatch(setModal('Re소개팅설문'))}>소개팅 설문 수정</button>

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import detail_css from './matedetail.module.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { setChatIdx, setChatTitle, setModal, setSidebar } from '../../store/actions';
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
+
 import { Client } from '@stomp/stompjs';
 import { AppState } from '../../store/state';
 
@@ -31,7 +32,7 @@ const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
   const [Follow, setFollow] = useState(false);
   useEffect(() => {
     const userToken = localStorage.getItem('userToken')
-    axios({
+    axiosInstance({
       method: 'get',
       url: `https://i9b206.p.ssafy.io:9090/partner/detail/${userIdx}`,
       headers: {
@@ -55,7 +56,7 @@ const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
     const userToken = localStorage.getItem('userToken')
     const userIdxStr = localStorage.getItem('userIdx')
     const userIndex = userIdxStr ? parseInt(userIdxStr, 10) : null
-    axios({
+    axiosInstance({
       method: 'get',
       url: `https://i9b206.p.ssafy.io:9090/user/getFollowList/${userIndex}`,
       headers: {
@@ -78,7 +79,7 @@ const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
     const userIndex = userIdxStr ? parseInt(userIdxStr, 10) : null
     const userToken = localStorage.getItem('userToken')
     if (Follow) {
-      axios({
+      axiosInstance({
         method: 'delete',
         url: `https://i9b206.p.ssafy.io:9090/user/unfollow`,
         headers: {
@@ -92,7 +93,7 @@ const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
         .then(() => setFollow(false))
     }
     else {
-      axios({
+      axiosInstance({
         method: 'post',
         url: `https://i9b206.p.ssafy.io:9090/user/follow`,
         headers: {
@@ -112,7 +113,7 @@ const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
     const senduserIdxStr = localStorage.getItem('userIdx')
     const senduserIdx = senduserIdxStr ? parseInt(senduserIdxStr, 10) : null
 
-    axios({
+    axiosInstance({
       method: 'get',
       url: `https://i9b206.p.ssafy.io:9090/chat/rooms/check`,
       headers: {

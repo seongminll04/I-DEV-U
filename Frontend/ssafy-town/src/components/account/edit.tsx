@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import edit_css from './edit.module.css';
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -41,7 +41,7 @@ const EditAccount: React.FC<Props> = ({ user, change }) => {
     }
 
     else if (!formik.errors.nickname) {
-      axios({
+      axiosInstance({
         method: 'get',
         url: `https://i9b206.p.ssafy.io:9090/user/signUp/nicknameCheck/${nickname}`
       })
@@ -73,7 +73,7 @@ const EditAccount: React.FC<Props> = ({ user, change }) => {
     onSubmit: (values) => {
       console.log(values);
       const userToken = localStorage.getItem('userToken');
-      axios({
+      axiosInstance({
         method: 'put',
         url: 'https://i9b206.p.ssafy.io:9090/user/modify',
         headers: {

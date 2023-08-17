@@ -3,7 +3,7 @@ import Inquiry from './inquiry.module.css';
 
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 
 const CreateQnA: React.FC = () => {
   const dispatch = useDispatch()
@@ -34,7 +34,7 @@ const CreateQnA: React.FC = () => {
     var userIdx: number | null;
     if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
 
-    axios({
+    axiosInstance({
       method: 'post',
       url: `https://i9b206.p.ssafy.io:9090/inquiry/create`,
       data: {

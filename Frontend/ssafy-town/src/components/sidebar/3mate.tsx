@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../store/state';
 import { setModal } from '../../store/actions';
 
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 import MateFilter from '../filter/mateFilter';
 import MateDetail from '../detail/matedetail';
 
@@ -43,7 +43,7 @@ const Mate: React.FC = () => {
       tList = [...tList, ...filter.tagList]
     }
     if (tList[0]) {
-      axios({
+      axiosInstance({
         method: 'post',
         url: 'https://i9b206.p.ssafy.io:9090/partner/list',
         headers: {
@@ -59,7 +59,7 @@ const Mate: React.FC = () => {
         .catch(err => console.log(err))
     }
     else {
-      axios({
+      axiosInstance({
         method: 'post',
         url: 'https://i9b206.p.ssafy.io:9090/partner/list',
         headers: {

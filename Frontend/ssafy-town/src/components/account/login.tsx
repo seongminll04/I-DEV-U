@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 import login_css from './login.module.css';
 
 class ValidationError extends Error {
@@ -29,7 +29,7 @@ const Login: React.FC = () => {
   },[userId, saveId])
 
   const handleLogin = async () => {
-    axios({
+    axiosInstance({
       method:'post',
       url:'https://i9b206.p.ssafy.io:9090/user/login',
       data:{'email': userId, 'password': userPassword,}

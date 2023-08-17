@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import detail_css from './matedetail.module.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { setChatIdx, setChatTitle, setModal, setSidebar } from '../../store/actions';
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 import { Client } from '@stomp/stompjs';
 import { AppState } from '../../store/state';
 
@@ -34,7 +34,7 @@ const SogaeDetail: React.FC<Props> = ({ userIdx, percent }) => {
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
   useEffect(() => {
     const userToken = localStorage.getItem('userToken')
-    axios({
+    axiosInstance({
       method: 'get',
       url: `https://i9b206.p.ssafy.io:9090/date/detail/${userIdx}`,
       headers: {
@@ -57,7 +57,7 @@ const SogaeDetail: React.FC<Props> = ({ userIdx, percent }) => {
     const userToken = localStorage.getItem('userToken')
     const userIdxStr = localStorage.getItem('userIdx')
     const userIndex = userIdxStr ? parseInt(userIdxStr, 10) : null
-    axios({
+    axiosInstance({
       method: 'get',
       url: `https://i9b206.p.ssafy.io:9090/user/getFollowList/${userIndex}`,
       headers: {
@@ -80,7 +80,7 @@ const SogaeDetail: React.FC<Props> = ({ userIdx, percent }) => {
     const userIndex = userIdxStr ? parseInt(userIdxStr, 10) : null
     const userToken = localStorage.getItem('userToken')
     if (Follow) {
-      axios({
+      axiosInstance({
         method: 'delete',
         url: `https://i9b206.p.ssafy.io:9090/user/unfollow`,
         headers: {
@@ -94,7 +94,7 @@ const SogaeDetail: React.FC<Props> = ({ userIdx, percent }) => {
         .then(() => setFollow(false))
     }
     else {
-      axios({
+      axiosInstance({
         method: 'post',
         url: `https://i9b206.p.ssafy.io:9090/user/follow`,
         headers: {
@@ -112,9 +112,9 @@ const SogaeDetail: React.FC<Props> = ({ userIdx, percent }) => {
   const sendrequest = () => {
     const userToken = localStorage.getItem('userToken')
     const senduserIdxStr = localStorage.getItem('userIdx')
-    const senduserIdx = senduserIdxStr ? parseInt(senduserIdxStr,10) : null
+    const senduserIdx = senduserIdxStr ? parseInt(senduserIdxStr, 10) : null
 
-    axios({
+    axiosInstance({
       method: 'get',
       url: `https://i9b206.p.ssafy.io:9090/chat/rooms/check`,
       headers: {
@@ -165,20 +165,20 @@ const SogaeDetail: React.FC<Props> = ({ userIdx, percent }) => {
               <img
                 src={mateUser.storedFileName ? mateUser.storedFileName : "assets/default_profile.png"}
                 alt=""
-                style={{ borderRadius: "50%" ,width:'125px', height:'125px'}}
+                style={{ borderRadius: "50%", width: '125px', height: '125px' }}
               />
               <p>나이 : {mateUser.age}</p>
               <p>성별 : {mateUser.gender}</p>
-   
-        
-              {/* {mateUser.language.map((lang) => (
-                lang + '    '
-              ))} */}
               {Follow ? <button onClick={onfollow}>언팔로우</button> : <button onClick={onfollow}>팔로우</button>}
             </div>
             <div style={{ width: '65%', margin: '0 20px', boxSizing: 'border-box' }}>
               <br />
-              <h3>자기소개 : {mateUser.intro ? mateUser.intro:'등록된 자기소개가 없습니다'}</h3>
+              <h3>자기소개 : {mateUser.intro ? mateUser.intro : '등록된 자기소개가 없습니다'}</h3>
+              <h3>
+                언어 : {mateUser.language.map((lang) => (
+                  lang + '    '
+                ))}
+              </h3>
               <h2>일치율 : {percent} %</h2>
               <br />
               <button onClick={sendrequest}>채팅 신청</button>

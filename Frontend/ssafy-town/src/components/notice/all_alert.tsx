@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import alert_css from '../sidebar/1alert.module.css';
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
@@ -45,7 +45,7 @@ const AllAlert: React.FC = () => {
     const userToken = localStorage.getItem('userToken')
     const userIdxStr = localStorage.getItem('userIdx')
     const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
-    axios({
+    axiosInstance({
       method: 'get',
       url: `https://i9b206.p.ssafy.io:9090/alarm/from/${userIdx}`,
       headers: {

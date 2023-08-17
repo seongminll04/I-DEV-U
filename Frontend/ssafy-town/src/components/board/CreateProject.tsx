@@ -3,9 +3,7 @@ import Create_css from './CreateProject.module.css';
 
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
-import axios from 'axios';
-// import { wrap } from 'module';
-
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 
 const CreateProject: React.FC = () => {
 
@@ -68,7 +66,7 @@ const CreateProject: React.FC = () => {
     console.log("1단계")
     // OpenVidu 세션 생성
     const userToken = localStorage.getItem('userToken')
-    axios.post(OPENVIDU_SERVER_URL +'/api/sessions', {}, {
+    axiosInstance.post(OPENVIDU_SERVER_URL +'/api/sessions', {}, {
         headers: {
             'Authorization': 'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SECRET)
         }
@@ -83,7 +81,7 @@ const CreateProject: React.FC = () => {
         if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
 
         // 화상방 생성
-        axios({
+        axiosInstance({
           method:'post',
           url:BACKEND_SERVER_URL+'/video/create',
           data:{
@@ -102,7 +100,7 @@ const CreateProject: React.FC = () => {
         .catch(err=>console.log(err))
 
         // 백엔드에 프로젝트 정보, 세션 ID 전송
-        axios({
+        axiosInstance({
           method:'post',
           url:BACKEND_SERVER_URL+'/project/register',
           data:{

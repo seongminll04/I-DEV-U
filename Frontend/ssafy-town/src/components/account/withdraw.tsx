@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import withdraw_css from './withdraw.module.css';
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 
@@ -30,7 +30,7 @@ const Withdraw: React.FC = () => {
     } else {
       // 백엔드 에 따라 수정할 곳
       const userToken=localStorage.getItem('userToken')
-      axios({
+      axiosInstance({
         method: 'PUT',
         url: 'https://i9b206.p.ssafy.io:9090/user/delete',
         headers : {

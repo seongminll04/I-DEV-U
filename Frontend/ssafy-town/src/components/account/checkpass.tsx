@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import checkpass_css from './checkpass.module.css';
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 
@@ -13,7 +13,7 @@ const CheckPass: React.FC = () => {
     const userIdxStr = localStorage.getItem('userIdx')
     const userIdx = userIdxStr ? parseInt(userIdxStr, 10):null
   
-    axios({
+    axiosInstance({
       method: 'post',
       url: 'https://i9b206.p.ssafy.io:9090/user/modify/check',
       headers: {

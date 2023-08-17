@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import project_css from "./4project.module.css";
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllowMove, setModal } from '../../store/actions';
-import axios from "axios";
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 import { AppState } from "../../store/state";
 import ProjectFilter from "../filter/projectFilter";
 import EnterProject from "../board/EnterProject";
@@ -48,7 +48,7 @@ const Project: React.FC = () => {
     // if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
     if (survey) {
       setSurvey(false)
-      axios({
+      axiosInstance({
         method: 'post',
         url: 'https://i9b206.p.ssafy.io:9090/project/filter',
         headers: {
@@ -72,7 +72,7 @@ const Project: React.FC = () => {
   useEffect(() => {
     console.log("first");
     const userToken = localStorage.getItem('userToken')
-    axios({
+    axiosInstance({
       method: 'get',
       url: 'https://i9b206.p.ssafy.io:9090/project/list',
       headers: {
@@ -89,7 +89,7 @@ const Project: React.FC = () => {
   // 키워드로 프로젝트 검색
   const loaddata = () => {
     const userToken = localStorage.getItem('userToken')
-    axios({
+    axiosInstance({
       method: 'get',
       url: `https://i9b206.p.ssafy.io:9090/project/list/${inputvalue}`,
       headers: {

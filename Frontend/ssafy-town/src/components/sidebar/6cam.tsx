@@ -1,7 +1,7 @@
 import React,{ useState, useEffect } from 'react';
 
 import cam_css from './6cam.module.css'
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 
 import { useDispatch } from 'react-redux';
 import { setAllowMove } from '../../store/actions';
@@ -45,7 +45,7 @@ const Cam: React.FC = () => {
     const userIdxStr = localStorage.getItem('userIdx')
     const userIdx = userIdxStr ? parseInt(userIdxStr,10): null
     const userToken = localStorage.getItem('userToken')
-    axios({
+    axiosInstance({
       method:'get',
       url:BACKEND_SERVER_URL + `/video/list/${userIdx}`,
       headers : {

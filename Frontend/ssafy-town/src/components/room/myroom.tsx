@@ -12,7 +12,7 @@ import {useNavigate} from 'react-router-dom'
 import { Ssize1Scene } from '../map/Ssize1Scene';
 import ModalOpen from '../system/modalopen';
 // import Cam from '../openvidu/cam/cam'
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 
 const MyRoom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
@@ -29,7 +29,7 @@ const MyRoom: React.FC = () => {
     
     const userToken = localStorage.getItem('userToken');
     if (userToken) {
-      axios({
+      axiosInstance({
         method:'get',
         url:`https://i9b206.p.ssafy.io:9090/basicSurvey/${userIdx}`,
         headers : {

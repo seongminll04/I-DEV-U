@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import follow_css from './7follow.module.css'
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllowMove, setModal } from '../../store/actions';
@@ -31,7 +31,7 @@ const Follow: React.FC = () => {
     const userIdxStr = localStorage.getItem('userIdx');
     const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
 
-    axios({
+    axiosInstance({
       method: 'get',
       url: `https://i9b206.p.ssafy.io:9090/user/getFollowList/${userIdx}`,
       headers: {
@@ -53,7 +53,7 @@ const Follow: React.FC = () => {
     const userIdxStr = localStorage.getItem('userIdx');
     const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
 
-    axios({
+    axiosInstance({
       method: 'get',
       url: `https://i9b206.p.ssafy.io:9090/user/getFollowList/${userIdx}`,
       headers: {
@@ -90,7 +90,7 @@ const Follow: React.FC = () => {
       const userIdxStr = localStorage.getItem('userIdx');
       const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
 
-      axios({
+      axiosInstance({
         method: "delete",
         url: 'https://i9b206.p.ssafy.io:9090/user/unfollow',
         headers: {
@@ -125,7 +125,7 @@ const Follow: React.FC = () => {
           if (follow.userNickName.includes(inputvalue)) {
             return (
               <>
-                <div className={follow_css.profile}>
+                <div className={follow_css.profile} key={index}>
                   <img
                     src={follow.storedFileName ? follow.storedFileName : "assets/default_profile.png"}
                     alt=""

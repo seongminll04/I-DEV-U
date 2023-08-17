@@ -26,10 +26,11 @@ axiosInstance.interceptors.response.use(
 
       try {
         const { data } = await axios({
-          method: 'post',
+          method: 'get',
           url: `https://i9b206.p.ssafy.io:9090/user/sleep`,
           data: { accessToken, refreshToken },
         });
+        console.log(data);
         const newAccessToken = data.data.accessToken;
         const newRefreshToken = data.data.refreshToken;
         originalRequest.headers = {

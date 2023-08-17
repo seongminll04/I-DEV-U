@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import followDetail_css from './followDetail.module.css';
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
 
@@ -38,7 +38,7 @@ const FollowDetail: React.FC<Props> = ({refresh}) => {
   const handleSubmit = () => {
     const userToken = localStorage.getItem('userToken')
 
-    axios({
+    axiosInstance({
       method: "get",
       url: 'https://i9b206.p.ssafy.io:9090/user/search/nickname',
       headers: {
@@ -62,7 +62,7 @@ const FollowDetail: React.FC<Props> = ({refresh}) => {
     const userIdxStr = localStorage.getItem('userIdx')
     const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
 
-    axios({
+    axiosInstance({
       method: "post",
       url: 'https://i9b206.p.ssafy.io:9090/user/follow',
       headers: {

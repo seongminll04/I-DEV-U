@@ -308,6 +308,7 @@ export class Msize1Scene extends Phaser.Scene {
   /////////////////////////// WEBRTC
 
   initializeWebRTC() {
+    console.log("66666666666666666666666666666666666666666")
     const stompClientRef = store.getState().stompClientRef;
     const sessionName = localStorage.getItem('OVsession');
     this.remoteCharacterNames = {};
@@ -404,6 +405,7 @@ export class Msize1Scene extends Phaser.Scene {
 
     // 캐릭터의 위치나 상태가 변경될 때 호출
     sendCharacterData(message?: string) {
+      console.log("55555555555555555555555555555555555555555555555")
       const currentUserId = localStorage.getItem('userToken');
       const currentUserNickname = localStorage.getItem('userNickname') || 'Unknown';  // 닉네임 가져오기
   

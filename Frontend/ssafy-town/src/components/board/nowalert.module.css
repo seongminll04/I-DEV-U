@@ -68,3 +68,11 @@
     margin-right:2px;
     padding:0 10px;
 }
+
+.chatreq {
+    margin:10px 20px;
+    width: 60px;
+    height: 30px;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}

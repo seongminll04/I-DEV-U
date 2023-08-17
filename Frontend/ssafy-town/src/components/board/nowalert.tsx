@@ -93,7 +93,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
   const sogaeOK = () => {
     const random = generateRandomString(12)
     // 수락 반응 리스폰
-    setTimeout(() => {
+    const timeout1 = setTimeout(() => {
       if (stompClientRef.current) {
         localStorage.setItem('userNum',random)
         localStorage.setItem('OVsession',random)
@@ -105,6 +105,13 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
           destination: `/sub/wait/${message.fromUser.idx}`,
           body: JSON.stringify(data),
         });
+        
+        stompClientRef.current.subscribe(`/sub/response/${random}`, function(message: Message) {
+          alert('소개팅 맵으로 이동합니다.')
+          window.location.href='https://i9b206.p.ssafy.io/love'
+        });
+
+        
         // 해당 알람삭제
         axiosInstance({
           method:'delete',
@@ -114,85 +121,97 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
           },
         })
         .then(() => {
-          setTimeout(() => {
-            if (stompClientRef.current) {
-              stompClientRef.current.subscribe(`/sub/response/${random}`, function(message: Message) {
-                alert('소개팅 맵으로 이동합니다.')
-                window.location.href='https://i9b206.p.ssafy.io/love'
-  
-            });
-            return ()=>{
-              if (stompClientRef.current) {
-                stompClientRef.current.unsubscribe(`/sub/response/${random}`);
-              }
-            }
-            }
-          }, 1000);
         })
         .catch(err=>console.log(err))
 
-        setTimeout(() => {
+        const timeout3 = setTimeout(() => {
           alert('상대방이 온라인 상태가 아닙니다. 취소되었습니다.')
           onMessage();
-        }, 10000);
-      
+        }, 60000);
+      return () => {
+        clearTimeout(timeout3)
+      }
       }
     }, 1000);
+    return()=>{
+      if(stompClientRef.current) {
+        stompClientRef.current.unsubscribe(`/sub/response/${random}`);
+      }
+      clearTimeout(timeout1)
+    }
   }
-  const nono = () => {
+  const meetingok = () => {
+    const userToken = localStorage.getItem('userToken')
+    // 수락시 알림 제거
     axiosInstance({
-      method:'delete',
-      url: `https://i9b206.p.ssafy.io:9090/alarm/${message.idx}`,
+      method: 'delete',
+      url: `https://i9b206.p.ssafy.io:9090/alarm/${message.alarmResponse.idx}`,
       headers: {
         Authorization: 'Bearer ' + userToken
       },
     })
-    .then(() => {
-      onMessage();
+      .then(res => console.log(res, '삭제완료'))
+      .catch(err => console.log(err))
+    // 프로젝트 참가 (백에서 비디오 룸까지 입장하게 처리됌)
+    axiosInstance({
+      method: 'post',
+      url: `https://i9b206.p.ssafy.io:9090/project/enter`,
+      data: {
+        projectIdx: message.alarmResponse.targetIdx,
+        userIdx: message.alarmResponse.fromUser.idx,
+      },
+      headers: {
+        Authorization: 'Bearer ' + userToken
+      },
     })
-    .catch(err=>console.log(err))
-
+      .then(() => {
+        console.log('참가완료')
+        dispatch(setModal(null))
+      })
+      .catch(err => console.log(err))
   }
+
   return (
     <div className={now_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) { onMessage(); dispatch(setModal(null)) }}} >
         <div className={now_css.QnA_modal}>
           {message.type === 'SOGAE' ? 
           <div>
-            <p>
+            <h1>소개팅 신청</h1>
+            <h2>
               {message.fromUser.nickname}님의 소개팅 신청이 들어왔습니다
-            </p>
-            <p>
-              {message.createdAt}
-            </p>
-            <button onClick={sogaeOK}>수락</button>
-            <button onClick={nono}>거절</button>
+            </h2>
+            <button className={now_css.chatreq} onClick={sogaeOK}>수락</button>
+            <button className={now_css.chatreq} onClick={()=>{onMessage(); dispatch(setModal(null)) }}>거절</button>
           </div>
           : message.type==='MATE' ? 
           <>
             <h1>동료찾기 신청</h1>
-            <p>
+            <h2>
               {message.fromUser.nickname}님의 채팅신청이 들어왔습니다
-            </p>
-            <p>
-              {message.createdAt}
-            </p>
-            <button onClick={ok}>수락</button>
-            <button onClick={nono}>거절</button>
+            </h2>
+    
+            <button className={now_css.chatreq} onClick={ok}>수락</button>
+            <button className={now_css.chatreq} onClick={()=>{onMessage(); dispatch(setModal(null)) }}>거절</button>
           </>
           : message.type==='CHAT' ? 
           <>
             <h1>채팅신청</h1>
-            <p>
+            <h2>
               {message.fromUser.nickname}님의 채팅신청이 들어왔습니다
-            </p>
-            <p>
-              {message.createdAt}
-            </p>
-            <button onClick={ok}>수락</button>
-            <button onClick={nono}>거절</button>
+            </h2>
+            <button className={now_css.chatreq} onClick={ok}>수락</button>
+            <button className={now_css.chatreq} onClick={()=>{onMessage(); dispatch(setModal(null))}}>거절</button>
           </>
-          :null}
+          : message.alarmResponse.type==='PROJECT' ? 
+          <>
+            <h1>프로젝트 참가신청</h1>
+            <h2>
+              {message.alarmResponse.fromUser.nickname}님의 프로젝트 참가신청이 들어왔습니다
+            </h2>
+            <button className={now_css.chatreq} onClick={meetingok}>수락</button>
+            <button className={now_css.chatreq} onClick={()=>{onMessage(); dispatch(setModal(null))}}>거절</button>
+          </>:null}
         </div>
     </div>
   );

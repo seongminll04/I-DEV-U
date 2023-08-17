@@ -29,21 +29,29 @@ const Setting: React.FC = () => {
   return (
     <div className='sidebar_modal'>
       <h1>Setting</h1>
+      <hr style={{border:'1px solid black', width:'90%'}}/>
+      <h2>관리자에게 문의하기</h2>
+      <button style={{width:'200px', height:'100px', borderRadius:'0.8rem',cursor:'pointer',fontSize:'18px', color:'red',}}  onClick={()=>dispatch(setModal('문의'))}>1 : 1 문의</button>
       <br /><br />
-      <button className={setting_css.button} onClick={()=>dispatch(setModal('문의'))}>1 : 1 문의</button>
-      <br /><br />
-      {/* {isAdmin && (
-        <div>
-          <button className={setting_css.button2} onClick={()=>dispatch(setModal('문의목록'))}>1 : 1 문의사항 목록조회</button>
+      {/* <button style={{width:'200px', height:'100px', borderRadius:'0.8rem',cursor:'pointer',fontSize:'18px', color:'red',}}  onClick={()=>dispatch(setModal('문의'))}>1 : 1 문의</button> */}
+      {isAdmin && (
+        <div className="aaa">
+          <button className={"aaa"} onClick={()=>dispatch(setModal('문의목록'))}>1 : 1 문의사항 목록조회</button>
         </div>
       )} */}
       <button className={setting_css.button} style={{display: isAdmin? 'block' : "none"}} onClick={()=>dispatch(setModal('문의목록'))}>1 : 1 문의사항 목록조회</button>
 
       <hr />
-      <h1>방 이동하기(구경)</h1>
-      <button className={setting_css.button} onClick={()=>{window.location.href = '/home';}}>마이룸</button>
-      <button className={setting_css.button} onClick={()=>{localStorage.setItem('OVsession',`test_${userIdx}`); window.location.href = '/meeting';}}>회의룸</button>
-      <button className={setting_css.button} onClick={()=>{localStorage.setItem('OVsession',`test_${userIdx}`); window.location.href = '/love';}}>소개팅룸</button>
+      <div style={{height:'250px'}}></div>
+      <hr style={{border:'1px solid black', width:'90%'}}/>
+      <h2>방 이동하기</h2>
+      <p>*맵 구경을 위한 이동*
+        <br />(실제 화상기능은 작동하지 않습니다)</p>
+      <div>
+        <button style={{margin:'8px', width:'100px', height:'50px', borderRadius:'0.8rem',cursor:'pointer'}} onClick={()=>{window.location.href = '/home';}}>마이룸</button>
+        <button style={{margin:'8px', width:'100px', height:'50px', borderRadius:'0.8rem',cursor:'pointer'}} onClick={()=>{localStorage.setItem('OVsession',`test_${userIdx}`); window.location.href = '/meeting';}}>회의룸</button>
+        <button style={{margin:'8px', width:'100px', height:'50px', borderRadius:'0.8rem',cursor:'pointer'}} onClick={()=>{localStorage.setItem('OVsession',`test_${userIdx}`); window.location.href = '/love';}}>소개팅룸</button>
+      </div>
       <hr />
     </div>
   );

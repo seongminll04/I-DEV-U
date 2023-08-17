@@ -13,7 +13,7 @@ const SogaeMatch: React.FC = () => {
 
 
   useEffect(()=>{
-    setTimeout(() => {
+    const timout = setTimeout(() => {
       alert('응답없음')
       dispatch(setModal(null))
     }, 60000);
@@ -24,7 +24,7 @@ const SogaeMatch: React.FC = () => {
         const newMessage = JSON.parse(message.body);
         if (newMessage.message==='수락') {
           localStorage.setItem('OVsession',newMessage.OVsession)
-          alert('매칭 성공!')
+          // alert('매칭 성공!')
           if (stompClientRef.current){
             stompClientRef.current.publish({
               destination: `/sub/response/${newMessage.OVsession}`,
@@ -39,6 +39,7 @@ const SogaeMatch: React.FC = () => {
       });
       
       return () => {
+        clearTimeout(timout)
         if (stompClientRef.current) {
           subscription.unsubscribe();
         }
@@ -48,10 +49,6 @@ const SogaeMatch: React.FC = () => {
   },[stompClientRef, dispatch])
 
   const matchout = () =>{
-    if (stompClientRef.current) {
-      const userIdx = localStorage.getItem('userIdx')
-      stompClientRef.current.unsubscribe(`/sub/wait/${userIdx}`)
-    }
     dispatch(setModal(null))
   }
 

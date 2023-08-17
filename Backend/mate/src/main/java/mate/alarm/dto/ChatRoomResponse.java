@@ -4,6 +4,7 @@ package mate.alarm.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mate.chat.domain.ChatParticipation;
 import mate.chat.domain.ChatRoom;
 import mate.chat.domain.ChatRoomStatus;
 
@@ -34,7 +35,6 @@ public class ChatRoomResponse {
         chatRoomResponse.updatedAt = chatRoom.getUpdatedAt();
         chatRoomResponse.userCount = chatRoom.getUserCount();
         chatRoomResponse.chatRoomUsers = ChatParticipationResponse.from(chatRoom.getChatRoomUsers());
-
         return chatRoomResponse;
     }
     

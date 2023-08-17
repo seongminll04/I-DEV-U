@@ -78,6 +78,7 @@ const Project: React.FC = () => {
       },
       data: { keyword: "" }
     }).then(res => {
+      console.log(res)
       setProjectList(res.data.list)
     })
       .catch(err => { console.log(err); });

@@ -180,7 +180,6 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
               </div>
               <div style={{ margin: 'auto' }}>
                 <div>
-
                   <h1>
                     {Selalert.type === 'PROJECT' ? <>
                       <p>프로젝트 : {pjtdata} </p>

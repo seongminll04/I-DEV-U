@@ -114,7 +114,7 @@ const Alert: React.FC = () => {
                     const date = new Date(notice.createdAt);
                     return (
                       <div key={notice.idx} onClick={() => { setPage(1); setNoticeIdx(notice.idx) }} className={alert_css.notice}>
-                        <span>{notice.idx}</span>
+                        <span>{index+1}</span>
                         <span>{notice.title}</span>
                         <span>{date.getMonth() + 1}/{date.getDate()} {date.getHours()}:{date.getMinutes()}</span>
                         {/* <span>{date.getMonth() + 1}/{date.getDate()}</span> */}

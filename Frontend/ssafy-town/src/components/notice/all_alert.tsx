@@ -53,7 +53,7 @@ const AllAlert: React.FC = () => {
       },
     })
       .then(res => {
-        console.log(res)
+        // console.log(res)
         const receivedata = res.data.data.filter((a:any) => a.type!=='SOGAE')
         setAlertList(receivedata);
         setMaxpage(Math.ceil(receivedata.length/10)|0)

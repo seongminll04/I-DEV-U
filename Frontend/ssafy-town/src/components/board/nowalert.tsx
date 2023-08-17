@@ -48,7 +48,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
 
       // 채팅방 참가
       dispatch(setChatIdx(res.data.data.roomIdx))
-      dispatch(setChatTitle(message.fromUser.nickname+', '+message.toUser.nickname ))
+      dispatch(setChatTitle(message.fromUser.nickname+'의 채팅방' ))
       axiosInstance({
         method:'post',
         url: `https://i9b206.p.ssafy.io:9090/chat/rooms/${res.data.data.roomIdx}/users`,

@@ -40,9 +40,10 @@ const EnterChatF: React.FC<Props> = ({sendusername,senduserIdx}) => {
     <div className={enter_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) {dispatch(setModal(null))}}}>
         <div className={enter_css.modal}>
+          <br />
             <h1>{sendusername} 님에게</h1>
-            <h2>채팅신청 하시겠습니까?</h2>
-            <button onClick={enter}>신청</button><button onClick={()=>dispatch(setModal(null))}>취소</button>
+            <h2>채팅을 신청하시겠습니까?</h2>
+            <button className={enter_css.chatreq} onClick={enter}>신청</button><button className={enter_css.chatreq} onClick={()=>dispatch(setModal(null))}>취소</button>
         </div>
 
   </div>

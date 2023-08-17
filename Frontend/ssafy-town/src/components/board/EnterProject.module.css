@@ -18,3 +18,11 @@
     box-sizing: border-box;
     color : white;
 }
+
+.chatreq {
+    margin:10px 20px;
+    width: 60px;
+    height: 30px;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}

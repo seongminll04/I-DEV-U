@@ -17,6 +17,8 @@ interface chatroom {
   createdAt: Date,
   master: boolean,
   userCount: number,
+  chatuser:string|null;
+  chatimg:string|null;
 }
 
 const Chat: React.FC = () => {
@@ -54,6 +56,13 @@ const Chat: React.FC = () => {
             },
           }).then((res) => {
             const date = new Date(res.data.data.createdAt)
+
+            var chatuser=null
+            var chatimg=null
+            if (room.userList.length > 1){
+              if (room.userList[0].idx === userIdx){chatuser=room.userList[1].nickname;chatimg=room.userList[1].storedFileName}
+              else {chatuser=room.userList[0].nickname;chatimg=room.userList[0].storedFileName}
+            }
             rooms.push({
               roomIdx: room.idx,
               nickname: res.data.data.nickname,
@@ -62,6 +71,8 @@ const Chat: React.FC = () => {
               createdAt: date,
               master: room.master,
               userCount: room.userCount,
+              chatuser:chatuser,
+              chatimg:chatimg
             });
           });
           roomPromises.push(roomPromise);
@@ -101,6 +112,12 @@ const Chat: React.FC = () => {
                 },
               }).then((res) => {
                 const date = new Date(res.data.data.createdAt)
+                var chatuser=null
+                var chatimg=null
+                if (room.userList.length > 1){
+                  if (room.userList[0].idx === userIdx){chatuser=room.userList[1].nickname;chatimg=room.userList[1].storedFileName}
+                  else {chatuser=room.userList[0].nickname;chatimg=room.userList[0].storedFileName}
+                }
                 rooms.push({
                   roomIdx: room.idx,
                   nickname: res.data.data.nickname,
@@ -109,6 +126,8 @@ const Chat: React.FC = () => {
                   createdAt: date,
                   master: room.master,
                   userCount: room.userCount,
+                  chatuser:chatuser,
+                  chatimg:chatimg
                 });
               });
               roomPromises.push(roomPromise);
@@ -234,18 +253,22 @@ const Chat: React.FC = () => {
               }
             }
 
-            if (!room.title.includes(inputvalue)) {
+            if (!room.chatuser!.includes(inputvalue)) {
               return (<div>
 
               </div>)
             }
             return (
               <div>
-                <div className={chat_css.chat_room} onClick={() => { dispatch(setSidebar('채팅방')); dispatch(setChatTitle(room.title)); dispatch(setChatIdx(room.roomIdx)) }}>
-                  <img src="assets/default_profile.png" alt="" />
+                <div className={chat_css.chat_room} onClick={() => { dispatch(setSidebar('채팅방')); dispatch(setChatTitle(room.chatuser+'의 채팅방')); dispatch(setChatIdx(room.roomIdx)) }}>
+                  <img
+                    src={room.chatimg ? room.chatimg : "assets/default_profile.png"}
+                    alt=""
+                    style={{ borderRadius: "50%" }}
+                  />
                   <div className={chat_css.chat_roomdata}>
                     <div className={chat_css.roomdata} style={{ marginBottom: '10px' }}>
-                      <b>{room.title} <span style={{ fontSize: '10px', color: 'gray' }}>{room.userCount}</span></b>
+                      <b>{room.chatuser}의 채팅방 <span style={{ fontSize: '10px', color: 'gray' }}>{room.userCount}</span></b>
 
                       <div>
                         {/* <span className={chat_css.chattime}>마지막 채팅시간</span> */}

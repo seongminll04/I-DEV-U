@@ -43,12 +43,6 @@ public class ChatRoomService {
         User user = userRepository.findByIdx(userIdx).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         List<ChatRoom> findChatRooms = chatRoomRepository.findWithUser(user);
-        for (ChatRoom findChatRoom : findChatRooms) {
-            List<ChatParticipation> chatRoomUsers = findChatRoom.getChatRoomUsers();
-            for (ChatParticipation chatRoomUser : chatRoomUsers) {
-                System.out.println(chatRoomUser.getUser().getNickname());
-            }
-        }
         return findChatRooms.stream()
                 .map(chatRoom -> mate.alarm.dto.ChatRoomResponse.from(chatRoom))
                 .collect(Collectors.toList());

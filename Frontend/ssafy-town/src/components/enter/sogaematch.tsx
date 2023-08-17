@@ -26,6 +26,9 @@ const SogaeMatch: React.FC = () => {
             window.location.href='https://i9b206.p.ssafy.io/love'
           }, 1000);
         }
+        else {
+          alert('매칭 거절')
+        }
       });
       
       return () => {

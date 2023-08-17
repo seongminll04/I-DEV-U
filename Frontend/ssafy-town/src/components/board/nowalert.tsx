@@ -62,7 +62,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
       })
       .then(() => {
         dispatch(setSidebar('채팅방'))
-        onMessage()
+        onMessage();
 
       })
       .catch(err => console.log(err))
@@ -121,14 +121,14 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
             }
             }
           }, 1000);
-          setTimeout(() => {
-            alert('상대방이 온라인 상태가 아닙니다. 취소되었습니다.')
-            dispatch(setModal(null))
-            onMessage()
-          }, 10000);
-        
         })
         .catch(err=>console.log(err))
+
+        setTimeout(() => {
+          alert('상대방이 온라인 상태가 아닙니다. 취소되었습니다.')
+          onMessage();
+        }, 10000);
+      
       }
     }, 1000);
   }
@@ -141,10 +141,10 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
       },
     })
     .then(() => {
-      onMessage()
-      dispatch(setModal(null))
+      onMessage();
     })
     .catch(err=>console.log(err))
+
   }
   return (
     <div className={now_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
@@ -163,7 +163,19 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
           </div>
           : message.type==='MATE' ? 
           <>
-            <h1>동료찾기 요청</h1>
+            <h1>동료찾기 신청</h1>
+            <p>
+              {message.fromUser.nickname}님의 채팅신청이 들어왔습니다
+            </p>
+            <p>
+              {message.createdAt}
+            </p>
+            <button onClick={ok}>수락</button>
+            <button onClick={nono}>거절</button>
+          </>
+          : message.type==='CHAT' ? 
+          <>
+            <h1>채팅신청</h1>
             <p>
               {message.fromUser.nickname}님의 채팅신청이 들어왔습니다
             </p>

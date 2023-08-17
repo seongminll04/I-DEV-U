@@ -45,7 +45,6 @@ const Chat: React.FC = () => {
       },
     })
       .then((res1) => {
-        console.log(res1.data.data)
         const roomPromises = [];
         for (const room of res1.data.data) {
           const roomPromise = axiosInstance({
@@ -102,7 +101,6 @@ const Chat: React.FC = () => {
         })
           .then((res) => {
             const roomPromises = [];
-
             for (const room of res.data.data) {
               const roomPromise = axiosInstance({
                 method: 'get',
@@ -253,7 +251,7 @@ const Chat: React.FC = () => {
               }
             }
 
-            if (!room.chatuser!.includes(inputvalue)) {
+            if (!`${room.chatuser}의 채팅방`.includes(inputvalue)) {
               return (<div>
 
               </div>)
@@ -268,7 +266,7 @@ const Chat: React.FC = () => {
                   />
                   <div className={chat_css.chat_roomdata}>
                     <div className={chat_css.roomdata} style={{ marginBottom: '10px' }}>
-                      <b>{room.chatuser}의 채팅방 <span style={{ fontSize: '10px', color: 'gray' }}>{room.userCount}</span></b>
+                      <b>{room.chatuser ? room.chatuser+'의 채팅방 ': ' '}<span style={{ fontSize: '10px', color: 'gray' }}>{room.userCount}</span></b>
 
                       <div>
                         {/* <span className={chat_css.chattime}>마지막 채팅시간</span> */}

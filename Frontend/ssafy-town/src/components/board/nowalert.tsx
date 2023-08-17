@@ -105,6 +105,13 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
           destination: `/sub/wait/${message.fromUser.idx}`,
           body: JSON.stringify(data),
         });
+        
+        stompClientRef.current.subscribe(`/sub/response/${random}`, function(message: Message) {
+          alert('소개팅 맵으로 이동합니다.')
+          window.location.href='https://i9b206.p.ssafy.io/love'
+        });
+
+        
         // 해당 알람삭제
         axiosInstance({
           method:'delete',
@@ -114,49 +121,56 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
           },
         })
         .then(() => {
-          
-            if (stompClientRef.current) {
-              stompClientRef.current.subscribe(`/sub/response/${random}`, function(message: Message) {
-                alert('소개팅 맵으로 이동합니다.')
-                window.location.href='https://i9b206.p.ssafy.io/love'
-  
-            });
-            return ()=>{
-              if (stompClientRef.current) {
-                stompClientRef.current.unsubscribe(`/sub/response/${random}`);
-              }
-            }
-            }
         })
         .catch(err=>console.log(err))
 
         const timeout3 = setTimeout(() => {
           alert('상대방이 온라인 상태가 아닙니다. 취소되었습니다.')
           onMessage();
-        }, 10000);
+        }, 60000);
       return () => {
         clearTimeout(timeout3)
       }
       }
     }, 1000);
     return()=>{
+      if(stompClientRef.current) {
+        stompClientRef.current.unsubscribe(`/sub/response/${random}`);
+      }
       clearTimeout(timeout1)
     }
   }
-  // const nono = () => {
-  //   axiosInstance({
-  //     method:'delete',
-  //     url: `https://i9b206.p.ssafy.io:9090/alarm/${message.idx}`,
-  //     headers: {
-  //       Authorization: 'Bearer ' + userToken
-  //     },
-  //   })
-  //   .then(() => {
-  //     onMessage();
-  //   })
-  //   .catch(err=>console.log(err))
+  const meetingok = () => {
+    const userToken = localStorage.getItem('userToken')
+    // 수락시 알림 제거
+    axiosInstance({
+      method: 'delete',
+      url: `https://i9b206.p.ssafy.io:9090/alarm/${message.alarmResponse.idx}`,
+      headers: {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+      .then(res => console.log(res, '삭제완료'))
+      .catch(err => console.log(err))
+    // 프로젝트 참가 (백에서 비디오 룸까지 입장하게 처리됌)
+    axiosInstance({
+      method: 'post',
+      url: `https://i9b206.p.ssafy.io:9090/project/enter`,
+      data: {
+        projectIdx: message.alarmResponse.targetIdx,
+        userIdx: message.alarmResponse.fromUser.idx,
+      },
+      headers: {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+      .then(() => {
+        console.log('참가완료')
+        dispatch(setModal(null))
+      })
+      .catch(err => console.log(err))
+  }
 
-  // }
   return (
     <div className={now_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) { onMessage(); dispatch(setModal(null)) }}} >
@@ -189,7 +203,15 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
             <button className={now_css.chatreq} onClick={ok}>수락</button>
             <button className={now_css.chatreq} onClick={()=>{onMessage(); dispatch(setModal(null))}}>거절</button>
           </>
-          :null}
+          : message.alarmResponse.type==='PROJECT' ? 
+          <>
+            <h1>프로젝트 참가신청</h1>
+            <h2>
+              {message.alarmResponse.fromUser.nickname}님의 프로젝트 참가신청이 들어왔습니다
+            </h2>
+            <button className={now_css.chatreq} onClick={meetingok}>수락</button>
+            <button className={now_css.chatreq} onClick={()=>{onMessage(); dispatch(setModal(null))}}>거절</button>
+          </>:null}
         </div>
     </div>
   );

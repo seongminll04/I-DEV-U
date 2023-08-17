@@ -31,7 +31,6 @@ const DetailNotice: React.FC<Props> = ({ backpage, inquiryIdx }) => {
       },
     })
       .then(res => {
-        // console.log(res)
         setInquiry(res.data.inquiry)
       })
       .catch(err => console.log(err))

@@ -67,7 +67,6 @@ const Mate: React.FC = () => {
         },
       })
         .then(res => {
-          console.log(res.data)
           setMateList(res.data.userList.filter((user: Matep) => user.userIdx !== userIdx));
         })
         .catch(err => console.log(err))
@@ -87,7 +86,6 @@ const Mate: React.FC = () => {
             </div>
             <div className={mate_css.scrollbar}>
               {mateList.map((mate: Matep, index: number) => {
-                console.log(mate);
                 return (
                   <div className={mate_css.usertable} onClick={() => { setMateIdx(mate.userIdx); setMatePercent(mate.percent); dispatch(setModal('동료상세정보')) }}>
                     <div className={mate_css.userInfo}>

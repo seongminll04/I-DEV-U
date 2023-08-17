@@ -42,7 +42,6 @@ const Sogae: React.FC = () => {
       },
     })
       .then(res => {
-        console.log(res)
         if (res.data.resmsg === '설문 했음') {
           setServey(true)
         }
@@ -64,7 +63,6 @@ const Sogae: React.FC = () => {
         },
       })
         .then(res => {
-          console.log(res.data)
           setUsers(res.data.user_list)
         })
         .catch(err => console.log(err))

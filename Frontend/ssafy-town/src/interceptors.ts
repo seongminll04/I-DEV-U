@@ -32,7 +32,6 @@ axiosInstance.interceptors.response.use(
             'Authorization-refresh': 'Bearer' + refreshToken,
           },
         });
-        console.log(data);
         const newAccessToken = data.data.accessToken;
         const newRefreshToken = data.data.refreshToken;
         originalRequest.headers = {

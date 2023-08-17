@@ -30,7 +30,6 @@ const AllNotice: React.FC = () => {
       },
     })
       .then(res => {
-        // console.log(res.data)
         setInquiryList(res.data.data)
       })
       .catch(err => console.log(err))

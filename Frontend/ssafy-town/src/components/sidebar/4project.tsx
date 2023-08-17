@@ -68,7 +68,6 @@ const Project: React.FC = () => {
 
   // 처음에 가져오는 프로젝트 리스트
   useEffect(() => {
-    console.log("first");
     const userToken = localStorage.getItem('userToken')
     axiosInstance({
       method: 'get',
@@ -78,7 +77,6 @@ const Project: React.FC = () => {
       },
       data: { keyword: "" }
     }).then(res => {
-      console.log(res)
       setProjectList(res.data.list)
     })
       .catch(err => { console.log(err); });

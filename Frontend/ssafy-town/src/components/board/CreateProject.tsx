@@ -63,7 +63,6 @@ const CreateProject: React.FC = () => {
       return
     }
 
-    console.log("1단계")
     // OpenVidu 세션 생성
     const userToken = localStorage.getItem('userToken')
     axiosInstance.post(OPENVIDU_SERVER_URL +'/api/sessions', {}, {
@@ -72,7 +71,6 @@ const CreateProject: React.FC = () => {
         }
     })
     .then((response) => {
-      console.log("2단계")
         const sessionId = response.data.id;
         localStorage.setItem("OVsession",sessionId);
 

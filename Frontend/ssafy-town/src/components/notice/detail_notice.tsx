@@ -31,7 +31,6 @@ const DetailNotice: React.FC<Props> = ({ backpage, noticeIdx }) => {
       },
     })
       .then(res => {
-        // console.log(res)
         setNotice(res.data.notice)
       })
       .catch(err => console.log(err))

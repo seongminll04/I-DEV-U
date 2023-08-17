@@ -142,7 +142,6 @@ const Chatroom: React.FC = () => {
         message: message,
         createdAt: now
       };
-      // console.log(data)
       stompClientRef.current.publish({
         destination: '/pub/messages',
         body: JSON.stringify(data),

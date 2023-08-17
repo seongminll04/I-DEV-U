@@ -31,7 +31,6 @@ const MateFilter: React.FC<props> = ({ filter, onfilter }) => {
 
 
   useEffect(() => {
-    console.log(filter)
     for (const f of filter) {
       if (f.surveyIdx === 1 && f.tagList) {
         setWorkingYears(f.tagList[0])
@@ -99,7 +98,6 @@ const MateFilter: React.FC<props> = ({ filter, onfilter }) => {
         tagList: [projectExperience],
       },
     ];
-    console.log(surveyResults)
     onfilter(surveyResults)
     dispatch(setModal(null))
   }

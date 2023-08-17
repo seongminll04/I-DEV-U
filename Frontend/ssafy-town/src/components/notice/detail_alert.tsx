@@ -55,7 +55,6 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
   const ok = () => {
     const userToken = localStorage.getItem('userToken')
     const now = new Date()
-    console.log(Selalert)
     // 채팅방 생성
     axiosInstance({
       method: 'post',
@@ -70,7 +69,6 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
       },
     })
       .then(res => {
-        console.log('채팅방 생성')
         const userIdxStr = localStorage.getItem('userIdx')
         const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
 
@@ -98,7 +96,6 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
           },
         })
           .then(() => {
-            console.log('채팅방 참가')
             dispatch(setSidebar('채팅방'))
             dispatch(setModal(null))
 
@@ -147,7 +144,6 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
       },
     })
       .then(() => {
-        console.log('참가완료')
         dispatch(setModal(null))
       })
       .catch(err => console.log(err))

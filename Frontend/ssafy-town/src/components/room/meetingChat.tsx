@@ -58,7 +58,6 @@ const MeetingChat: React.FC = () => {
           message: messageInput,
           createdAt: new Date()
         };
-        // console.log(data)
         stompClientRef.current.publish({
           destination: `/sub/msg/${OVsession}`,
           body: JSON.stringify(data),

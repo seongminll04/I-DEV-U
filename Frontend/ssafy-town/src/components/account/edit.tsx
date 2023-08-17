@@ -71,7 +71,6 @@ const EditAccount: React.FC<Props> = ({ user, change }) => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log(values);
       const userToken = localStorage.getItem('userToken');
       axiosInstance({
         method: 'put',

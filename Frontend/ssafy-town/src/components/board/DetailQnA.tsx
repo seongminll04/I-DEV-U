@@ -80,7 +80,6 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
       },
     })
       .then(res => {
-        // console.log(res.data);
         setCommentlist(res.data.data)
       })
       .catch(err => console.log(err))
@@ -111,7 +110,6 @@ const DetailQnA: React.FC<Props> = ({ qnaid, onback }) => {
             },
           })
             .then(res => {
-              // console.log(res.data);
               setCommentlist(res.data.data)
             })
             .catch(err => console.log(err))

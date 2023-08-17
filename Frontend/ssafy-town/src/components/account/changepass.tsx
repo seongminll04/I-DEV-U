@@ -44,7 +44,6 @@ const ChangePass: React.FC<Props> = ({ user }) => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log(values);
       const userToken = localStorage.getItem('userToken');
       axiosInstance({
         method: 'put',

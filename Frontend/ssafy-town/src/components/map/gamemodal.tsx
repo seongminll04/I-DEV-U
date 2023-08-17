@@ -26,12 +26,12 @@ const GameModal: React.FC = () => {
             setDy(nextDirection.dy);
             setDirectionsQueue(prev => prev.slice(1));
         }
-      // Update snake's position
+
       let head = { ...snake[0] };
       head.x += dx;
       head.y += dy;
 
-          // Check for collision with wall
+
     if (head.x < -1 || head.x >= 31 || head.y < -1 || head.y >= 31) {
         clearInterval(interval);
         alert("게임 오버: 벽에 부딪혔습니다!");
@@ -39,7 +39,7 @@ const GameModal: React.FC = () => {
         return;
       }
   
-      // Check for collision with self
+
       for (let i = 1; i < snake.length; i++) {
         if (snake[i].x === head.x && snake[i].y === head.y) {
           clearInterval(interval);
@@ -71,14 +71,14 @@ const GameModal: React.FC = () => {
         return;
         }
 
-      // Check for food
+
       if (head.x === food.x && head.y === food.y) {
         let newSnake = [...snake];
         newSnake.unshift(head);
 
         setSnake(newSnake);
 
-        // Generate new food
+
         let newFood = {
           x: Math.floor(Math.random() * 30),
           y: Math.floor(Math.random() * 30),
@@ -91,7 +91,7 @@ const GameModal: React.FC = () => {
         setSnake(newSnake);
       }
 
-      // Draw
+
       const ctx = canvasRef.current?.getContext('2d');
       if (ctx) {
         ctx.clearRect(0, 0, 300, 300);
@@ -159,9 +159,9 @@ const GameModal: React.FC = () => {
             }}
         >
             <h1 style={{ color: '#333',fontWeight: 'bold', marginBottom: '10px' }}>🐍 스네이크 게임 🐍</h1>
-            <p style={{ color: '#555', marginBottom: '8px'  }}>📈레벨: {level}</p>
-            <p style={{ color: '#555', marginBottom: '8px'  }}>🍖먹은 먹이의 개수: {foodCount}</p>
-            <p style={{ color: '#555', marginBottom: '8px'  }}>🏋️‍♂️다음 레벨까지 먹이: {foodsToNextLevel}</p>
+            <p style={{ color: '#555', marginBottom: '8px'  }}>📈 레벨: {level}</p>
+            <p style={{ color: '#555', marginBottom: '8px'  }}>🍖 먹은 먹이의 개수: {foodCount}</p>
+            <p style={{ color: '#555', marginBottom: '8px'  }}>🏋️‍♂️ 다음 레벨까지 먹이: {foodsToNextLevel}</p>
             <p style={{ color: 'red', fontSize: '15px', marginBottom: '10px' }}>※주의 : 모달 밖을 클릭하면 종료됩니다.</p>
             <canvas ref={canvasRef} width={300} height={300} style={{ border: '2px solid #333', marginBottom: '20px' }}></canvas>
             <button 

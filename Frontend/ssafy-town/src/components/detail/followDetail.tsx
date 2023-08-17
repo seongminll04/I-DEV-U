@@ -48,7 +48,6 @@ const FollowDetail: React.FC<Props> = ({refresh}) => {
         nickname : text
       }
     }).then((res) => {
-      console.log(res.data.data[0]);
       setFindUser(res.data.data[0]);
       setFind(true);
     }).catch((err) => {

@@ -40,7 +40,6 @@ const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
       },
     })
       .then(res => {
-        console.log(res.data)
         if (res.data.user) {
           setMateUser(res.data.user)
         }
@@ -125,7 +124,6 @@ const MateDetail: React.FC<Props> = ({ userIdx, percent }) => {
       }
     })
       .then(res => {
-        console.log(res)
         if (res.data.data) {
           alert('이미 존재하는 채팅방이 있습니다')
           dispatch(setChatIdx(res.data.data.idx))

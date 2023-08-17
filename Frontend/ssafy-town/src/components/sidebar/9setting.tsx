@@ -19,10 +19,10 @@ const Setting: React.FC = () => {
         Authorization: 'Bearer ' + userToken
       }
     }).then(() => {
-      console.log("관리자셔유")
+      console.log("관리자입니다.")
       setIsAdmin(true);
     }).catch((err) => {
-      console.log("댁은 관리자가 아녀유")
+      console.log("관리자가 아닙니다.")
     })
   }, [])
   return (

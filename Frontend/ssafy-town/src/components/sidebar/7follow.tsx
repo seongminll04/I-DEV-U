@@ -39,7 +39,6 @@ const Follow: React.FC = () => {
       },
     })
       .then(res => {
-        console.log(res.data.data)
         if (res.data.data) {
           setMyFollowList(res.data.data.data)
         }
@@ -127,7 +126,6 @@ const Follow: React.FC = () => {
       }
     })
     .then(res=>{
-      console.log(res.data)
       if (res.data.data) {
         dispatch(setChatIdx(res.data.data.idx))
         dispatch(setChatTitle(senduserNick+'의 채팅방'))

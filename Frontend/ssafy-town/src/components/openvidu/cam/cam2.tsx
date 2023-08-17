@@ -150,7 +150,6 @@ toggleVisibility = () => {
         if (!this.OV) {
             this.OV = new OpenVidu();
         }
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@")
     
         // 세션 초기화
         this.setState({

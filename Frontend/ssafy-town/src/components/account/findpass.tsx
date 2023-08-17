@@ -24,7 +24,6 @@ const FindPassword: React.FC = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log(values);
       // Add 회원정보 찾기 logic here
       axiosInstance({
         method:'post',

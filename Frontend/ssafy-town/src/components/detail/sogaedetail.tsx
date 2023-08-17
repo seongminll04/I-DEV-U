@@ -42,7 +42,6 @@ const SogaeDetail: React.FC<Props> = ({ userIdx, percent }) => {
       },
     })
       .then(res => {
-        console.log(res.data)
         if (res.data.user) {
           setMateUser(res.data.user)
         }

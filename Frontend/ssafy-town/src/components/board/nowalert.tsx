@@ -25,7 +25,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
       url: 'https://i9b206.p.ssafy.io:9090/chat/rooms',
       data:{
         userIdx:message.fromUser.idx,
-        title: message.fromUser.nickname + '님의 mate 채팅방',
+        title: message.fromUser.nickname+', '+message.toUser.nickname ,
         createdAt:now
       },
       headers: {
@@ -48,7 +48,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
 
       // 채팅방 참가
       dispatch(setChatIdx(res.data.data.roomIdx))
-      dispatch(setChatTitle(message.fromUser.nickname + '님의 mate 채팅방'))
+      dispatch(setChatTitle(message.fromUser.nickname+', '+message.toUser.nickname ))
       axiosInstance({
         method:'post',
         url: `https://i9b206.p.ssafy.io:9090/chat/rooms/${res.data.data.roomIdx}/users`,

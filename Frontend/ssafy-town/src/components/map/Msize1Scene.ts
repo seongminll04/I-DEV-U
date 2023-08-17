@@ -75,6 +75,17 @@ export class Msize1Scene extends Phaser.Scene {
 
     private sittingOnBench: boolean = false; // 현재 앉아있니?
     private buttontext: string = '';
+
+    private emoji1!: Phaser.GameObjects.Sprite;
+    private emoji2!: Phaser.GameObjects.Sprite;
+    private emoji3!: Phaser.GameObjects.Sprite;
+    private emoji4!: Phaser.GameObjects.Sprite;
+    private emoji5!: Phaser.GameObjects.Sprite;
+    private emoji6!: Phaser.GameObjects.Sprite;
+    private emoji7!: Phaser.GameObjects.Sprite;
+    private emoji8!: Phaser.GameObjects.Sprite;
+    private emoji9!: Phaser.GameObjects.Sprite;
+    private emoji10!: Phaser.GameObjects.Sprite;
   
     constructor() {
       super({ key: 'Msize1Scene' });
@@ -122,6 +133,17 @@ export class Msize1Scene extends Phaser.Scene {
 
       this.balloon = this.add.sprite(0, 0, 'balloon').setVisible(false);
       this.balloon.setDepth(2);
+
+      this.emoji1 = this.add.sprite(0, 0, 'imoji1').setVisible(false); this.emoji1.setDepth(2);
+      this.emoji2 = this.add.sprite(0, 0, 'imoji2').setVisible(false); this.emoji2.setDepth(2);
+      this.emoji3 = this.add.sprite(0, 0, 'imoji3').setVisible(false); this.emoji3.setDepth(2);
+      this.emoji4 = this.add.sprite(0, 0, 'imoji4').setVisible(false); this.emoji4.setDepth(2);
+      this.emoji5 = this.add.sprite(0, 0, 'imoji5').setVisible(false); this.emoji5.setDepth(2);
+      this.emoji6 = this.add.sprite(0, 0, 'imoji6').setVisible(false); this.emoji6.setDepth(2);
+      this.emoji7 = this.add.sprite(0, 0, 'imoji7').setVisible(false); this.emoji7.setDepth(2);
+      this.emoji8 = this.add.sprite(0, 0, 'imoji8').setVisible(false); this.emoji8.setDepth(2);
+      this.emoji9 = this.add.sprite(0, 0, 'imoji9').setVisible(false); this.emoji9.setDepth(2);
+      this.emoji10 = this.add.sprite(0, 0, 'imoji10').setVisible(false); this.emoji10.setDepth(2);
   
       // const mapCenterX = rows[0].length * tileSize / 2;
       const mapCenterY = rows.length * tileSize / 2;
@@ -310,17 +332,19 @@ export class Msize1Scene extends Phaser.Scene {
     }, 5000);
   
     if (stompClientRef) {
-      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+      console.log("1111111111111111111111111111111111111111111111111111111")
       stompClientRef.subscribe(`/sub/channel/${sessionName}`, function(message:Message) {
         const newMessage = JSON.parse(message.body);
   
         if (newMessage) {
+          console.log("2222222222222222222222222222222222222222222222222222222222")
           // 기존 캐릭터가 존재하는지 확인
           let remoteChar = location.remoteCharacters[newMessage.id];
           const userIdx = localStorage.getItem('userToken')
   
           // 캐릭터가 존재하지 않으면 새로 생성
           if (!remoteChar && newMessage.id !== userIdx) {
+            console.log("33333333333333333333333333333333333333333333333333")
             remoteChar = location.physics.add.sprite(newMessage.position.x, newMessage.position.y, `${newMessage.type}2`);
             remoteChar.setDepth(3);
             location.remoteCharacters[newMessage.id] = remoteChar;
@@ -332,6 +356,7 @@ export class Msize1Scene extends Phaser.Scene {
             location.remoteCharacterNames[newMessage.id] = nameText;
           }
             else if(remoteChar){
+              console.log("4444444444444444444444444444444444444444444444444")
             // 캐릭터가 이미 존재하면 위치와 애니메이션 상태 업데이트
             remoteChar.setPosition(newMessage.position.x, newMessage.position.y);
 
@@ -421,7 +446,7 @@ export class Msize1Scene extends Phaser.Scene {
         this.sendCharacterData();
         this.prevPosition = currentPlayerPosition;
     }
-    const text = this.add.text(1600, 480, this.buttontext, { color: '#ffffff', align: 'left', fontSize: '32px', fontStyle:'bold'});
+    const text = this.add.text(1600, 400, this.buttontext, { color: '#ffffff', align: 'left', fontSize: '24px', fontStyle:'bold'});
       setTimeout(() => {
         text.destroy();
       }, 5000);

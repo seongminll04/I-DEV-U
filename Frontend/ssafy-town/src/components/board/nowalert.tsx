@@ -104,14 +104,13 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
       localStorage.setItem('OVsession',random)
       const data = {
         message:'수락',
-        OVsession:random
+        OVsession:'ses_'+random
       };
       stompClientRef.current.publish({
         destination: `/sub/${message.fromUser.idx}`,
         body: JSON.stringify(data),
       });
       alert('소개팅 맵으로 이동합니다.')
-      onMessage()
       window.location.href='https://i9b206.p.ssafy.io/love'
     }
   }

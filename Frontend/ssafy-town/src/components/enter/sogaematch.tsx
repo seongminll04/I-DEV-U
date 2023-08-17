@@ -20,6 +20,7 @@ const SogaeMatch: React.FC = () => {
           const newMessage = JSON.parse(message.body);
           if (newMessage.message==='수락') {
             alert('매칭 성공!')
+            console.log(newMessage.OVsession)
             localStorage.setItem('OVsession',newMessage.OVsession)
             window.location.href='https://i9b206.p.ssafy.io/love'
           }
@@ -31,8 +32,8 @@ const SogaeMatch: React.FC = () => {
           }
         };
       }
-    }, 2000);
-  },[])
+    }, 1000);
+  },[stompClientRef])
 
   // const matchout = () =>{
   //   dispatch(setModal(null))

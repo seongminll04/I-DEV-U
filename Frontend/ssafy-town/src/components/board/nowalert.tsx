@@ -129,7 +129,19 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
       }
     }, 1000);
   }
-
+  const nono = () => {
+    axiosInstance({
+      method:'delete',
+      url: `https://i9b206.p.ssafy.io:9090/alarm/${message.idx}`,
+      headers: {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+    .then(() => {
+      onMessage()
+    })
+    .catch(err=>console.log(err))
+  }
   return (
     <div className={now_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) { onMessage(); dispatch(setModal(null)) }}} >
@@ -143,7 +155,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
               {message.createdAt}
             </p>
             <button onClick={sogaeOK}>수락</button>
-            <button>거절</button>
+            <button onClick={nono}>거절</button>
           </div>
           : message.type==='MATE' ? 
           <>
@@ -155,7 +167,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
               {message.createdAt}
             </p>
             <button onClick={ok}>수락</button>
-            <button>거절</button>
+            <button onClick={nono}>거절</button>
           </>
           :null}
         </div>

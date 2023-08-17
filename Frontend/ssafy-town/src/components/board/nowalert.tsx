@@ -3,7 +3,7 @@ import now_css from './nowalert.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChatIdx, setChatTitle, setModal, setSidebar } from '../../store/actions';
 import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
-import { Client } from '@stomp/stompjs';
+import { Client, Message } from '@stomp/stompjs';
 import { AppState } from '../../store/state';
 
 interface Props {
@@ -98,21 +98,34 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
           destination: `/sub/wait/${message.fromUser.idx}`,
           body: JSON.stringify(data),
         });
-  
-        setTimeout(() => {
-          alert('소개팅 맵으로 이동합니다.')
-          // 해당 알림 삭제
-          axiosInstance({
-            method:'delete',
-            url: `https://i9b206.p.ssafy.io:9090/alarm/${message.idx}`,
-            headers: {
-              Authorization: 'Bearer ' + userToken
-            },
-          })
-          .then(() => window.location.href='https://i9b206.p.ssafy.io/love')
-          .catch(err=>console.log(err))
-          
-        }, 1000);
+        // 해당 알람삭제
+        axiosInstance({
+          method:'delete',
+          url: `https://i9b206.p.ssafy.io:9090/alarm/${message.idx}`,
+          headers: {
+            Authorization: 'Bearer ' + userToken
+          },
+        })
+        .then(() => {
+          if (stompClientRef.current) {
+            stompClientRef.current.subscribe(`/sub/response/${random}`, function(message: Message) {
+              alert('소개팅 맵으로 이동합니다.')
+              window.location.href='https://i9b206.p.ssafy.io/love'
+
+          });
+          return ()=>{
+            if (stompClientRef.current) {
+              stompClientRef.current.unsubscribe(`/sub/response/${random}`);
+            }
+          }
+          }
+          setTimeout(() => {
+            alert('상대방이 온라인 상태가 아닙니다. 취소되었습니다.')
+            onMessage()
+          }, 10000);
+        
+        })
+        .catch(err=>console.log(err))
       }
     }, 1000);
   }
@@ -132,11 +145,9 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
             <button onClick={sogaeOK}>수락</button>
             <button>거절</button>
           </div>
-          :null}
-
-          <h1>동료찾기 요청</h1>
-          {message ? 
+          : message.type==='MATE' ? 
           <>
+            <h1>동료찾기 요청</h1>
             <p>
               {message.fromUser.nickname}님의 채팅신청이 들어왔습니다
             </p>

@@ -375,7 +375,7 @@ export class Msize1Scene extends Phaser.Scene {
         this.sendCharacterData();
         this.prevPosition = currentPlayerPosition;
     }
-    const text = this.add.text(1550, 400, this.buttontext, { color: '#ffffff', align: 'left', fontSize: '32px', fontStyle:'bold'});
+    const text = this.add.text(1600, 400, this.buttontext, { color: '#ffffff', align: 'left', fontSize: '32px', fontStyle:'bold'});
       setTimeout(() => {
         text.destroy();
       }, 5000);
@@ -491,12 +491,12 @@ export class Msize1Scene extends Phaser.Scene {
     showtext() {
       
       const texts = [
-          "1. 장점", "2. 단점", "3. 별명", "4. 취미", "5. 특기",
-          "6. 여행", "7. 운동", "8. 책", "9. 영화", "10. 동물",
-          "11. 이상형", "12. 계절", "13. 음악", "14. 음식", "15. 친구",
-          "16. 로또", "17. 초능력", "18. 추억", "19. 경치", "20. 색깔",
-          "21. 기분", "22. 단골", "23. 좌우명", "24. 수면", "25. MBTI",
-          "26. 언어", "27. 관심사", "28. 트렌드", "29. 식물", "30. 날씨"
+          "장점", "단점", "별명", "취미", "특기",
+          "여행", "운동", "책", "영화", " 동물",
+          "이상형", "계절", "음악", "음식", "친구",
+          "로또", "초능력", "추억", "경치", "색깔",
+          "기분", "단골", "좌우명", "수면", "MBTI",
+          "언어", "관심사", "트렌드", "식물", "날씨"
       ];
       
       const randomText = Phaser.Math.RND.pick(texts);

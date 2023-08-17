@@ -387,6 +387,8 @@ changeEffectSprite.on('animationcomplete', () => {
         this.petheart();
       } else if(nearbyObject === 'mirror'){
         this.choosecharacter();
+      } else if(nearbyObject === 'computer'){
+        store.dispatch(setModal('게임'))
       }
     });
 
@@ -547,23 +549,26 @@ changeEffectSprite.on('animationcomplete', () => {
       this.NearbyObjects();
     }
 
-  private NearbyObjects(): 'bed' | 'board' | 'pet'| 'mirror' | null {
+  private NearbyObjects(): 'bed' | 'board' | 'pet'| 'mirror' | 'computer' | null {
     const bedPosition = { x: 84, y: 131 }; // 침대
     const boardPosition = { x: 400, y: 100 }; // 게시판
-    const mirrorPosition = { x: 176, y: 100 }; // 게시판
+    const mirrorPosition = { x: 176, y: 100 }; // 거울
+    const computerPosition = { x: 310, y: 100 }; // 컴퓨터
 
     if (this.character) {
       const distanceToBed = Phaser.Math.Distance.Between(this.character.x, this.character.y, bedPosition.x, bedPosition.y);
       const distanceToBoard = Phaser.Math.Distance.Between(this.character.x, this.character.y, boardPosition.x, boardPosition.y);
       const distanceToMirror = Phaser.Math.Distance.Between(this.character.x, this.character.y, mirrorPosition.x, mirrorPosition.y);
+      const distanceToComputer = Phaser.Math.Distance.Between(this.character.x, this.character.y, computerPosition.x, computerPosition.y);
 
-      if (distanceToBed <= 50 || distanceToBoard <= 64 || distanceToMirror<=40) {
+      if (distanceToBed <= 50 || distanceToBoard <= 64 || distanceToMirror<=40 || distanceToComputer<=40) {
           this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
 
 
           if(distanceToBed <= 50) return 'bed';
           if(distanceToBoard <= 64) return 'board';
           if(distanceToMirror <= 40) return 'mirror';
+          if(distanceToComputer<= 40) return 'computer';
       } else if(Math.abs(this.pet!.x-this.character!.x)<50 && Math.abs(this.pet!.y-this.character!.y)<50){
         return 'pet';
       } 

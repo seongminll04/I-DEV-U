@@ -18,6 +18,7 @@ import EditSel from '../account/editsel';
 import Withdraw from '../account/withdraw';
 import Inquiry from '../board/inquiry'
 import InquiryList from '../board/all_inquiry'
+import GameModal from '../map/gamemodal'
 
 const ModalOpen: React.FC = () => {
   const isModalOpen = useSelector((state: AppState) => state.isModalOpen);//사이드바 오픈여부
@@ -36,6 +37,7 @@ const ModalOpen: React.FC = () => {
       : isModalOpen === '회원탈퇴' ? <Withdraw />
       : isModalOpen === '문의' ? <Inquiry />
       : isModalOpen === '문의목록' ? <InquiryList />
+      : isModalOpen === '게임' ? <GameModal/>
       : null }
     </div>
   );

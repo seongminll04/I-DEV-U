@@ -121,6 +121,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
           }
           setTimeout(() => {
             alert('상대방이 온라인 상태가 아닙니다. 취소되었습니다.')
+            dispatch(setModal(null))
             onMessage()
           }, 10000);
         
@@ -138,6 +139,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
       },
     })
     .then(() => {
+      dispatch(setModal(null))
       onMessage()
     })
     .catch(err=>console.log(err))

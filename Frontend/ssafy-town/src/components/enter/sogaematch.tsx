@@ -46,6 +46,10 @@ const SogaeMatch: React.FC = () => {
   },[stompClientRef])
 
   const matchout = () =>{
+    if (stompClientRef.current) {
+      const userIdx = localStorage.getItem('userIdx')
+      stompClientRef.current.unsubscribe(`/sub/wait/${userIdx}`)
+    }
     dispatch(setModal(null))
   }
 

@@ -34,11 +34,6 @@ const Setting: React.FC = () => {
       <button style={{width:'200px', height:'100px', borderRadius:'0.8rem',cursor:'pointer',fontSize:'18px', color:'red',}}  onClick={()=>dispatch(setModal('문의'))}>1 : 1 문의</button>
       <br /><br />
       {/* <button style={{width:'200px', height:'100px', borderRadius:'0.8rem',cursor:'pointer',fontSize:'18px', color:'red',}}  onClick={()=>dispatch(setModal('문의'))}>1 : 1 문의</button> */}
-      {isAdmin && (
-        <div className="aaa">
-          <button className={"aaa"} onClick={()=>dispatch(setModal('문의목록'))}>1 : 1 문의사항 목록조회</button>
-        </div>
-      )} */}
       <button className={setting_css.button} style={{display: isAdmin? 'block' : "none"}} onClick={()=>dispatch(setModal('문의목록'))}>1 : 1 문의사항 목록조회</button>
 
       <hr />

@@ -128,7 +128,7 @@ function App() {
           <Route path="/meeting" element={<LMeetingRoom />} />
           <Route path="/love" element={<SogaeRoom />} />
         </Routes>
-        {isModalOpen==='실시간알림' ? <NowAlert message={newmessage} onMessage={()=>{setNewmessage(null)}}/>:null}
+        {isModalOpen==='실시간알림' ? <NowAlert message={newmessage} onMessage={()=>{setNewmessage(null); dispatch(setModal(null))}}/>:null}
       </div>
     </Router>
   );

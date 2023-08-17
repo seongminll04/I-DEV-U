@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import now_css from './nowalert.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChatIdx, setChatTitle, setModal, setSidebar } from '../../store/actions';
@@ -16,6 +16,13 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
   const userToken = localStorage.getItem('userToken')
   const stompClientRef = React.useRef<Client | null>(null);
   stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
+  
+  useEffect(()=>{
+    if (!message) {
+      onMessage()
+      return
+    }
+  },[message,onMessage])
 
   const ok = () => {
     const now = new Date()

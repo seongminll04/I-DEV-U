@@ -129,6 +129,11 @@ const Chatroom: React.FC = () => {
   }
 
   const sendMessage = (message: string) => {
+
+    if (message==='') {
+      alert('메시지를 입력해주세요')
+      return
+    }
     if (stompClientRef.current) {
       const now = new Date()
       const data = {
@@ -145,7 +150,6 @@ const Chatroom: React.FC = () => {
       setMessageInput('');
     }
   };
-
 
   const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
 

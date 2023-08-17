@@ -45,13 +45,11 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private static final String NO_CHECK_URL = "/user/login"; // "/login"으로 들어오는 요청은 Filter 작동 X
     private static final String NO_KAKAO_URL = "/user/kakaologin"; // "/login"으로 들어오는 요청은 Filter 작동 X
-    private static final String USERNAME_KEY = "email"; // 회원 로그인 시 이메일 요청 JSON Key : "email"
 
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
 //    private final RedisService redisService;
-    private final ObjectMapper objectMapper;
 
 
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();

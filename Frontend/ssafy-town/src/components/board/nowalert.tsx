@@ -147,58 +147,51 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
       clearTimeout(timeout1)
     }
   }
-  const nono = () => {
-    axiosInstance({
-      method:'delete',
-      url: `https://i9b206.p.ssafy.io:9090/alarm/${message.idx}`,
-      headers: {
-        Authorization: 'Bearer ' + userToken
-      },
-    })
-    .then(() => {
-      onMessage();
-    })
-    .catch(err=>console.log(err))
+  // const nono = () => {
+  //   axiosInstance({
+  //     method:'delete',
+  //     url: `https://i9b206.p.ssafy.io:9090/alarm/${message.idx}`,
+  //     headers: {
+  //       Authorization: 'Bearer ' + userToken
+  //     },
+  //   })
+  //   .then(() => {
+  //     onMessage();
+  //   })
+  //   .catch(err=>console.log(err))
 
-  }
+  // }
   return (
     <div className={now_css.modal_overlay} onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) { onMessage(); dispatch(setModal(null)) }}} >
         <div className={now_css.QnA_modal}>
           {message.type === 'SOGAE' ? 
           <div>
-            <p>
+            <h1>소개팅 신청</h1>
+            <h2>
               {message.fromUser.nickname}님의 소개팅 신청이 들어왔습니다
-            </p>
-            <p>
-              {message.createdAt}
-            </p>
-            <button onClick={sogaeOK}>수락</button>
-            <button onClick={nono}>거절</button>
+            </h2>
+            <button className={now_css.chatreq} onClick={sogaeOK}>수락</button>
+            <button className={now_css.chatreq} onClick={()=>{onMessage(); dispatch(setModal(null)) }}>거절</button>
           </div>
           : message.type==='MATE' ? 
           <>
             <h1>동료찾기 신청</h1>
-            <p>
+            <h2>
               {message.fromUser.nickname}님의 채팅신청이 들어왔습니다
-            </p>
-            <p>
-              {message.createdAt}
-            </p>
-            <button onClick={ok}>수락</button>
-            <button onClick={nono}>거절</button>
+            </h2>
+    
+            <button className={now_css.chatreq} onClick={ok}>수락</button>
+            <button className={now_css.chatreq} onClick={()=>{onMessage(); dispatch(setModal(null)) }}>거절</button>
           </>
           : message.type==='CHAT' ? 
           <>
             <h1>채팅신청</h1>
-            <p>
+            <h2>
               {message.fromUser.nickname}님의 채팅신청이 들어왔습니다
-            </p>
-            <p>
-              {message.createdAt}
-            </p>
-            <button onClick={ok}>수락</button>
-            <button onClick={nono}>거절</button>
+            </h2>
+            <button className={now_css.chatreq} onClick={ok}>수락</button>
+            <button className={now_css.chatreq} onClick={()=>{onMessage(); dispatch(setModal(null))}}>거절</button>
           </>
           :null}
         </div>

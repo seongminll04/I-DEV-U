@@ -96,3 +96,12 @@
     border-radius: 1rem;
     border: 3px gray solid;
 }
+
+.chatreq {
+    margin:10px 20px;
+    width: 120px;
+    height: 60px;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 20px;
+}

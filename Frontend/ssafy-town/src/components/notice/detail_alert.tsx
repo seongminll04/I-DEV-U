@@ -187,8 +187,8 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
                       <p>{Selalert.fromUser.nickname}님의 가입신청입니다.</p>
                       <p>{Selalert.comment}</p>
                       <div>
-                        <button onClick={meetingok}>수락</button>
-                        <button onClick={nope}>거절</button>
+                        <button className={alert_css.chatreq} onClick={meetingok}>수락</button>
+                        <button className={alert_css.chatreq} onClick={nope}>거절</button>
                       </div>
                     </>
                       : Selalert.type === "MATE" ?
@@ -196,17 +196,18 @@ const DetailAlert: React.FC<Props> = ({ backpage, Selalert }) => {
                           <p>동료찾기</p>
                           <p>{Selalert.fromUser.nickname}님의 동료신청입니다.</p>
                           <div>
-                            <button onClick={ok}>수락</button>
-                            <button onClick={nope}>거절</button>
+                            <button className={alert_css.chatreq} onClick={ok}>수락</button>
+                            <button className={alert_css.chatreq} onClick={nope}>거절</button>
                           </div>
                         </>
                         : Selalert.type === 'CHAT' ? <>
+                        <p>채팅신청</p>
                           <p>
                             {Selalert.fromUser.nickname}님의 채팅신청입니다.
                           </p>
                           <div>
-                            <button onClick={ok}>수락</button>
-                            <button onClick={nope}>거절</button>
+                            <button className={alert_css.chatreq} onClick={ok}>수락</button>
+                            <button className={alert_css.chatreq} onClick={nope}>거절</button>
                           </div>
                         </>
 

@@ -13,7 +13,7 @@ const SogaeMatch: React.FC = () => {
 
 
   useEffect(()=>{
-    setTimeout(() => {
+    const timout = setTimeout(() => {
       alert('응답없음')
       dispatch(setModal(null))
     }, 60000);
@@ -39,6 +39,7 @@ const SogaeMatch: React.FC = () => {
       });
       
       return () => {
+        clearTimeout(timout)
         if (stompClientRef.current) {
           subscription.unsubscribe();
         }
@@ -48,10 +49,6 @@ const SogaeMatch: React.FC = () => {
   },[stompClientRef, dispatch])
 
   const matchout = () =>{
-    if (stompClientRef.current) {
-      const userIdx = localStorage.getItem('userIdx')
-      stompClientRef.current.unsubscribe(`/sub/wait/${userIdx}`)
-    }
     dispatch(setModal(null))
   }
 

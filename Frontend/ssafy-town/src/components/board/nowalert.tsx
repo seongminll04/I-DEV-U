@@ -93,7 +93,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
   const sogaeOK = () => {
     const random = generateRandomString(12)
     // 수락 반응 리스폰
-    setTimeout(() => {
+    const timeout1 = setTimeout(() => {
       if (stompClientRef.current) {
         localStorage.setItem('userNum',random)
         localStorage.setItem('OVsession',random)
@@ -114,7 +114,7 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
           },
         })
         .then(() => {
-          setTimeout(() => {
+          const timeout2 = setTimeout(() => {
             if (stompClientRef.current) {
               stompClientRef.current.subscribe(`/sub/response/${random}`, function(message: Message) {
                 alert('소개팅 맵으로 이동합니다.')
@@ -128,16 +128,24 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
             }
             }
           }, 1000);
+          return ()=>{
+            clearTimeout(timeout2)
+          }
         })
         .catch(err=>console.log(err))
 
-        setTimeout(() => {
+        const timeout3 = setTimeout(() => {
           alert('상대방이 온라인 상태가 아닙니다. 취소되었습니다.')
           onMessage();
         }, 10000);
-      
+      return () => {
+        clearTimeout(timeout3)
+      }
       }
     }, 1000);
+    return()=>{
+      clearTimeout(timeout1)
+    }
   }
   const nono = () => {
     axiosInstance({

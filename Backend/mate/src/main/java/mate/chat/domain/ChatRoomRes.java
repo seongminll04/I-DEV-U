@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import mate.alarm.dto.ChatParticipationResponse;
 import mate.alarm.dto.ChatRoomResponse;
+import mate.alarm.dto.UserResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,9 +21,9 @@ public class ChatRoomRes {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private int userCount;
-    private List<ChatParticipation> userList;
+    private List<UserResponse> userList;
 
-    public static ChatRoomRes from(ChatRoom chatRoom, List<ChatParticipation> userList){
+    public static ChatRoomRes from(ChatRoom chatRoom, List<UserResponse> userList){
 
         ChatRoomRes chatRoomRes = new ChatRoomRes();
         chatRoomRes.idx = chatRoom.getIdx();

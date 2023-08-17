@@ -4,6 +4,7 @@ package mate.chat.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mate.alarm.dto.ChatRoomResponse;
+import mate.alarm.dto.UserResponse;
 import mate.chat.domain.*;
 import mate.chat.dto.*;
 import mate.controller.Result;
@@ -48,7 +49,12 @@ public class ChatRoomService {
 
         for (ChatRoom findChatRoom : findChatRooms) {
             List<ChatParticipation> findUser = chatParticipationRepository.findUser(findChatRoom.getIdx());
-            ChatRoomRes response = ChatRoomRes.from(findChatRoom, findUser);
+            List<UserResponse> userList = new ArrayList<>();
+            for (ChatParticipation chatParticipation : findUser) {
+                UserResponse userResponse = UserResponse.from(chatParticipation.getUser());
+                userList.add(userResponse);
+            }
+            ChatRoomRes response = ChatRoomRes.from(findChatRoom, userList);
 
             list.add(response);
         }

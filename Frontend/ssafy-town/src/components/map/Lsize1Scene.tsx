@@ -652,7 +652,6 @@ export class Lsize1Scene extends Phaser.Scene {
 
   // 캐릭터의 위치나 상태가 변경될 때 호출
   sendCharacterData(message?: string) {
-    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     const currentUserId = localStorage.getItem('userToken');
     const currentUserNickname = localStorage.getItem('userNickname') || 'Unknown';  // 닉네임 가져오기
 

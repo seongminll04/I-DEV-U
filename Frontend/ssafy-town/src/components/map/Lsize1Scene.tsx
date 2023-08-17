@@ -465,15 +465,16 @@ export class Lsize1Scene extends Phaser.Scene {
 
     
     for (let i = 1; i <= 10; i++) {
-      this.input.keyboard?.on('keydown-' + i, () => {
-        this.settingemoji = i;
-        const emojiKey = 'emoji' + i;
-        const targetEmoji = (this as any)[emojiKey];
-        const emoji = this.add.image(this.character!.x, this.character!.y - this.character!.height / 2 - targetEmoji.height / 2, 'emoji' + i);
-        setTimeout(() => {
-            emoji.destroy();
-            this.settingemoji = 0;
-        }, 300);
+      const keyboardNumber = (i === 10) ? 0 : i;
+      this.input.keyboard?.on('keydown-' + keyboardNumber, () => {
+          this.settingemoji = i;
+          const emojiKey = 'emoji' + i;
+          const targetEmoji = (this as any)[emojiKey];
+          const emoji = this.add.image(this.character!.x, this.character!.y - this.character!.height / 2 - targetEmoji.height / 2, 'emoji' + i);
+          setTimeout(() => {
+              emoji.destroy();
+              this.settingemoji = 0;
+          }, 300);
       });
     }
     
@@ -577,6 +578,7 @@ export class Lsize1Scene extends Phaser.Scene {
     }, 5000);
   
     if (stompClientRef) {
+      console.log("@@@@@@@@@@@@@@@@@@2")
       stompClientRef.subscribe(`/sub/channel/${sessionName}`, function(message:Message) {
         const newMessage = JSON.parse(message.body);
   

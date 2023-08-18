@@ -14,19 +14,6 @@ var OPENVIDU_URL = process.env.OPENVIDU_URL;
 // opvidu 서버 비번
 var OPENVIDU_SECRET = process.env.OPENVIDU_SECRET;
 
-<<<<<<< HEAD
-// Cors 지금은 전체인데 나중에 바꿔줘야함
-app.use(
-  cors({
-    origin: "*",
-  })
-);
-
-
-
-// express 로 HTTP 서버를 생성
-var server = http.createServer(app);
-=======
 const privateKey = fs.readFileSync("privkey.pem", "utf8");
 const certificate = fs.readFileSync("cert.pem", "utf8")
 const ca = fs.readFileSync("fullchain.pem", "utf8")
@@ -49,16 +36,11 @@ app.use(
 // express 로 HTTPS 서버를 생성
 var server = https.createServer(credentials, app);
 
->>>>>>> 630feb622527dfd00bf57d30b618bcfb139ed9db
 // openvidu 클라이언트 객체를 초기화
 var openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
 openvidu.activeSessions = [];
 // socket.io 초기화
-<<<<<<< HEAD
-const io = socketIo(server, {
-=======
 var io = socketIo(server, {
->>>>>>> 630feb622527dfd00bf57d30b618bcfb139ed9db
     cors: {
       origin: "*",
     }

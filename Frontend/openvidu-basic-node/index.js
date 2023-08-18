@@ -1,11 +1,15 @@
 require("dotenv").config(!!process.env.CONFIG ? {path: process.env.CONFIG} : {});
 var express = require("express");
 var bodyParser = require("body-parser");
-var http = require("http");
+var https = require("https");
 var OpenVidu = require("openvidu-node-client").OpenVidu;
 var socketIo = require('socket.io');
 var cors = require("cors");
+var axios = require('axios');
+var base64 = require('base64-js');
 var app = express();
+const fs = require("fs");
+
 
 // 노드서버
 var SERVER_PORT = process.env.SERVER_PORT;
@@ -14,19 +18,6 @@ var OPENVIDU_URL = process.env.OPENVIDU_URL;
 // opvidu 서버 비번
 var OPENVIDU_SECRET = process.env.OPENVIDU_SECRET;
 
-<<<<<<< HEAD
-// Cors 지금은 전체인데 나중에 바꿔줘야함
-app.use(
-  cors({
-    origin: "*",
-  })
-);
-
-
-
-// express 로 HTTP 서버를 생성
-var server = http.createServer(app);
-=======
 const privateKey = fs.readFileSync("privkey.pem", "utf8");
 const certificate = fs.readFileSync("cert.pem", "utf8")
 const ca = fs.readFileSync("fullchain.pem", "utf8")
@@ -46,23 +37,20 @@ app.use(
 );
 
 
-// express 로 HTTPS 서버를 생성
+// express 로 HTTP 서버를 생성
 var server = https.createServer(credentials, app);
-
->>>>>>> 630feb622527dfd00bf57d30b618bcfb139ed9db
 // openvidu 클라이언트 객체를 초기화
 var openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
 openvidu.activeSessions = [];
 // socket.io 초기화
-<<<<<<< HEAD
-const io = socketIo(server, {
-=======
+// var io = socketIo(server);
 var io = socketIo(server, {
->>>>>>> 630feb622527dfd00bf57d30b618bcfb139ed9db
-    cors: {
-      origin: "*",
-    }
-  });
+  cors: {
+    origin: "https://i9b206.p.ssafy.io",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  },
+});
 
 // express 앱에 bodyParser 미들웨어를 추가하여 POST 요청의 body를 쉽게 파싱
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -114,6 +102,45 @@ app.post("/api/sessions/:sessionId/connections", async (req, res) => {
   }
 });
 
+// 세션의 스트림 정보를 가져오는 함수
+async function getSessionInfo(sessionId) {
+    const authString = "Basic " + base64.fromByteArray(Buffer.from("OPENVIDUAPP:" + OPENVIDU_SECRET));
+    // console.log("Fetching session info for sessionId:", sessionId);  // 로그 추가
+    try {
+        const response = await axios.get(OPENVIDU_URL + "/api/sessions/" + sessionId, {
+            headers: {
+                Authorization: authString
+            }
+        });
+        // console.log("Got response:", response.data);  // 로그 추가
+        // console.log("여기",response.data.connections.content);
+        return response.data.connections.content;
+    } catch (error) {
+        console.error("Error fetching session info:", error);
+        return null;
+    }
+}
+
+// API 엔드포인트 추가: 세션의 스트림 정보를 가져오기
+app.get("/api/sessions/:sessionId/streams", async (req, res) => {
+    try {
+        const sessionId = req.params.sessionId;
+        const connections = await getSessionInfo(sessionId);
+
+        if (connections && connections.length > 0) {
+            const streamIds = connections.flatMap(connection => 
+                connection.publishers.map(p => p.streamId)
+            );
+            res.json(streamIds);
+        } else {
+            res.status(500).send("Error fetching streams or no active streams");
+        }
+    } catch (error) {
+        console.error("Endpoint error:", error);
+        res.status(500).send("Unexpected error");
+    }
+});
+
 
 
 // 미처리된 예외를 처리
@@ -121,6 +148,7 @@ process.on('uncaughtException', err => console.error(err));
 
 // 유저 세션 초기화
 var userSessions = {};
+
 
 
 // 여긴 p2p 시그널링서버 이벤트 핸들러

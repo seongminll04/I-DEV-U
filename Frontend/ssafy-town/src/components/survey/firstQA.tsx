@@ -3,6 +3,7 @@ import qa_css from './firstQA.module.css';
 
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../store/actions';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 
 const QAModal: React.FC = () => {
   const dispatch = useDispatch()
@@ -36,15 +37,59 @@ const QAModal: React.FC = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    const surveyResults = {
-      workingYears,
-      currentJob,
-      languages,
-      location,
-      projectExperience
-    }
-    // onConfirm(surveyResults);
-    console.log(surveyResults)
+
+    const surveyResults = [
+      {
+        surveyIdx: 1,
+        surveyTitle: '개발자로 근무한 기간을 선택하세요',
+        tagList: [workingYears],
+      },
+      {
+        surveyIdx: 2,
+        surveyTitle: '현재 직무는 무엇인가요?',
+        tagList: [currentJob],
+      },
+      {
+        surveyIdx: 3,
+        surveyTitle: '사용하는 언어가 무엇인가요? (최대 5개)',
+        tagList: languages,
+      },
+      {
+        surveyIdx: 4,
+        surveyTitle: '거주중인 지역은 어디인가요?',
+        tagList: [location],
+      },
+      {
+        surveyIdx: 5,
+        surveyTitle: '프로젝트 경험이 있으신가요?',
+        tagList: [projectExperience],
+      },
+    ];
+
+    const userToken = localStorage.getItem('userToken')
+    const userIdxStr = localStorage.getItem('userIdx')
+    var userIdx: number | null;
+    if (userIdxStr) { userIdx = parseInt(userIdxStr, 10) } else { userIdx = null }
+    axiosInstance({
+      method: 'post',
+      url: `https://i9b206.p.ssafy.io:9090/basicSurvey/create`,
+      data: {
+        'userIdx': userIdx,
+        'surveyResult': surveyResults
+      },
+      headers: {
+        Authorization: 'Bearer ' + userToken
+      },
+    })
+      .then(() => {
+        dispatch(setModal(null))
+        alert('설문에 참여해주셔서 감사합니다.')
+      })
+      .catch(() => {
+        alert('설문 등록 실패')
+      })
+
+
   }
 
   const surveyForm = (
@@ -73,21 +118,22 @@ const QAModal: React.FC = () => {
         <p>📚 사용하는 언어가 무엇인가요? (최대 5개)</p>
         {languageOptions.map(option => (
           <label key={option}>
-          <input 
-            type="checkbox" 
-            name="languages" 
-            value={option} 
-            onChange={() => toggleLanguage(option)}
-            checked={languages.includes(option)} // checked 속성을 추가하여 렌더링 시 마다 선택 상태를 업데이트함
-          />
-          {option}
-        </label>
+            <input
+              type="checkbox"
+              name="languages"
+              value={option}
+              onChange={() => toggleLanguage(option)}
+              checked={languages.includes(option)} // checked 속성을 추가하여 렌더링 시 마다 선택 상태를 업데이트함
+            />
+            {option}
+          </label>
         ))}
       </div>
 
       <div>
         <p>🗺️ 거주중인 지역은 어디인가요?</p>
         <select name="location" onChange={(e) => setLocation(e.target.value)}>
+          <option disabled selected value="" hidden>선택</option>
           {locationOptions.map(option => (
             <option key={option} value={option}>
               {option}
@@ -112,16 +158,13 @@ const QAModal: React.FC = () => {
 
   return (
     <div className={qa_css.modal_overlay}>
-  <div className={qa_css.qa_modal}>
-    <h1>I DEV U</h1>
-    <h2>📝 신규 유저 설문조사</h2>
-    <h3>* 저희 서비스를 이용하기 위해 첫 로그인시 설문조사가 필요합니다. *</h3>
-    {surveyForm}
-    <button onClick={()=>dispatch(setModal(null))}>
-      나중에 하기(개발용, 나중에는 없애고 강제시킬예정)
-    </button>
-  </div>
-</div>
+      <div className={qa_css.qa_modal}>
+        <h1>I DEV U</h1>
+        <h2>📝 신규 유저 설문조사</h2>
+        <h3>* 저희 서비스를 이용하기 위해 첫 로그인시 설문조사가 필요합니다. *</h3>
+        {surveyForm}
+      </div>
+    </div>
   );
 };
 

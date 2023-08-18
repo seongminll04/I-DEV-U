@@ -1,169 +1,298 @@
-  // src/App.tsx
-  import React, { useState, useEffect } from "react";
-  import { io, Socket } from "socket.io-client";
-  import chat_css from "./5chat.module.css";
+// src/App.tsx
+import React, { useEffect, useState } from "react";
+import chat_css from "./5chat.module.css";
+import { Client, Message } from '@stomp/stompjs';
 
-import { useDispatch } from 'react-redux';
-import { setAllowMove } from '../../store/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAllowMove, setSidebar, setChatIdx, setChatTitle } from '../../store/actions';
+import { AppState } from '../../store/state';
 
-  interface ChatMessage {
-    content: string;
-    sender: string;
-  }
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 
-  const Chat: React.FC = () => {
-    const dispatch = useDispatch()
+interface chatroom {
+  roomIdx: number,
+  nickname: string,
+  title: string,
+  message: string,
+  createdAt: Date,
+  master: boolean,
+  userCount: number,
+  chatuser:string|null;
+  chatimg:string|null;
+}
 
-    const [socket, setSocket] = useState<Socket | null>(null);
-    const [messages, setMessages] = useState<ChatMessage[]>([]);
-    const [messageInput, setMessageInput] = useState<string>("");
-    const [roomList, setRoomList] = useState<string[]>([]);
-    const [selectedRoom, setSelectedRoom] = useState<string>("");
-    const [oldestMessageTimestamp, setOldestMessageTimestamp] = useState<number | null>(null);
+const Chat: React.FC = () => {
+  const dispatch = useDispatch()
 
-      // input 방향키 살리기
-  const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
+  const stompClientRef = React.useRef<Client | null>(null);
+  stompClientRef.current = useSelector((state: AppState) => state.stompClientRef)
+  const [chatList, setChatList] = useState<chatroom[]>([])
+  const userIdxStr = localStorage.getItem('userIdx')
+  const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
+
+  const [inputvalue, setInputValue] = useState('')
+
+  // 최초 ChatList 불러오기
+
+  useEffect(() => {
+    const userToken = localStorage.getItem('userToken');
+    const rooms: chatroom[] = [];
+    axiosInstance({
+      method: 'get',
+      url: `https://i9b206.p.ssafy.io:9090/chat/list/${userIdx}`,
+      headers: {
+        Authorization: 'Bearer ' + userToken,
+      },
+    })
+      .then((res1) => {
+        const roomPromises = [];
+        for (const room of res1.data.data) {
+          const roomPromise = axiosInstance({
+            method: 'get',
+            url: `https://i9b206.p.ssafy.io:9090/chat/rooms/${room.idx}/last`,
+            headers: {
+              Authorization: 'Bearer ' + userToken,
+            },
+          }).then((res) => {
+            const date = new Date(res.data.data.createdAt)
+
+            var chatuser=null
+            var chatimg=null
+            if (room.userList.length > 1){
+              if (room.userList[0].idx === userIdx){chatuser=room.userList[1].nickname;chatimg=room.userList[1].storedFileName}
+              else {chatuser=room.userList[0].nickname;chatimg=room.userList[0].storedFileName}
+            }
+            rooms.push({
+              roomIdx: room.idx,
+              nickname: res.data.data.nickname,
+              title: room.title,
+              message: res.data.data.message,
+              createdAt: date,
+              master: room.master,
+              userCount: room.userCount,
+              chatuser:chatuser,
+              chatimg:chatimg
+            });
+          });
+          roomPromises.push(roomPromise);
+        }
+        return Promise.all(roomPromises);
+      })
+      .then(() => {
+        setChatList(rooms);
+      })
+      .catch((err) => console.log(err));
+  }, [userIdx]);
+
+  // ChatList로 구독 등록, 현재는 구독 반응시 chatList 다시 가져오기 ->큐형태로 진화하면 좋음
+  useEffect(() => {
+    const userIdxStr = localStorage.getItem('userIdx')
+    const userIdx = userIdxStr ? parseInt(userIdxStr, 10) : null
+    const userToken = localStorage.getItem('userToken')
+    if (stompClientRef.current) {
+      stompClientRef.current.subscribe(`/sub/addChat/${userIdx}`, function (message: Message) {
+        const rooms: chatroom[] = [];
+        axiosInstance({
+          method: 'get',
+          url: `https://i9b206.p.ssafy.io:9090/chat/list/${userIdx}`,
+          headers: {
+            Authorization: 'Bearer ' + userToken,
+          },
+        })
+          .then((res) => {
+            const roomPromises = [];
+            for (const room of res.data.data) {
+              const roomPromise = axiosInstance({
+                method: 'get',
+                url: `https://i9b206.p.ssafy.io:9090/chat/rooms/${room.idx}/last`,
+                headers: {
+                  Authorization: 'Bearer ' + userToken,
+                },
+              }).then((res) => {
+                const date = new Date(res.data.data.createdAt)
+                var chatuser=null
+                var chatimg=null
+                if (room.userList.length > 1){
+                  if (room.userList[0].idx === userIdx){chatuser=room.userList[1].nickname;chatimg=room.userList[1].storedFileName}
+                  else {chatuser=room.userList[0].nickname;chatimg=room.userList[0].storedFileName}
+                }
+                rooms.push({
+                  roomIdx: room.idx,
+                  nickname: res.data.data.nickname,
+                  title: room.title,
+                  message: res.data.data.message,
+                  createdAt: date,
+                  master: room.master,
+                  userCount: room.userCount,
+                  chatuser:chatuser,
+                  chatimg:chatimg
+                });
+              });
+              roomPromises.push(roomPromise);
+            }
+            return Promise.all(roomPromises);
+          })
+          .then(() => {
+            setChatList(rooms);
+          })
+          .catch((err) => console.log(err));
+      });
+
+      for (const room of chatList) {
+        stompClientRef.current.subscribe(`/sub/rooms/${room.roomIdx}`, function (message: Message) {
+          axiosInstance({
+            method: 'get',
+            url: `https://i9b206.p.ssafy.io:9090/chat/rooms/${room.roomIdx}/last`,
+            headers: {
+              Authorization: 'Bearer ' + userToken
+            },
+          })
+            .then(res => {
+              const updatedChatList: chatroom[] = []
+              for (const chat of chatList) {
+                if (chat.roomIdx === room.roomIdx) {
+                  const date = new Date(res.data.data.createdAt)
+                  chat.message = res.data.data.message
+                  chat.createdAt = date
+                }
+                updatedChatList.push(chat)
+              }
+
+              setChatList(updatedChatList)
+
+            })
+            .catch(err => console.log(err))
+        })
+      }
+
+      return () => {
+        if (stompClientRef.current) {
+          stompClientRef.current.unsubscribe(`/sub/addChat/${userIdx}`)
+          for (const room of chatList) {
+            stompClientRef.current.unsubscribe(`/sub/chatRoom/${room.roomIdx}`)
+          }
+        };
+      }
+    }
+  }, [stompClientRef, chatList]);
+
+  // input 방향키 살리기
+  const handlekeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget
     const currentCursorPosition = inputElement.selectionStart || 0;
-    if (event.key === 'ArrowLeft' && currentCursorPosition!==0) {
+    if (event.key === 'ArrowLeft' && currentCursorPosition !== 0) {
       inputElement.setSelectionRange(currentCursorPosition - 1, currentCursorPosition - 1);
     } else if (event.key === 'ArrowRight') {
       inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
-    } else if (event.key === ' '){
-      inputElement.value = inputElement.value.slice(0,currentCursorPosition)+ ' ' +inputElement.value.slice(currentCursorPosition,)
-      inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
+    } else if (event.key === ' ') {
+      inputElement.value = inputElement.value.slice(0, currentCursorPosition) + ' ' + inputElement.value.slice(currentCursorPosition,)
+      inputElement.setSelectionRange(currentCursorPosition + 1, currentCursorPosition + 1);
     }
   }
 
-    useEffect(() => {
-      // Socket.IO 연결
-      const newSocket = io("https://i9b206.p.ssafy.io:9090"); // 백엔드 서버의 URL로 변경해주세요.
-      setSocket(newSocket);
-    
-      newSocket.on("connect", () => {
-        console.log("Connected to Socket.IO");
-      });
-    
-      // 채팅 메시지 수신
-      newSocket.on("chat", (message: ChatMessage) => {
-        setMessages((prevMessages) => [...prevMessages, message]);
-      });
-    
-      // 채팅방 목록 수신
-      newSocket.on("roomList", (rooms: string[]) => {
-        setRoomList(rooms);
-      });
-      setRoomList(['김싸피','이싸피']);
-    
-      return () => {
-        // 컴포넌트 언마운트 시 Socket.IO 연결 종료 및 이벤트 리스너 제거
-        newSocket.disconnect();
-        newSocket.off("chat"); // 채팅 이벤트 리스너 제거
-      };
-    }, []);
+  return (
+    <div className="sidebar_modal">
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <h1>채팅방목록</h1>
+        <div className={chat_css.search}>
+          <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown}
+            onFocus={() => dispatch(setAllowMove(false))} onBlur={() => dispatch(setAllowMove(true))}
+            value={inputvalue} onChange={(e) => { setInputValue(e.target.value) }} />
+        </div>
+        <hr style={{ width: '75%', color: 'black' }} />
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setMessageInput(event.target.value);
-    };
+        <div className={chat_css.scrollbox}>
+          {chatList.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).map((room) => {
+            const now = new Date()
+            const date = room.createdAt
+            var today;
+            var datee;
 
-    const handleSendMessage = () => {
-      if (!selectedRoom) {
-        alert("채팅방을 선택해주세요.");
-        return;
-      }
+            if (now.getFullYear() + '' + now.getMonth() + '' + now.getDate() === date.getFullYear() + '' + date.getMonth() + '' + date.getDate()) {
+              const hours = room.createdAt.getHours().toString().padStart(2, '0');
+              const minutes = room.createdAt.getMinutes().toString().padStart(2, '0');
+              if (room.createdAt.getHours() < 12) {
+                today = `${hours}:${minutes} AM`;
+              }
+              else {
+                today = `${hours}:${minutes} PM`;
+              }
+            }
+            else {
+              const year = room.createdAt.getFullYear();
+              const month = (room.createdAt.getMonth() + 1).toString().padStart(2, '0');
+              const day = room.createdAt.getDate().toString().padStart(2, '0');
+              const hours = room.createdAt.getHours().toString().padStart(2, '0');
+              const minutes = room.createdAt.getMinutes().toString().padStart(2, '0');
+              if (year === 1970) {
+                today = ''
+              }
+              else if (year === now.getFullYear()) {
+                if (room.createdAt.getHours() < 12) {
+                  datee=`${month}/${day}`
+                  today = `${hours}:${minutes} AM`;
+                }
+                else {
+                  datee=`${month}/${day}`
+                  today = `${hours}:${minutes} PM`;
+                }
 
-      // 서버로 메시지 전송
-      socket?.emit("sendMessage", {
-        content: messageInput,
-        sender: "User", // 사용자 이름 또는 식별자로 변경해주세요.
-        room: selectedRoom,
-      });
-      setMessageInput("");
-    };
+              }
+              else {
+                if (room.createdAt.getHours() < 12) {
+                  datee=`${year}/${month}/${day}`
+                  today = `${hours}:${minutes} AM`;
+                }
+                else {
+                  datee=`${year}/${month}/${day}`
+                  today = `${hours}:${minutes} PM`;
+                }
+  
+              }
+            }
 
-    const handleJoinRoom = (roomName: string) => {
-      setSelectedRoom(roomName);
-      socket?.emit("joinRoom", roomName);
-    
-      // 새로운 방에 들어가면 메시지와 oldestMessageTimestamp를 초기화합니다.
-      setMessages([]);
-      setOldestMessageTimestamp(null);
-    
-      // 선택한 채팅방에 대한 최신 메시지를 불러옵니다.
-      // 이 부분에서 백엔드로 API 호출을 하거나, Socket.IO를 통해 처리할 수 있습니다.
-      // 메시지를 업데이트하고, 가장 오래된 메시지의 타임스탬프를 저장합니다.
-    };
+            if (!`${room.chatuser}의 채팅방`.includes(inputvalue)) {
+              return (<div>
 
-    const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
-      const target = event.currentTarget;
-      if (target.scrollTop === 0 && oldestMessageTimestamp !== null) {
-        // 이전 메시지를 불러올 수 있도록 oldestMessageTimestamp를 이용합니다.
-        // 이 부분에서 백엔드로 API 호출을 하거나, Socket.IO를 통해 처리할 수 있습니다.
-        // 새롭게 불러온 메시지로 메시지 상태를 업데이트합니다.
-    
-        // 이전 메시지를 불러온 후, 가장 오래된 메시지의 타임스탬프를 업데이트합니다.
-      }
-    };
-
-    return (
-      <div className="sidebar_modal">
-        {!selectedRoom ? 
-        <div style={{width:'100%', display:'flex',flexDirection:'column', alignItems:'center'}}>
-          <h1>채팅방목록</h1>
-          <div className={chat_css.search}>
-            <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown}
-            onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
-            <button>검색</button>
-          </div>
-          <hr style={{width:'75%', color:'black'}}/>
-
-          <div className={chat_css.scrollbox}>
-            {roomList.map((room) => (
+              </div>)
+            }
+            return (
               <div>
-                <div className={chat_css.chat_room} key={room}  onClick={() => handleJoinRoom(room)}>
-                  <img src="assets/default_profile.png" alt=""/>
+                <div className={chat_css.chat_room} onClick={() => { dispatch(setSidebar('채팅방')); dispatch(setChatTitle(room.chatuser+'의 채팅방')); dispatch(setChatIdx(room.roomIdx)) }}>
+                  <img
+                    src={room.chatimg ? room.chatimg : "assets/default_profile.png"}
+                    alt=""
+                    style={{ borderRadius: "50%" }}
+                  />
                   <div className={chat_css.chat_roomdata}>
-                    <div className={chat_css.roomdata} style={{marginBottom:'10px'}}>
-                      <b>{room}</b>
-                      <span className={chat_css.chattime}>07/25 12:25 PM</span>
+                    <div className={chat_css.roomdata} style={{ marginBottom: '10px' }}>
+                      <b>{room.chatuser ? room.chatuser+'의 채팅방 ': ' '}<span style={{ fontSize: '10px', color: 'gray' }}>{room.userCount}</span></b>
+
+                      <div>
+                        {/* <span className={chat_css.chattime}>마지막 채팅시간</span> */}
+                        <span className={chat_css.chattime}></span>
+                        <br />
+                      </div>
+
                     </div>
                     <div className={chat_css.roomdata}>
-                      <p className={chat_css.lastchat}>마지막 채팅 메시지 입니다. 입니다. 입니다. 입니다. 입니다. 입니다.</p>
-                      <p className={chat_css.chatcount}>99+</p>
+                      <p className={chat_css.lastchat}>{room.message}</p>
+                      <div className={chat_css.chattime} style={{ display: 'grid'}}>
+                        <span>{datee}</span>
+                        <span>{today}</span>
+                      </div>  
+                      {/* <span className={chat_css.chattime}>{today}</span> */}
+                      {/* <p className={chat_css.chatcount}></p> */}
                     </div>
                   </div>
                 </div>
                 <hr />
-              </div>
-            ))} 
-          </div>
+              </div>)
+          })}
         </div>
-        :
-        <div style={{width:'80%'}}>
-          <div className={chat_css.chatstatus}>
-            <p onClick={() => {setSelectedRoom('')}}>back</p>
-            <h3>{selectedRoom}</h3>
-            <p>나가기</p>
-          </div>
-          <hr />
-          <div onScroll={handleScroll} style={{height:'80vh'}}>
-            {messages.map((message, index) => (
-              <div key={index}>
-                <strong>{message.sender}: </strong>
-                {message.content}
-              </div>
-            ))}
-          </div>
-          <hr />
-          <div>
-            <input type="text" value={messageInput} onChange={handleInputChange} style={{width:'80%'}} onKeyDown={handlekeydown} 
-            onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
-            <button onClick={handleSendMessage}>전송</button>
-          </div>
-        </div>
-        }
       </div>
-    );
-  };
+    </div>
+  );
+};
 
-  export default Chat;
+export default Chat;

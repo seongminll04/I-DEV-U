@@ -4,12 +4,12 @@
     margin-bottom: 20px;
 }
 .search input {
-    width: 70%;
+    width: 90%;
     padding: 0 10px;
     background-color: #D9D9D9;
     box-sizing: border-box;
     border-radius: 0.5rem;
-    border:none;
+    border : gray 0.5px solid;
     height:22px;
 }
 .search button {
@@ -25,7 +25,7 @@
     overflow-y: scroll;
 }
 .profile {
-    width: 80%;
+    width: 85%;
     display: flex;
     margin: 5px 0;
     margin-left:10%
@@ -39,14 +39,70 @@
     margin-right: 10px;
 }
 .profiledata{
-    width:80%;
+    width:55%;
     text-align: left;
+    /* margin:0; */
     margin-top:5px;
+    overflow: hidden;
 }
+
+.profiledata2{
+    min-width: 90px;
+}
+
+.profileintro{
+    /* width: fit-content; */
+    word-break:keep-all;
+}
+
 .profilebtn {
-    width: 80%;
+    /* width: 100%; */
+    min-width: 45px;
     height:22px;
     border-radius: 0.5rem;
     font-size: medium;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+    padding: 1px 3px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.profilebtn2 {
+    min-width: 50px;
+    height:50px;
+    border-radius: 50%;
+    font-size: medium;
+    margin-bottom: 5px;
+    padding: 1px 3px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.profilebtn:hover,
+.profilebtn2:hover {
+    color: red;
+}
+
+.button {
+    background: deepskyblue;
+    color: white;
+    font-size: 1em;
+    margin: 5px;
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 3px;
+    width: 80%;
+    transition: all 0.3s ease;
+}
+
+.buttons {
+    
+    margin-right: 0.1em;
+}
+
+.x {
+    height: 100%;
+    align-self: center;
+    font-size: 24px;
+    cursor: pointer;
+    color: red;
 }

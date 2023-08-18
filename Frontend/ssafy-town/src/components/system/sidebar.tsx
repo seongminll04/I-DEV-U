@@ -1,11 +1,14 @@
 import React from 'react';
 import ssafytown_css from './ssafytown.module.css';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setModal,setSidebar } from '../../store/actions';
+import { AppState } from '../../store/state';
 
 const Sidebar: React.FC= () => {
   const dispatch = useDispatch();
+  const isSidebarOpen = useSelector((state: AppState) => state.isSidebarOpen);//사이드바 오픈여부
+
   return (
         <div className={ssafytown_css.sidebar}>
           <img style={{marginTop:'20px'}} src={'assets/사이드바/알림.png'} alt={'알림 icon'} onClick={()=>dispatch(setModal('공지알림'))} />
@@ -14,7 +17,8 @@ const Sidebar: React.FC= () => {
           <img src={'assets/사이드바/동료.png'} alt={'동료 icon'} onClick={()=>dispatch(setSidebar('동료'))} />
           <img src={'assets/사이드바/프로젝트.png'} alt={'프로젝트 icon'} onClick={()=>dispatch(setSidebar('프로젝트'))} />
           <hr />
-          <img src={'assets/사이드바/채팅.png'} alt={'채팅 icon'} onClick={()=>dispatch(setSidebar('채팅'))}/>
+          <img src={'assets/사이드바/채팅.png'} alt={'채팅 icon'} 
+          onClick={()=>{if (isSidebarOpen==='채팅방') {dispatch(setSidebar(isSidebarOpen))} else {dispatch(setSidebar('채팅목록'))}}}/>
           <img src={'assets/사이드바/화상.png'} alt={'화상 icon'} onClick={()=>dispatch(setSidebar('화상'))}/>
           <img src={'assets/사이드바/팔로우.png'} alt={'팔로우 icon'} onClick={()=>dispatch(setSidebar('팔로우'))}/>
           <hr />

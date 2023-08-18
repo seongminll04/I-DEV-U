@@ -1,0 +1,585 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema mate
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `mate` ;
+
+-- -----------------------------------------------------
+-- Schema mate
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mate` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `mate` ;
+
+-- -----------------------------------------------------
+-- Table `mate`.`balance_game`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`balance_game` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(100) NULL DEFAULT NULL,
+  `choice1` VARCHAR(45) NULL DEFAULT NULL,
+  `choice2` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`user` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(100) NULL DEFAULT NULL,
+  `password` TEXT NULL DEFAULT NULL,
+  `name` VARCHAR(20) NULL DEFAULT NULL,
+  `nickname` VARCHAR(45) NULL DEFAULT NULL,
+  `birth` DATE NULL DEFAULT NULL,
+  `gender` VARCHAR(10) NOT NULL DEFAULT 'MALE',
+  `intro` TEXT NULL DEFAULT NULL,
+  `status` VARCHAR(10) NOT NULL DEFAULT 'A',
+  `role` VARCHAR(10) NOT NULL DEFAULT 'USER',
+  `refresh_token` TEXT NULL DEFAULT NULL,
+  `invite` VARCHAR(10) NULL DEFAULT 'false',
+  `original_file_name` TEXT NULL DEFAULT NULL,
+  `stored_file_name` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 17
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`basic_answer`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`basic_answer` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `user_idx` INT NULL DEFAULT NULL,
+  `survey_idx` INT NULL DEFAULT NULL,
+  `tag` VARCHAR(30) NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`),
+  INDEX `basic_answer_to_user_fk_user_idx_to_idx_idx` (`user_idx` ASC) VISIBLE,
+  CONSTRAINT `basic_answer_to_user_fk_user_idx_to_idx`
+    FOREIGN KEY (`user_idx`)
+    REFERENCES `mate`.`user` (`idx`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 16
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`basic_title`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`basic_title` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `answerIdx` INT NULL DEFAULT NULL,
+  `title` TEXT NULL DEFAULT NULL,
+  `answer_idx` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`chat_room`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`chat_room` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(10) NULL DEFAULT NULL,
+  `type` VARCHAR(45) NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `user_count` INT NULL DEFAULT 0,
+  PRIMARY KEY (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`chat_participation`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`chat_participation` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `user_idx` INT NULL DEFAULT NULL,
+  `room_idx` INT NULL DEFAULT NULL,
+  `role` VARCHAR(45) NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`idx`),
+  INDEX `chat_participation_to_chat_room_fk_room_idx_to_idx_idx` (`room_idx` ASC) VISIBLE,
+  INDEX `chat_participation_to_user_fk_user_idx_to_idx_idx` (`user_idx` ASC) VISIBLE,
+  CONSTRAINT `chat_participation_to_chat_room_fk_room_idx_to_idx`
+    FOREIGN KEY (`room_idx`)
+    REFERENCES `mate`.`chat_room` (`idx`),
+  CONSTRAINT `chat_participation_to_user_fk_user_idx_to_idx`
+    FOREIGN KEY (`user_idx`)
+    REFERENCES `mate`.`user` (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`chat_message`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`chat_message` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `user_idx` INT NULL DEFAULT NULL,
+  `room_idx` INT NULL DEFAULT NULL,
+  `message` TEXT NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `nickname` VARCHAR(20) NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`follow`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`follow` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `user_idx` INT NOT NULL,
+  `follow_idx` INT NOT NULL,
+  PRIMARY KEY (`idx`),
+  INDEX `follow_to_user_fk_user_idx_to_idx_idx` (`user_idx` ASC) VISIBLE,
+  INDEX `follow_to_user_fk_follow_idx_to_idx_idx` (`follow_idx` ASC) VISIBLE,
+  CONSTRAINT `follow_to_user_fk_follow_idx_to_idx`
+    FOREIGN KEY (`follow_idx`)
+    REFERENCES `mate`.`user` (`idx`),
+  CONSTRAINT `follow_to_user_fk_user_idx_to_idx`
+    FOREIGN KEY (`user_idx`)
+    REFERENCES `mate`.`user` (`idx`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`match`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`match` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `send_idx` INT NULL DEFAULT NULL,
+  `receive_idx` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`),
+  INDEX `partner_to_user_fk_send_idx_to_idx_idx` (`send_idx` ASC) VISIBLE,
+  INDEX `partner_to_user_fk_receive_idx_to_idx_idx` (`receive_idx` ASC) VISIBLE,
+  CONSTRAINT `match_to_user_fk_receive_idx_to_idx`
+    FOREIGN KEY (`receive_idx`)
+    REFERENCES `mate`.`user` (`idx`),
+  CONSTRAINT `match_to_user_fk_send_idx_to_idx`
+    FOREIGN KEY (`send_idx`)
+    REFERENCES `mate`.`user` (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+-- -----------------------------------------------------
+-- Table `mate`.`match_survey`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mate`.`match_survey` ;
+
+CREATE TABLE IF NOT EXISTS `mate`.`match_survey` (
+  `idx` INT NOT NULL,
+  `title` VARCHAR(100) NULL,
+  PRIMARY KEY (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+-- -----------------------------------------------------
+-- Table `mate`.`match_user`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mate`.`match_user` ;
+
+CREATE TABLE IF NOT EXISTS `mate`.`match_user` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `user_idx` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`),
+  INDEX `match_user_to_user_fk_user_id_to_idx_idx` (`user_idx` ASC) VISIBLE,
+  CONSTRAINT `match_user_to_user_fk_user_idx_to_idx`
+    FOREIGN KEY (`user_idx`)
+    REFERENCES `mate`.`user` (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`match_answer`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`match_answer` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+	`user_idx` INT NULL DEFAULT NULL,
+  `survey_idx` INT NULL DEFAULT NULL,
+  `tag` VARCHAR(30) NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`),
+  INDEX `match_answer_to_user_fk_user_idx_to_idx_idx` (`user_idx` ASC) VISIBLE,
+  INDEX `match_answer_to_match_survey_fk_survey_idx_to_idx_idx` (`survey_idx` ASC) VISIBLE,
+  CONSTRAINT `match_answer_to_match_survey_fk_survey_idx_to_idx`
+    FOREIGN KEY (`survey_idx`)
+    REFERENCES `mate`.`match_survey` (`idx`),
+  CONSTRAINT `match_answer_to_match_user_fk_user_idx_to_idx`
+    FOREIGN KEY (`user_idx`)
+    REFERENCES `mate`.`match_user` (`user_idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`notice_board`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`notice_board` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `user_idx` INT NULL DEFAULT NULL,
+  `title` VARCHAR(100) NULL DEFAULT NULL,
+  `content` TEXT NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `type` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`),
+  INDEX `notification_to_user_fk_user_id_to_idx_idx` (`user_idx` ASC) VISIBLE,
+  CONSTRAINT `notice_board_to_user_fk_user_idx_to_idx`
+    FOREIGN KEY (`user_idx`)
+    REFERENCES `mate`.`user` (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`notification`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`notification` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `user_idx` INT NULL DEFAULT NULL,
+  `content` VARCHAR(100) NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `data_type` VARCHAR(10) NULL DEFAULT NULL,
+  `checked` VARCHAR(10) NOT NULL DEFAULT 'N',
+  `creat_at` DATETIME(6) NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`),
+  INDEX `notification_to_user_fk_user_idx_to_idx_idx` (`user_idx` ASC) VISIBLE,
+  CONSTRAINT `notification_to_user_fk_user_idx_to_idx`
+    FOREIGN KEY (`user_idx`)
+    REFERENCES `mate`.`user` (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`partner`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`partner` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `user_idx` INT NULL DEFAULT NULL,
+  `percent` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`),
+  INDEX `percent_to_user_fk_user_idx_to_idx_idx` (`user_idx` ASC) VISIBLE,
+  CONSTRAINT `percent_to_user_fk_user_idx_to_idx`
+    FOREIGN KEY (`user_idx`)
+    REFERENCES `mate`.`user` (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`project`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`project` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `manager_idx` INT NULL DEFAULT NULL,
+  `title` VARCHAR(50) NULL DEFAULT NULL,
+  `content` TEXT NULL DEFAULT NULL,
+  `total_num` INT NULL DEFAULT NULL,
+  `now_num` INT NULL DEFAULT NULL,
+  `status` VARCHAR(50) NULL DEFAULT NULL,
+  `front` INT NULL DEFAULT NULL,
+  `max_front` INT NULL DEFAULT NULL,
+  `back` INT NULL DEFAULT NULL,
+  `max_back` INT NULL DEFAULT NULL,
+  `session` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`),
+  INDEX `project_to_user_fk_user_idx_to_idx_idx` (`manager_idx` ASC) VISIBLE,
+  CONSTRAINT `project_to_user_fk_user_manager_idx_to_idx`
+    FOREIGN KEY (`manager_idx`)
+    REFERENCES `mate`.`user` (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`project_board`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`project_board` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `project_idx` INT NULL DEFAULT NULL,
+  `user_idx` INT NULL DEFAULT NULL,
+  `title` VARCHAR(100) NULL DEFAULT NULL,
+  `content` TEXT NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`),
+  INDEX `project_board_to_project_fk_project_idx_to_idx_idx` (`project_idx` ASC) VISIBLE,
+  INDEX `FK5tr1a9xcpnqs8ddihal6v7kem` (`user_idx` ASC) VISIBLE,
+  CONSTRAINT `FK5tr1a9xcpnqs8ddihal6v7kem`
+    FOREIGN KEY (`user_idx`)
+    REFERENCES `mate`.`user` (`idx`),
+  CONSTRAINT `project_board_to_project_fk_project_idx_to_idx`
+    FOREIGN KEY (`project_idx`)
+    REFERENCES `mate`.`project` (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`project_board_comment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`project_board_comment` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `board_idx` INT NULL DEFAULT NULL,
+  `user_idx` INT NULL DEFAULT NULL,
+  `content` TEXT NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`),
+  INDEX `project_board_comment_to_project_board_fk_board_idx_to_idx_idx` (`board_idx` ASC) VISIBLE,
+  CONSTRAINT `project_board_comment_to_project_board_fk_board_idx_to_idx`
+    FOREIGN KEY (`board_idx`)
+    REFERENCES `mate`.`project_board` (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`project_language`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`project_language` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `project_idx` INT NULL DEFAULT NULL,
+  `language` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`),
+  INDEX `project_language_to_project_fk_project_idx_to_idx_idx` (`project_idx` ASC) VISIBLE,
+  CONSTRAINT `project_language_to_project_fk_project_idx_to_idx`
+    FOREIGN KEY (`project_idx`)
+    REFERENCES `mate`.`project` (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`project_participation`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`project_participation` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `project_idx` INT NULL DEFAULT NULL,
+  `user_idx` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`),
+  INDEX `project_participants_to_project_fk_project_idx_to_idx_idx` (`project_idx` ASC) VISIBLE,
+  INDEX `project_participants_to_user_fk_user_idx_to_idx_idx` (`user_idx` ASC) VISIBLE,
+  CONSTRAINT `project_participants_to_project_fk_project_idx_to_idx`
+    FOREIGN KEY (`project_idx`)
+    REFERENCES `mate`.`project` (`idx`),
+  CONSTRAINT `project_participants_to_user_fk_user_idx_to_idx`
+    FOREIGN KEY (`user_idx`)
+    REFERENCES `mate`.`user` (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`project_tech`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`project_tech` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `project_idx` INT NULL DEFAULT NULL,
+  `tech` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`),
+  INDEX `project_tech_to_project_fk_project_idx_to_idx_idx` (`project_idx` ASC) VISIBLE,
+  CONSTRAINT `project_tech_to_project_fk_project_idx_to_idx`
+    FOREIGN KEY (`project_idx`)
+    REFERENCES `mate`.`project` (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`question_board`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`question_board` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `user_idx` INT NULL DEFAULT NULL,
+  `title` VARCHAR(100) NULL DEFAULT NULL,
+  `content` TEXT NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`idx`),
+  INDEX `question_board_to_user_fk_user_id_to_idx_idx` (`user_idx` ASC) VISIBLE,
+  CONSTRAINT `question_board_to_user_fk_user_idx_to_idx`
+    FOREIGN KEY (`user_idx`)
+    REFERENCES `mate`.`user` (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`question_board_comment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`question_board_comment` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `board_idx` INT NULL DEFAULT NULL,
+  `user_idx` INT NULL DEFAULT NULL,
+  `content` TEXT NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`idx`),
+  INDEX `question_board_comment_to_question_board_fk_board_idx_to_id_idx` (`board_idx` ASC) VISIBLE,
+  INDEX `question_board_comment_to_user_fk_user_idx_to_idx_idx` (`user_idx` ASC) VISIBLE,
+  CONSTRAINT `question_board_comment_to_question_board_fk_board_idx_to_idx`
+    FOREIGN KEY (`board_idx`)
+    REFERENCES `mate`.`question_board` (`idx`),
+  CONSTRAINT `question_board_comment_to_user_fk_user_idx_to_idx`
+    FOREIGN KEY (`user_idx`)
+    REFERENCES `mate`.`user` (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`question_board_like`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`question_board_like` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `board_idx` INT NULL DEFAULT NULL,
+  `user_idx` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`),
+  INDEX `question_board_like_to_question_board_fk_board_idx_to_idx_idx` (`board_idx` ASC) VISIBLE,
+  INDEX `question_board_like_to_user_user_idx_to_idx_idx` (`user_idx` ASC) VISIBLE,
+  CONSTRAINT `question_board_like_to_question_board_fk_board_idx_to_idx`
+    FOREIGN KEY (`board_idx`)
+    REFERENCES `mate`.`question_board` (`idx`),
+  CONSTRAINT `question_board_like_to_user_user_idx_to_idx`
+    FOREIGN KEY (`user_idx`)
+    REFERENCES `mate`.`user` (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`video_room`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`video_room` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `manager_idx` INT NULL DEFAULT NULL,
+  `title` VARCHAR(100) NULL DEFAULT NULL,
+  `content` TEXT NULL DEFAULT NULL,
+  `total_number` INT NULL DEFAULT NULL,
+  `type` VARCHAR(45) NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `video_code` VARCHAR(255) NULL DEFAULT NULL,
+  `ov_session` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`),
+  INDEX `video_room_to_user_manager_idx_to_idx_idx` (`manager_idx` ASC) VISIBLE,
+  CONSTRAINT `video_room_to_user_manager_idx_to_idx`
+    FOREIGN KEY (`manager_idx`)
+    REFERENCES `mate`.`user` (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`video_participation`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`video_participation` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `room_idx` INT NULL DEFAULT NULL,
+  `user_idx` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`),
+  INDEX `video_participation_video_room_fk_room_idx_to_idx_idx` (`room_idx` ASC) VISIBLE,
+  INDEX `video_participation_to_user_fk_user_idx_to_idx_idx` (`user_idx` ASC) VISIBLE,
+  CONSTRAINT `video_participation_to_user_fk_user_idx_to_idx`
+    FOREIGN KEY (`user_idx`)
+    REFERENCES `mate`.`user` (`idx`),
+  CONSTRAINT `video_participation_video_room_fk_room_idx_to_idx`
+    FOREIGN KEY (`room_idx`)
+    REFERENCES `mate`.`video_room` (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `mate`.`session`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mate`.`session` ;
+
+CREATE TABLE IF NOT EXISTS `mate`.`session` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `user_idx` INT NULL DEFAULT NULL,
+  `nickname` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+-- -----------------------------------------------------
+-- Table `mate`.`alarm`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mate`.`alarm` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `from_idx` INT NULL DEFAULT NULL,
+  `to_idx` INT NULL DEFAULT NULL,
+  `type` VARCHAR(45) NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`target_idx` INT NULL DEFAULT NULL,
+	`comment` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`idx`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+INSERT INTO match_survey (idx, title) VALUES
+(1, '나의 얼굴상은?'),
+(2, '나의 연봉은?'),
+(3, '나의 지역'),
+(4, '원하는 상대의 연령대'),
+(5, '원하는 상대의 지역'),
+(6, '원하는 상대의 얼굴상'),
+(7, '원하는 근무형태는?'),
+(8, '둘 중 하나를 고른다면?'),
+(9, '나는 개발할 때 노래를?'),
+(10, '사용 중인 스마트폰'),
+(11, '개발자의 옷은?'),
+(12, '워라밸과 월급 어떤 것을 더 선호?'),
+(13, '평소에 하는 운동이?'),
+(14, '즐겨하는 취미가?'),
+(15, '나의 이름이?'),
+(16, '애완동물을 가진다면?');

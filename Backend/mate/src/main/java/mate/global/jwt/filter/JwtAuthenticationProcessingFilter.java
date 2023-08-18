@@ -1,19 +1,21 @@
 package mate.global.jwt.filter;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mate.domain.user.User;
+import mate.global.exception.NotFoundException;
 import mate.global.jwt.service.JwtService;
 import mate.global.jwt.util.PasswordUtil;
-import mate.repository.UserRepository;
+import mate.repository.user.UserRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -21,6 +23,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 /**
  * Jwt 인증 필터
@@ -40,16 +44,20 @@ import java.io.IOException;
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private static final String NO_CHECK_URL = "/user/login"; // "/login"으로 들어오는 요청은 Filter 작동 X
+    private static final String NO_KAKAO_URL = "/user/kakaologin"; // "/login"으로 들어오는 요청은 Filter 작동 X
+
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
+//    private final RedisService redisService;
+
 
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getRequestURI().equals(NO_CHECK_URL)) {
-            
+        if (request.getRequestURI().equals(NO_CHECK_URL) || request.getRequestURI().equals(NO_KAKAO_URL)) {
+
             filterChain.doFilter(request, response); // "/login" 요청이 들어오면, 다음 필터 호출
             return; // return으로 이후 현재 필터 진행 막기 (안해주면 아래로 내려가서 계속 필터 진행시킴)
         }
@@ -61,6 +69,8 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         String refreshToken = jwtService.extractRefreshToken(request)
                 .filter(jwtService::isTokenValid)
                 .orElse(null);
+        System.out.println(refreshToken);
+
 
         // 리프레시 토큰이 요청 헤더에 존재했다면, 사용자가 AccessToken이 만료되어서
         // RefreshToken까지 보낸 것이므로 리프레시 토큰이 DB의 리프레시 토큰과 일치하는지 판단 후,
@@ -92,6 +102,16 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                     jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(user.getEmail()),
                             reIssuedRefreshToken);
                 });
+//        redisService.getRedis(refreshToken)
+//                .ifPresent(email -> {
+//                    userRepository.findByEmail(email)
+//                        .ifPresent(user -> {
+//                            String reIssuedRefreshToken = reIssueRefreshToken(user);
+//                            jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(user.getEmail()),
+//                                    reIssuedRefreshToken);
+//                            });
+//                });
+
     }
 
     /**
@@ -103,6 +123,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         String reIssuedRefreshToken = jwtService.createRefreshToken();
         user.updateRefreshToken(reIssuedRefreshToken);
         userRepository.saveAndFlush(user);
+//        redisService.setRedis(reIssuedRefreshToken, user.getEmail());
         return reIssuedRefreshToken;
     }
 

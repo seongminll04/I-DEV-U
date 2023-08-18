@@ -2,7 +2,7 @@ package mate.domain.project;
 
 import java.util.List;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,47 +11,51 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import mate.domain.user.User;
 
 @Entity
-@Table(name = "project")
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Project {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idx;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "manager_idx")
 	private User manager;
 
-	@Column(name = "title")
 	private String title;
-
-	@Column(name = "content")
 	private String content;
-
-	@Column(name = "total_num")
 	private Integer totalNum;
-
-	@Column(name = "now_num")
 	private Integer nowNum;
-
-	@Column(name = "status")
 	private String status;
-
-	@Column(name = "type")
+	private Integer front;
+	private Integer max_front;
+	private Integer back;
+	private Integer max_back;
+	private String session;
+	private String text;
 	private String type;
 
-	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+	@JsonIgnore
+	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ProjectParticipation> projectParticipation;
 
-	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-	private List<ProjectTech> projectTeches;
+	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ProjectLanguage> projectLanguages;
 
-	// Getters and setters, constructors, and other methods
-	// ...
+	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ProjectTech> projectTechs;
 }

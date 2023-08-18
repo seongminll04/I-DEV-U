@@ -1,6 +1,7 @@
 package mate.domain.user;
 
 import lombok.Getter;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,15 +10,18 @@ import java.time.LocalDateTime;
 @Getter
 public class Notification {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idx;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_idx")
     private User user;
 
     private String content;
-    private LocalDateTime creatAt;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+
     @Enumerated(EnumType.STRING)
     private NotificationType dataType;
 

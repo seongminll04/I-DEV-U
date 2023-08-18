@@ -8,6 +8,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+#          ddl-auto: create
     properties:
       hibernate:
         format_sql: true
@@ -19,13 +20,14 @@ spring:
 logging.level:
   org.hibernate.SQL: debug
 
-# SSL
+# SSL 관련 설정
 server:
-  port: 443
+  port: 9090
   ssl:
     key-store: ${SSL_KEY_PATH}certificate.p12
     key-store-type: PKCS12
     key-store-password: ${SSL_PASSWORD}
+
 
 jwt:
   secretKey: ${jwt_secretKey}
@@ -38,7 +40,11 @@ jwt:
     expiration: ${jwt_refresh_expiration} #  (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> 하루) * 14(2주))
     header: ${jwt_refresh_header}
 
-OPENVIDU:
-  PASSWORD: ${OPENVIDU_PASSWORD}
-  URL: ${OPENVIDU_URL}
+#OPENVIDU:
+#  PASSWORD: ${OPENVIDU_PASSWORD}
+#  URL: ${OPENVIDU_URL}
 
+custom:
+  path:
+    upload-images: ${custom_path_upload-images}
+    load-images : ${custom_path_load-images}

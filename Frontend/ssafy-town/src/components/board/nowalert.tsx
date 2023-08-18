@@ -166,7 +166,8 @@ const NowAlert: React.FC<Props> = ({message,onMessage}) => {
     })
       .then(() => {
         alert('참가완료')
-        window.location.href='/home'
+        onMessage();
+        // window.location.href='/home'
       })
       .catch(err => console.log(err))
   }

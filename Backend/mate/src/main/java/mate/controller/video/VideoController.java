@@ -44,6 +44,7 @@ public class VideoController {
 		}
 	}
 
+
 	@GetMapping("/list/{userIdx}")
 	public ResponseEntity<Map<String, Object>> videoRoomList(@PathVariable("userIdx") int userIdx) {
 		Map<String, Object> map = new HashMap<>();

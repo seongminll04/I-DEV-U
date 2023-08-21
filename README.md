@@ -4,8 +4,8 @@
 <br><br>
 
 ### I DEV U 의 소개 UCC
-[![동영상 제목](https://img.youtube.com/vi/t0qLK7M8DDA/0.jpg)](https://www.youtube.com/watch?v=t0qLK7M8DDA)
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/t0qLK7M8DDA" frameborder="0" allowfullscreen></iframe>
 
 목표 : 개발자에게 인적·기술적으로 유용한 커뮤니티를 제공하기 위함
 

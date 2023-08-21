@@ -4,8 +4,12 @@ const initialState: AppState = {
     isModalOpen: null,
     isSidebarOpen:null,
     isAllowMove:true,
-    loginToken:'',
-    SelectMap:'A',
+
+    stompClientRef:null,
+
+    receivedAlert:[],
+    isChatIdx:null,
+    isChatTitle:null,
 };
 
 const reducer = (state: AppState = initialState, action: { type: string; payload: any }) => {
@@ -18,10 +22,16 @@ const reducer = (state: AppState = initialState, action: { type: string; payload
       else {return {...state, isSidebarOpen: action.payload,}}
     case 'SET_ALLOWMOVE':
         return {...state, isAllowMove: action.payload}
-    case 'SET_LOGINTOKEN':
-        return {...state, loginToken: action.payload}
-    case 'SET_SELECTMAP':
-      return {...state, SelectMap: action.payload}
+        
+    case 'SET_STOMP':
+        return {...state, stompClientRef: action.payload}
+    case 'SET_RECEIVEALERT':
+      return {...state, receivedAlert: action.payload}
+    case 'SET_CHATIDX':
+      return {...state,isChatIdx: action.payload}
+    case 'SET_CHATTITLE':
+      return {...state,isChatTitle: action.payload}
+          
     default:
       return state;
   }

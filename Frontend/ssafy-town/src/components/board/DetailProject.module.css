@@ -18,6 +18,20 @@
   box-sizing: border-box;
   color : white;
 }
+.modal2 {
+  background-color: rgba(109, 206, 245, 0.9);
+  border-radius: 1rem;
+  width:50%;
+  height: 500px;
+  padding: 10px;
+  box-sizing: border-box;
+  color : white;
+  overflow-y: scroll;
+}
+
+.modal2::-webkit-scrollbar {
+  display: none;
+}
 
 .closebtn {
   margin:10px;
@@ -28,4 +42,50 @@
 .closebtn:hover{
   color:gray;
   cursor: pointer;
+}
+
+.button {
+  position: relative;
+  background-color: white;
+  padding: 10px;
+  height: 50px;
+  border-radius: 0.5rem;
+  bottom: -30px;
+  font-size: 16px;
+}
+
+.button:hover {
+  background-color: gray;
+}
+
+.detail {
+  /* display: flex; */
+  /* flex-direction: column;
+  align-items: flex-start; */
+  padding: 0px 20px;
+}
+
+.detail > *{
+  text-align: left;
+}
+
+.title, .content, .people, .lang {
+  display: flex;
+}
+
+.title > p {
+  align-self: center;
+}
+
+.content {
+  display: flex;
+}
+
+.title h2, .content h2, .people h2, .lang h2{
+  margin: 0;
+  letter-spacing: 3px;
+}
+
+.title, .content, .people, .lang {
+  margin: 30px 0px;
 }

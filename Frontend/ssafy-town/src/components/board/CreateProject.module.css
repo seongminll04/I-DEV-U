@@ -17,6 +17,19 @@
     padding: 10px;
     box-sizing: border-box;
     color : white;
+    overflow-y: scroll;
+}
+
+.button {
+    margin-top: 20px;
+    background-color: white;
+    width: 150px;
+    height: 50px;
+    border-radius: 0.5rem;
+}
+
+.button:hover {
+    background-color: gray;
 }
 
 .closebtn {
@@ -31,18 +44,18 @@
 }
 
 .info {
-    overflow-y: scroll;
+    overflow-y:none;
 }
+
+
 .input {
     display: flex;
     align-items: center;
-    /* justify-content: center; */
-    align-items: flex-start;
     margin:auto;
     width:70%;
     font-size: large;
 }
-.input label {
+.input .label {
     width:20%;
     display: flex;
     justify-content: space-between;
@@ -51,7 +64,7 @@
 .input p {
     margin: 10px 20px;
 }
-.input input,textarea {
+.input .input1,textarea {
     width:60%;
     border-radius: 0.5rem;
     padding:5px 10px;
@@ -61,4 +74,11 @@
     resize:none;
     border: solid 2px;
     height: 100px;
+}
+
+.choose {
+    width: '60%';
+    white-space: pre-wrap;
+    display: flex;
+    flex-wrap: wrap;
 }

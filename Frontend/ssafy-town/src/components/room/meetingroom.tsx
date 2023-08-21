@@ -7,11 +7,12 @@ import Navbar from '../system/navbar'
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
-import { setAllowMove, setModal, setSidebar, setLoginToken } from '../../store/actions';
+import { setAllowMove, setModal, setSidebar } from '../../store/actions';
 
-import { Lsize1Scene } from '../map/Lsize1Scene';
+import { Tsize1Scene } from '../map/Tsize1Scene';
 import ModalOpen from '../system/modalopen';
-import Cam from '../openvidu/cam/cam'
+// import Cam from '../openvidu/cam/cam'
+import Cam2 from '../openvidu/cam/cam2'
 
 const MeetingRoom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
@@ -23,10 +24,9 @@ const MeetingRoom: React.FC = () => {
   const navigate = useNavigate()
 
   useEffect(()=>{
-    const userToken = localStorage.getItem('usertoken');
-    if (userToken) {dispatch(setLoginToken(userToken))}
-    else {navigate('/login')}
-  },[dispatch, navigate])
+    const userToken = localStorage.getItem('userToken');
+    if (!userToken) {navigate('/login')}
+  },[navigate])
 
   useEffect(() => { //esc키로 사이드바, 모달창 끄기 : 전역설정임
     if (isModalOpen) {
@@ -36,7 +36,8 @@ const MeetingRoom: React.FC = () => {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        if (isModalOpen !== null) {dispatch(setModal(null))}
+        if (isModalOpen === '최초설문') {}
+        else if (isModalOpen !== null) {dispatch(setModal(null))}
         else if (isSidebarOpen !== null) {dispatch(setSidebar(null))}
       }
     };
@@ -56,7 +57,7 @@ const MeetingRoom: React.FC = () => {
         default: 'arcade',
       },
       pixelArt: true, //  픽셀 아트 스타일의 게임에서 그래픽이 더 깔끔하고 정확하게 표시되도록 도와줍니다. 라네요
-      scene: Lsize1Scene //맵들 여기 다넣으면됨
+      scene: Tsize1Scene //맵들 여기 다넣으면됨
     };
 
     const newGame = new Phaser.Game(config);
@@ -97,7 +98,7 @@ const MeetingRoom: React.FC = () => {
       <div id="phaser_game" className={ssafytown_css.phaser_game} >
         <div id="my-video-container" className={ssafytown_css.my_video_bar}></div>
         <div id="videoContainer" className={ssafytown_css.op_video_bar}> </div>
-        <div className={ssafytown_css.video_bar}><Cam /></div>
+        <div className={ssafytown_css.video_bar}><Cam2 /></div>
       </div>
     </div>
   );

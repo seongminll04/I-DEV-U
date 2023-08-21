@@ -6,10 +6,12 @@ import Navbar from '../system/navbar'
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
-import { setAllowMove, setModal, setSidebar, setLoginToken } from '../../store/actions';
+import { setAllowMove, setModal, setSidebar } from '../../store/actions';
 
 import { Msize1Scene } from '../map/Msize1Scene';
 import ModalOpen from '../system/modalopen';
+import Cam from '../openvidu/cam/cam'
+import MeetingChat from './meetingChat';
 
 // import Cam from '../openvidu/cam/cam'
 
@@ -23,10 +25,9 @@ const SogaeRoom: React.FC = () => {
   const navigate = useNavigate()
 
   useEffect(()=>{
-    const userToken = localStorage.getItem('usertoken');
-    if (userToken) {dispatch(setLoginToken(userToken))}
-    else {navigate('/login')}
-  },[dispatch, navigate])
+    const userToken = localStorage.getItem('userToken');
+    if (!userToken) {navigate('/login')}
+  },[navigate])
 
   useEffect(() => { //esc키로 사이드바, 모달창 끄기 : 전역설정임
     if (isModalOpen) {
@@ -94,11 +95,13 @@ const SogaeRoom: React.FC = () => {
       {/* 사이드바 오픈 */}
       {isSidebarOpen ? <Navbar /> : null}
       <ModalOpen />
+      <button className={ssafytown_css.GO_myroom} onClick={()=>{
+        localStorage.removeItem('OVsession'); window.location.href='/home'
+      }}>나가기</button>
       <div id="phaser_game" className={ssafytown_css.phaser_game} >
-          <div id="my-video-container" className={ssafytown_css.my_video_bar}></div>
-          <div id="videoContainer" className={ssafytown_css.op_video_bar}> </div>
-          {/* <div className={ssafytown_css.video_bar}><Cam /></div> */}
+          <div className={ssafytown_css.video_bar}><Cam /></div>
       </div>
+      <MeetingChat />
     </div>
   );
 }

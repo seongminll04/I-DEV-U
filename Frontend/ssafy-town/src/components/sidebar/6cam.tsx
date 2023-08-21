@@ -1,27 +1,34 @@
 import React,{ useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import cam_css from './6cam.module.css'
-import axios from 'axios';
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 
 import { useDispatch } from 'react-redux';
 import { setAllowMove } from '../../store/actions';
 
-type CamProps = {
-  name: string;
-  info: string;
-  sessionId: string; // 각 화상방의 세션 ID
+
+type ProjectDataType = {
+  idx:number;
+  title:string;
+  nowNum:number;
+  ovSession:string;
+  modify:boolean;
+  totalNumber:number;
+  users:string[];
+  // name: string; // 프로젝트 이름
+  // participants: string[]; // 참가자 이름 리스트
+  // sessionId: string; // 각 화상방의 세션 ID
 };
 
 const Cam: React.FC = () => {
   const dispatch = useDispatch()
-  const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
+  // const BACKEND_SERVER_URL = process.env.REACT_APP_BACKEND_SERVER_URL;
+  const BACKEND_SERVER_URL = 'https://i9b206.p.ssafy.io:9090';
+  const [camList, setCamList] = useState<ProjectDataType[]>([]);
+  const [inputvalue, setinputvalue] = useState<string>('');
 
-  const navigate = useNavigate()
-  const [camList, setCamList] = useState<CamProps[]>([
-    {name:'',info:'',sessionId: ''}]);
 
-          // input 방향키 살리기
+  // input 방향키 살리기
   const handlekeydown = (event:React.KeyboardEvent<HTMLInputElement>) => {
     const inputElement = event.currentTarget
     const currentCursorPosition = inputElement.selectionStart || 0;
@@ -34,70 +41,85 @@ const Cam: React.FC = () => {
       inputElement.setSelectionRange(currentCursorPosition+1 , currentCursorPosition+1);
     }
   }
-    // 유저의 화상방 데이터 가져오기
-  useEffect(()=>{
-    axios.get(BACKEND_SERVER_URL+'/video/list', {
-      data : '', // 여기 유저 아이디가 들어가야할듯? 아이디 어떻게 받아왔는지 이전꺼에 하셨으면 통일합시다. (api명세서 빠져있어서 대충추가함)
-    })
-    .then(res =>{
-      setCamList(res.data); // 백엔드에서 잘 보내줘야할듯 name / info / sessionId 잘맞춰서 받아야함. 백엔드와 소통 ㄱ
-      console.log(res)
-    })
-    .catch(err=>{console.log(err)
-      setCamList([])})
-  })
+  // 유저의 화상방 데이터 가져오기
+  useEffect(() => {
+    const userIdxStr = localStorage.getItem('userIdx')
+    const userIdx = userIdxStr ? parseInt(userIdxStr,10): null
+    const userToken = localStorage.getItem('userToken')
+    const projects: ProjectDataType[] = [];
+    axiosInstance({
+      method:'get',
+      url:BACKEND_SERVER_URL + `/video/list/${userIdx}`,
+      headers : {
+        Authorization: 'Bearer ' + userToken
+      },
+    }).then(res => {
+      const pjts = [];
+      for (const pjt of res.data.list) {
+        const pjtPromise = axiosInstance({
+          method: 'get',
+          url: `https://i9b206.p.ssafy.io:9090/project/video/user/${pjt.idx}`,
+          headers: {
+            Authorization: 'Bearer ' + userToken,
+          },
+        }).then((res) => {
+          const users = res.data.data.userList.map((user:any) => user.nickname);
+          projects.push({
+            idx:pjt.idx,
+            title:pjt.title,
+            nowNum:pjt.nowNum,
+            ovSession:pjt.ovSession,
+            modify:pjt.modify,
+            totalNumber:pjt.totalNumber,
+            users:users
+          });
+        });
+        pjts.push(pjtPromise);
+      }
+      return Promise.all(pjts);
+      })
+      .then(()=>{
+        setCamList(projects);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  },[BACKEND_SERVER_URL]); //BACKEND_SERVER_URL는 환경변수라서 차피 안바뀌는데 에러나와서 그냥 넣어둠
 
-  // 접속 반응 추가하기
+  // 접속 반응
   const EnterCam = (sessionId: string) => {
-    axios.post(BACKEND_SERVER_URL+'/video/enter', {
-      // 이거 백엔드에 들어가서 세션과 유저 아이디를 사용해서 openvidu에서 토큰을 요청하고
-      // 받은 토큰을 DB(project_participation)에 저장하고 토큰을 다시 전해줘야함
-      sessionId: sessionId
-    })
-    .then(res =>{
-      // const token = res.data.token;
-      const map = res.data.map;
-
-      // 토큰을 사용하여 OpenVidu에 접속하는 코드 (OpenVidu SDK를 사용)
-      // 예: openVidu.joinSession(token);
-
-      console.log(res)
-      navigate(map);  // 성공시 이동주소 L1 M1 S1 L2 M2 이런식으로 받아와서 navigate말고 바로 들어가는형식으로 ㅇㅇ
-    })
-    .catch(err=>{console.log(err)})
+    localStorage.setItem("OVsession", sessionId);  // 토큰을 로컬 스토리지에 저장
+    window.location.href = "https://i9b206.p.ssafy.io/meeting";
   }
-
-  
   
   return (
     <div className='sidebar_modal'>
       <h1>내 화상방</h1>
       <div className={cam_css.search}>
-        <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown}
+        <input type="text" placeholder='검색어를 입력해주세요' onKeyDown={handlekeydown} value={inputvalue} onChange={(e)=>setinputvalue(e.target.value)}
             onFocus={()=>dispatch(setAllowMove(false))} onBlur={()=>dispatch(setAllowMove(true))}/>
-        <button>검색</button>
       </div>
       <hr style={{width:'75%', color:'black'}}/>
 
       <div className={cam_css.scrollbox}>
-      {camList.map((cam, index) => (
-        <>
-        <div className={cam_css.profile} key={index}>
-        <img src="assets/default_profile.png" alt=""/>
-        <div className={cam_css.profiledata}>
-          <b>{cam.name}</b>
-          <p style={{color:'gray'}}>{cam.info}</p>
-        </div>
-        <div>
-        <button className={cam_css.profilebtn} onClick={() => EnterCam(cam.sessionId)}>접속</button>
-          <button className={cam_css.profilebtn}>삭제</button>
+        {camList.filter(c => c.title.includes(inputvalue)).map((cam, index) => (
+          <div key={index}>
+            <div className={cam_css.profile}>
+              <img src="assets/default_profile.png" alt="" />
+              <div className={cam_css.profiledata}>
+                <b>{cam.title}</b>
+                <p style={{ color: 'gray', margin:'0', marginTop:'5px'}}>
+                  {cam.users.map((name:string)=>('#'+name+' '))}
+                </p>
+              </div>
+              <div>
+                <button className={cam_css.profilebtn} onClick={() => EnterCam(cam.ovSession)}>화상접속</button>
+                {/* <button className={cam_css.profilebtn}>나가기</button> */}
+              </div>
+            </div>
+            <hr />
           </div>
-        </div>
-        <hr />
-        </>
-      ))}
-
-      <p>-더 업슴-</p>
+        ))}
       </div>
     </div>
   );

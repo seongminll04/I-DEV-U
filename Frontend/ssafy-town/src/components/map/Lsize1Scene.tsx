@@ -1,12 +1,12 @@
 import Phaser from 'phaser';
 import store from '../../store/store'
 import { setModal } from '../../store/actions';
-import io, { Socket } from 'socket.io-client';
+import { Message } from '@stomp/stompjs';
 
 type AssetKeys = 'A' | 'B' | 'C' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' 
-               | 'T' | 'U' | 'V' | 'W' | 'X' | '1' | '2' | '3' | '4'
-               | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's'
-               | 't' | 'u' | 'z';
+              | 'T' | 'U' | 'V' | 'W' | 'X' | '1' | '2' | '3' | '4'
+              | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's'
+              | 't' | 'u' | 'z' | 'ㄱ';
 const ASSETS: Record<AssetKeys, string> = {
   'A': '/assets/L1-B1.png',
   'B': '/assets/L1-C4.png',
@@ -57,6 +57,7 @@ const ASSETS: Record<AssetKeys, string> = {
   't': '/assets/의자2.png',
   'u': '/assets/피아노의자.png',
   'z': '/assets/장식용허수코드.png',
+  'ㄱ': '/assets/컴퓨터1.png',
 };
 
 const pattern = `
@@ -116,7 +117,7 @@ BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCjjjhhhiiigggfffB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCkkkeeeaaabbbdddB
 BRBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCCCCCBCCCCCCmCCmCCmCCmCCmCB
 BAAAAAAAAAAAAAAAAAAAABCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
-BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
+BCCCCCCCCCCㄱCCCㄱCCCㄱCBCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCClCClCClCClCClCB
 BCCCCCCCCCCCCCCCCCCCCBCCCCCCCCCCCCCCCCCCCCBCCCCCiiifffhhhjjjgggB
 BCCCCCCCCCCCCCCCCCCCCACCCCCCCCCCCCCCCCCCCCBECCCCdddaaabbbaaacccB
@@ -126,43 +127,59 @@ BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 `;
 
-export class Lsize1Scene extends Phaser.Scene {
 
-    private socket?: Socket;
+export class Lsize1Scene extends Phaser.Scene {
+    private dataChannels: { [id: string]: RTCDataChannel } = {}; 
+    private prevPosition: { x: number, y: number } | null = null;
+    private remoteCharacters: { [id: string]: Phaser.GameObjects.Sprite } = {};
+    private lastSentTime: number = 0;
+    private remoteCharacterNames: { [id: string]: Phaser.GameObjects.Text } = {};
+    private remoteCharactersLastUpdate: { [id: string]: number } = {}; // 여기에 추가
+    private remoteEmojis: { [key: string]: Phaser.GameObjects.Image } = {};
 
     private character?: Phaser.Physics.Arcade.Sprite;
-    private remoteCharacters: { [id: string]: Phaser.GameObjects.Sprite } = {};
     private balloon!: Phaser.GameObjects.Sprite;
+    private emoji!: Phaser.GameObjects.Sprite;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
-    private prevPosition: { x: number, y: number } | null = null;
     private walls?: Phaser.Physics.Arcade.StaticGroup;
     private clockText!: Phaser.GameObjects.Text; //우하시계
     private clockText2!: Phaser.GameObjects.Text; //우상시계
     private clockText3!: Phaser.GameObjects.Text; //좌하시계
     private deadzoneActive: boolean = false;  // 데드존 상태 추적 변수
 
-
     private doorParts: Phaser.GameObjects.Image[] = [];
     private doorOpenTween?: Phaser.Tweens.Tween;
     private doorOpened: boolean = false; // 현재 문의 상태
-
     private chairPositions: {x: number, y: number}[] = [];
     private sittingOnChair: boolean = false; // 현재 앉아있니?
+    private settingemoji: number = 0; // 이모지 번호
 
-      private d1?: Phaser.Physics.Arcade.Sprite;
-      private d2?: Phaser.Physics.Arcade.Sprite;
-      private d3?: Phaser.Physics.Arcade.Sprite;
-      private d4?: Phaser.Physics.Arcade.Sprite;
-      private d5?: Phaser.Physics.Arcade.Sprite;
-      private d6?: Phaser.Physics.Arcade.Sprite;
-      private d7?: Phaser.Physics.Arcade.Sprite;
-      private d8?: Phaser.Physics.Arcade.Sprite;
-      private d9?: Phaser.Physics.Arcade.Sprite;
-      private d10?: Phaser.Physics.Arcade.Sprite;
-      private d11?: Phaser.Physics.Arcade.Sprite;
-      private water?: Phaser.Physics.Arcade.Sprite;
-      private copy?: Phaser.Physics.Arcade.Sprite;
-  
+    private d1?: Phaser.Physics.Arcade.Sprite;
+    private d2?: Phaser.Physics.Arcade.Sprite;
+    private d3?: Phaser.Physics.Arcade.Sprite;
+    private d4?: Phaser.Physics.Arcade.Sprite;
+    private d5?: Phaser.Physics.Arcade.Sprite;
+    private d6?: Phaser.Physics.Arcade.Sprite;
+    private d7?: Phaser.Physics.Arcade.Sprite;
+    private d8?: Phaser.Physics.Arcade.Sprite;
+    private d9?: Phaser.Physics.Arcade.Sprite;
+    private d10?: Phaser.Physics.Arcade.Sprite;
+    private d11?: Phaser.Physics.Arcade.Sprite;
+    private d12?: Phaser.Physics.Arcade.Sprite;
+    private water?: Phaser.Physics.Arcade.Sprite;
+    private copy?: Phaser.Physics.Arcade.Sprite;
+
+    private emoji1!: Phaser.GameObjects.Sprite;
+    private emoji2!: Phaser.GameObjects.Sprite;
+    private emoji3!: Phaser.GameObjects.Sprite;
+    private emoji4!: Phaser.GameObjects.Sprite;
+    private emoji5!: Phaser.GameObjects.Sprite;
+    private emoji6!: Phaser.GameObjects.Sprite;
+    private emoji7!: Phaser.GameObjects.Sprite;
+    private emoji8!: Phaser.GameObjects.Sprite;
+    private emoji9!: Phaser.GameObjects.Sprite;
+    private emoji10!: Phaser.GameObjects.Sprite;
+
     constructor() {
       super({ key: 'Lsize1Scene' });
     }
@@ -171,27 +188,41 @@ export class Lsize1Scene extends Phaser.Scene {
         for (let char in ASSETS) {
             this.load.image(char, (ASSETS as Record<string, string>)[char]);
         }
-
         this.load.image('character', 'assets/admin_character.png');
-        this.load.image('character2', 'assets/겨울나무6.png');
         this.load.image('balloon', 'assets/ekey.png');
-        
 
+        for (let i = 0; i <= 9; i++) {
+          for (let j = 1; j <= 12; j++) {
+              let secondChar;
+              if (j <= 9) {
+                  secondChar = j;
+              } else if (j === 10) {
+                  secondChar = 'A';
+              } else if (j === 11) {
+                  secondChar = 'B';
+              } else {
+                  secondChar = 'C';
+              }
+              
+              const imageKey = `${i}${secondChar}`;
+              const imagePath = `assets/${imageKey}.png`;
+              
+              this.load.image(imageKey, imagePath);
+          }
+      }
+        
         for (let i = 1; i <= 72; i++) {
             this.load.image('문' + i, 'assets/문' + i + '.png');
         }
+        for(let i = 1; i <=10; i++){
+            this.load.image('emoji'+i,'assets/emoji'+i+'.png');
+        }
     }
+
+
 
     create() {
       
-
-      this.socket = io('http://your_backend_url');
-
-      this.socket.on('playerData', (data: any) => {
-        console.log("111")
-        this.updateRemoteCharacter(data);
-      });
-
       const rows = pattern.trim().split('\n');
       const tileSize = 32; 
 
@@ -205,24 +236,42 @@ export class Lsize1Scene extends Phaser.Scene {
       this.walls = this.physics.add.staticGroup();
 
       this.balloon = this.add.sprite(0, 0, 'balloon').setVisible(false);
-      this.balloon.setDepth(2);
+      this.balloon.setDepth(5);
+      this.emoji1 = this.add.sprite(0, 0, 'imoji1').setVisible(false); this.emoji1.setDepth(2);
+      this.emoji2 = this.add.sprite(0, 0, 'imoji2').setVisible(false); this.emoji2.setDepth(2);
+      this.emoji3 = this.add.sprite(0, 0, 'imoji3').setVisible(false); this.emoji3.setDepth(2);
+      this.emoji4 = this.add.sprite(0, 0, 'imoji4').setVisible(false); this.emoji4.setDepth(2);
+      this.emoji5 = this.add.sprite(0, 0, 'imoji5').setVisible(false); this.emoji5.setDepth(2);
+      this.emoji6 = this.add.sprite(0, 0, 'imoji6').setVisible(false); this.emoji6.setDepth(2);
+      this.emoji7 = this.add.sprite(0, 0, 'imoji7').setVisible(false); this.emoji7.setDepth(2);
+      this.emoji8 = this.add.sprite(0, 0, 'imoji8').setVisible(false); this.emoji8.setDepth(2);
+      this.emoji9 = this.add.sprite(0, 0, 'imoji9').setVisible(false); this.emoji9.setDepth(2);
+      this.emoji10 = this.add.sprite(0, 0, 'imoji10').setVisible(false); this.emoji10.setDepth(2);
 
       const mapCenterX = rows[0].length * tileSize / 2;
       const mapCenterY = rows.length * tileSize / 2;
       const mapWidth = rows[0].length * tileSize;
       const mapHeight = rows.length * tileSize;
 
-  
-      this.character = this.physics.add.sprite(mapCenterX, mapCenterY, 'character').setOrigin(0.5, 0.5);
+
+      // 사용자 캐릭터 선택
+      const userCharacter = localStorage.getItem("character") || '0';
+
+      this.character = this.physics.add.sprite(mapCenterX, mapCenterY, `${  userCharacter}2`).setOrigin(0.5, 0.5);
+
       this.physics.add.collider(this.character, this.walls);  // 캐릭터와 벽 사이의 충돌 설정
       
       this.cameras.main.setBounds(0, 0, mapWidth, mapHeight); // 카메라가 이동 가능한 범위 설정
       this.cursors = this.input.keyboard?.createCursorKeys();
       this.cameras.main.startFollow(this.character);
 
+      this.createAnimationsForCharacter(userCharacter); // 방향 애니메이션
+
       this.character?.setDepth(2); // 캐릭터부터 생성했으니 depth를 줘야 캐릭터가 화면에 보임
       // this.physics.world.createDebugGraphic();  // 디버그 그래픽
   
+
+
       
       rows.forEach((row, rowIndex) => {
         for (let colIndex = 0; colIndex < row.length; colIndex ++) {
@@ -233,7 +282,7 @@ export class Lsize1Scene extends Phaser.Scene {
                 const wallTile = this.walls?.create(colIndex * tileSize + tileSize / 2, rowIndex * tileSize + tileSize / 2, tileID);
                 wallTile.setSize(tileSize, tileSize);
             } else if (tileID ==='C' || tileID === 'm' || tileID === 'l' || tileID === 'I'|| tileID === 'n' || tileID === 'o' ||
-                       tileID ==='p' || tileID === 'q' || tileID === 'r' || tileID === 's'|| tileID === 't' || tileID === 'u' ) {
+                      tileID ==='p' || tileID === 'q' || tileID === 'r' || tileID === 's'|| tileID === 't' || tileID === 'u' ) {
               this.add.image(colIndex * tileSize, rowIndex * tileSize, tileID).setOrigin(0, 0);
 
               if(tileID ==='p' || tileID ==='q' || tileID ==='r' || tileID ==='s' || tileID ==='t' || tileID ==='l' || tileID ==='m' || tileID ==='I' ){
@@ -410,16 +459,38 @@ export class Lsize1Scene extends Phaser.Scene {
               this.d11.setOrigin(0, 0).setDisplaySize(96, 32).setImmovable(true);
               this.physics.add.collider(this.character!, this.d11);
               colIndex +=2
+            } else if (tileID === 'ㄱ') {
+              this.d12 = this.physics.add.sprite(colIndex * tileSize, rowIndex * tileSize, tileID);
+              this.d12.setOrigin(0, 0).setDisplaySize(64, 64).setImmovable(true);
+              this.physics.add.collider(this.character!, this.d12);
+              this.d12.setDepth(2);
             }
         }
       }        
     });
+
+
+    
+    const keyNames = ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'ZERO'];
+
+    for (let i = 1; i <= 10; i++) {
+        this.input.keyboard?.on('keydown-' + keyNames[i - 1], () => {
+            this.settingemoji = i;
+            const emojiKey = 'emoji' + i;
+            const targetEmoji = (this as any)[emojiKey];
+            const emoji = this.add.image(this.character!.x, this.character!.y - this.character!.height / 2 - targetEmoji.height / 2, 'emoji' + i);
+            emoji.setDepth(5);
+            this.sendCharacterData();
+            setTimeout(() => {
+                emoji.destroy();
+                this.settingemoji = 0;
+            }, 300);
+        });
+    }
     
 
     this.input.keyboard?.on('keydown-E', () => {
       const nearbyObject = this.NearbyObjects();
-
-      console.log(this.character!.x + "@@" + this.character!.y)
   
       if (nearbyObject === 'door') {
         this.openDoor();
@@ -427,60 +498,291 @@ export class Lsize1Scene extends Phaser.Scene {
         store.dispatch(setModal('QnA게시판'))
       } else if (nearbyObject && typeof nearbyObject !== 'string') {
         this.sitdown(nearbyObject);
-    }
+      } else if (nearbyObject === 'computer') {
+        store.dispatch(setModal('게임'))
+      }
   });
-      
-      
       this.loadDoorParts();
+      
+      
+
+      this.initializeWebRTC();
+  }
+  /////////////////////////// 캐릭터 이동 애니메이션
+  
+  createAnimationsForCharacter(characterKey : string) {
+    // 위를 바라보는 애니메이션
+    this.anims.create({
+      key: `${characterKey}-up`,
+      frames: [
+        { key: `${characterKey}A`},
+        { key: `${characterKey}C`},
+        { key: `${characterKey}B`},
+      ],
+      frameRate: 10,
+      repeat: -1
+    });
+  
+    // 오른쪽을 바라보는 애니메이션
+    this.anims.create({
+      key: `${characterKey}-right`,
+      frames: [
+        { key: `${characterKey}7`},
+        { key: `${characterKey}8`},
+        { key: `${characterKey}9`},
+      ],
+      frameRate: 10,
+      repeat: -1
+    });
+  
+    // 아래를 바라보는 애니메이션
+    this.anims.create({
+      key: `${characterKey}-down`,
+      frames: [
+        { key: `${characterKey}1`},
+        { key: `${characterKey}3`},
+        { key: `${characterKey}2`},
+      ],
+      frameRate: 10,
+      repeat: -1
+    });
+  
+    // 왼쪽을 바라보는 애니메이션
+    this.anims.create({
+      key: `${characterKey}-left`,
+      frames: [
+        { key: `${characterKey}4`},
+        { key: `${characterKey}6`},
+        { key: `${characterKey}5`},
+      ],
+      frameRate: 10,
+      repeat: -1
+    });
+  }
+
+
+  /////////////////////////// WEBRTC
+
+  initializeWebRTC() {
+    const stompClientRef = store.getState().stompClientRef;
+    const sessionName = localStorage.getItem('OVsession');
+    this.remoteCharacterNames = {};
+    this.remoteCharactersLastUpdate = {};
+  
+    var location = this;
+
+    setInterval(() => {
+      // 5초마다 모든 유저의 데이터를 보내기
+      this.sendCharacterData();
+
+      // 10초마다 캐릭터 정보 확인 및 오래된 캐릭터 제거
+      const now = Date.now();
+      for (let id in this.remoteCharacters) {
+        if (now - this.remoteCharactersLastUpdate[id] > 10000) {
+          this.remoteCharacters[id].destroy(); // Phaser sprite 제거
+          this.remoteCharacterNames[id]?.destroy(); // 이름 라벨도 제거
+          delete this.remoteCharacters[id];
+          delete this.remoteCharactersLastUpdate[id];
+        }
+      }
+    }, 5000);
+  
+    if (stompClientRef) {
+      stompClientRef.subscribe(`/sub/channel/${sessionName}`, function(message:Message) {
+        const newMessage = JSON.parse(message.body);
+  
+        if (newMessage) {
+          // 기존 캐릭터가 존재하는지 확인
+          let remoteChar = location.remoteCharacters[newMessage.id];
+          const userIdx = localStorage.getItem('userToken')
+  
+          // 캐릭터가 존재하지 않으면 새로 생성
+          if (!remoteChar && newMessage.id !== userIdx) {
+            remoteChar = location.physics.add.sprite(newMessage.position.x, newMessage.position.y, `${newMessage.type}2`);
+            remoteChar.setDepth(3);
+            location.remoteCharacters[newMessage.id] = remoteChar;
+
+            const userName = newMessage.nickname || 'Unknown';
+            const nameText = location.add.text(newMessage.position.x, newMessage.position.y - 30, userName, { color: 'black', align: 'center', fontSize: '14px', fontStyle: 'bold'});
+            nameText.setOrigin(0.5, 0.5);
+            nameText.setDepth(4);  // 캐릭터보다 위에 표시되게 depth를 설정
+            location.remoteCharacterNames[newMessage.id] = nameText;
+
+          }
+            else if(remoteChar){
+            // 캐릭터가 이미 존재하면 위치와 애니메이션 상태 업데이트
+            remoteChar.setPosition(newMessage.position.x, newMessage.position.y);
+
+            location.remoteCharacterNames[newMessage.id]?.setPosition(newMessage.position.x, newMessage.position.y - 30);
+  
+            // 애니메이션 상태 업데이트
+            if (newMessage.direction) {
+              if (!location.anims.exists(`${newMessage.type}-up`)) {
+                location.createAnimationsForCharacter(newMessage.type);
+              }
+              remoteChar.play(`${newMessage.direction}`, true);
+            }
+            remoteChar.setAlpha(newMessage.state ? 0.4 : 1);
+
+            if (newMessage.doorOpened && !location.doorOpened) {
+              location.openDoor();  // 다른 유저가 문을 열었다면
+            } else if (!newMessage.doorOpened && location.doorOpened) {
+              location.closeDoor(); // 다른 유저가 문을 닫았다면
+            }
+            
+            //이모지
+            if (newMessage.settingemoji && newMessage.settingemoji > 0) {
+              const emojiKey = 'emoji' + newMessage.settingemoji;
+              let remoteEmoji = location.remoteEmojis[newMessage.id];
+          
+              // 만약 해당 사용자에 대한 이모지가 아직 생성되지 않았다면 생성합니다.
+              if (!remoteEmoji) {
+                  remoteEmoji = location.add.image(remoteChar.x, remoteChar.y - 32, emojiKey);
+                  location.remoteEmojis[newMessage.id] = remoteEmoji;
+              } else {
+                  // 이미 생성된 이모지가 있다면, 해당 이모지를 업데이트합니다.
+                  remoteEmoji.setTexture(emojiKey);
+                  remoteEmoji.setPosition(remoteChar.x, remoteChar.y - 32);
+                  remoteEmoji.setVisible(true);
+              }
+          
+              // 300ms 후에 이모지를 숨깁니다.
+              setTimeout(() => {
+                  remoteEmoji.setVisible(false);
+              }, 300);
+            }
+
+          }
+          location.remoteCharactersLastUpdate[newMessage.id] = Date.now();
+        }
+      });
+    }
   }
   
-  
-    update() {
 
-      const currentPlayerPosition = { x: this.character!.x, y: this.character!.y };
+  // 캐릭터의 위치나 상태가 변경될 때 호출
+  sendCharacterData(message?: string) {
+    const currentUserId = localStorage.getItem('userToken');
+    const currentUserNickname = localStorage.getItem('userNickname') || 'Unknown';  // 닉네임 가져오기
 
-      if (!this.prevPosition || (this.prevPosition.x !== currentPlayerPosition.x || this.prevPosition.y !== currentPlayerPosition.y)) {
-        console.log("@@@@")
-        const playerData = {
-            id: {},
-            position: currentPlayerPosition,
-            state: 'A', // 혹은 'B'
-            type: 1, // 1~10
-            // chat: ...
-        };
-        this.socket?.emit('playerData', playerData);
-
-        // 현재 위치를 이전 위치로 저장
-        this.prevPosition = currentPlayerPosition;
+    const now = Date.now();
+    if (now - this.lastSentTime < 20) { // 마지막으로 데이터를 보낸 후 100ms가 지나지 않았다면 리턴
+      return;
     }
 
-      // if(this.cursors?.left?.isDown || this.cursors?.right?.isDown || this.cursors?.up?.isDown || this.cursors?.down?.isDown){
-      //   console.log("@@@")
-      //     const playerData = {
-      //       id:{},
-      //       position: { x: this.character!.x, y: this.character!.y },
-      //       state: 'A', // 혹은 'B'
-      //       type: 1, // 1~10
-      //       // chat: 모르겠다아직
-      //     };
-      //     this.socket?.emit('playerData', playerData);
-      // }
+    const dataToSend = {
+      id: currentUserId,
+      position: { x: this.character?.x || 0, y: this.character?.y || 0 },
+      state: this.sittingOnChair, //의자에 앉아 있으면 true 아니면 false
+      type: localStorage.getItem('character'),
+      direction: this.character?.anims.currentAnim?.key,  // 현재 애니메이션 상태
+      frame: this.character?.anims.currentFrame?.index || 2,       // 현재 프레임 번호
+      nickname: currentUserNickname,
+      doorOpened: this.doorOpened,
+      settingemoji: this.settingemoji,
+    };
+    // const stompClientRef:Client|null = null;
+    
+    const stompClientRef =store.getState().stompClientRef
+    const sessionName = localStorage.getItem('OVsession');
+    if (stompClientRef) {
+      stompClientRef.publish({
+        destination:`/sub/channel/${sessionName}`,
+        body:JSON.stringify(dataToSend)
+      })
+      this.lastSentTime = now;
+    }
+  }
 
-      if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnChair) {
-        if (this.cursors.left?.isDown) {
-          this.character.setVelocityX(-640);
-        } else if (this.cursors.right?.isDown) {
-          this.character.setVelocityX(640);
-        } else {
-          this.character.setVelocityX(0);
-        }
+
+/////////////////////////////
+
+
   
-        if (this.cursors.up?.isDown) {
-          this.character.setVelocityY(-640);
-        } else if (this.cursors.down?.isDown) {
-          this.character.setVelocityY(640);
+  
+  update() {
+    const currentPlayerPosition = { x: this.character!.x, y: this.character!.y };
+    
+
+    if (!this.prevPosition || (this.prevPosition.x !== currentPlayerPosition.x || this.prevPosition.y !== currentPlayerPosition.y)) {
+        this.sendCharacterData();
+        this.prevPosition = currentPlayerPosition;
+    }
+    if(store.getState().isAllowMove && this.cursors && this.character && this.sittingOnChair){
+      if (this.character.anims.currentAnim) {
+        this.character.setVelocityX(0);
+        this.character.setVelocityY(0);
+        let previousAnimationKey = this.character.anims.currentAnim.key;
+        let direction = previousAnimationKey.split('-')[1]; // 예: 'left' from '0-left'
+
+        // Verify that the direction is one of the expected values
+        if (['left', 'right', 'up', 'down'].includes(direction)) {
+            // Now replace the last character with the corresponding idle frame
+            let idleFrameKey = {
+              'left': '5',
+              'right': '8',
+              'up': 'B',
+              'down': '2'
+            }[direction];
+
+            if (idleFrameKey) {
+              this.character.setTexture(`${localStorage.getItem("character") || '0'}${idleFrameKey}`);
+            }
+        }
+    }
+    }
+
+    if (store.getState().isAllowMove && this.cursors && this.character && !this.sittingOnChair) {
+        let moved = false;
+
+        if (this.cursors.left?.isDown) {
+            this.character.setVelocityX(-320);
+            this.character.play(`${localStorage.getItem("character") || '0'}-left`, true);
+            moved = true;
+        } else if (this.cursors.right?.isDown) {
+            this.character.setVelocityX(320);
+            this.character.play(`${localStorage.getItem("character") || '0'}-right`, true);
+            moved = true;
         } else {
-          this.character.setVelocityY(0);
+            this.character.setVelocityX(0);
+        }
+
+        if (this.cursors.up?.isDown) {
+            this.character.setVelocityY(-320);
+            if (!this.cursors.right?.isDown && !this.cursors.left?.isDown) {
+                this.character.play(`${localStorage.getItem("character") || '0'}-up`, true);
+            }
+            moved = true;
+        } else if (this.cursors.down?.isDown) {
+            this.character.setVelocityY(320);
+            if (!this.cursors.right?.isDown && !this.cursors.left?.isDown) {
+                this.character.play(`${localStorage.getItem("character") || '0'}-down`, true);
+            }
+            moved = true;
+        } else {
+            this.character.setVelocityY(0);
+        }
+
+        if (!moved) {
+          if (this.character.anims.currentAnim) {
+              let previousAnimationKey = this.character.anims.currentAnim.key;
+              let direction = previousAnimationKey.split('-')[1]; // 예: 'left' from '0-left'
+      
+              // Verify that the direction is one of the expected values
+              if (['left', 'right', 'up', 'down'].includes(direction)) {
+                  // Now replace the last character with the corresponding idle frame
+                  let idleFrameKey = {
+                    'left': '5',
+                    'right': '8',
+                    'up': 'B',
+                    'down': '2'
+                  }[direction];
+      
+                  if (idleFrameKey) {
+                    this.character.setTexture(`${localStorage.getItem("character") || '0'}${idleFrameKey}`);
+                  }
+              }
+          }
         }
       }
 
@@ -505,10 +807,15 @@ export class Lsize1Scene extends Phaser.Scene {
       this.NearbyObjects()
     }
 
-    private NearbyObjects(): 'door' | 'board' | { x: number, y: number } | null {
+
+
+    private NearbyObjects(): 'door' | 'board' | 'computer' |{ x: number, y: number } | null {
       const doorPosition = { x: 1024, y: 768 }; // 문
       const boardPosition = { x: 1236, y: 835 }; // 게시판
       const chairPositions = this.chairPositions; // 의자
+      const computerPositions = {x: 380, y:1840}; //컴퓨터
+      const computerPositions2 = {x: 500, y:1840}; //컴퓨터
+      const computerPositions3 = {x: 630, y:1840}; //컴퓨터
 
       if (this.character) {
           const distanceToDoor = Phaser.Math.Distance.Between(this.character.x, this.character.y, doorPosition.x, doorPosition.y);
@@ -521,6 +828,13 @@ export class Lsize1Scene extends Phaser.Scene {
           if (distanceToBoard <= 64) {
             this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
             return 'board';
+        }
+          const distanceToComputer = Phaser.Math.Distance.Between(this.character.x, this.character.y, computerPositions.x, computerPositions.y);
+          const distanceToComputer2 = Phaser.Math.Distance.Between(this.character.x, this.character.y, computerPositions2.x, computerPositions2.y);
+          const distanceToComputer3 = Phaser.Math.Distance.Between(this.character.x, this.character.y, computerPositions3.x, computerPositions3.y);
+        if (distanceToComputer <= 60 || distanceToComputer2 <= 60 || distanceToComputer3 <= 60) {
+          this.balloon.setPosition(this.character.x, this.character.y - this.character.height / 2 - this.balloon.height / 2).setVisible(true);
+            return 'computer';
         }
   
           let nearestChair: { x: number, y: number } | null = null;
@@ -539,7 +853,7 @@ export class Lsize1Scene extends Phaser.Scene {
       }
       this.balloon.setVisible(false);
       return null; // 주변에 아무 오브젝트도 없다면 null
-  }
+    }
     
 
     loadDoorParts() {
@@ -579,8 +893,8 @@ export class Lsize1Scene extends Phaser.Scene {
                 this.physics.add.existing(part, true);
             }
     
-            if ([1, 2].includes(index)) {
-                part.setDepth(1);
+            if ([0, 1, 2, 3].includes(index)) {
+                part.setDepth(3);
             } else if ([5, 6, 9, 10].includes(index)) {
                 part.setDepth(-1);
             } else {
@@ -652,12 +966,12 @@ export class Lsize1Scene extends Phaser.Scene {
         this.doorOpened = false; // 문이 닫혔다는 상태로 업데이트
     }
 
-      addDoorCollisions() {
-        // 모든 문 부분의 충돌을 활성화
-        this.doorParts.forEach((part, index) => {
-            (part.body as Phaser.Physics.Arcade.Body).enable = true;
-        });
-      }
+    addDoorCollisions() {
+      // 모든 문 부분의 충돌을 활성화
+      this.doorParts.forEach((part, index) => {
+          (part.body as Phaser.Physics.Arcade.Body).enable = true;
+      });
+    }
 
     updateDoorSet(set: number) {
         this.doorParts.forEach((part, index) => {
@@ -668,38 +982,24 @@ export class Lsize1Scene extends Phaser.Scene {
 
     removeDoorCollisions() {
         // 모든 문 부분의 충돌을 비활성화
-        this.doorParts.forEach((part) => {
+        this.doorParts.forEach((part, index) => {
+          if (![0, 3, 4, 7, 8, 11].includes(index)) { // remember arrays are 0-indexed
             (part.body as Phaser.Physics.Arcade.Body).enable = false;
+        }
         });
     }
 
     sitdown(chairPosition: { x: number, y: number }){
       if (this.sittingOnChair) {  
-          this.character!.x += 32;
+          this.character!.x = chairPosition.x;
+          this.character!.y = chairPosition.y;
           this.character!.setAlpha(1);
           this.sittingOnChair = false;
       } else {  
           this.character!.x = chairPosition.x;
-          this.character!.y = chairPosition.y - 16;
+          this.character!.y = chairPosition.y;
           this.character!.setAlpha(0.4);
           this.sittingOnChair = true;
       }
-  }
-
-  updateRemoteCharacter(data: any){
-    // 원격 캐릭터의 ID나 식별자 // 각자 들어가나? let으로 하면? 30명이면 30!만큼이 되어버리나? 테스트 해보고싶네
-    let remoteChar = this.remoteCharacters[data.id];
-
-    // 원격 캐릭터가 게임에 없으면 만들고 위치세팅
-    if (!remoteChar) {
-        remoteChar = this.physics.add.sprite(data.position.x, data.position.y, data.type+'');
-        this.remoteCharacters[data.id] = remoteChar;
     }
-
-    // 원격 캐릭터의 위치, 투명상태
-    remoteChar.setPosition(data.position.x, data.position.y);
-    if(data.state === 'B') {
-      remoteChar.setAlpha(0.4);
-    }
-  }
 }

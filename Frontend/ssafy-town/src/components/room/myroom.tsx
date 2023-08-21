@@ -6,13 +6,13 @@ import Navbar from '../system/navbar'
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/state';
-import { setAllowMove, setModal, setSidebar, setLoginToken } from '../../store/actions';
+import { setAllowMove, setModal, setSidebar } from '../../store/actions';
 
 import {useNavigate} from 'react-router-dom'
 import { Ssize1Scene } from '../map/Ssize1Scene';
 import ModalOpen from '../system/modalopen';
 // import Cam from '../openvidu/cam/cam'
-
+import axiosInstance from '../../interceptors'; // axios 인스턴스 가져오기
 
 const MyRoom: React.FC = () => {
   const [game, setGame] = useState<Phaser.Game | null>(null);
@@ -21,14 +21,30 @@ const MyRoom: React.FC = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
-
   useEffect(()=>{
-    const userToken = localStorage.getItem('usertoken');
+
+    const userIdxStr = localStorage.getItem('userIdx')
+    var userIdx:number|null;
+    if (userIdxStr) {userIdx=parseInt(userIdxStr,10)} else {userIdx=null}
+    
+    const userToken = localStorage.getItem('userToken');
     if (userToken) {
-      dispatch(setLoginToken(userToken))
-      if (true) {
-        dispatch(setModal('최초설문'))
-      }
+      axiosInstance({
+        method:'get',
+        url:`https://i9b206.p.ssafy.io:9090/basicSurvey/${userIdx}`,
+        headers : {
+          Authorization: 'Bearer ' + userToken
+        },
+      })
+      .then(res => {
+        if (res.data.data.survey==='NO') {
+          dispatch(setModal('최초설문'))
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
     }
     else {navigate('/login')}
   },[dispatch, navigate])
@@ -42,7 +58,8 @@ const MyRoom: React.FC = () => {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        if (isModalOpen !== null) {dispatch(setModal(null))}
+        if (isModalOpen === '최초설문' || isModalOpen === '매칭중') {}
+        else if (isModalOpen !== null) {dispatch(setModal(null))}
         else if (isSidebarOpen !== null) {dispatch(setSidebar(null))}
       }
     };
@@ -94,6 +111,7 @@ const MyRoom: React.FC = () => {
       };
     }
   }, [isModalOpen,isSidebarOpen, game, dispatch]);
+
   return (
     <div className={ssafytown_css.container}>
       <Sidebar/>

@@ -1,7 +1,12 @@
 # 🎮I DEV U
 **캐릭터🧝‍♂️ 뿐만 아니라 사람의 마음❤️도 움직이는 I DEV U**<br>
 **바로가기 : https://i9b206.p.ssafy.io**
-<br><br><br>
+<br><br>
+
+### I DEV U 의 소개 UCC
+[![동영상 제목](https://img.youtube.com/vi/t0qLK7M8DDA/0.jpg)](https://www.youtube.com/watch?v=t0qLK7M8DDA)
+
+
 목표 : 개발자에게 인적·기술적으로 유용한 커뮤니티를 제공하기 위함
 
 1. 싸피타운

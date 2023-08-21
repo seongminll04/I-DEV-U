@@ -3,7 +3,7 @@
 **바로가기 : https://i9b206.p.ssafy.io**
 <br>
 
-### ⬇️⬇️⬇️I DEV U 의 소개 UCC (youtube로 보러가기)⬇️⬇️⬇️
+### ⬇️⬇️I DEV U 의 소개 UCC (youtube로 보러가기)⬇️⬇️
 [![동영상 제목](https://img.youtube.com/vi/t0qLK7M8DDA/0.jpg)](https://www.youtube.com/watch?v=t0qLK7M8DDA)
 
 

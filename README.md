@@ -29,6 +29,8 @@
 <summary>1. 로그인</summary>
 
 ![Alt text](readme사진/image-3.png)
+![Alt text](readme사진/image-21.png)
+![Alt text](readme사진/image-22.png)
 </details>
 
 <details>

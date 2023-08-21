@@ -1,5 +1,6 @@
-# I DEV U
-**캐릭터🧝‍♂️ 뿐만 아니라 사람의 마음❤️도 움직이는 I DEV U**
+# 🎮I DEV U
+**캐릭터🧝‍♂️ 뿐만 아니라 사람의 마음❤️도 움직이는 I DEV U**<br>
+**바로가기 : https://i9b206.p.ssafy.io**
 <br><br><br>
 목표 : 개발자에게 인적·기술적으로 유용한 커뮤니티를 제공하기 위함
 
@@ -23,7 +24,30 @@
 
 이를 통해 개발자들은 자신의 역량을 발휘하고 동시에 다양한 프로젝트 경험을 쌓을 수 있습니다.
 
-## 기능
+## 📅프로젝트 기간
+
+**23.07.10 ~ 23.08.18 (6주간)**
+
+## 🧝‍♂️팀원 및 역할
+
+| **팀장** | 이형석 (FE,Infra)   |
+|----------|---------------------|
+| **팀원** | 최범선 (FE,Websocket) |
+|          | 박해종 (FE,webRTC)  |
+|          | 이진호 (FE,BE)     |
+|          | 이성민 (FE,Websocket) |
+
+## 👨‍👩‍👧협업 툴
+
+- GitLab
+- Jira
+- Notion
+- Mattermost
+- Webex
+
+
+
+## 🛠️주요 기능
 
 <details>
 <summary>1. 로그인</summary>
@@ -31,7 +55,7 @@
 ![Alt text](readme사진/image-3.png)
 ![Alt text](readme사진/image-21.png)
 ![Alt text](readme사진/image-22.png)
-</details>
+</details></br>
 
 <details>
 <summary>2. 소개팅</summary>
@@ -39,7 +63,7 @@
 ![Alt text](readme사진/image-4.png)
 ![Alt text](readme사진/image-7.png)
 ![Alt text](readme사진/image-6.png)
-</details>
+</details></br>
 
 <details>
 <summary>3. 프로젝트</summary>
@@ -47,14 +71,14 @@
 ![Alt text](readme사진/image-9.png)
 ![Alt text](readme사진/image-10.png)
 ![Alt text](readme사진/image-11.png)
-</details>
+</details></br>
 
 <details>
 <summary>4. 채팅</summary>
 ![Alt text](readme사진/image-12.png)
 ![Alt text](readme사진/image-13.png)
 ![Alt text](readme사진/image-14.png)
-</details>
+</details></br>
 
 <details>
 <summary>5. SSAFY-TWON</summary>
@@ -64,12 +88,9 @@
 ![Alt text](readme사진/image-17.png)
 ![Alt text](readme사진/image-18.png)
 ![Alt text](readme사진/image-19.png)
-</details>
+</details></br>
 
-### 🖥️ 개발 환경
-https://complex-mailman-fb1.notion.site/ef8ac591628a4e7ea0f0045d5b28f86c?pvs=4
-
----
+## 🖥️ 개발 환경
 
 🖱**Backend**
 
@@ -105,6 +126,10 @@ https://complex-mailman-fb1.notion.site/ef8ac591628a4e7ea0f0045d5b28f86c?pvs=4
 - nginx
 - jenkins
 
+## 🔧 서비스 아키텍쳐
+
+![Alt text](readme사진/image-23.png)
+
 ## 📑 API 명세서
 
 ![Alt text](readme사진/image-2.png)
@@ -114,7 +139,7 @@ https://www.notion.so/API-5ac6298a71fa4eb1ab82b7a671afd94d?pvs=4
 
 ![Alt text](readme사진/image.png)
 
-## ✨커밋 컨벤션 규칙
+## 📚 커밋 컨벤션 규칙
 
 | Type 키워드 | 사용 시점 |
 | --- | --- |
@@ -139,4 +164,16 @@ https://www.notion.so/API-5ac6298a71fa4eb1ab82b7a671afd94d?pvs=4
   - commit은 최대한 자세히
 
 `키워드(대문자) :  (영어로 위치/함수/기능) + 설명`
+
+## 🌐EC2 PORT
+
+| 서비스               | 포트  |
+|---------------------|-------|
+| Spring Boot (BE)    | 9090  |
+| React (FE)          | 3000  |
+| Openvidu             | 8445  |
+| Openvidu (Node)     | 5000  |
+| MySQL (DB)          | 3500  |
+| Jenkins             | 8080  |
+
 

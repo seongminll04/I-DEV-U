@@ -25,32 +25,44 @@
 
 ## 기능
 
-#### 1. 로그인
-![Alt text](readme사진/image-3.png)
+<details>
+<summary>1. 로그인</summary>
 
-#### 2. 소개팅
+![Alt text](readme사진/image-3.png)
+</details>
+
+<details>
+<summary>2. 소개팅</summary>
+
 ![Alt text](readme사진/image-4.png)
 ![Alt text](readme사진/image-7.png)
 ![Alt text](readme사진/image-6.png)
+</details>
 
-#### 3. 프로젝트 생성
+<details>
+<summary>3. 프로젝트</summary>
 ![Alt text](readme사진/image-8.png)
 ![Alt text](readme사진/image-9.png)
 ![Alt text](readme사진/image-10.png)
 ![Alt text](readme사진/image-11.png)
+</details>
 
-### 4. 채팅
+<details>
+<summary>4. 채팅</summary>
 ![Alt text](readme사진/image-12.png)
 ![Alt text](readme사진/image-13.png)
 ![Alt text](readme사진/image-14.png)
+</details>
 
-### 5. SSAFY-TWON
+<details>
+<summary>5. SSAFY-TWON</summary>
 ![Alt text](readme사진/image-15.png)
 ![Alt text](readme사진/image-20.png)
 ![Alt text](readme사진/image-16.png)
 ![Alt text](readme사진/image-17.png)
 ![Alt text](readme사진/image-18.png)
 ![Alt text](readme사진/image-19.png)
+</details>
 
 ### 🖥️ 개발 환경
 https://complex-mailman-fb1.notion.site/ef8ac591628a4e7ea0f0045d5b28f86c?pvs=4

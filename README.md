@@ -138,6 +138,8 @@
 ## 📑 API 명세서
 
 ![Alt text](readme사진/image-2.png)
+
+**바로가기 :**
 https://www.notion.so/API-5ac6298a71fa4eb1ab82b7a671afd94d?pvs=4
 
 ## ✨ERD

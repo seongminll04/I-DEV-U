@@ -7,7 +7,7 @@ import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -20,15 +20,17 @@ public class RedisService {
     @TimeToLive
     private Long refreshTokenExpirationPeriod;
 
-    public String getRedis(String key) {
-        return (String) redisTemplate.opsForValue().get(key);
+    public Optional<String> getRedis(String key) {
+        return (Optional<String>) redisTemplate.opsForValue().get(key);
     }
 
 
-    public void setRedis(String email, String token) {
-        if (this.getRedis(email) != null)
-            this.deleteRedis(email);
-        redisTemplate.opsForValue().set(email, token, refreshTokenExpirationPeriod);
+    public void setRedis(String token, String email) {
+        System.out.println(token);
+        if (this.getRedis(token) != null) this.deleteRedis(token);
+        System.out.println(token);
+        redisTemplate.opsForValue().set("Bearer " + token, email, refreshTokenExpirationPeriod);
+
     }
 
     public void deleteRedis(String key) {

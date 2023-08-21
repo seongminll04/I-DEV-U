@@ -1,16 +1,21 @@
 package mate.domain.question;
 
-import lombok.Getter;
+import lombok.*;
 import mate.domain.user.User;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class QuestionBoard {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idx;
 
     @ManyToOne
@@ -18,6 +23,16 @@ public class QuestionBoard {
     private User user;
 
     private String title;
+
     private String content;
-    private LocalDateTime createAt;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @Override
+    public String toString() {
+        return "QuestionBoard{" +
+                ", user=" + user +
+                '}';
+    }
 }

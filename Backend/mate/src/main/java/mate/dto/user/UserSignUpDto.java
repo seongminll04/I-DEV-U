@@ -14,6 +14,7 @@ public class UserSignUpDto {
     private String nickname;
     private LocalDate birthday;
     private UserGender gender;
+    private String image;
 
 
 }

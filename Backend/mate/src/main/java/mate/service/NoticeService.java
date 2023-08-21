@@ -1,10 +1,14 @@
 package mate.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import mate.domain.notice.NoticeBoardType;
+import mate.domain.user.User;
+import mate.dto.notice.NoticeDto;
+import mate.repository.user.UserRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +20,18 @@ import mate.repository.NoticeRepository;
 public class NoticeService {
 
 	private final NoticeRepository noticeRepository;
+	private final UserRepository userRepository;
 
-	public void writeNotice(NoticeBoard notice) {
-		noticeRepository.save(notice);
+	public void writeNotice(NoticeDto noticeDto) {
+		User user = userRepository.findById(noticeDto.getUserIdx()).get();
+
+		noticeRepository.save(NoticeBoard.builder()
+						.user(user)
+						.title(noticeDto.getTitle())
+						.content(noticeDto.getContent())
+						.createdAt(LocalDateTime.now())
+						.type(NoticeBoardType.A)
+				.build());
 	}
 
 	public NoticeBoard detailNotice(int noticeIdx) {
@@ -27,8 +40,11 @@ public class NoticeService {
 		return notice.get();
 	}
 
-	public void modifyNotice(NoticeBoard notice) {
-		noticeRepository.save(notice);
+	public void modifyNotice(NoticeDto noticeDto) {
+		noticeRepository.save(NoticeBoard.builder()
+						.title(noticeDto.getTitle())
+						.content(noticeDto.getContent())
+				.build());
 	}
 
 	public void deleteNotice(int noticeIdx) {
@@ -41,16 +57,20 @@ public class NoticeService {
 	}
 
 	// 가장 최근 4개만 조회
-//	public List<NoticeBoard> listNoticeTop4() {
-//		return noticeRepository.findNoticeTop4OrderByIdxDesc();
-//	}
+	public List<NoticeBoard> listNoticeTop4() {
+		return noticeRepository.findTop4ByOrderByIdxDesc();
+	}
 
 	// 검색어를 사용한 리스트 조회(제목)
+	public List<NoticeBoard> listNoticeByKeyword(String keyWord) {
+		return noticeRepository.findByTitleContainingOrContentContaining(keyWord, keyWord);
+	}
+
 	public List<NoticeBoard> listNoticeByTitle(String keyWord) {
-		return noticeRepository.findNoticeByTitleContainingOrderByIdxDesc(keyWord);
+		return noticeRepository.findByTitleContainingOrderByIdxDesc(keyWord);
 	}
 
 	public List<NoticeBoard> listNoticeByContent(String keyWord) {
-		return noticeRepository.findNoticeByContentContainingOrderByIdxDesc(keyWord);
+		return noticeRepository.findByContentContainingOrderByIdxDesc(keyWord);
 	}
 }

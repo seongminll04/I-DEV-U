@@ -30,9 +30,9 @@
 
 ## 🧝‍♂️팀원 및 역할
 
-| **팀장** | 이형석 (FE,Infra)   |
+| **팀장** | 이형석 (BE,Infra)   |
 |----------|---------------------|
-| **팀원** | 최범선 (FE,Websocket) |
+| **팀원** | 최범선 (BE,Websocket) |
 |          | 박해종 (FE,webRTC)  |
 |          | 이진호 (FE,BE)     |
 |          | 이성민 (FE,Websocket) |
@@ -81,7 +81,7 @@
 </details></br>
 
 <details>
-<summary>5. SSAFY-TWON</summary>
+<summary>5. SSAFY-TOWN</summary>
 ![Alt text](readme사진/image-15.png)
 ![Alt text](readme사진/image-20.png)
 ![Alt text](readme사진/image-16.png)
